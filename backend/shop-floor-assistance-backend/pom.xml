@@ -61,7 +61,7 @@
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
                     <failsOnError>true</failsOnError>
-                    <failsOnViolation>true</failsOnViolation>
+                    <failOnViolation>true</failOnViolation>
                 </configuration>
                 <executions>
                     <execution>
