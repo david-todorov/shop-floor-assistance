@@ -22,22 +22,30 @@ To run both the backend and frontend applications using Docker Compose, follow t
    ```bash
    docker-compose up --build --detach
 
-### Running runnig Backend or Frontend individually 
+### Running runnig Backend or Frontend individually
+-  **Running only the Backend**: 
    ```bash
    docker-compose up --build --detach backend
+
+-  **Running only the Frontend**:
    ```bash
    docker-compose up --build --detach frontend
 
 ### Stopping containers
+-  **Stopping all**:
    ```bash
    docker-compose down
+
+-  **Stopping only the Backend**:
    ```bash
    docker-compose stop backend
+
+-  **Stopping only the Frontend**:
    ```bash
    docker-compose stop frontend
 
 
 ### Ports Used
-1. The backend will be available at http://localhost:8080
-2. The frontend will be available at http://localhost (on port 80). The Angular application runs on top of Nginx, which is why it uses port 80 instead of the default Angular development server port (4200).
+- **The backend will be available at http://localhost:8080**
+- **The frontend will be available at http://localhost (on port 80). The Angular application runs on top of Nginx, which is why it uses port 80 instead of the default Angular development server port (4200).**
 
