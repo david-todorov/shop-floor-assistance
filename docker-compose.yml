@@ -18,7 +18,7 @@ services:
 #      - ./.env
  
   frontend:
-      container_name: frontend
+      container_name: sfa-frontend
       build:
          context: ./frontend/shop-floor-assistance-frontend
          dockerfile: Dockerfile  
@@ -29,7 +29,7 @@ services:
       restart: unless-stopped 
 
   backend:
-    container_name: backend
+    container_name: sfa-backend
  #   depends_on:
  #     database:
  #       condition: service_started
