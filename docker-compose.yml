@@ -2,20 +2,20 @@ version: "3.4"
 
 services:
 
-#  database:
-#    image: postgres
-#    container_name: database
-#    environment:
-#      POSTGRES_USER: ${databaseUser}
-#      POSTGRES_PASSWORD: ${databasePassword}
-#      POSTGRES_DB: tutorialDb
-#    volumes:
-#      - ./database/data:/var/lib/postgresql/data
-#    ports:
-#      - "5432:5432"
-#    restart: on-failure
-#    env_file:
-#      - ./.env
+  database:
+    image: postgres
+    container_name: sfa-database
+    environment:
+      POSTGRES_USER: ${databaseUser}
+      POSTGRES_PASSWORD: ${databasePassword}
+      POSTGRES_DB: sfaDb
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: on-failure
+    env_file:
+      - ./.env
  
   frontend:
       container_name: sfa-frontend
@@ -30,14 +30,14 @@ services:
 
   backend:
     container_name: sfa-backend
- #   depends_on:
- #     database:
- #       condition: service_started
+    depends_on:
+      database:
+        condition: service_started
     build:
         context: ./backend/shop-floor-assistance-backend
         dockerfile: Dockerfile
     ports:
           - "8080:8080"
     restart: on-failure
- #   env_file:
- #     - ./.env
+    env_file:
+      - ./.env

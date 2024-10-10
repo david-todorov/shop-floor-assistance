@@ -1,3 +1,4 @@
+
 # shop-floor-assistance
 Project for developing operator guides and assistance tools for pharmaceutical production lines.
 
@@ -8,44 +9,63 @@ Project for developing operator guides and assistance tools for pharmaceutical p
 Before running the application, ensure you have the following installed:
 
 - **Docker Engine**: Make sure Docker is installed and running on your machine.
-- **Docker Compose**: You will also need Docker Compose. It typically comes with Docker Desktop, but you can install it separately.
+- **Docker Compose**: Docker Compose is also required. It typically comes with Docker Desktop, but you can install it separately if needed.
 
-### Running the whole application with Docker Compose
+### Running the Application with Docker Compose
 
 To run both the backend and frontend applications using Docker Compose, follow these steps:
 
 1. **Navigate to the root directory of the project**:
    ```bash
    cd ~/path/to/shop-floor-assistance
+   ```
 
-2. **Compose up command**:
+2. **Run the Compose command**:
    ```bash
    docker-compose up --build --detach
+   ```
 
-### Running runnig Backend or Frontend individually
--  **Running only the Backend**: 
+### Running Backend, Frontend, or Database Individually
+
+- **Running only the Backend** (will start the database as a dependency):
    ```bash
    docker-compose up --build --detach backend
+   ```
 
--  **Running only the Frontend**:
+- **Running only the Frontend**:
    ```bash
    docker-compose up --build --detach frontend
+   ```
 
-### Stopping containers
--  **Stopping all**:
+- **Running only the Database**:
+   ```bash
+   docker-compose up --build --detach database
+   ```
+
+### Stopping Containers
+
+- **Stopping all containers**:
    ```bash
    docker-compose down
+   ```
 
--  **Stopping only the Backend**:
+- **Stopping only the Backend**:
    ```bash
    docker-compose stop backend
+   ```
 
--  **Stopping only the Frontend**:
+- **Stopping only the Frontend**:
    ```bash
    docker-compose stop frontend
+   ```
 
+### Environment Variables
+
+- **`.env` file**: An `.env` file, required for creating the database and backend container, is included in the repository as an example.
+- **Running Backend Locally**: If you run the backend from an IDE, ensure the database is started first. Identical environment variables should be set to match those in Docker.
+- **Local Database URL**: If the backend runs outside a Docker container, make sure the `databaseUrl` points to your local database (e.g., `localhost`).
 
 ### Ports Used
-- **The backend will be available at http://localhost:8080**
-- **The frontend will be available at http://localhost (on port 80). The Angular application runs on top of Nginx, which is why it uses port 80 instead of the default Angular development server port (4200).**
 
+- **Backend**: Available at [http://localhost:8080](http://localhost:8080)
+- **Frontend**: Available at [http://localhost](http://localhost) on port 80 (served by Nginx, not Angular's development server).
