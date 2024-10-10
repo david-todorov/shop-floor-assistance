@@ -81,3 +81,4 @@ To run both the backend and frontend applications using Docker Compose, follow t
 
 - **Backend**: Available at [http://localhost:8080](http://localhost:8080)
 - **Frontend**: Available at [http://localhost](http://localhost) on port 80 (served by Nginx, not Angular's development server).
+- **Database**: Available at [http://localhost:5432](http://localhost:5432)
