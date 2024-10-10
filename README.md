@@ -59,11 +59,23 @@ To run both the backend and frontend applications using Docker Compose, follow t
    docker-compose stop frontend
    ```
 
+- **Stopping only the Database**:
+   ```bash
+   docker-compose stop database
+   ```
+
 ### Environment Variables
 
 - **`.env` file**: An `.env` file, required for creating the database and backend container, is included in the repository as an example.
 - **Running Backend Locally**: If you run the backend from an IDE, ensure the database is started first. Identical environment variables should be set to match those in Docker.
 - **Local Database URL**: If the backend runs outside a Docker container, make sure the `databaseUrl` points to your local database (e.g., `localhost`).
+
+### Database Data Persistence
+
+- The database used in this application is configured to be persistent by utilizing Docker volumes.
+- In the `docker-compose.yml` file, a named volume (`postgres_data`) is created and mapped to the PostgreSQL container’s data directory (`/var/lib/postgresql/data`)
+- Additionally, the data is stored in a folder named `database` in the repository.
+- This setup ensures that all database data remains intact even when the container is stopped or removed, allowing for seamless data management across container lifecycles.
 
 ### Ports Used
 
