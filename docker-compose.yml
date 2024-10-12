@@ -13,7 +13,7 @@ services:
       - ./database/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    restart: on-failure
+    restart: always
     env_file:
       - ./.env
  
@@ -38,6 +38,6 @@ services:
         dockerfile: Dockerfile
     ports:
           - "8080:8080"
-    restart: on-failure
+    restart: always
     env_file:
       - ./.env
