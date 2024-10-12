@@ -4,10 +4,13 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Date;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,11 +27,19 @@ public class UserDTO implements UserDetails {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 100, nullable = false)
     private String username;
 
-
+    @Column(nullable = false)
     private String password;
+
+    @CreationTimestamp
+    @Column(updatable = false, name = "created_at")
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Date updatedAt;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -50,7 +61,7 @@ public class UserDTO implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().name())) // Ensure prefix
                 .collect(Collectors.toSet());
     }
 
