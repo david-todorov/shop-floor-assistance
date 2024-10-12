@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_USER: ${databaseUser}
       POSTGRES_PASSWORD: ${databasePassword}
-      POSTGRES_DB: sfaDb
+      POSTGRES_DB: ${databaseName}
     volumes:
       - ./database/data:/var/lib/postgresql/data
     ports:
