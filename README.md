@@ -69,6 +69,7 @@ To run both the backend and frontend applications using Docker Compose, follow t
 - **`.env` file**: An `.env` file, required for creating the database and backend container, is included in the repository as an example.
 - **Running Backend Locally**: If you run the backend from an IDE, ensure the database is started first. Identical environment variables should be set to match those in Docker.
 - **Local Database URL**: If the backend runs outside a Docker container, make sure the `databaseUrl` points to your local database (e.g., `localhost`).
+- **JWT_SECRET_KEY**:The secret key must be an HMAC hash string of 256 bits; otherwise, the token generation will throw an error.
 
 ### Database Data Persistence
 
