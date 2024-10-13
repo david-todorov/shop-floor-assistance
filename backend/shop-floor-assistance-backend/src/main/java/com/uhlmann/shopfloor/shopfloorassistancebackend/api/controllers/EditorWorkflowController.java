@@ -10,7 +10,7 @@ public class EditorWorkflowController {
 
     // POST /workflows/editor
     @PostMapping
-    public ResponseEntity<String> createWorkflow(@RequestBody WorkflowDTO workflowDTO) {
+    public ResponseEntity<String> createWorkflow() {
         // Logic to create a new workflow
         return ResponseEntity.ok("Workflow created");
     }
