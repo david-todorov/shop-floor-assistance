@@ -1,8 +1,8 @@
 package com.uhlmann.shopfloor.shopfloorassistancebackend.api.controllers;
 
-import com.uhlmann.shopfloor.shopfloorassistancebackend.api.dtos.AuthenticationRequestDTO;
-import com.uhlmann.shopfloor.shopfloorassistancebackend.api.dtos.AuthenticationResponseDTO;
-import com.uhlmann.shopfloor.shopfloorassistancebackend.security.authentication.JwtService;
+import com.uhlmann.shopfloor.shopfloorassistancebackend.api.transferobjects.AuthenticationUserResponseTO;
+import com.uhlmann.shopfloor.shopfloorassistancebackend.api.transferobjects.LoginUserRequestTO;
+import com.uhlmann.shopfloor.shopfloorassistancebackend.services.security.authentication.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+/**
+ *                            PLEASE READ
+ * This is an AuthenticationController that authenticate users
+ * User sends a "LoginUserRequestTO" in a form of JSON
+ * The server sends back "AuthenticationUserResponseTO" in a form of JSON
+ */
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
@@ -35,23 +41,23 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO authenticationRequestDto) {
+    public ResponseEntity<AuthenticationUserResponseTO> authenticate(@RequestBody LoginUserRequestTO loginUserRequestTO) {
         // Authenticate the user
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authenticationRequestDto.getUsername(), authenticationRequestDto.getPassword())
+                new UsernamePasswordAuthenticationToken(loginUserRequestTO.getUsername(), loginUserRequestTO.getPassword())
         );
 
         // Load user details
-        UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequestDto.getUsername());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginUserRequestTO.getUsername());
 
         // Generate JWT token
         String jwtToken = jwtService.generateToken(userDetails);
 
         // Set expiration time (e.g., 24 hours)
         long expiresIn = jwtService.getExpirationTime();
-        System.out.println(expiresIn);
+
         // Create the response
-        AuthenticationResponseDTO response = new AuthenticationResponseDTO(jwtToken, LocalDateTime.now(ZoneOffset.UTC), expiresIn);
+        AuthenticationUserResponseTO response = new AuthenticationUserResponseTO(jwtToken, LocalDateTime.now(ZoneOffset.UTC), expiresIn);
 
         return ResponseEntity.ok(response);
     }

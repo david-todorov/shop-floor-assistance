@@ -1,11 +1,33 @@
 package com.uhlmann.shopfloor.shopfloorassistancebackend.api.controllers;
 
+import com.uhlmann.shopfloor.shopfloorassistancebackend.services.workflows.OperatorService;
+import com.uhlmann.shopfloor.shopfloorassistancebackend.services.workflows.OperatorServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ *                            PLEASE READ
+ * This is a blueprint for controller which uses OperatorServiceImpl
+ * In our case we use it through an interface called OperatorService
+ * Any logic should be in declared in OperatorService interface first
+ * Then OperatorServiceImpl implements it
+ * Finally OperatorWorkflowController uses it
+ *                              IMPORTANT
+ * No concrete implementations here, just use the "operatorService"
+ * This ensures that the implementation is flexible and scalable
+ * Thank you for your time, now go implement
+ */
 @RestController
 @RequestMapping("/workflows/operator")
 public class OperatorWorkflowController {
+
+    private OperatorService operatorService;
+
+    @Autowired
+    public OperatorWorkflowController(OperatorServiceImpl operatorService) {
+        this.operatorService = operatorService;
+    }
 
     // GET /workflows/operator
     @GetMapping

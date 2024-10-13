@@ -1,4 +1,4 @@
-package com.uhlmann.shopfloor.shopfloorassistancebackend.api.dtos;
+package com.uhlmann.shopfloor.shopfloorassistancebackend.api.transferobjects;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,16 +6,21 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents the response sent to the client during authentication.
+ * The TO is used for transferring data to the client without being stored
+ * directly in the database.
+ */
 @Getter
 @Setter
-public class AuthenticationResponseDTO {
+public class AuthenticationUserResponseTO {
     private String token;
 
     private String createdAt;
 
     private String expiresAt;
 
-    public AuthenticationResponseDTO(String token, LocalDateTime createdAt, long expiresIn) {
+    public AuthenticationUserResponseTO(String token, LocalDateTime createdAt, long expiresIn) {
         this.token = token;
         this.createdAt = formatDateTime(createdAt);
         this.expiresAt = formatDateTime(createdAt.plusSeconds(expiresIn / 1000));

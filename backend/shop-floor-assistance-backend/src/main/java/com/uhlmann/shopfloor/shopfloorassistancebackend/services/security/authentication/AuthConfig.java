@@ -1,6 +1,6 @@
-package com.uhlmann.shopfloor.shopfloorassistancebackend.security.authentication;
+package com.uhlmann.shopfloor.shopfloorassistancebackend.services.security.authentication;
 
-import com.uhlmann.shopfloor.shopfloorassistancebackend.database.repositories.UserRepository;
+import com.uhlmann.shopfloor.shopfloorassistancebackend.services.database.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

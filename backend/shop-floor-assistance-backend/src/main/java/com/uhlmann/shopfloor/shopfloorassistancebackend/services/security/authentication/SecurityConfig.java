@@ -1,4 +1,4 @@
-package com.uhlmann.shopfloor.shopfloorassistancebackend.security.authentication;
+package com.uhlmann.shopfloor.shopfloorassistancebackend.services.security.authentication;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +14,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+
+/**
+ * This files ensures the authentication policies and cors configurations
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -26,6 +30,17 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    /**
+     * Configures the security filter chain for HTTP requests. Disables CSRF, sets authorization rules for
+     * different endpoints based on user roles, enforces stateless session management, and adds a JWT authentication filter.
+     *
+     * There are two hierarchical roles in this setup:
+     * - **EDITOR**: Has access to both editor and operator workflows.
+     * - **OPERATOR**: Has limited access to operator workflows only.
+     *
+     * **Note**: If a new endpoint or role is introduced, this method will need to be updated to reflect the new access rules.
+     *
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -45,6 +60,18 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Configures Cross-Origin Resource Sharing (CORS) settings for the application, allowing specific origins,
+     * HTTP methods, and headers to be used in cross-origin requests.
+     *
+     * - **Allowed Origins**: Only requests from `http://localhost:4200` and `http://localhost:80` are permitted.
+     * - **Allowed Methods**: Limits cross-origin HTTP requests to "GET", "POST", "PUT", and "DELETE".
+     * - **Allowed Headers**: Restricts allowed headers to "Authorization" and "Content-Type".
+     * - **Allow Credentials**: Enables sending of credentials (such as cookies or authorization headers).
+     * - **Configuration Application**: Applies this configuration to all endpoints (`/**`).
+     *
+     * @return a CORS configuration source with specified settings
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

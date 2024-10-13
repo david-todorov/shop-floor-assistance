@@ -1,4 +1,4 @@
-package com.uhlmann.shopfloor.shopfloorassistancebackend.security.authentication;
+package com.uhlmann.shopfloor.shopfloorassistancebackend.services.security.authentication;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

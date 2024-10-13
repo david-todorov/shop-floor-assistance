@@ -1,4 +1,4 @@
-package com.uhlmann.shopfloor.shopfloorassistancebackend.security.authentication;
+package com.uhlmann.shopfloor.shopfloorassistancebackend.services.security.authentication;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

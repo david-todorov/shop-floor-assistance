@@ -1,4 +1,4 @@
-package com.uhlmann.shopfloor.shopfloorassistancebackend.database.objects;
+package com.uhlmann.shopfloor.shopfloorassistancebackend.services.database.objects;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,11 +13,19 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * This class represent a user in our database
+ * For now consists of username, password and list of roles
+ * Of course it is meant to change
+ * It implements UserDetails which is needed for JWT Authorization
+ * The relation between user and role is bidirectional manyToMany
+ * DBO stands for DatabaseObject
+ */
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-public class UserDTO implements UserDetails {
+public class UserDBO implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,14 +43,14 @@ public class UserDTO implements UserDetails {
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<RoleDTO> roles = new HashSet<>();
+    private Set<RoleDBO> roles = new HashSet<>();
 
 
-    public UserDTO() {
+    public UserDBO() {
         this.roles = new HashSet<>();
     }
 
-    public UserDTO(String username, String password) {
+    public UserDBO(String username, String password) {
         this.username = username;
         this.password = password;
     }
