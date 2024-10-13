@@ -1,4 +1,4 @@
-package com.shopfloor.backend.services.security;
+package com.shopfloor.backend.services.security.utils;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;

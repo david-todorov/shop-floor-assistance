@@ -2,63 +2,40 @@ package com.shopfloor.backend.api.controllers;
 
 import com.shopfloor.backend.api.transferobjects.AuthenticationUserResponseTO;
 import com.shopfloor.backend.api.transferobjects.LoginUserRequestTO;
-import com.shopfloor.backend.services.security.authentication.JwtService;
+import com.shopfloor.backend.services.security.AuthenticationService;
+import com.shopfloor.backend.services.security.AuthenticationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 /**
  *                            PLEASE READ
- * This is an AuthenticationController that authenticate users
- * User sends a "LoginUserRequestTO" in a form of JSON
- * The server sends back "AuthenticationUserResponseTO" in a form of JSON
- */
+ * This is a blueprint for controller which uses AuthenticationServiceImpl
+ * In our case we use it through an interface called AuthenticationService
+ * Any logic should be in declared in AuthenticationService interface first
+ * Then AuthenticationServiceImpl implements it
+ * Finally AuthenticationController uses it
+ *                               IMPORTANT
+ * No concrete implementations here, just use the "authenticationService"
+ * This ensures that the implementation is flexible and scalable
+ * Thank you for your time, now go implement
+ **/
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
-    private final JwtService jwtService;
+    private final AuthenticationService authenticationService;
 
     @Autowired
-    public AuthenticationController(AuthenticationManager authenticationManager,
-                                    UserDetailsService userDetailsService,
-                                    JwtService jwtService) {
-        this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
-        this.jwtService = jwtService;
+    public AuthenticationController(AuthenticationServiceImpl authenticationServiceImpl) {
+        this.authenticationService = authenticationServiceImpl;
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationUserResponseTO> authenticate(@RequestBody LoginUserRequestTO loginUserRequestTO) {
-        // Authenticate the user
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginUserRequestTO.getUsername(), loginUserRequestTO.getPassword())
-        );
-
-        // Load user details
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginUserRequestTO.getUsername());
-
-        // Generate JWT token
-        String jwtToken = jwtService.generateToken(userDetails);
-
-        // Set expiration time (e.g., 24 hours)
-        long expiresIn = jwtService.getExpirationTime();
-        System.out.println(expiresIn);
-        // Create the response
-        AuthenticationUserResponseTO response = new AuthenticationUserResponseTO(jwtToken, LocalDateTime.now(ZoneOffset.UTC), expiresIn);
-
-        return ResponseEntity.ok(response);
+        return authenticationService.authenticate(loginUserRequestTO);
     }
 }

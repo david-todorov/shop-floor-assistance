@@ -1,4 +1,4 @@
-package com.shopfloor.backend.services.security;
+package com.shopfloor.backend.services.security.utils;
 
 import com.shopfloor.backend.services.database.objects.Role;
 import com.shopfloor.backend.services.database.objects.RoleDBO;
