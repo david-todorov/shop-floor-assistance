@@ -8,12 +8,11 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
-@Table(name = "workflows")
+@Table(name = "tasks")
 @Setter
 @Getter
-public class WorkflowDBO {
+public class TaskDBO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +27,10 @@ public class WorkflowDBO {
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "workflow_id")
-    private List<TaskDBO> tasks;
+    @JoinColumn(name = "task_id")
+    private List<ItemDBO> items;
 
-    public WorkflowDBO() {
-        this.tasks = new ArrayList<TaskDBO>();
+    public TaskDBO() {
+        this.items = new ArrayList<ItemDBO>();
     }
 }

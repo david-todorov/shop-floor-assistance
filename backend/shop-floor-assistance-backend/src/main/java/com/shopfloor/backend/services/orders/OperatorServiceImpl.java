@@ -1,4 +1,4 @@
-package com.shopfloor.backend.services.workflows;
+package com.shopfloor.backend.services.orders;
 
 import org.springframework.stereotype.Component;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * But do not be afraid to extract common logic in private methods
  * The number of public methods should be the same as in OperatorService
  * If you implement something public here and NOT declare it in OperatorService
- * The controller OperatorWorkflowController can NOT see it
+ * The controller OperatorController can NOT see it
  * Have fun
  */
 @Component
