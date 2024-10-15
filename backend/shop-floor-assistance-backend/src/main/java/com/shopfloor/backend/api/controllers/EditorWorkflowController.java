@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * Thank you for your time, now go implement
  **/
 @RestController
-@RequestMapping("/workflows/editor")
+@RequestMapping("/editor/workflows")
 public class EditorWorkflowController {
 
     private final EditorService editorService;

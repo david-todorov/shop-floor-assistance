@@ -47,8 +47,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/workflows/editor/**").hasRole("EDITOR")
-                        .requestMatchers("/workflows/operator/**").hasAnyRole("EDITOR", "OPERATOR")
+                        .requestMatchers("/editor/**").hasRole("EDITOR")
+                        .requestMatchers("/operator/**").hasAnyRole("EDITOR", "OPERATOR")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

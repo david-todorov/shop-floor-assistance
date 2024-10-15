@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * Thank you for your time, now go implement
  */
 @RestController
-@RequestMapping("/workflows/operator")
+@RequestMapping("/operator/workflows")
 public class OperatorWorkflowController {
 
     private OperatorService operatorService;
