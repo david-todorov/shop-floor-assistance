@@ -5,20 +5,17 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name = "workflows")
+@Table(name = "items")
 @Setter
 @Getter
-public class WorkflowDBO {
+public class ItemDBO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
-    @Column(name = "id")
     private Long id;
 
     @Column(name = "name", nullable = false, length = 255)
@@ -26,6 +23,9 @@ public class WorkflowDBO {
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "time_required")
+    private Integer timeRequired;
 
     @Column(name = "created_by", nullable = false)
     private Long createdBy;
@@ -41,11 +41,4 @@ public class WorkflowDBO {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "workflow_id")
-    private List<TaskDBO> tasks;
-
-    public WorkflowDBO() {
-        this.tasks = new ArrayList<TaskDBO>();
-    }
 }

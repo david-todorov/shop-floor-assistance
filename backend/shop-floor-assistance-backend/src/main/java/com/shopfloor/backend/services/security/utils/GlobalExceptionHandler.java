@@ -1,5 +1,6 @@
 package com.shopfloor.backend.services.security.utils;
 
+import com.shopfloor.backend.services.database.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,6 +24,46 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(OrderNotIdentifiableException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ProblemDetail handleIdNull(OrderNumberExistsException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setProperty("description", " Order id or order number are missing");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(OrderNumberExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ProblemDetail handleUserOrderNumberExists(OrderNumberExistsException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setProperty("description", "The provided order number already exist and assigned for different order");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(OrderNotExistsException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleUserNotFound(OrderNotExistsException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setProperty("description", "The requested order does not exist");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleUserNotFound(UserNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setProperty("description", "The requested user was not found.");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(OrderExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ProblemDetail handleOrderAlreadyExists(OrderExistsException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problemDetail.setProperty("description", "The order you are trying to create already exists.");
+        return problemDetail;
+    }
 
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

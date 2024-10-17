@@ -38,15 +38,16 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(Long userId, UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userId, userDetails);
     }
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extraClaims, Long userId, UserDetails userDetails) {
         // Include user roles as a claim in the JWT
         extraClaims.put("roles", userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList());
+        extraClaims.put("id", userId); // Include user ID in the claims
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
@@ -75,8 +76,13 @@ public class JwtService {
     }
 
     public String getUsernameFromAuthorizationHeader(String authorizationHeader) {
-        String jwt = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
+        String jwt = extractTokenFromAuthorizationHeader(authorizationHeader);
         return extractUsername(jwt);
+    }
+
+    public Long extractUserIdFromAuthorizationHeader(String authorizationHeader) {
+        String jwt = extractTokenFromAuthorizationHeader(authorizationHeader);
+        return extractClaim(jwt, claims -> claims.get("id", Long.class)); // Assuming "id" is the key used to store the user ID
     }
 
     private boolean isTokenExpired(String token) {
@@ -99,6 +105,10 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private String extractTokenFromAuthorizationHeader(String authorizationHeader) {
+        return authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
     }
 
 }

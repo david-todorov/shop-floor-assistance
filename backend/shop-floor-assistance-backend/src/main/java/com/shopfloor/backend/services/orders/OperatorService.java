@@ -1,8 +1,8 @@
-package com.shopfloor.backend.services.workflows;
+package com.shopfloor.backend.services.orders;
 
 /**
  * This is where all needed public methods should be declared
- * Think what EditorWorkflowController would need and declare it here
+ * Think what OperatorController would need and declare it here
  * Be generic not concrete
  * Rely on actions not implementations
  * Keep the number of methods low as possible and if
@@ -10,5 +10,5 @@ package com.shopfloor.backend.services.workflows;
  * probably should be private and not here
  * Have fun
  */
-public interface EditorService {
+public interface OperatorService {
 }

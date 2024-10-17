@@ -2,6 +2,7 @@ package com.shopfloor.backend.services.security;
 
 import com.shopfloor.backend.api.transferobjects.AuthenticationUserResponseTO;
 import com.shopfloor.backend.api.transferobjects.LoginUserRequestTO;
+import com.shopfloor.backend.services.database.objects.UserDBO;
 import com.shopfloor.backend.services.security.authentication.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +48,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // Load user details
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginUserRequestTO.getUsername());
 
+        // Retrieve the user ID from the userDetails object (assuming you have a method to get it)
+        Long userId = ((UserDBO) userDetails).getId(); // Assuming CustomUserDetails implements UserDetails and has getId()
+
         // Generate JWT token
-        String jwtToken = jwtService.generateToken(userDetails);
+        String jwtToken = jwtService.generateToken(userId, userDetails);
 
         // Set expiration time (e.g., 24 hours)
         long expiresIn = jwtService.getExpirationTime();

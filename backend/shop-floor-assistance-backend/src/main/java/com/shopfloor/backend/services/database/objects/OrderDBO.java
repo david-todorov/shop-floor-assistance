@@ -10,16 +10,19 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "workflows")
+@Table(name = "orders")
 @Setter
 @Getter
-public class WorkflowDBO {
+public class OrderDBO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "order_number", nullable = false, unique = true, length = 255)
+    private String orderNumber;
 
     @Column(name = "name", nullable = false, length = 255)
     private String name;
@@ -42,10 +45,11 @@ public class WorkflowDBO {
     private Date updatedAt;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "workflow_id")
-    private List<TaskDBO> tasks;
+    @JoinColumn(name = "order_id")
+    private List<WorkflowDBO> workflows;
 
-    public WorkflowDBO() {
-        this.tasks = new ArrayList<TaskDBO>();
+
+    public OrderDBO() {
+       this.workflows = new ArrayList<WorkflowDBO>();
     }
 }
