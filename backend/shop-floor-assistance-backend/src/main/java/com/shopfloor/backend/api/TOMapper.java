@@ -16,73 +16,61 @@ import java.util.List;
 @Component
 public class TOMapper {
 
-    public List<OrderTO> toOrderTOs(List<OrderDBO> orderDBOS) {
-        List<OrderTO> orderTOs = new ArrayList<>();
-        orderDBOS.forEach(orderDBO -> orderTOs.add(toOrderTO(orderDBO, false)));
-        return orderTOs;
-    }
-
-    public List<WorkflowTO> toWorkflowTOs(List<WorkflowDBO> workflowDBOs) {
-        List<WorkflowTO> workflowTOs = new ArrayList<>();
-        workflowDBOs.forEach(workflowDBO -> workflowTOs.add(toWorkflowTO(workflowDBO, false)));
-        return workflowTOs;
-    }
-
-    public List<TaskTO> toTaskTOs(List<TaskDBO> taskDBOs) {
-        List<TaskTO> taskTOs = new ArrayList<>();
-        taskDBOs.forEach(taskDBO -> taskTOs.add(toTaskTO(taskDBO, false)));
-        return taskTOs;
-    }
-
-    public List<ItemTO> toItemTOs(List<ItemDBO> itemDBOs) {
-        List<ItemTO> itemTOs = new ArrayList<>();
-        itemDBOs.forEach(itemDBO -> itemTOs.add(toItemTO(itemDBO, false)));
-        return itemTOs;
-    }
-
-    public OrderTO toOrderTO(OrderDBO orderDBO, boolean idsIncluded) {
+    public OrderTO toOrderTO(OrderDBO orderDBO) {
         OrderTO orderTO = new OrderTO();
-        if (idsIncluded) {
-            orderTO.setId(orderDBO.getId());
-        }
+
+        orderTO.setId(orderDBO.getId());
         orderTO.setOrderNumber(orderDBO.getOrderNumber());
         orderTO.setName(orderDBO.getName());
-        orderTO.setShortDescription(orderDBO.getShortDescription());
-        orderTO.setLongDescription(orderDBO.getLongDescription());
-        orderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows(), idsIncluded));
+        orderTO.setDescription(orderDBO.getDescription());
+        orderTO.setCreatedBy(orderDBO.getCreatedBy());
+        orderTO.setUpdatedBy(orderDBO.getUpdatedBy());
+        orderTO.setCreatedAt(orderDBO.getCreatedAt());
+        orderTO.setUpdatedAt(orderDBO.getUpdatedAt());
+
+
+        orderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
+
         return orderTO;
     }
 
-    public WorkflowTO toWorkflowTO(WorkflowDBO workflowDBO, boolean idsIncluded) {
+    public WorkflowTO toWorkflowTO(WorkflowDBO workflowDBO) {
         WorkflowTO workflowTO = new WorkflowTO();
-        if (idsIncluded) {
-            workflowTO.setId(workflowDBO.getId());
-        }
+
+        workflowTO.setId(workflowDBO.getId());
         workflowTO.setName(workflowDBO.getName());
         workflowTO.setDescription(workflowDBO.getDescription());
-        workflowTO.setTasks(toTaskTOs(workflowDBO.getTasks(), idsIncluded));
+        workflowTO.setCreatedBy(workflowDBO.getCreatedBy());
+        workflowTO.setUpdatedBy(workflowDBO.getUpdatedBy());
+        workflowTO.setCreatedAt(workflowDBO.getCreatedAt());
+        workflowTO.setUpdatedAt(workflowDBO.getUpdatedAt());
+        workflowTO.setTasks(toTaskTOs(workflowDBO.getTasks()));
         return workflowTO;
     }
 
-    public TaskTO toTaskTO(TaskDBO taskDBO, boolean idsIncluded) {
+    public TaskTO toTaskTO(TaskDBO taskDBO) {
         TaskTO taskTO = new TaskTO();
-        if (idsIncluded) {
-            taskTO.setId(taskDBO.getId());
-        }
+
+        taskTO.setId(taskDBO.getId());
         taskTO.setName(taskDBO.getName());
         taskTO.setDescription(taskDBO.getDescription());
-        taskTO.setItems(toItemTOs(taskDBO.getItems(), idsIncluded));
+        taskTO.setCreatedBy(taskDBO.getCreatedBy());
+        taskTO.setUpdatedBy(taskDBO.getUpdatedBy());
+        taskTO.setCreatedAt(taskDBO.getCreatedAt());
+        taskTO.setUpdatedAt(taskDBO.getUpdatedAt());
+        taskTO.setItems(toItemTOs(taskDBO.getItems()));
+
         return taskTO;
     }
 
-    public ItemTO toItemTO(ItemDBO itemDBO, boolean idsIncluded) {
+    public ItemTO toItemTO(ItemDBO itemDBO) {
         ItemTO itemTO = new ItemTO();
-        if (idsIncluded) {
-            itemTO.setId(itemDBO.getId());
-        }
+
+        itemTO.setId(itemDBO.getId());
         itemTO.setName(itemDBO.getName());
-        itemTO.setShortDescription(itemDBO.getShortDescription());
-        itemTO.setLongDescription(itemDBO.getLongDescription());
+        itemTO.setDescription(itemDBO.getDescription());
+        itemTO.setCreatedBy(itemDBO.getCreatedBy());
+        itemTO.setUpdatedBy(itemDBO.getUpdatedBy());
         itemTO.setCreatedAt(itemDBO.getCreatedAt());
         itemTO.setUpdatedAt(itemDBO.getUpdatedAt());
         itemTO.setTimeRequired(itemDBO.getTimeRequired());
@@ -93,27 +81,27 @@ public class TOMapper {
      * WITH IDS
      */
 
-    public List<OrderTO> toOrderTOs(List<OrderDBO> orderDBOS, boolean idsIncluded) {
+    public List<OrderTO> toOrderTOs(List<OrderDBO> orderDBOS) {
         List<OrderTO> orderTOs = new ArrayList<>();
-        orderDBOS.forEach(orderDBO -> orderTOs.add(toOrderTO(orderDBO, idsIncluded)));
+        orderDBOS.forEach(orderDBO -> orderTOs.add(toOrderTO(orderDBO)));
         return orderTOs;
     }
 
-    public List<WorkflowTO> toWorkflowTOs(List<WorkflowDBO> workflowDBOs, boolean idsIncluded) {
+    public List<WorkflowTO> toWorkflowTOs(List<WorkflowDBO> workflowDBOs) {
         List<WorkflowTO> workflowTOs = new ArrayList<>();
-        workflowDBOs.forEach(workflowDBO -> workflowTOs.add(toWorkflowTO(workflowDBO, idsIncluded)));
+        workflowDBOs.forEach(workflowDBO -> workflowTOs.add(toWorkflowTO(workflowDBO)));
         return workflowTOs;
     }
 
-    public List<TaskTO> toTaskTOs(List<TaskDBO> taskDBOs, boolean idsIncluded) {
+    public List<TaskTO> toTaskTOs(List<TaskDBO> taskDBOs) {
         List<TaskTO> taskTOs = new ArrayList<>();
-        taskDBOs.forEach(taskDBO -> taskTOs.add(toTaskTO(taskDBO, idsIncluded)));
+        taskDBOs.forEach(taskDBO -> taskTOs.add(toTaskTO(taskDBO)));
         return taskTOs;
     }
 
-    public List<ItemTO> toItemTOs(List<ItemDBO> itemDBOs, boolean idsIncluded) {
+    public List<ItemTO> toItemTOs(List<ItemDBO> itemDBOs) {
         List<ItemTO> itemTOs = new ArrayList<>();
-        itemDBOs.forEach(itemDBO -> itemTOs.add(toItemTO(itemDBO, idsIncluded)));
+        itemDBOs.forEach(itemDBO -> itemTOs.add(toItemTO(itemDBO)));
         return itemTOs;
     }
 }

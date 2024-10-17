@@ -13,11 +13,13 @@ public class ItemTO {
 
     private String name;
 
-    private String shortDescription;
-
-    private String longDescription;
+    private String description;
 
     private Integer timeRequired;
+
+    private Long createdBy;
+
+    private Long updatedBy;
 
     private Date createdAt;
 

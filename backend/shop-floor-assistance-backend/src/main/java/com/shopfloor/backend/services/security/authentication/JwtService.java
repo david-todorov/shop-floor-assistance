@@ -80,13 +80,10 @@ public class JwtService {
         return extractUsername(jwt);
     }
 
-
     public Long extractUserIdFromAuthorizationHeader(String authorizationHeader) {
         String jwt = extractTokenFromAuthorizationHeader(authorizationHeader);
         return extractClaim(jwt, claims -> claims.get("id", Long.class)); // Assuming "id" is the key used to store the user ID
     }
-
-
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

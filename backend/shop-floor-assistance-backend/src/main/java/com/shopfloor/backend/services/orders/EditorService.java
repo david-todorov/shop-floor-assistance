@@ -17,5 +17,10 @@ import java.util.List;
 public interface EditorService {
 
     List<OrderTO> getAllOrderAsTOs();
-    OrderTO addOrderToDatabase(OrderTO newOrderTO, String authorizationHeader);
+
+    OrderTO addOrder(OrderTO newOrderTO, String authorizationHeader);
+
+    OrderTO updateOrder(OrderTO orderTO, String authorizationHeader);
+
+    void deleteOrder(Long orderId);
 }

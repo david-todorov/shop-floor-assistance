@@ -1,16 +1,11 @@
 package com.shopfloor.backend.api.controllers;
 
 import com.shopfloor.backend.api.transferobjects.OrderTO;
-import com.shopfloor.backend.services.database.exceptions.OrderAlreadyExistsException;
-import com.shopfloor.backend.services.database.objects.OrderDBO;
-import com.shopfloor.backend.services.database.objects.WorkflowDBO;
 import com.shopfloor.backend.services.orders.EditorService;
 import com.shopfloor.backend.services.orders.EditorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -40,40 +35,24 @@ public class EditorController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<OrderTO> getAllOrders() {
-
-        try {
-            return this.editorService.getAllOrderAsTOs();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
-
+        return this.editorService.getAllOrderAsTOs();
     }
 
-    // POST /orders/editor
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderTO createOrder(@RequestBody OrderTO newOrder,@RequestHeader("Authorization") String authorizationHeader) {
-
-        try {
-            return this.editorService.addOrderToDatabase(newOrder, authorizationHeader);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
-        }
+    public OrderTO createOrder(@RequestBody OrderTO newOrder, @RequestHeader("Authorization") String authorizationHeader) {
+        return this.editorService.addOrder(newOrder, authorizationHeader);
     }
 
-    // PUT /orders/editor/{id}
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateWorkflow(@PathVariable Long id, @RequestBody WorkflowDBO workflowDBO) {
-        // Logic to update an existing workflow
-        return ResponseEntity.ok("Workflow updated");
+    @PutMapping()
+    public OrderTO updateOrder(@RequestBody OrderTO updatedOrder, @RequestHeader("Authorization") String authorizationHeader) {
+        return this.editorService.updateOrder(updatedOrder, authorizationHeader);
     }
 
-    // DELETE /orders/editor/{id}
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteWorkflow(@PathVariable Long id) {
-        // Logic to delete a workflow
-        return ResponseEntity.ok("Workflow deleted");
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteOrder(@PathVariable Long id) {
+        this.editorService.deleteOrder(id);
     }
 
-    // Additional methods for handling steps, etc.
 }

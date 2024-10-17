@@ -21,14 +21,17 @@ public class ItemDBO {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "short_description", length = 255)
-    private String shortDescription;
-
-    @Column(name = "long_description", columnDefinition = "TEXT")
-    private String longDescription;
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
 
     @Column(name = "time_required")
     private Integer timeRequired;
+
+    @Column(name = "created_by", nullable = false)
+    private Long createdBy;
+
+    @Column(name = "updated_by")
+    private Long updatedBy;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -16,13 +17,17 @@ public class OrderTO {
 
     private String name;
 
-    private String shortDescription;
-
-    private String longDescription;
+    private String description;
 
     private List<WorkflowTO> workflows;
 
     private Long createdBy;
+
+    private Long updatedBy;
+
+    private Date createdAt;
+
+    private Date updatedAt;
 
     public OrderTO() {
         this.workflows = new ArrayList<WorkflowTO>();

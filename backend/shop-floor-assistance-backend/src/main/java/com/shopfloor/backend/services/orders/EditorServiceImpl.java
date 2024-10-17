@@ -2,13 +2,16 @@ package com.shopfloor.backend.services.orders;
 
 import com.shopfloor.backend.api.TOMapper;
 import com.shopfloor.backend.api.transferobjects.OrderTO;
-import com.shopfloor.backend.services.database.DBOMapper;
-import com.shopfloor.backend.services.database.exceptions.OrderAlreadyExistsException;
-import com.shopfloor.backend.services.database.objects.OrderDBO;
+import com.shopfloor.backend.services.database.DBOInitializerMapper;
+import com.shopfloor.backend.services.database.DBOUpdaterMapper;
+import com.shopfloor.backend.services.database.exceptions.*;
+import com.shopfloor.backend.services.database.objects.*;
 import com.shopfloor.backend.services.database.repositories.OrderRepository;
+import com.shopfloor.backend.services.database.repositories.UserRepository;
 import com.shopfloor.backend.services.security.authentication.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,33 +27,92 @@ import java.util.List;
 @Component
 public class EditorServiceImpl implements EditorService {
 
-    private DBOMapper dboMapper;
-    private TOMapper toMapper;
-    private OrderRepository orderRepository;
-    private JwtService jwtService;
+    private final DBOInitializerMapper dboInitializerMapper;
+    private final DBOUpdaterMapper dboUpdaterMapper;
+    private final TOMapper toMapper;
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @Autowired
-    public EditorServiceImpl(DBOMapper dboMapper, TOMapper toMapper, OrderRepository orderRepository, JwtService jwtService) {
-        this.dboMapper = dboMapper;
+    public EditorServiceImpl(DBOInitializerMapper dboInitializerMapper,
+                             TOMapper toMapper,
+                             OrderRepository orderRepository,
+                             JwtService jwtService,
+                             UserRepository userRepository,
+                             DBOUpdaterMapper dboUpdaterMapper) {
+        this.dboInitializerMapper = dboInitializerMapper;
+        this.dboUpdaterMapper = dboUpdaterMapper;
         this.toMapper = toMapper;
         this.orderRepository = orderRepository;
         this.jwtService = jwtService;
+        this.userRepository = userRepository;
     }
 
+    @Override
     public List<OrderTO> getAllOrderAsTOs() {
-        return this.toMapper.toOrderTOs(this.orderRepository.findAll(), true);
+        return this.toMapper.toOrderTOs(this.orderRepository.findAll());
     }
 
-    public OrderTO addOrderToDatabase(OrderTO newOrderTO, String authorizationHeader) {
+    @Override
+    public OrderTO addOrder(OrderTO newOrderTO, String authorizationHeader) {
 
-        if (this.orderRepository.existsByOrderNumber(newOrderTO.getOrderNumber())) {
-            throw new OrderAlreadyExistsException();
+        if (newOrderTO.getOrderNumber() == null) {
+            throw new OrderNotIdentifiableException();
+        }
+        Long creatorId = getIdFromHeader(authorizationHeader);
+
+        String orderNumber = newOrderTO.getOrderNumber();
+        if (getOrderIfExists(orderNumber) != null) {
+            throw new OrderExistsException();
         }
 
-        Long creatorId = this.jwtService.extractUserIdFromAuthorizationHeader(authorizationHeader);
+        OrderDBO newOrderDBO = this.dboInitializerMapper.toOrderDBO(newOrderTO, creatorId);
 
-        OrderDBO newOrderDBO = this.dboMapper.toOrderDBO(newOrderTO, creatorId);
-
-        return this.toMapper.toOrderTO(this.orderRepository.save(newOrderDBO), true);
+        return this.toMapper.toOrderTO(this.orderRepository.save(newOrderDBO));
     }
+
+    @Transactional
+    public OrderTO updateOrder(OrderTO updatedOrderTO, String authorizationHeader) {
+
+        Long updaterId = getIdFromHeader(authorizationHeader);
+
+        String orderNumber = updatedOrderTO.getOrderNumber();
+        Long orderId = updatedOrderTO.getId();
+
+        if (orderNumber == null || orderId == null) {
+            throw new OrderNotIdentifiableException();
+        }
+
+        // Fetch the existing order by ID
+        OrderDBO existingOrderDBO = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotExistsException());
+
+        // Check if another order has the same order number
+        if (orderRepository.existsByOrderNumberAndIdNot(orderNumber, orderId)) {
+            throw new OrderNumberExistsException();
+        }
+
+        // Update the order details
+        this.dboUpdaterMapper.copyOrderDboFrom(existingOrderDBO, updatedOrderTO, updaterId);
+
+        // Save the updated order and return the result
+        return this.toMapper.toOrderTO(this.orderRepository.save(existingOrderDBO));
+    }
+
+    @Override
+    public void deleteOrder(Long orderId) {
+        OrderDBO toDeleteOrder = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotExistsException());
+        this.orderRepository.delete(toDeleteOrder);
+    }
+
+    private OrderDBO getOrderIfExists(String orderNumber) {
+        return this.orderRepository.findByOrderNumber(orderNumber).orElse(null);
+    }
+
+    private Long getIdFromHeader(String authorizationHeader) {
+        return this.jwtService.extractUserIdFromAuthorizationHeader(authorizationHeader);
+    }
+
 }

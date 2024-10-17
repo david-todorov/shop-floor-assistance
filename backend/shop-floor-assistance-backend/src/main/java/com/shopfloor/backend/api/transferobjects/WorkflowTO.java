@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -15,6 +16,14 @@ public class WorkflowTO {
     private String name;
 
     private String description;
+
+    private Long createdBy;
+
+    private Long updatedBy;
+
+    private Date createdAt;
+
+    private Date updatedAt;
 
     private List<TaskTO> tasks;
 
