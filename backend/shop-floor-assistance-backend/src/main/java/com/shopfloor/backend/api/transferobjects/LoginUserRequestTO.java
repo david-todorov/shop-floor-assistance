@@ -13,4 +13,9 @@ import lombok.Setter;
 public class LoginUserRequestTO {
     private String username;
     private String password;
+
+    public LoginUserRequestTO(String password, String username) {
+        this.password = password;
+        this.username = username;
+    }
 }
