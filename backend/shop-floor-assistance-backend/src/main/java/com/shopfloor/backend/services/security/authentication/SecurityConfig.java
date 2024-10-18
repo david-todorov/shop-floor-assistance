@@ -45,6 +45,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Add this line
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/editor/**").hasRole("EDITOR")
@@ -59,6 +60,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     /**
      * Configures Cross-Origin Resource Sharing (CORS) settings for the application, allowing specific origins,
@@ -75,7 +77,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:80")); // Allow specific origins
+        configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:80", "http://localhost")); // Add http://localhost
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Allow specific HTTP methods
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Allow specific headers
         configuration.setAllowCredentials(true); // Allow credentials for authorization headers
