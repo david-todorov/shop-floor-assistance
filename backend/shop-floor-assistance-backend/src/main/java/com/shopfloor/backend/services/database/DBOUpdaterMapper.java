@@ -19,6 +19,18 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * This class serve as copier and mapper for existing orders
+ * It maps the "basic" properties on an OrderDBO from OrderTO
+ * Sets the updater id and timestamp for update
+ *                    IMPORTANT
+ * It returns new OrderDBO only if
+ * - The new entity is supposed to be created with the help of "DBOInitializerMapper"
+ * - Creator id is actually the updater id in that case
+ * Otherwise
+ * - Updates existing order, but only the "basic" properties
+ * - This ensures the integrity of the database
+ */
 @Component
 public class DBOUpdaterMapper {
     private final DBOInitializerMapper dboInitializerMapper;

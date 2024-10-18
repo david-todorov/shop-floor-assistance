@@ -16,6 +16,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class serve as initializer and mapper for new orders
+ * It maps the "basic" properties on an OrderDBO from OrderTO
+ * Sets the creator id and timestamp for creation
+ *                    IMPORTANT
+ * It returns new OrderDBO rather than updating them
+ * For copying DBOUpdaterMapper is used
+ */
 @Component
 public class DBOInitializerMapper {
 

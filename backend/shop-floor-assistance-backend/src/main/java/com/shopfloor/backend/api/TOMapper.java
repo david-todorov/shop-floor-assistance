@@ -13,6 +13,10 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is responsible for mapping a DBO object to TO object
+ * If representation of any TO object has to change this is th place
+ */
 @Component
 public class TOMapper {
 
@@ -76,10 +80,6 @@ public class TOMapper {
         itemTO.setTimeRequired(itemDBO.getTimeRequired());
         return itemTO;
     }
-
-    /**
-     * WITH IDS
-     */
 
     public List<OrderTO> toOrderTOs(List<OrderDBO> orderDBOS) {
         List<OrderTO> orderTOs = new ArrayList<>();
