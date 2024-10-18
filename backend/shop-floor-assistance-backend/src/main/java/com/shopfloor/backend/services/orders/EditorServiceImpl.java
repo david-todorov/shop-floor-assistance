@@ -73,23 +73,22 @@ public class EditorServiceImpl implements EditorService {
     }
 
     @Transactional
-    public OrderTO updateOrder(OrderTO updatedOrderTO, String authorizationHeader) {
+    public OrderTO updateOrder(Long id, OrderTO updatedOrderTO, String authorizationHeader) {
 
         Long updaterId = getIdFromHeader(authorizationHeader);
 
         String orderNumber = updatedOrderTO.getOrderNumber();
-        Long orderId = updatedOrderTO.getId();
 
-        if (orderNumber == null || orderId == null) {
+        if (orderNumber == null || id == null) {
             throw new OrderNotIdentifiableException();
         }
 
         // Fetch the existing order by ID
-        OrderDBO existingOrderDBO = orderRepository.findById(orderId)
+        OrderDBO existingOrderDBO = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotExistsException());
 
         // Check if another order has the same order number
-        if (orderRepository.existsByOrderNumberAndIdNot(orderNumber, orderId)) {
+        if (orderRepository.existsByOrderNumberAndIdNot(orderNumber, id)) {
             throw new OrderNumberExistsException();
         }
 

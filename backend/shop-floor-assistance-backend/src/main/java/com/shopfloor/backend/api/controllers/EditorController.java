@@ -44,9 +44,9 @@ public class EditorController {
         return this.editorService.addOrder(newOrder, authorizationHeader);
     }
 
-    @PutMapping()
-    public OrderTO updateOrder(@RequestBody OrderTO updatedOrder, @RequestHeader("Authorization") String authorizationHeader) {
-        return this.editorService.updateOrder(updatedOrder, authorizationHeader);
+    @PutMapping("/{id}")
+    public OrderTO updateOrder(@PathVariable Long id, @RequestBody OrderTO updatedOrder, @RequestHeader("Authorization") String authorizationHeader) {
+        return this.editorService.updateOrder(id, updatedOrder, authorizationHeader);
     }
 
     @DeleteMapping("/{id}")

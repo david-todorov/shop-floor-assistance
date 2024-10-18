@@ -20,7 +20,7 @@ public interface EditorService {
 
     OrderTO addOrder(OrderTO newOrderTO, String authorizationHeader);
 
-    OrderTO updateOrder(OrderTO orderTO, String authorizationHeader);
+    OrderTO updateOrder(Long id, OrderTO orderTO, String authorizationHeader);
 
     void deleteOrder(Long orderId);
 }
