@@ -26,11 +26,15 @@ export class LoginComponent {
     this.authService.login(this.username, this.password).subscribe(
       (response: any)=>{
         localStorage.setItem('jwtToken', response.token);
-        console.log(response);
+        // console.log(response);
+        this.router.navigate(['/home']);
       },
       (error)=>{
         this.errorMessage= 'Invalid username or password';
         alert(this.errorMessage);
+      },
+      ()=>{
+        this.errorMessage='';
       }
     );
   }
