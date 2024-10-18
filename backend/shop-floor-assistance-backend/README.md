@@ -16,7 +16,6 @@
 
 ## User Login Endpoint
 
-### Endpoint
 `POST /auth/login`
 
 ### Description
@@ -86,3 +85,40 @@ curl -X POST http:/localhost/auth/login \
     "password": "operator"
   }'
   ```
+## Editors Endpoints
+
+#### `GET /editor/orders`
+- **Description**: Returns a list of all available orders in the system.
+- **Response**: List of orders as TOs from the database.
+
+---
+
+#### `POST /editor/orders`
+- **Description**: Creates and saves a new order, returning the saved order as a Transfer Object (TO).
+- **Throws**:
+    - Exception if the provided order number is `null`.
+    - Exception if an order with the same `order number` already exists.
+- **Response**: The saved order as TO
+---
+
+#### `PUT /editor/orders/{id}`
+- **Description**: Updates an existing order.
+- **Parameters**:
+    - `{id}`: The unique identifier of the order to be updated.
+- **Throws**:
+    - Exception if the provided order number or ID is `null`.
+    - Exception if the provided ID does not exist in the database.
+    - Exception if another order has the same `order number`, as it cannot be renamed.
+- **Response**: The updated order as TO
+---
+
+#### `DELETE /editor/orders/{id}`
+- **Description**: Deletes an existing order identified by the specified `id`.
+- **Parameters**:
+    - `{id}`: The unique identifier of the order to be deleted.
+- **Throws**:
+    - Exception if the provided `id` is `null`.
+    - Exception if the order with the specified `id` does not exist in the database.
+- **Response**: A confirmation message indicating successful deletion or an error message if the deletion fails.
+
+---
