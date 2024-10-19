@@ -51,7 +51,7 @@ public class EditorController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrder(@PathVariable Long id) {
+    public void deleteOrder(@PathVariable Long id, @RequestHeader("Authorization") String authorizationHeader) {
         this.editorService.deleteOrder(id);
     }
 

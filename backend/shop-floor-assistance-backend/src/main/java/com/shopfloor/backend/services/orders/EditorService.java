@@ -22,5 +22,7 @@ public interface EditorService {
 
     OrderTO updateOrder(Long id, OrderTO orderTO, String authorizationHeader);
 
+    OrderTO getOrder(Long id);
+
     void deleteOrder(Long orderId);
 }

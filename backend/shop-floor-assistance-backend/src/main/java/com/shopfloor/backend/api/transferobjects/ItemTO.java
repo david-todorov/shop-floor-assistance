@@ -28,4 +28,10 @@ public class ItemTO {
     public ItemTO() {
 
     }
+
+    public ItemTO(String name, String description, Integer timeRequired) {
+        this.name = name;
+        this.description = description;
+        this.timeRequired = timeRequired;
+    }
 }

@@ -57,10 +57,11 @@ public class EditorServiceImpl implements EditorService {
     @Override
     public OrderTO addOrder(OrderTO newOrderTO, String authorizationHeader) {
 
+        Long creatorId = this.jwtService.extractUserIdFromAuthorizationHeader(authorizationHeader);
+
         if (newOrderTO.getOrderNumber() == null) {
             throw new OrderNotIdentifiableException();
         }
-        Long creatorId = getIdFromHeader(authorizationHeader);
 
         String orderNumber = newOrderTO.getOrderNumber();
         if (getOrderIfExists(orderNumber) != null) {
@@ -75,7 +76,7 @@ public class EditorServiceImpl implements EditorService {
     @Transactional
     public OrderTO updateOrder(Long id, OrderTO updatedOrderTO, String authorizationHeader) {
 
-        Long updaterId = getIdFromHeader(authorizationHeader);
+        Long updaterId = this.jwtService.extractUserIdFromAuthorizationHeader(authorizationHeader);
 
         String orderNumber = updatedOrderTO.getOrderNumber();
 
@@ -100,6 +101,14 @@ public class EditorServiceImpl implements EditorService {
     }
 
     @Override
+    public OrderTO getOrder(Long id) {
+        OrderDBO orderDBO  = orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotExistsException());
+
+        return this.toMapper.toOrderTO(orderDBO);
+    }
+
+    @Override
     public void deleteOrder(Long orderId) {
         OrderDBO toDeleteOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotExistsException());
@@ -108,10 +117,6 @@ public class EditorServiceImpl implements EditorService {
 
     private OrderDBO getOrderIfExists(String orderNumber) {
         return this.orderRepository.findByOrderNumber(orderNumber).orElse(null);
-    }
-
-    private Long getIdFromHeader(String authorizationHeader) {
-        return this.jwtService.extractUserIdFromAuthorizationHeader(authorizationHeader);
     }
 
 }
