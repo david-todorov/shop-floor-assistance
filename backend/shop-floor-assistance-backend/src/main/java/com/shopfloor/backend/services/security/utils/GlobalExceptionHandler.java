@@ -25,25 +25,41 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(OrderNotIdentifiableException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ProblemDetail handleIdNull(OrderNumberExistsException ex) {
+    @ExceptionHandler(MissingOrderException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleAuthHeaderNull(MissingOrderException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problemDetail.setProperty("description", " Order id or order number are missing");
+        problemDetail.setProperty("description", "Order passed as parameter is null");
         return problemDetail;
     }
 
-    @ExceptionHandler(OrderNumberExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ProblemDetail handleUserOrderNumberExists(OrderNumberExistsException ex) {
+    @ExceptionHandler(MissingAuthorizationHeaderException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleAuthHeaderNull(MissingAuthorizationHeaderException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problemDetail.setProperty("description", "The provided order number already exist and assigned for different order");
+        problemDetail.setProperty("description", "Authorization header not found");
         return problemDetail;
     }
 
-    @ExceptionHandler(OrderNotExistsException.class)
+    @ExceptionHandler(MissingOrderIdException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleIdNull(MissingOrderIdException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setProperty("description", " Order id is null");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(MissingOrderNumberException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleOrderNumberNull(MissingOrderNumberException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setProperty("description", " Order number is null");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ProblemDetail handleUserNotFound(OrderNotExistsException ex) {
+    public ProblemDetail handleUserNotFound(OrderNotFoundException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problemDetail.setProperty("description", "The requested order does not exist");
         return problemDetail;
@@ -57,9 +73,9 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
-    @ExceptionHandler(OrderExistsException.class)
+    @ExceptionHandler(DuplicatedOrderException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ProblemDetail handleOrderAlreadyExists(OrderExistsException ex) {
+    public ProblemDetail handleOrderAlreadyExists(DuplicatedOrderException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
         problemDetail.setProperty("description", "The order you are trying to create already exists.");
         return problemDetail;

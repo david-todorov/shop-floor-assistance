@@ -1,9 +1,9 @@
 package com.shopfloor.backend.services.database.exceptions;
 
-public class OrderExistsException extends RuntimeException {
+public class DuplicatedOrderException extends RuntimeException {
 
     private static final String MESSAGE = "Order already exists";
-    public OrderExistsException() {
+    public DuplicatedOrderException() {
         super(MESSAGE);
     }
 }

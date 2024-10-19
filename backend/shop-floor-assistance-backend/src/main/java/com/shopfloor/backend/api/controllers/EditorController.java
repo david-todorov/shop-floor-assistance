@@ -35,7 +35,7 @@ public class EditorController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<OrderTO> getAllOrders() {
-        return this.editorService.getAllOrderAsTOs();
+        return this.editorService.getAllOrders();
     }
 
     @PostMapping

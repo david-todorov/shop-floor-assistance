@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface EditorService {
 
-    List<OrderTO> getAllOrderAsTOs();
+    List<OrderTO> getAllOrders();
 
     OrderTO addOrder(OrderTO newOrderTO, String authorizationHeader);
 

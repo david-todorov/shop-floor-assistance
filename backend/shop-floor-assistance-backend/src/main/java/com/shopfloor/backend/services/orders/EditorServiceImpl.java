@@ -50,22 +50,19 @@ public class EditorServiceImpl implements EditorService {
     }
 
     @Override
-    public List<OrderTO> getAllOrderAsTOs() {
+    public List<OrderTO> getAllOrders() {
         return this.toMapper.toOrderTOs(this.orderRepository.findAll());
     }
 
     @Override
     public OrderTO addOrder(OrderTO newOrderTO, String authorizationHeader) {
+        validateOrder(newOrderTO);
+        validateAuthorizationHeader(authorizationHeader);
 
         Long creatorId = this.jwtService.extractUserIdFromAuthorizationHeader(authorizationHeader);
 
-        if (newOrderTO.getOrderNumber() == null) {
-            throw new OrderNotIdentifiableException();
-        }
-
-        String orderNumber = newOrderTO.getOrderNumber();
-        if (getOrderIfExists(orderNumber) != null) {
-            throw new OrderExistsException();
+        if (getOrderIfExists(newOrderTO.getOrderNumber()) != null) {
+            throw new DuplicatedOrderException();
         }
 
         OrderDBO newOrderDBO = this.dboInitializerMapper.toOrderDBO(newOrderTO, creatorId);
@@ -74,45 +71,64 @@ public class EditorServiceImpl implements EditorService {
     }
 
     @Transactional
-    public OrderTO updateOrder(Long id, OrderTO updatedOrderTO, String authorizationHeader) {
+    public OrderTO updateOrder(Long orderId, OrderTO updatedOrderTO, String authorizationHeader) {
+        validateOrderId(orderId);
+        validateOrder(updatedOrderTO);
+        validateAuthorizationHeader(authorizationHeader);
 
         Long updaterId = this.jwtService.extractUserIdFromAuthorizationHeader(authorizationHeader);
 
-        String orderNumber = updatedOrderTO.getOrderNumber();
+        OrderDBO existingOrderDBO = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException());
 
-        if (orderNumber == null || id == null) {
-            throw new OrderNotIdentifiableException();
+        if (orderRepository.existsByOrderNumberAndIdNot(updatedOrderTO.getOrderNumber(), orderId)) {
+            throw new DuplicatedOrderException();
         }
 
-        // Fetch the existing order by ID
-        OrderDBO existingOrderDBO = orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotExistsException());
-
-        // Check if another order has the same order number
-        if (orderRepository.existsByOrderNumberAndIdNot(orderNumber, id)) {
-            throw new OrderNumberExistsException();
-        }
-
-        // Update the order details
         this.dboUpdaterMapper.copyOrderDboFrom(existingOrderDBO, updatedOrderTO, updaterId);
 
-        // Save the updated order and return the result
         return this.toMapper.toOrderTO(this.orderRepository.save(existingOrderDBO));
     }
 
     @Override
-    public OrderTO getOrder(Long id) {
-        OrderDBO orderDBO  = orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotExistsException());
+    public OrderTO getOrder(Long orderId) {
+        validateOrderId(orderId);
+
+        OrderDBO orderDBO = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException());
 
         return this.toMapper.toOrderTO(orderDBO);
     }
 
     @Override
     public void deleteOrder(Long orderId) {
+        validateOrderId(orderId);
+
         OrderDBO toDeleteOrder = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotExistsException());
+                .orElseThrow(() -> new OrderNotFoundException());
+
         this.orderRepository.delete(toDeleteOrder);
+    }
+
+    private void validateOrderId(Long orderId) {
+        if (orderId == null) {
+            throw new MissingOrderIdException();
+        }
+    }
+
+    private void validateOrder(OrderTO orderTO) {
+        if (orderTO == null) {
+            throw new MissingOrderException();
+        }
+        if (orderTO.getOrderNumber() == null) {
+            throw new MissingOrderNumberException();
+        }
+    }
+
+    private void validateAuthorizationHeader(String authorizationHeader) {
+        if (authorizationHeader == null) {
+            throw new MissingAuthorizationHeaderException();
+        }
     }
 
     private OrderDBO getOrderIfExists(String orderNumber) {

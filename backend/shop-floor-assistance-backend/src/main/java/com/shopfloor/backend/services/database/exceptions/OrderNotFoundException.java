@@ -1,9 +1,9 @@
 package com.shopfloor.backend.services.database.exceptions;
 
-public class OrderNotExistsException extends RuntimeException {
+public class OrderNotFoundException extends RuntimeException {
 
     private static final String MESSAGE = "Order does not exists";
-    public OrderNotExistsException() {
+    public OrderNotFoundException() {
         super(MESSAGE);
     }
 }
