@@ -2,9 +2,9 @@ package com.shopfloor.backend.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shopfloor.backend.api.transferobjects.*;
-import com.shopfloor.backend.services.database.exceptions.*;
-import com.shopfloor.backend.services.orders.EditorServiceImpl;
-import com.shopfloor.backend.services.database.repositories.OrderRepository;
+import com.shopfloor.backend.database.exceptions.*;
+import com.shopfloor.backend.services.EditorServiceImpl;
+import com.shopfloor.backend.database.repositories.OrderRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

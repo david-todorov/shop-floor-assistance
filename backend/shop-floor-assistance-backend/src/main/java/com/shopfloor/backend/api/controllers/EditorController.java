@@ -1,8 +1,8 @@
 package com.shopfloor.backend.api.controllers;
 
 import com.shopfloor.backend.api.transferobjects.OrderTO;
-import com.shopfloor.backend.services.orders.EditorService;
-import com.shopfloor.backend.services.orders.EditorServiceImpl;
+import com.shopfloor.backend.services.EditorService;
+import com.shopfloor.backend.services.EditorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
