@@ -27,7 +27,7 @@ public class AuthControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void whenLoginWithValidEditorCredentials_thenReturnsToken() throws Exception {
+    public void when_LoginWithValidEditorCredentials_ThenReturnsToken() throws Exception {
         LoginUserRequestTO request = new LoginUserRequestTO();
         request.setUsername("editor");
         request.setPassword("editor");
@@ -42,7 +42,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void whenLoginWithValidOperatorCredentials_thenReturnsToken() throws Exception {
+    public void when_LoginWithValidOperatorCredentials_ThenReturnsToken() throws Exception {
         LoginUserRequestTO request = new LoginUserRequestTO();
         request.setUsername("operator");
         request.setPassword("operator");
@@ -57,7 +57,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void whenLoginWithValidEditorUsernameButWrongPassword_thenReturnsUnauthorized() throws Exception {
+    public void when_LoginWithValidEditorUsernameButWrongPassword_ThenReturnsUnauthorized() throws Exception {
         LoginUserRequestTO request = new LoginUserRequestTO();
         request.setUsername("editor");
         request.setPassword("wrongPassword"); // Use an incorrect password
@@ -73,7 +73,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void whenLoginWithValidOperatorUsernameButWrongPassword_thenReturnsUnauthorized() throws Exception {
+    public void when_LoginWithValidOperatorUsernameButWrongPassword_ThenReturnsUnauthorized() throws Exception {
         LoginUserRequestTO request = new LoginUserRequestTO();
         request.setUsername("operator");
         request.setPassword("invalid"); // Use an incorrect password
@@ -87,8 +87,9 @@ public class AuthControllerTest {
                 .andExpect(jsonPath("$.detail").value("Bad credentials"))
                 .andExpect(jsonPath("$.description").value("The username or password is incorrect"));
     }
+
     @Test
-    public void whenLoginWithInvalidUsername_thenReturnsUnauthorized() throws Exception {
+    public void when_LoginWithInvalidUsername_ThenReturnsUnauthorized() throws Exception {
         LoginUserRequestTO request = new LoginUserRequestTO();
         request.setUsername("invalid");
         request.setPassword("operator");
@@ -120,7 +121,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void whenOperatorAccessesOperatorEndpoint_thenSuccess() throws Exception {
+    public void when_OperatorAccessesOperatorEndpoint_ThenSuccess() throws Exception {
         String token = loginAndGetToken("operator", "operator");
 
         mockMvc.perform(get("/operator/orders")
@@ -129,7 +130,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void whenOperatorAccessesEditorEndpoint_thenForbidden() throws Exception {
+    public void when_OperatorAccessesEditorEndpoint_ThenForbidden() throws Exception {
         String token = loginAndGetToken("operator", "operator");
 
         mockMvc.perform(get("/editor/orders")
@@ -138,7 +139,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void whenEditorAccessesEditorEndpoint_thenSuccess() throws Exception {
+    public void when_EditorAccessesEditorEndpoint_ThenSuccess() throws Exception {
         String token = loginAndGetToken("editor", "editor");
 
         mockMvc.perform(get("/editor/orders")
@@ -147,7 +148,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void whenEditorAccessesOperatorEndpoint_thenSuccess() throws Exception {
+    public void when_EditorAccessesOperatorEndpoint_ThenSuccess() throws Exception {
         String token = loginAndGetToken("editor", "editor");
 
         mockMvc.perform(get("/operator/orders")

@@ -46,7 +46,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_AddOrder_then_Success() throws Exception {
+    public void when_AddOrder_Then_Success() throws Exception {
 
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
 
@@ -62,7 +62,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_AddOrderWithNullOrderNumber_then_ThrowsMissingOrderNumberException() throws Exception{
+    public void when_AddOrder_WithNullOrderNumber_Then_ThrowsMissingOrderNumberException() throws Exception{
 
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO orderWithNullOrderNumber = this.createCompleteOrderTO(null);
@@ -73,7 +73,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_AddOrderWithNullOrder_then_ThrowsMissingOrderException() throws Exception{
+    public void when_AddOrder_WithNullOrder_Then_ThrowsMissingOrderException() throws Exception{
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO nullOrder = null;
 
@@ -83,7 +83,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_AddOrderWithNullAuthorizationHeader_then_ThrowsMissingAuthorizationHeaderException() throws Exception{
+    public void when_AddOrder_WithNullAuthorizationHeader_Then_ThrowsMissingAuthorizationHeaderException() throws Exception{
         String nullAuthorizationHeader = null;
         OrderTO order = this.createCompleteOrderTO("W001");
 
@@ -93,7 +93,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_AddOrderWithDuplicatedOrderNumber_then_ThrowsDuplicatedOrderException() throws Exception {
+    public void when_AddOrder_WithDuplicatedOrderNumber_Then_ThrowsDuplicatedOrderException() throws Exception {
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO existingOrder = this.createCompleteOrderTO("W001");
 
@@ -109,7 +109,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_UpdateOrder_then_Success() throws Exception {
+    public void when_UpdateOrder_Then_Success() throws Exception {
         // Saving an order
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO existingOrderTO = this.createCompleteOrderTO("W001");
@@ -221,7 +221,7 @@ public class EditorServiceImplTest {
 
 
     @Test
-    public void when_UpdateOrderWithNullOrderNumber_then_ThrowsMissingOrderNumberException() throws Exception{
+    public void when_UpdateOrder_WithNullOrderNumber_Then_ThrowsMissingOrderNumberException() throws Exception{
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO existingOrderTO = this.createCompleteOrderTO("W001");
         existingOrderTO = this.editorService.addOrder(existingOrderTO, authorizationHeader);
@@ -237,7 +237,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_UpdateOrderWithNullOrderId_then_ThrowsMissingOrderIdException() throws Exception{
+    public void when_UpdateOrder_WithNullOrderId_Then_ThrowsMissingOrderIdException() throws Exception{
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO existingOrderTO = this.createCompleteOrderTO("W001");
         existingOrderTO = this.editorService.addOrder(existingOrderTO, authorizationHeader);
@@ -252,7 +252,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_UpdateOrderWithNullOrder_then_ThrowsMissingOrderException() throws Exception{
+    public void when_UpdateOrder_WithNullOrder_Then_ThrowsMissingOrderException() throws Exception{
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO existingOrderTO = this.createCompleteOrderTO("W001");
         existingOrderTO = this.editorService.addOrder(existingOrderTO, authorizationHeader);
@@ -267,7 +267,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_UpdateOrderWithNullAuthorizationHeader_then_ThrowsMissingAuthorizationHeaderException() throws Exception{
+    public void when_UpdateOrder_WithNullAuthorizationHeader_Then_ThrowsMissingAuthorizationHeaderException() throws Exception{
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO existingOrderTO = this.createCompleteOrderTO("W001");
         existingOrderTO = this.editorService.addOrder(existingOrderTO, authorizationHeader);
@@ -282,7 +282,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_UpdateOrderWithNonExistentOrderId_then_ThrowsOrderNotFoundException() throws Exception{
+    public void when_UpdateOrder_WithNonExistentOrderId_Then_ThrowsOrderNotFoundException() throws Exception{
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO existingOrderTO = this.createCompleteOrderTO("W001");
         existingOrderTO = this.editorService.addOrder(existingOrderTO, authorizationHeader);
@@ -298,7 +298,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_UpdateOrderWithExistingOrderNumber_then_ThrowsDuplicatedOrderException() throws Exception{
+    public void when_UpdateOrder_WithExistingOrderNumber_Then_ThrowsDuplicatedOrderException() throws Exception{
         //Creating and saving first order
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO existingOrderOne = this.createCompleteOrderTO("W001");
@@ -320,7 +320,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_DeleteOrder_then_Success() throws Exception {
+    public void when_DeleteOrder_Then_Success() throws Exception {
         // Arrange
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO existingOrderTO = this.createCompleteOrderTO("W001");
@@ -335,7 +335,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_DeleteOrderWithNullOrderId_then_ThrowsMissingOrderIdException() throws Exception{
+    public void when_DeleteOrder_WithNullOrderId_Then_ThrowsMissingOrderIdException() throws Exception{
         // Act and Assert
         assertThrows(MissingOrderIdException.class, () -> {
             editorService.deleteOrder(null);
@@ -343,7 +343,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_DeleteOrderWithNonExistentOrderId_then_ThrowsOrderNotFoundException() throws Exception {
+    public void when_DeleteOrder_WithNonExistentOrderId_Then_ThrowsOrderNotFoundException() throws Exception {
         // Arrange
         Long nonExistentOrderId = 999L; // Use an ID that is known not to exist
 
@@ -354,7 +354,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_GetOrder_then_Success() throws Exception {
+    public void when_GetOrder_Then_Success() throws Exception {
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
         OrderTO existingOrderTO = this.createCompleteOrderTO("W001");
         existingOrderTO = this.editorService.addOrder(existingOrderTO, authorizationHeader);
@@ -365,7 +365,7 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_GetOrderWithNonExistentOrderId_then_ThrowsOrderNotFoundException() throws Exception {
+    public void when_GetOrder_WithNonExistentOrderId_Then_ThrowsOrderNotFoundException() throws Exception {
         Long nonExistentOrderId = 999L; // Use an ID that is known not to exist
 
         // Act and Assert
@@ -375,14 +375,14 @@ public class EditorServiceImplTest {
     }
 
     @Test
-    public void when_GetOrderWithNullOrderId_then_ThrowsMissingOrderIdException() throws Exception{
+    public void when_GetOrder_WithNullOrderId_Then_ThrowsMissingOrderIdException() throws Exception{
         assertThrows(MissingOrderIdException.class, () -> {
             editorService.getOrder(null); // Attempt to delete a non-existent order
         });
     }
 
     @Test
-    public void when_GetOrders_then_Success() throws Exception {
+    public void when_GetOrders_Then_Success() throws Exception {
         // Arrange
         String authorizationHeader = this.createAuthorizationHeaderFrom("editor", "editor");
 
