@@ -4,10 +4,10 @@ import com.shopfloor.backend.api.transferobjects.ItemTO;
 import com.shopfloor.backend.api.transferobjects.OrderTO;
 import com.shopfloor.backend.api.transferobjects.TaskTO;
 import com.shopfloor.backend.api.transferobjects.WorkflowTO;
-import com.shopfloor.backend.services.database.objects.ItemDBO;
-import com.shopfloor.backend.services.database.objects.OrderDBO;
-import com.shopfloor.backend.services.database.objects.TaskDBO;
-import com.shopfloor.backend.services.database.objects.WorkflowDBO;
+import com.shopfloor.backend.database.objects.ItemDBO;
+import com.shopfloor.backend.database.objects.OrderDBO;
+import com.shopfloor.backend.database.objects.TaskDBO;
+import com.shopfloor.backend.database.objects.WorkflowDBO;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

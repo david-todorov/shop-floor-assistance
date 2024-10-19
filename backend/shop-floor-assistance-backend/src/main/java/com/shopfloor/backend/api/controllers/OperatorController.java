@@ -1,7 +1,7 @@
 package com.shopfloor.backend.api.controllers;
 
-import com.shopfloor.backend.services.orders.OperatorService;
-import com.shopfloor.backend.services.orders.OperatorServiceImpl;
+import com.shopfloor.backend.services.OperatorService;
+import com.shopfloor.backend.services.OperatorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
