@@ -32,7 +32,6 @@ export class EditorCreateWorkflowComponent implements OnInit {
   // item: string = '';
 
   constructor() {}
-
 order: orderTO = {
     orderNumber: '',
     name: '',
@@ -41,6 +40,9 @@ order: orderTO = {
   };
   selectedWorkflowIndex: number | null = null;
   selectedIndex = 0;
+
+  // State management for edit mode and description visibility
+  workflowStates: { [key: number]: { editMode: boolean, showDescription: boolean } } = {};
 
   ngOnInit() {
     this.loadOrder();
@@ -55,6 +57,7 @@ order: orderTO = {
 
   addWorkflow() {
     this.order.workflows.push({ name: '', description: '', tasks: [{ name: 'Task 1', description: '', items: [{ name: '', longDescription: '', timeRequired: null }] }] });
+    this.workflowStates[this.order.workflows.length - 1] = { editMode: false, showDescription: false };
     this.saveOrder();
   }
 
@@ -79,14 +82,39 @@ order: orderTO = {
     }
   }
 
+  toggleEditMode(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.workflowStates[index].editMode = !this.workflowStates[index].editMode;
+    this.saveOrder();
+  }
+
+  deleteWorkflow(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.order.workflows.splice(index, 1);
+    delete this.workflowStates[index];
+    this.saveOrder();
+  }
+
+  toggleDescription(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.workflowStates[index].showDescription = !this.workflowStates[index].showDescription;
+    this.saveOrder();
+  }
+
   saveOrder() {
     localStorage.setItem('order', JSON.stringify(this.order));
+    localStorage.setItem('workflowStates', JSON.stringify(this.workflowStates));
   }
 
   loadOrder() {
     const savedOrder = localStorage.getItem('order');
+    const savedWorkflowStates = localStorage.getItem('workflowStates');
     if (savedOrder) {
       this.order = JSON.parse(savedOrder);
+    }
+    if (savedWorkflowStates) {
+      this.workflowStates = JSON.parse(savedWorkflowStates);
+      //
     }
   }
 }

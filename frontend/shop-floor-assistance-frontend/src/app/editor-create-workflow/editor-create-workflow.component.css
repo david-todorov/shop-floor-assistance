@@ -18,3 +18,29 @@
     border-radius: 10px;
     background-color: #f0f0f0;
 }
+
+.workflow-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.workflow-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.workflow-icons {
+    display: flex;
+    gap: 10px;
+}
+
+.workflow-icons button {
+    padding: 5px;
+}
+
+mat-form-field {
+    width: 100%;
+}
