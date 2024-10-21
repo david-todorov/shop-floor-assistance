@@ -1,0 +1,18 @@
+:host {
+    display: flex;
+    height: 100%;
+}
+
+.side-panel {
+    width: 30%;
+    background-color: #f0f0f0;
+    /* Optional: Add a background color */
+    padding: 16px;
+    /* Optional: Add some padding */
+}
+
+.main-content {
+    width: 70%;
+    padding: 16px;
+    /* Optional: Add some padding */
+}

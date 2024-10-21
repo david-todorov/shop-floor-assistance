@@ -1,0 +1,21 @@
+<div class="side-panel">
+    <!-- Content for the side panel -->
+    Side Panel Content
+</div>
+
+<div class="main-content">
+    <mat-tab-group [(selectedIndex)]="selectedIndex">
+        <mat-tab *ngFor="let tab of tabs; let i = index" [label]="tab.label">
+            <!-- Content for the tab -->
+            {{ tab.content }}
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <button mat-icon-button (click)="addTab($event)">
+                    <mat-icon>add</mat-icon>
+                    Add Tab
+                </button>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
+</div>
