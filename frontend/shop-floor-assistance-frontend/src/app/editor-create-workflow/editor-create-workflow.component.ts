@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { EditTaskDialogComponent } from '../dialogs/edit-task-dialog/edit-task-dialog.component';
+import { dummyOrder } from '../types/dummyData';
 
 
 @Component({
@@ -48,9 +49,17 @@ order: orderTO = {
   workflowStates: { [key: number]: { editMode: boolean, showDescription: boolean } } = {};
   taskStates: { [key: number]: { editMode: boolean, showDescription: boolean } } = {};
   ngOnInit() {
-    this.loadOrder();
+    //this.loadOrder();
+    this.loadorderFromDummyData();
+    this.initializeWorkflowStates();
   }
 
+    initializeWorkflowStates() {
+    this.order.workflows.forEach((workflow: any, index: number) => {
+      this.workflowStates[index] = { editMode: false, showDescription: false };
+    });
+  }
+  
   get selectedWorkflowTasks(): taskTO[] {
     if (this.selectedWorkflowIndex !== null) {
       return this.order.workflows[this.selectedWorkflowIndex].tasks;
@@ -117,8 +126,13 @@ order: orderTO = {
     }
     if (savedWorkflowStates) {
       this.workflowStates = JSON.parse(savedWorkflowStates);
-      //
     }
+  }
+
+  loadorderFromDummyData(){
+    this.order= dummyOrder;
+    this.saveOrder();
+    this.loadOrder();
   }
 
   deleteTask(index: number, event: MouseEvent) {
