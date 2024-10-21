@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -29,19 +29,27 @@ export class EditorCreateWorkflowComponent {
 
   orderName: string = '';
   workflows: workflowTO[] = [];
+  item: string = '';
 
   constructor() {}
 
   tabs = [
-    { label: 'Tab 1', content: 'Tab 1 Content' }
+    { label: 'Tab 1', 
+      content: 'Tab 1 Content', 
+      items: [''] 
+    }
   ];
   selectedIndex = 0;
 
   addTab(event: MouseEvent) {
-    event.preventDefault(); // Prevent the default tab switch behavior
+    event.preventDefault();
     const newIndex = this.tabs.length + 1;
-    this.tabs.push({ label: `Tab ${newIndex}`, content: `Tab ${newIndex} Content` });
-    this.selectedIndex = this.tabs.length; // Set the selected index to the new tab
+    this.tabs.push({ label: `Tab ${newIndex}`, content: `Tab ${newIndex} Content`, items: [''] });
+    this.selectedIndex = this.tabs.length - 1;
+  }
+
+  addItem(tabIndex: number) {
+    this.tabs[tabIndex].items.push('');
   }
 }
 

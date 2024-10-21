@@ -7,7 +7,12 @@
     <mat-tab-group [(selectedIndex)]="selectedIndex">
         <mat-tab *ngFor="let tab of tabs; let i = index" [label]="tab.label">
             <!-- Content for the tab -->
-            {{ tab.content }}
+            <div *ngFor="let item of tab.items">
+                <mat-form-field>
+                    <input matInput placeholder="Item">
+                </mat-form-field>
+            </div>
+            <button mat-raised-button color="primary" (click)="addItem(i)">Add Item</button>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>

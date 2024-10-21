@@ -4,15 +4,17 @@
 }
 
 .side-panel {
+    margin: 30px;
     width: 30%;
+    border-radius: 10px;
     background-color: #f0f0f0;
-    /* Optional: Add a background color */
     padding: 16px;
-    /* Optional: Add some padding */
 }
 
 .main-content {
+    margin: 30px;
     width: 70%;
     padding: 16px;
-    /* Optional: Add some padding */
+    border-radius: 10px;
+    background-color: #f0f0f0;
 }
