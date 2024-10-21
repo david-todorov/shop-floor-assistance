@@ -8,7 +8,7 @@
             <span *ngIf="!workflowStates[i]?.editMode">{{ workflow.name }}</span>
             <div class="workflow-icons">
                 <button mat-icon-button (click)="toggleEditMode(i, $event)">
-                    <mat-icon>edit</mat-icon>
+                    <mat-icon>{{ workflowStates[i].editMode ? 'check' : 'edit' }}</mat-icon>
                 </button>
                 <button mat-icon-button (click)="deleteWorkflow(i, $event)">
                     <mat-icon>delete</mat-icon>
