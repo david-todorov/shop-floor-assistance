@@ -8,7 +8,7 @@
             <span *ngIf="!workflowStates[i]?.editMode">{{ workflow.name }}</span>
             <div class="workflow-icons">
                 <button mat-icon-button (click)="toggleEditMode(i, $event)">
-                    <mat-icon>{{ workflowStates[i].editMode ? 'check' : 'edit' }}</mat-icon>
+                    <mat-icon>{{ workflowStates[i]?.editMode ? 'check' : 'edit' }}</mat-icon>
                 </button>
                 <button mat-icon-button (click)="deleteWorkflow(i, $event)">
                     <mat-icon>delete</mat-icon>
@@ -18,8 +18,9 @@
                 </button>
             </div>
         </div>
-        <mat-form-field *ngIf="workflowStates[i]?.editMode || workflowStates[i]?.showDescription">
-            <textarea matInput [(ngModel)]="workflow.description" placeholder="Description" [disabled]="!workflowStates[i].editMode"></textarea>
+        <mat-form-field *ngIf="workflowStates[i]?.showDescription || workflowStates[i]?.editMode">
+            <textarea matInput [(ngModel)]="workflow.description" placeholder="Description"
+                [disabled]="!workflowStates[i]?.editMode"></textarea>
         </mat-form-field>
     </div>
     <button mat-raised-button color="primary" (click)="addWorkflow()">Add Workflow</button>
@@ -29,9 +30,20 @@
     <mat-tab-group [(selectedIndex)]="selectedIndex">
         <mat-tab *ngFor="let task of selectedWorkflowTasks; let i = index">
             <ng-template mat-tab-label>
-                <mat-form-field>
-                    <input matInput [(ngModel)]="task.name" placeholder="Task Name">
-                </mat-form-field>
+                <div class="tab-label-container">
+                    <span class="task-label">{{ task.name }}</span>
+                    <div class="tab-icons">
+                        <button mat-icon-button (click)="openEditDialog(i, true)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="deleteTask(i, $event)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="openEditDialog(i, false)">
+                            <mat-icon>info</mat-icon>
+                        </button>
+                    </div>
+                </div>
             </ng-template>
             <!-- Content for the tab -->
             <div *ngFor="let item of task.items">

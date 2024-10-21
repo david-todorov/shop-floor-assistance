@@ -41,6 +41,33 @@
     padding: 5px;
 }
 
+.tab-label-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.task-label {
+    flex-grow: 1;
+    font-size: 1.2em;
+    margin: 0.5rem;
+    /* Increase font size for better visibility */
+}
+
+.tab-icons {
+    display: flex;
+    gap: 0;
+    /* Remove gap between icons */
+}
+
+.tab-icons button {
+    padding: 2px;
+    /* Reduced padding for smaller icons */
+    font-size: 16px;
+    /* Reduced font size for smaller icons */
+}
+
 mat-form-field {
     width: 100%;
 }

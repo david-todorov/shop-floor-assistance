@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { workflowTO } from '../types/workflowTO';
@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { EditTaskDialogComponent } from '../dialogs/edit-task-dialog/edit-task-dialog.component';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatTabsModule,
     MatIconModule,
+    MatDialogModule,
     FormsModule,
     CommonModule,],
   templateUrl: './editor-create-workflow.component.html',
@@ -27,11 +29,12 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class EditorCreateWorkflowComponent implements OnInit {
 
+
   orderName: string = '';
   // workflows: string[] = [];
   // item: string = '';
 
-  constructor() {}
+  constructor(public dialog: MatDialog) {}
 order: orderTO = {
     orderNumber: '',
     name: '',
@@ -43,7 +46,7 @@ order: orderTO = {
 
   // State management for edit mode and description visibility
   workflowStates: { [key: number]: { editMode: boolean, showDescription: boolean } } = {};
-
+  taskStates: { [key: number]: { editMode: boolean, showDescription: boolean } } = {};
   ngOnInit() {
     this.loadOrder();
   }
@@ -116,6 +119,29 @@ order: orderTO = {
       this.workflowStates = JSON.parse(savedWorkflowStates);
       //
     }
+  }
+
+  deleteTask(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    if (this.selectedWorkflowIndex !== null) {
+      this.order.workflows[this.selectedWorkflowIndex].tasks.splice(index, 1);
+      delete this.taskStates[index];
+      this.saveOrder();
+    }
+  }
+
+    openEditDialog(index: number, isEditMode: boolean) {
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      width: '400px',
+      data: { task: { ...this.selectedWorkflowTasks[index] }, isEditMode }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.selectedWorkflowTasks[index] = result;
+        this.saveOrder();
+      }
+    });
   }
 }
 
