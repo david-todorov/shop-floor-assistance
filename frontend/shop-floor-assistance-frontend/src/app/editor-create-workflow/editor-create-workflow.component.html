@@ -1,24 +1,43 @@
 <div class="side-panel">
     <!-- Content for the side panel -->
-    Side Panel Content
+    <div *ngFor="let workflow of order.workflows; let i = index" (click)="selectWorkflow(i)">
+        <mat-form-field>
+            <input matInput [(ngModel)]="workflow.name" placeholder="Workflow Name">
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput [(ngModel)]="workflow.description" placeholder="Workflow Description">
+        </mat-form-field>
+    </div>
+    <button mat-raised-button color="primary" (click)="addWorkflow()">Add Workflow</button>
 </div>
 
 <div class="main-content">
     <mat-tab-group [(selectedIndex)]="selectedIndex">
-        <mat-tab *ngFor="let tab of tabs; let i = index" [label]="tab.label">
-            <!-- Content for the tab -->
-            <div *ngFor="let item of tab.items">
+        <mat-tab *ngFor="let task of selectedWorkflowTasks; let i = index">
+            <ng-template mat-tab-label>
                 <mat-form-field>
-                    <input matInput placeholder="Item">
+                    <input matInput [(ngModel)]="task.name" placeholder="Task Name">
+                </mat-form-field>
+            </ng-template>
+            <!-- Content for the tab -->
+            <div *ngFor="let item of task.items">
+                <mat-form-field>
+                    <input matInput [(ngModel)]="item.name" placeholder="Item Name">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput [(ngModel)]="item.longDescription" placeholder="Item Description">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput [(ngModel)]="item.timeRequired" placeholder="Time Required" type="number">
                 </mat-form-field>
             </div>
             <button mat-raised-button color="primary" (click)="addItem(i)">Add Item</button>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <button mat-icon-button (click)="addTab($event)">
+                <button mat-icon-button (click)="addTask()">
                     <mat-icon>add</mat-icon>
-                    Add Tab
+                    Add Task
                 </button>
             </ng-template>
         </mat-tab>

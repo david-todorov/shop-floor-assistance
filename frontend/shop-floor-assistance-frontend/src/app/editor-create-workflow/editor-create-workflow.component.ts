@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,31 +25,69 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './editor-create-workflow.component.html',
   styleUrl: './editor-create-workflow.component.css'
 })
-export class EditorCreateWorkflowComponent {
+export class EditorCreateWorkflowComponent implements OnInit {
 
   orderName: string = '';
-  workflows: workflowTO[] = [];
-  item: string = '';
+  // workflows: string[] = [];
+  // item: string = '';
 
   constructor() {}
 
-  tabs = [
-    { label: 'Tab 1', 
-      content: 'Tab 1 Content', 
-      items: [''] 
-    }
-  ];
+order: orderTO = {
+    orderNumber: '',
+    name: '',
+    shortDescription: '',
+    workflows: []
+  };
+  selectedWorkflowIndex: number | null = null;
   selectedIndex = 0;
 
-  addTab(event: MouseEvent) {
-    event.preventDefault();
-    const newIndex = this.tabs.length + 1;
-    this.tabs.push({ label: `Tab ${newIndex}`, content: `Tab ${newIndex} Content`, items: [''] });
-    this.selectedIndex = this.tabs.length - 1;
+  ngOnInit() {
+    this.loadOrder();
   }
 
-  addItem(tabIndex: number) {
-    this.tabs[tabIndex].items.push('');
+  get selectedWorkflowTasks(): taskTO[] {
+    if (this.selectedWorkflowIndex !== null) {
+      return this.order.workflows[this.selectedWorkflowIndex].tasks;
+    }
+    return [];
+  }
+
+  addWorkflow() {
+    this.order.workflows.push({ name: '', description: '', tasks: [{ name: 'Task 1', description: '', items: [{ name: '', longDescription: '', timeRequired: null }] }] });
+    this.saveOrder();
+  }
+
+  selectWorkflow(index: number) {
+    this.selectedWorkflowIndex = index;
+    this.selectedIndex = 0; // Reset the selected tab index
+  }
+
+  addTask() {
+    if (this.selectedWorkflowIndex !== null) {
+      const newIndex = this.order.workflows[this.selectedWorkflowIndex].tasks.length + 1;
+      this.order.workflows[this.selectedWorkflowIndex].tasks.push({ name: `Task ${newIndex}`, description: '', items: [{ name: '', longDescription: '', timeRequired: null }] });
+      this.selectedIndex = this.order.workflows[this.selectedWorkflowIndex].tasks.length - 1;
+      this.saveOrder();
+    }
+  }
+
+  addItem(taskIndex: number) {
+    if (this.selectedWorkflowIndex !== null) {
+      this.order.workflows[this.selectedWorkflowIndex].tasks[taskIndex].items.push({ name: '', longDescription: '', timeRequired: null });
+      this.saveOrder();
+    }
+  }
+
+  saveOrder() {
+    localStorage.setItem('order', JSON.stringify(this.order));
+  }
+
+  loadOrder() {
+    const savedOrder = localStorage.getItem('order');
+    if (savedOrder) {
+      this.order = JSON.parse(savedOrder);
+    }
   }
 }
 
