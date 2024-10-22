@@ -77,7 +77,6 @@ order: orderTO = {
   
   get selectedWorkflowTasks(): taskTO[] {
     if (this.selectedWorkflowIndex !== null) {
-      console.log('in get SelectedWorkflow',this.selectedWorkflowIndex)
       return this.order.workflows[this.selectedWorkflowIndex].tasks;
     }
     return [];
@@ -87,7 +86,7 @@ order: orderTO = {
     this.order.workflows.push({ name: '', description: '', tasks: [{ name: 'Task 1', description: '', items: [{ name: '', longDescription: '', timeRequired: null }] }] });
     this.workflowStates[this.order.workflows.length - 1] = { editMode: false, showDescription: false };
     this.selectedWorkflowIndex=this.order.workflows.length - 1;
-    this.saveOrder();
+    //this.saveOrder();
   }
 
   selectWorkflow(index: number) {
@@ -101,7 +100,7 @@ order: orderTO = {
       const newIndex = this.order.workflows[this.selectedWorkflowIndex].tasks.length + 1;
       this.order.workflows[this.selectedWorkflowIndex].tasks.push({ name: `Task ${newIndex}`, description: '', items: [{ name: '', longDescription: '', timeRequired: null }] });
       this.selectedTaskIndex = this.order.workflows[this.selectedWorkflowIndex].tasks.length - 1;
-      this.saveOrder();
+      //this.saveOrder();
     }
   }
 
@@ -109,7 +108,7 @@ order: orderTO = {
   toggleEditMode(index: number, event: MouseEvent) {
     event.stopPropagation();
     this.workflowStates[index].editMode = !this.workflowStates[index].editMode;
-    this.saveOrder();
+    //this.saveOrder();
   }
 
   deleteWorkflow(index: number, event: MouseEvent) {
@@ -121,19 +120,22 @@ order: orderTO = {
          showDescription: false };
       const correctedIndex = this.order.workflows.length - 1;
       this.selectedWorkflowIndex=correctedIndex>=0?correctedIndex:null;
-            this.saveOrder();
+      //this.saveOrder();
     }
   }
 
   toggleDescription(index: number, event: MouseEvent) {
     event.stopPropagation();
     this.workflowStates[index].showDescription = !this.workflowStates[index].showDescription;
-    this.saveOrder();
+    //this.saveOrder();
   }
 
   saveOrder() {
     localStorage.setItem('order', JSON.stringify(this.order));
     localStorage.setItem('workflowStates', JSON.stringify(this.workflowStates));
+    localStorage.setItem('taskStates', JSON.stringify(this.taskStates));
+    localStorage.setItem('itemStates', JSON.stringify(this.itemStates));
+    console.log(this.order);
   }
 
   loadOrder() {
@@ -158,7 +160,7 @@ order: orderTO = {
     if (this.selectedWorkflowIndex !== null) {
       this.order.workflows[this.selectedWorkflowIndex].tasks.splice(index, 1);
       delete this.taskStates[index];
-      this.saveOrder();
+      //this.saveOrder();
     }
   }
 
@@ -171,7 +173,7 @@ order: orderTO = {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.selectedWorkflowTasks[index] = result;
-        this.saveOrder();
+        //this.saveOrder();
       }
     });
   }
@@ -182,7 +184,7 @@ order: orderTO = {
   toggleItemDescription(index: number, event: MouseEvent) {
     event.stopPropagation();
     this.itemStates[index].showDescription = !this.itemStates[index].showDescription;
-    this.saveOrder();
+    //this.saveOrder();
   }
 
 
@@ -195,8 +197,7 @@ order: orderTO = {
           showDescription: false };
         const correctedIndex = this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length - 1;
         this.selectedItemIndex=correctedIndex>=0?correctedIndex:0;
-              console.log(this.order);
-              this.saveOrder();
+        //this.saveOrder();
       }
   }
 
@@ -205,19 +206,16 @@ order: orderTO = {
       this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.push({ name: '', longDescription: '', timeRequired: null });
       //const ind= this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length - 1;
       this.itemStates[this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length - 1] = { editMode: false, showDescription: false };
-      this.saveOrder();
-      }
+      //this.saveOrder();
+    }
   }
 
   toggleEditItemMode(index: number, event: MouseEvent) {
     event.stopPropagation();
     this.itemStates[index].editMode = !this.itemStates[index].editMode;
-    this.saveOrder();
+    //this.saveOrder();
   }
 
-  selectItem(index: number) {
-    this.selectedItemIndex = index;
-  }
 }
 
 
