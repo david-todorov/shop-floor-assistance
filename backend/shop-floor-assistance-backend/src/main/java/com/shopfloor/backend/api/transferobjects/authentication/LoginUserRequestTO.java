@@ -1,4 +1,4 @@
-package com.shopfloor.backend.api.transferobjects;
+package com.shopfloor.backend.api.transferobjects.authentication;
 
 import lombok.Getter;
 import lombok.Setter;

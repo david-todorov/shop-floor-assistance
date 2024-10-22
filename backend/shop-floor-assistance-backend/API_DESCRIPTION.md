@@ -26,8 +26,8 @@ The login request requires a JSON body with the following parameters:
 
 ```json
 {
-    "username": "operator",
-    "password": "operator"
+  "username": "operators",
+  "password": "operators"
 }
 ```
 
@@ -38,11 +38,11 @@ On successful authentication, the API responds with a JSON object based on the `
 #### Success Response
 
 ```json
-{ 
-	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-	 "createdAt": "2024-10-15 12:30:00",
-	 "expiresAt": "2024-10-15 13:30:00"
- }
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "createdAt": "2024-10-15 12:30:00",
+  "expiresAt": "2024-10-15 13:30:00"
+}
  ```
 
 #### Errors Responses:
@@ -54,7 +54,7 @@ On successful authentication, the API responds with a JSON object based on the `
 -   **Response:**
 ```json    
 {
-    "error": "Invalid username or password."
+  "error": "Invalid username or password."
 }
 ```
 
@@ -66,7 +66,7 @@ On successful authentication, the API responds with a JSON object based on the `
 -   **Response:**
 ```json
 {
-    "error": "Access to this resource is forbidden."
+  "error": "Access to this resource is forbidden."
 }
 ```
 
@@ -81,8 +81,8 @@ Once authenticated, include the token in the `Authorization` header to access ot
 curl -X POST http:/localhost/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "username": "operator",
-    "password": "operator"
+    "username": "operators",
+    "password": "operators"
   }'
   ```
 ## Editors Endpoints
@@ -96,29 +96,57 @@ curl -X POST http:/localhost/auth/login \
 #### `POST /editor/orders`
 - **Description**: Creates and saves a new order, returning the saved order as a Transfer Object (TO).
 - **Throws**:
-    - Exception if the provided order number is `null`.
-    - Exception if an order with the same `order number` already exists.
+  - Exception if the provided order number is `null`.
+  - Exception if an order with the same `order number` already exists.
+  - Exception if any name property from Order level to Item level is `null` or `empty`
 - **Response**: The saved order as TO
 ---
 
 #### `PUT /editor/orders/{id}`
 - **Description**: Updates an existing order.
 - **Parameters**:
-    - `{id}`: The unique identifier of the order to be updated.
+  - `{id}`: The unique identifier of the order to be updated.
 - **Throws**:
-    - Exception if the provided order number or ID is `null`.
-    - Exception if the provided ID does not exist in the database.
-    - Exception if another order has the same `order number`, as it cannot be renamed.
+  - Exception if the provided order number or ID is `null`.
+  - Exception if the provided ID does not exist in the database.
+  - Exception if another order has the same `order number`, as it cannot be renamed.
+  - Exception if any name property from Order level to Item level is `null` or `empty`
 - **Response**: The updated order as TO
 ---
 
 #### `DELETE /editor/orders/{id}`
 - **Description**: Deletes an existing order identified by the specified `id`.
 - **Parameters**:
-    - `{id}`: The unique identifier of the order to be deleted.
+  - `{id}`: The unique identifier of the order to be deleted.
 - **Throws**:
-    - Exception if the provided `id` is `null`.
-    - Exception if the order with the specified `id` does not exist in the database.
+  - Exception if the provided `id` is `null`.
+  - Exception if the order with the specified `id` does not exist in the database.
 - **Response**: A confirmation message indicating successful deletion or an error message if the deletion fails.
+---
 
+#### `GET /editor/orders/{id}`
+- **Description**: Retrieves an existing order identified by the specified `id`.
+- **Parameters**:
+  - `{id}`: The unique identifier of the order to be retrieved.
+- **Throws**:
+  - Exception if the provided `id` is `null`.
+  - Exception if the order with the specified `id` does not exist in the database.
+- **Response**: The requested  order as TO
+---
+
+## Operator Endpoints
+
+#### `GET /operator/orders`
+- **Description**: Returns a list of all available orders in the system
+- **Response**: List of orders as TOs from the database.
+---
+
+#### `GET /operator/orders/{id}`
+- **Description**: Retrieves an existing order identified by the specified `id`.
+- **Parameters**:
+  - `{id}`: The unique identifier of the order to be retrieved.
+- **Throws**:
+  - Exception if the provided `id` is `null`.
+  - Exception if the order with the specified `id` does not exist in the database.
+- **Response**: The requested  order as TO
 ---

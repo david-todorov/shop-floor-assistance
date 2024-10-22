@@ -1,6 +1,7 @@
 package com.shopfloor.backend.database.objects;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class ItemDBO {
     private String description;
 
     @Column(name = "time_required")
+    @Min(value = 1)
     private Integer timeRequired;
 
     @Column(name = "created_by", nullable = false)

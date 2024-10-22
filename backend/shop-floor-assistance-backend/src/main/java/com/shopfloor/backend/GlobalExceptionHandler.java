@@ -3,12 +3,17 @@ package com.shopfloor.backend;
 import com.shopfloor.backend.database.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Global exception handler for managing various exceptions in the application.
@@ -25,35 +30,44 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(MissingOrderException.class)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail handleAuthHeaderNull(MissingOrderException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problemDetail.setProperty("description", "Order passed as parameter is null");
+    public ProblemDetail handleRequestBodyIsNull(HttpMessageNotReadableException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Request body is missing or invalid");
+        problemDetail.setProperty("description", "The request body must not be null or malformed.");
+
+        // Optionally, you can include more details if needed (e.g., the error message)
+        problemDetail.setProperty("error", "Request body is null or could not be read.");
+
         return problemDetail;
     }
 
-    @ExceptionHandler(MissingAuthorizationHeaderException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail handleAuthHeaderNull(MissingAuthorizationHeaderException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problemDetail.setProperty("description", "Authorization header not found");
-        return problemDetail;
-    }
+    public ProblemDetail handleValidationExceptions(MethodArgumentNotValidException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
+        problemDetail.setProperty("description", "Input validation failed for the provided data.");
 
-    @ExceptionHandler(MissingOrderIdException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail handleIdNull(MissingOrderIdException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problemDetail.setProperty("description", " Order id is null");
-        return problemDetail;
-    }
+        // Collect detailed validation error messages
+        List<String> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> {
+                    String field = fieldError.getField();
+                    String message = fieldError.getDefaultMessage();
 
-    @ExceptionHandler(MissingOrderNumberException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail handleOrderNumberNull(MissingOrderNumberException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problemDetail.setProperty("description", " Order number is null");
+                    // Customize messages for specific fields
+                    if ("timeRequired".equals(field) && "must be greater than or equal to 1".equals(message)) {
+                        message = "Field 'timeRequired' must be greater than or equal to 1.";
+                    } else if ("must not be empty".equals(message)) {
+                        message = "Field '" + field + "' must not be null or empty.";
+                    }
+
+                    return String.format("Field '%s': %s", field, message);
+                })
+                .collect(Collectors.toList());
+
+        // Include the errors in the response
+        problemDetail.setProperty("errors", errors);
+
         return problemDetail;
     }
 

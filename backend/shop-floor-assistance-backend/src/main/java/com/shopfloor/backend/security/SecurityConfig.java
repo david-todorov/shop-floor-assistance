@@ -35,8 +35,8 @@ public class SecurityConfig {
      * different endpoints based on user roles, enforces stateless session management, and adds a JWT authentication filter.
      *
      * There are two hierarchical roles in this setup:
-     * - **EDITOR**: Has access to both editor and operator orders.
-     * - **OPERATOR**: Has limited access to operator orders only.
+     * - **EDITOR**: Has access to both editors and operators orders.
+     * - **OPERATOR**: Has limited access to operators orders only.
      *
      * **Note**: If a new endpoint or role is introduced, this method will need to be updated to reflect the new access rules.
      *

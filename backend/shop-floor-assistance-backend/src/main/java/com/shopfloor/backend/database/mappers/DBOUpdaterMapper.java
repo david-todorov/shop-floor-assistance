@@ -1,9 +1,9 @@
 package com.shopfloor.backend.database.mappers;
 
-import com.shopfloor.backend.api.transferobjects.ItemTO;
-import com.shopfloor.backend.api.transferobjects.OrderTO;
-import com.shopfloor.backend.api.transferobjects.TaskTO;
-import com.shopfloor.backend.api.transferobjects.WorkflowTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorItemTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorTaskTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
 import com.shopfloor.backend.database.objects.ItemDBO;
 import com.shopfloor.backend.database.objects.OrderDBO;
 import com.shopfloor.backend.database.objects.TaskDBO;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 /**
  * This class serve as copier and mapper for existing orders
- * It maps the "basic" properties on an OrderDBO from OrderTO
+ * It maps the "basic" properties on an OrderDBO from EditorOrderTO
  * Sets the updater id and timestamp for update
  *                    IMPORTANT
  * It returns new OrderDBO only if
@@ -40,7 +40,7 @@ public class DBOUpdaterMapper {
         this.dboInitializerMapper = dboInitializerMapper;
     }
 
-    public OrderDBO copyOrderDboFrom(OrderDBO target, OrderTO source, Long updaterId) {
+    public OrderDBO copyOrderDboFrom(OrderDBO target, EditorOrderTO source, Long updaterId) {
         target.setName(source.getName());
         target.setDescription(source.getDescription());
         target.setOrderNumber(source.getOrderNumber());
@@ -51,20 +51,20 @@ public class DBOUpdaterMapper {
         return target;
     }
 
-    private void updateWorkflows(List<WorkflowDBO> targetWorkflows, List<WorkflowTO> sourceWorkflows, Long updaterId) {
+    private void updateWorkflows(List<WorkflowDBO> targetWorkflows, List<EditorWorkflowTO> sourceWorkflows, Long updaterId) {
         Map<Long, WorkflowDBO> targetMap = targetWorkflows.stream()
                 .collect(Collectors.toMap(WorkflowDBO::getId, Function.identity()));
 
-        for (WorkflowTO workflowTO : sourceWorkflows) {
-            WorkflowDBO workflowDBO = targetMap.get(workflowTO.getId());
+        for (EditorWorkflowTO editorWorkflowTO : sourceWorkflows) {
+            WorkflowDBO workflowDBO = targetMap.get(editorWorkflowTO.getId());
 
             if (workflowDBO != null) {
                 // Update existing workflow
-                copyWorkflowDboFrom(workflowDBO, workflowTO, updaterId);
-                targetMap.remove(workflowTO.getId());
+                copyWorkflowDboFrom(workflowDBO, editorWorkflowTO, updaterId);
+                targetMap.remove(editorWorkflowTO.getId());
             } else {
                 // Add new workflow
-                WorkflowDBO newWorkflowDBO = dboInitializerMapper.toWorkflowDBO(workflowTO, updaterId);
+                WorkflowDBO newWorkflowDBO = dboInitializerMapper.toWorkflowDBO(editorWorkflowTO, updaterId);
                 targetWorkflows.add(newWorkflowDBO);
             }
         }
@@ -73,7 +73,7 @@ public class DBOUpdaterMapper {
         targetWorkflows.removeIf(workflow -> targetMap.containsKey(workflow.getId()));
     }
 
-    public WorkflowDBO copyWorkflowDboFrom(WorkflowDBO target, WorkflowTO source, Long updaterId) {
+    public WorkflowDBO copyWorkflowDboFrom(WorkflowDBO target, EditorWorkflowTO source, Long updaterId) {
         target.setName(source.getName());
         target.setDescription(source.getDescription());
         target.setUpdatedBy(updaterId);
@@ -83,20 +83,20 @@ public class DBOUpdaterMapper {
         return target;
     }
 
-    private void updateTasks(List<TaskDBO> targetTasks, List<TaskTO> sourceTasks, Long updaterId) {
+    private void updateTasks(List<TaskDBO> targetTasks, List<EditorTaskTO> sourceTasks, Long updaterId) {
         Map<Long, TaskDBO> targetMap = targetTasks.stream()
                 .collect(Collectors.toMap(TaskDBO::getId, Function.identity()));
 
-        for (TaskTO taskTO : sourceTasks) {
-            TaskDBO taskDBO = targetMap.get(taskTO.getId());
+        for (EditorTaskTO editorTaskTO : sourceTasks) {
+            TaskDBO taskDBO = targetMap.get(editorTaskTO.getId());
 
             if (taskDBO != null) {
                 // Update existing task
-                copyTaskDboFrom(taskDBO, taskTO, updaterId);
-                targetMap.remove(taskTO.getId());
+                copyTaskDboFrom(taskDBO, editorTaskTO, updaterId);
+                targetMap.remove(editorTaskTO.getId());
             } else {
                 // Add new task
-                TaskDBO newTaskDBO = dboInitializerMapper.toTaskDBO(taskTO, updaterId);
+                TaskDBO newTaskDBO = dboInitializerMapper.toTaskDBO(editorTaskTO, updaterId);
                 targetTasks.add(newTaskDBO);
             }
         }
@@ -105,7 +105,7 @@ public class DBOUpdaterMapper {
         targetTasks.removeIf(task -> targetMap.containsKey(task.getId()));
     }
 
-    public TaskDBO copyTaskDboFrom(TaskDBO target, TaskTO source, Long updaterId) {
+    public TaskDBO copyTaskDboFrom(TaskDBO target, EditorTaskTO source, Long updaterId) {
         target.setName(source.getName());
         target.setDescription(source.getDescription());
         target.setUpdatedBy(updaterId);
@@ -115,20 +115,20 @@ public class DBOUpdaterMapper {
         return target;
     }
 
-    private void updateItems(List<ItemDBO> targetItems, List<ItemTO> sourceItems, Long updaterId) {
+    private void updateItems(List<ItemDBO> targetItems, List<EditorItemTO> sourceItems, Long updaterId) {
         Map<Long, ItemDBO> targetMap = targetItems.stream()
                 .collect(Collectors.toMap(ItemDBO::getId, Function.identity()));
 
-        for (ItemTO itemTO : sourceItems) {
-            ItemDBO itemDBO = targetMap.get(itemTO.getId());
+        for (EditorItemTO editorItemTO : sourceItems) {
+            ItemDBO itemDBO = targetMap.get(editorItemTO.getId());
 
             if (itemDBO != null) {
                 // Update existing item
-                copyItemDboFrom(itemDBO, itemTO, updaterId);
-                targetMap.remove(itemTO.getId());
+                copyItemDboFrom(itemDBO, editorItemTO, updaterId);
+                targetMap.remove(editorItemTO.getId());
             } else {
                 // Add new item
-                ItemDBO newItemDBO = dboInitializerMapper.toItemDBO(itemTO, updaterId);
+                ItemDBO newItemDBO = dboInitializerMapper.toItemDBO(editorItemTO, updaterId);
                 targetItems.add(newItemDBO);
             }
         }
@@ -137,7 +137,7 @@ public class DBOUpdaterMapper {
         targetItems.removeIf(item -> targetMap.containsKey(item.getId()));
     }
 
-    public ItemDBO copyItemDboFrom(ItemDBO target, ItemTO source, Long updaterId) {
+    public ItemDBO copyItemDboFrom(ItemDBO target, EditorItemTO source, Long updaterId) {
         target.setName(source.getName());
         target.setDescription(source.getDescription());
         target.setTimeRequired(source.getTimeRequired());

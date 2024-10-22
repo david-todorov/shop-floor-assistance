@@ -1,9 +1,9 @@
 package com.shopfloor.backend.database.mappers;
 
-import com.shopfloor.backend.api.transferobjects.ItemTO;
-import com.shopfloor.backend.api.transferobjects.OrderTO;
-import com.shopfloor.backend.api.transferobjects.TaskTO;
-import com.shopfloor.backend.api.transferobjects.WorkflowTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorItemTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorTaskTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
 import com.shopfloor.backend.database.objects.ItemDBO;
 import com.shopfloor.backend.database.objects.OrderDBO;
 import com.shopfloor.backend.database.objects.TaskDBO;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * This class serve as initializer and mapper for new orders
- * It maps the "basic" properties on an OrderDBO from OrderTO
+ * It maps the "basic" properties on an OrderDBO from EditorOrderTO
  * Sets the creator id and timestamp for creation
  *                    IMPORTANT
  * It returns new OrderDBO rather than updating them
@@ -27,15 +27,15 @@ import java.util.stream.Collectors;
 @Component
 public class DBOInitializerMapper {
 
-    public OrderDBO toOrderDBO(OrderTO orderTO, Long creatorId) {
+    public OrderDBO toOrderDBO(EditorOrderTO editorOrderTO, Long creatorId) {
         OrderDBO orderDBO = new OrderDBO();
-        orderDBO.setOrderNumber(orderTO.getOrderNumber());
-        orderDBO.setName(orderTO.getName());
-        orderDBO.setDescription(orderTO.getDescription());
+        orderDBO.setOrderNumber(editorOrderTO.getOrderNumber());
+        orderDBO.setName(editorOrderTO.getName());
+        orderDBO.setDescription(editorOrderTO.getDescription());
         orderDBO.setCreatedBy(creatorId);
         orderDBO.setCreatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
 
-        List<WorkflowDBO> workflowDBOs = orderTO.getWorkflows().stream()
+        List<WorkflowDBO> workflowDBOs = editorOrderTO.getWorkflows().stream()
                 .map(workflowTO -> toWorkflowDBO(workflowTO, creatorId)) // Updated to pass orderDBO
                 .collect(Collectors.toList());
 
@@ -45,14 +45,14 @@ public class DBOInitializerMapper {
         return orderDBO;
     }
 
-    public WorkflowDBO toWorkflowDBO(WorkflowTO workflowTO, Long creatorId) {
+    public WorkflowDBO toWorkflowDBO(EditorWorkflowTO editorWorkflowTO, Long creatorId) {
         WorkflowDBO workflowDBO = new WorkflowDBO();
-        workflowDBO.setName(workflowTO.getName());
-        workflowDBO.setDescription(workflowTO.getDescription());
+        workflowDBO.setName(editorWorkflowTO.getName());
+        workflowDBO.setDescription(editorWorkflowTO.getDescription());
         workflowDBO.setCreatedBy(creatorId);
         workflowDBO.setCreatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
 
-        List<TaskDBO> taskDBOs = workflowTO.getTasks().stream()
+        List<TaskDBO> taskDBOs = editorWorkflowTO.getTasks().stream()
                 .map(taskTO -> toTaskDBO(taskTO, creatorId))
                 .collect(Collectors.toList());
 
@@ -61,15 +61,15 @@ public class DBOInitializerMapper {
         return workflowDBO;
     }
 
-    public TaskDBO toTaskDBO(TaskTO taskTO, Long creatorId) {
+    public TaskDBO toTaskDBO(EditorTaskTO editorTaskTO, Long creatorId) {
         TaskDBO taskDBO = new TaskDBO();
-        taskDBO.setName(taskTO.getName());
-        taskDBO.setDescription(taskTO.getDescription());
+        taskDBO.setName(editorTaskTO.getName());
+        taskDBO.setDescription(editorTaskTO.getDescription());
         taskDBO.setCreatedBy(creatorId);
         taskDBO.setCreatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
 
 
-        List<ItemDBO> itemDBOs = taskTO.getItems().stream()
+        List<ItemDBO> itemDBOs = editorTaskTO.getItems().stream()
                 .map(itemTO -> toItemDBO(itemTO, creatorId))
                 .collect(Collectors.toList());
 
@@ -78,11 +78,11 @@ public class DBOInitializerMapper {
         return taskDBO;
     }
 
-    public ItemDBO toItemDBO(ItemTO itemTO, Long creatorId) {
+    public ItemDBO toItemDBO(EditorItemTO editorItemTO, Long creatorId) {
         ItemDBO itemDBO = new ItemDBO();
-        itemDBO.setName(itemTO.getName());
-        itemDBO.setDescription(itemTO.getDescription());
-        itemDBO.setTimeRequired(itemTO.getTimeRequired());
+        itemDBO.setName(editorItemTO.getName());
+        itemDBO.setDescription(editorItemTO.getDescription());
+        itemDBO.setTimeRequired(editorItemTO.getTimeRequired());
         itemDBO.setCreatedBy(creatorId);
         itemDBO.setCreatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         return itemDBO;
