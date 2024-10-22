@@ -31,6 +31,8 @@ import { dummyOrder } from '../types/dummyData';
 export class EditorCreateWorkflowComponent implements OnInit {
 
 
+
+
   orderName: string = '';
   // workflows: string[] = [];
   // item: string = '';
@@ -43,22 +45,38 @@ order: orderTO = {
     workflows: []
   };
   selectedWorkflowIndex: number | null = null;
-  selectedIndex = 0;
+  selectedTaskIndex = 0;
+  selectedItemIndex= 0;
 
   // State management for edit mode and description visibility
   workflowStates: { [key: number]: { editMode: boolean, showDescription: boolean } } = {};
   taskStates: { [key: number]: { editMode: boolean, showDescription: boolean } } = {};
+  itemStates: { [key: number]: { editMode: boolean, showDescription: boolean } } = {};
+
   ngOnInit() {
     //this.loadOrder();
     this.loadorderFromDummyData();
     this.initializeWorkflowStates();
+    this.initializeItemStates();
   }
 
-    initializeWorkflowStates() {
+  initializeWorkflowStates() {
     this.order.workflows.forEach((workflow: any, index: number) => {
       this.workflowStates[index] = { editMode: false, showDescription: false };
     });
   }
+
+  initializeItemStates() {
+    this.order.workflows.forEach((workflow: any, index1: number) => {
+      workflow.tasks.forEach((task: any, index2: number)=>{
+
+          this.itemStates[index2] = { editMode: false, showDescription: false };
+        })
+        
+      } );
+     
+    }
+  
   
   get selectedWorkflowTasks(): taskTO[] {
     if (this.selectedWorkflowIndex !== null) {
@@ -75,24 +93,18 @@ order: orderTO = {
 
   selectWorkflow(index: number) {
     this.selectedWorkflowIndex = index;
-    this.selectedIndex = 0; // Reset the selected tab index
+    this.selectedTaskIndex = 0; // Reset the selected tab index
   }
 
   addTask() {
     if (this.selectedWorkflowIndex !== null) {
       const newIndex = this.order.workflows[this.selectedWorkflowIndex].tasks.length + 1;
       this.order.workflows[this.selectedWorkflowIndex].tasks.push({ name: `Task ${newIndex}`, description: '', items: [{ name: '', longDescription: '', timeRequired: null }] });
-      this.selectedIndex = this.order.workflows[this.selectedWorkflowIndex].tasks.length - 1;
+      this.selectedTaskIndex = this.order.workflows[this.selectedWorkflowIndex].tasks.length - 1;
       this.saveOrder();
     }
   }
 
-  addItem(taskIndex: number) {
-    if (this.selectedWorkflowIndex !== null) {
-      this.order.workflows[this.selectedWorkflowIndex].tasks[taskIndex].items.push({ name: '', longDescription: '', timeRequired: null });
-      this.saveOrder();
-    }
-  }
 
   toggleEditMode(index: number, event: MouseEvent) {
     event.stopPropagation();
@@ -156,6 +168,53 @@ order: orderTO = {
         this.saveOrder();
       }
     });
+  }
+
+
+
+  // ---------------
+  toggleItemDescription(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.itemStates[index].showDescription = !this.itemStates[index].showDescription;
+    this.saveOrder();
+  }
+
+
+  deleteItem(index: number, event: MouseEvent) {
+    // event.stopPropagation();
+    // this.order.workflows[1].tasks[1].items.splice(index, 1);
+    // delete this.itemStates[index];
+    // this.saveOrder();
+  }
+
+  addItem() {
+    if (this.selectedWorkflowIndex !== null) {
+      
+      
+      //const newIndex = this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length + 1;
+      
+ 
+    this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.push({ name: '', longDescription: '', timeRequired: null });
+    const ind= this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length - 1;
+
+
+
+    this.itemStates[this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length - 1] = { editMode: false, showDescription: false };
+      
+    console.log(this.itemStates[ind].editMode, this.itemStates[ind].showDescription)
+    
+    this.saveOrder();
+    }
+  }
+
+  toggleEditItemMode(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.itemStates[index].editMode = !this.itemStates[index].editMode;
+    this.saveOrder();
+  }
+
+  selectItem(index: number) {
+    this.selectedItemIndex = index;
   }
 }
 

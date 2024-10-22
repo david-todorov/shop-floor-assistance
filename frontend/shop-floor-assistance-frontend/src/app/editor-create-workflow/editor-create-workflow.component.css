@@ -51,21 +51,43 @@
 .task-label {
     flex-grow: 1;
     font-size: 1.2em;
-    margin: 0.5rem;
-    /* Increase font size for better visibility */
 }
 
 .tab-icons {
     display: flex;
     gap: 0;
-    /* Remove gap between icons */
 }
 
 .tab-icons button {
     padding: 2px;
-    /* Reduced padding for smaller icons */
     font-size: 16px;
-    /* Reduced font size for smaller icons */
+}
+
+.item-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-icons {
+    display: flex;
+    gap: 0;
+}
+
+.item-icons button {
+    padding: 2px;
+    font-size: 16px;
+}
+
+.item-details {
+    margin-top: 10px;
 }
 
 mat-form-field {

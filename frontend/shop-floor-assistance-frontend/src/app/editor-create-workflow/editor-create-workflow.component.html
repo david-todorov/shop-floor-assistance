@@ -26,8 +26,10 @@
     <button mat-raised-button color="primary" (click)="addWorkflow()">Add Workflow</button>
 </div>
 
+<!-- ---------------------------------------------------------------------------------- -->
+
 <div class="main-content">
-    <mat-tab-group [(selectedIndex)]="selectedIndex">
+    <mat-tab-group [(selectedIndex)]="selectedTaskIndex">
         <mat-tab *ngFor="let task of selectedWorkflowTasks; let i = index">
             <ng-template mat-tab-label>
                 <div class="tab-label-container">
@@ -46,18 +48,34 @@
                 </div>
             </ng-template>
             <!-- Content for the tab -->
-            <div *ngFor="let item of task.items">
-                <mat-form-field>
-                    <input matInput [(ngModel)]="item.name" placeholder="Item Name">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput [(ngModel)]="item.longDescription" placeholder="Item Description">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput [(ngModel)]="item.timeRequired" placeholder="Time Required" type="number">
+            <div *ngFor="let item of task.items; let itemIndex = index" class="item-container">
+                <div class="item-header">
+                    <mat-form-field *ngIf="itemStates[itemIndex]?.editMode">
+                        <input matInput [(ngModel)]="item.name" placeholder="Name">
+                    </mat-form-field>
+                    <span *ngIf="!itemStates[itemIndex]?.editMode">{{ item.name }}</span>
+                    <div class="item-icons">
+                        <button mat-icon-button (click)="toggleEditItemMode(itemIndex, $event)">
+                            <mat-icon>{{ itemStates[itemIndex].editMode ? 'check' : 'edit' }}</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="deleteItem(itemIndex, $event)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="toggleItemDescription(itemIndex, $event)">
+                            <mat-icon>info</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <mat-form-field *ngIf="itemStates[itemIndex]?.showDescription || itemStates[itemIndex]?.editMode">
+                    <mat-label>Item Description</mat-label>
+                    <textarea matInput [(ngModel)]="item.longDescription" placeholder="Description"
+                        [disabled]="!itemStates[itemIndex].editMode"></textarea>
+                    <mat-label>Time Required</mat-label>
+                    <textarea matInput [(ngModel)]="item.timeRequired" placeholder="Time required"
+                        [disabled]="!itemStates[itemIndex].editMode"></textarea>
                 </mat-form-field>
             </div>
-            <button mat-raised-button color="primary" (click)="addItem(i)">Add Item</button>
+            <button mat-raised-button color="primary" (click)="addItem()">Add Item</button>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
