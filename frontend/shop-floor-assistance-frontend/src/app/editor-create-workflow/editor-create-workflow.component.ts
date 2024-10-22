@@ -86,13 +86,14 @@ order: orderTO = {
   addWorkflow() {
     this.order.workflows.push({ name: '', description: '', tasks: [{ name: 'Task 1', description: '', items: [{ name: '', longDescription: '', timeRequired: null }] }] });
     this.workflowStates[this.order.workflows.length - 1] = { editMode: false, showDescription: false };
-this.selectedWorkflowIndex=this.order.workflows.length - 1;
+    this.selectedWorkflowIndex=this.order.workflows.length - 1;
     this.saveOrder();
   }
 
   selectWorkflow(index: number) {
     this.selectedWorkflowIndex = index;
     this.selectedTaskIndex = 0; // Reset the selected tab index
+    this.selectedItemIndex= 0;
   }
 
   addTask() {
@@ -114,21 +115,15 @@ this.selectedWorkflowIndex=this.order.workflows.length - 1;
   deleteWorkflow(index: number, event: MouseEvent) {
     if (this.selectedWorkflowIndex !== null) {
       event.stopPropagation();
-    
-
       this.order.workflows.splice(this.selectedWorkflowIndex, 1);
       delete this.workflowStates[this.selectedWorkflowIndex]; 
-
-      this.workflowStates[this.order.workflows.length - 1] = { editMode: false, showDescription: false };
-
-const correctedIndex = this.order.workflows.length - 1;
-this.selectedWorkflowIndex=correctedIndex>=0?correctedIndex:null;
-      this.saveOrder();
+      this.workflowStates[this.order.workflows.length - 1] = { editMode: false,
+         showDescription: false };
+      const correctedIndex = this.order.workflows.length - 1;
+      this.selectedWorkflowIndex=correctedIndex>=0?correctedIndex:null;
+            this.saveOrder();
     }
   }
-
-      // this.order.workflows[this.selectedWorkflowIndex].tasks.splice(index, 1);
-      // delete this.taskStates[index];
 
   toggleDescription(index: number, event: MouseEvent) {
     event.stopPropagation();
@@ -192,10 +187,17 @@ this.selectedWorkflowIndex=correctedIndex>=0?correctedIndex:null;
 
 
   deleteItem(index: number, event: MouseEvent) {
-    // event.stopPropagation();
-    // this.order.workflows[1].tasks[1].items.splice(index, 1);
-    // delete this.itemStates[index];
-    // this.saveOrder();
+      if (this.selectedWorkflowIndex !== null) {
+        event.stopPropagation();
+        this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.splice(index, 1);
+        delete this.itemStates[this.selectedItemIndex]; 
+        this.itemStates[this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length - 1] = { editMode: false,
+          showDescription: false };
+        const correctedIndex = this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length - 1;
+        this.selectedItemIndex=correctedIndex>=0?correctedIndex:0;
+              console.log(this.order);
+              this.saveOrder();
+      }
   }
 
   addItem() {
