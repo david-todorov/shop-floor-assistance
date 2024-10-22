@@ -94,3 +94,7 @@
 mat-form-field {
     width: 100%;
 }
+.selected-element, .selected-tab {
+    background-color: #e0f7fa;
+    border-color: #00796b;
+}

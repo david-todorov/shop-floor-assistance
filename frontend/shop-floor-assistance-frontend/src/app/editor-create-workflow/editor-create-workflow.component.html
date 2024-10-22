@@ -1,6 +1,6 @@
 <div class="side-panel">
     <!-- Content for the side panel -->
-    <div *ngFor="let workflow of order.workflows; let i = index" class="workflow-container" >
+    <div *ngFor="let workflow of order.workflows; let i = index" class="workflow-container"  [ngClass]="{'selected-element': selectedWorkflowIndex === i}" >
         <div class="workflow-header" (click)="selectWorkflow(i)">
             <mat-form-field *ngIf="workflowStates[i]?.editMode">
                 <input matInput [(ngModel)]="workflow.name" placeholder="Name">
@@ -29,10 +29,10 @@
 <!-- ---------------------------------------------------------------------------------- -->
 
 <div class="main-content">
-    <mat-tab-group [(selectedIndex)]="selectedTaskIndex">
-        <mat-tab *ngFor="let task of selectedWorkflowTasks; let i = index">
+    <mat-tab-group [(selectedIndex)]="selectedTaskIndex" >
+        <mat-tab *ngFor="let task of selectedWorkflowTasks; let i = index" >
             <ng-template mat-tab-label>
-                <div class="tab-label-container">
+                <div class="tab-label-container" [ngClass]="{'selected-tab': selectedTaskIndex === i}">
                     <span class="task-label">{{ task.name }}</span>
                     <div class="tab-icons">
                         <button mat-icon-button (click)="openEditDialog(i, true)">
