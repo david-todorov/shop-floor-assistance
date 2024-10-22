@@ -1,7 +1,7 @@
 <div class="side-panel">
     <!-- Content for the side panel -->
-    <div *ngFor="let workflow of order.workflows; let i = index" class="workflow-container" (click)="selectWorkflow(i)">
-        <div class="workflow-header">
+    <div *ngFor="let workflow of order.workflows; let i = index" class="workflow-container" >
+        <div class="workflow-header" (click)="selectWorkflow(i)">
             <mat-form-field *ngIf="workflowStates[i]?.editMode">
                 <input matInput [(ngModel)]="workflow.name" placeholder="Name">
             </mat-form-field>
@@ -56,7 +56,7 @@
                     <span *ngIf="!itemStates[itemIndex]?.editMode">{{ item.name }}</span>
                     <div class="item-icons">
                         <button mat-icon-button (click)="toggleEditItemMode(itemIndex, $event)">
-                            <mat-icon>{{ itemStates[itemIndex].editMode ? 'check' : 'edit' }}</mat-icon>
+                            <mat-icon>{{ itemStates[itemIndex]?.editMode ? 'check' : 'edit' }}</mat-icon>
                         </button>
                         <button mat-icon-button (click)="deleteItem(itemIndex, $event)">
                             <mat-icon>delete</mat-icon>

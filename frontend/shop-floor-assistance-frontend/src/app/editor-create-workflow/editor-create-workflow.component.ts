@@ -69,17 +69,15 @@ order: orderTO = {
   initializeItemStates() {
     this.order.workflows.forEach((workflow: any, index1: number) => {
       workflow.tasks.forEach((task: any, index2: number)=>{
-
           this.itemStates[index2] = { editMode: false, showDescription: false };
         })
-        
       } );
      
     }
   
-  
   get selectedWorkflowTasks(): taskTO[] {
     if (this.selectedWorkflowIndex !== null) {
+      console.log('in get SelectedWorkflow',this.selectedWorkflowIndex)
       return this.order.workflows[this.selectedWorkflowIndex].tasks;
     }
     return [];
@@ -88,6 +86,7 @@ order: orderTO = {
   addWorkflow() {
     this.order.workflows.push({ name: '', description: '', tasks: [{ name: 'Task 1', description: '', items: [{ name: '', longDescription: '', timeRequired: null }] }] });
     this.workflowStates[this.order.workflows.length - 1] = { editMode: false, showDescription: false };
+this.selectedWorkflowIndex=this.order.workflows.length - 1;
     this.saveOrder();
   }
 
@@ -113,11 +112,23 @@ order: orderTO = {
   }
 
   deleteWorkflow(index: number, event: MouseEvent) {
-    event.stopPropagation();
-    this.order.workflows.splice(index, 1);
-    delete this.workflowStates[index];
-    this.saveOrder();
+    if (this.selectedWorkflowIndex !== null) {
+      event.stopPropagation();
+    
+
+      this.order.workflows.splice(this.selectedWorkflowIndex, 1);
+      delete this.workflowStates[this.selectedWorkflowIndex]; 
+
+      this.workflowStates[this.order.workflows.length - 1] = { editMode: false, showDescription: false };
+
+const correctedIndex = this.order.workflows.length - 1;
+this.selectedWorkflowIndex=correctedIndex>=0?correctedIndex:null;
+      this.saveOrder();
+    }
   }
+
+      // this.order.workflows[this.selectedWorkflowIndex].tasks.splice(index, 1);
+      // delete this.taskStates[index];
 
   toggleDescription(index: number, event: MouseEvent) {
     event.stopPropagation();
@@ -159,7 +170,7 @@ order: orderTO = {
     openEditDialog(index: number, isEditMode: boolean) {
     const dialogRef = this.dialog.open(EditTaskDialogComponent, {
       width: '400px',
-      data: { task: { ...this.selectedWorkflowTasks[index] }, isEditMode }
+      data: { task: { ...this.selectedWorkflowTasks[index] }, isEditMode}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -189,22 +200,11 @@ order: orderTO = {
 
   addItem() {
     if (this.selectedWorkflowIndex !== null) {
-      
-      
-      //const newIndex = this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length + 1;
-      
- 
-    this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.push({ name: '', longDescription: '', timeRequired: null });
-    const ind= this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length - 1;
-
-
-
-    this.itemStates[this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length - 1] = { editMode: false, showDescription: false };
-      
-    console.log(this.itemStates[ind].editMode, this.itemStates[ind].showDescription)
-    
-    this.saveOrder();
-    }
+      this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.push({ name: '', longDescription: '', timeRequired: null });
+      //const ind= this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length - 1;
+      this.itemStates[this.order.workflows[this.selectedWorkflowIndex].tasks[this.selectedTaskIndex].items.length - 1] = { editMode: false, showDescription: false };
+      this.saveOrder();
+      }
   }
 
   toggleEditItemMode(index: number, event: MouseEvent) {
