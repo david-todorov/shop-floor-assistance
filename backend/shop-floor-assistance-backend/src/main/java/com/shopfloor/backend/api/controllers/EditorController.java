@@ -1,8 +1,9 @@
 package com.shopfloor.backend.api.controllers;
 
-import com.shopfloor.backend.api.transferobjects.OrderTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
 import com.shopfloor.backend.services.EditorService;
 import com.shopfloor.backend.services.EditorServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -34,25 +35,32 @@ public class EditorController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderTO> getAllOrders() {
+    public List<EditorOrderTO> getAllOrders() {
         return this.editorService.getAllOrders();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderTO createOrder(@RequestBody OrderTO newOrder, @RequestHeader("Authorization") String authorizationHeader) {
-        return this.editorService.addOrder(newOrder, authorizationHeader);
+    public EditorOrderTO createOrder(@Valid @RequestBody EditorOrderTO newOrder) {
+        return this.editorService.addOrder(newOrder);
     }
 
     @PutMapping("/{id}")
-    public OrderTO updateOrder(@PathVariable Long id, @RequestBody OrderTO updatedOrder, @RequestHeader("Authorization") String authorizationHeader) {
-        return this.editorService.updateOrder(id, updatedOrder, authorizationHeader);
+    @ResponseStatus(HttpStatus.OK)
+    public EditorOrderTO updateOrder(@PathVariable Long id, @Valid @RequestBody EditorOrderTO updatedOrder) {
+        return this.editorService.updateOrder(id, updatedOrder);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrder(@PathVariable Long id, @RequestHeader("Authorization") String authorizationHeader) {
+    public void deleteOrder(@PathVariable Long id) {
         this.editorService.deleteOrder(id);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public EditorOrderTO getAllOrders(@PathVariable Long id) {
+        return this.editorService.getOrder(id);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.shopfloor.backend.services;
 
-import com.shopfloor.backend.api.transferobjects.OrderTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ import java.util.List;
  */
 public interface EditorService {
 
-    List<OrderTO> getAllOrders();
+    List<EditorOrderTO> getAllOrders();
 
-    OrderTO addOrder(OrderTO newOrderTO, String authorizationHeader);
+    EditorOrderTO addOrder(EditorOrderTO newEditorOrderTO);
 
-    OrderTO updateOrder(Long id, OrderTO orderTO, String authorizationHeader);
+    EditorOrderTO updateOrder(Long id, EditorOrderTO editorOrderTO);
 
-    OrderTO getOrder(Long id);
+    EditorOrderTO getOrder(Long id);
 
     void deleteOrder(Long orderId);
 }

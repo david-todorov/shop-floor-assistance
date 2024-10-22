@@ -1,10 +1,13 @@
 package com.shopfloor.backend.api.controllers;
 
+import com.shopfloor.backend.api.transferobjects.operators.OperatorOrderTO;
 import com.shopfloor.backend.services.OperatorService;
 import com.shopfloor.backend.services.OperatorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  *                            PLEASE READ
@@ -29,26 +32,16 @@ public class OperatorController {
         this.operatorService = operatorService;
     }
 
-    // GET /orders/operator
     @GetMapping
-    public ResponseEntity<String> getAllWorkflows() {
-        // Logic to retrieve all orders
-        return ResponseEntity.ok("List of orders");
+    @ResponseStatus(HttpStatus.OK)
+    public List<OperatorOrderTO> getAllOrders() {
+        return this.operatorService.getAllOrders();
     }
 
-    // GET /orders/operator/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<String> getWorkflowById(@PathVariable Long id) {
-        // Logic to get details of a specific workflow
-        return ResponseEntity.ok("Workflow details");
+    @ResponseStatus(HttpStatus.OK)
+    public OperatorOrderTO getOrderById(@PathVariable Long id) {
+        return this.operatorService.getOrder(id);
     }
 
-    // POST /orders/operator/{id}/execute
-    @PostMapping("/{id}/execute")
-    public ResponseEntity<String> executeWorkflow(@PathVariable Long id) {
-        // Logic to execute a workflow
-        return ResponseEntity.ok("Workflow executed");
-    }
-
-    // Additional methods for getting status, history, etc.
 }

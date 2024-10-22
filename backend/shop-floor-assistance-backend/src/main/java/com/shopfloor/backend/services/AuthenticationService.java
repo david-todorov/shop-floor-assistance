@@ -1,7 +1,7 @@
 package com.shopfloor.backend.services;
 
-import com.shopfloor.backend.api.transferobjects.AuthenticationUserResponseTO;
-import com.shopfloor.backend.api.transferobjects.LoginUserRequestTO;
+import com.shopfloor.backend.api.transferobjects.authentication.AuthenticationUserResponseTO;
+import com.shopfloor.backend.api.transferobjects.authentication.LoginUserRequestTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 

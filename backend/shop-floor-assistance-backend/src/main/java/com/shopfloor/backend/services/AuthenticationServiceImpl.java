@@ -1,7 +1,7 @@
 package com.shopfloor.backend.services;
 
-import com.shopfloor.backend.api.transferobjects.AuthenticationUserResponseTO;
-import com.shopfloor.backend.api.transferobjects.LoginUserRequestTO;
+import com.shopfloor.backend.api.transferobjects.authentication.AuthenticationUserResponseTO;
+import com.shopfloor.backend.api.transferobjects.authentication.LoginUserRequestTO;
 import com.shopfloor.backend.database.objects.UserDBO;
 import com.shopfloor.backend.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
