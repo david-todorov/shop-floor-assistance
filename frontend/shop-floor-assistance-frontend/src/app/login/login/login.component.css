@@ -1,22 +1,51 @@
 .login-container {
-    display: flex-flow;
-    flex-wrap: column;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 10% auto;
     padding: 30px;
-    background-color: lightblue;
-    width: fit-content;
-    height: fit-content;
-    box-sizing: border-box;
+    background-color: #f0f4f8; /* Lighter background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    width: 400px; /* Fixed width for uniformity */
+    height: auto;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    color: #74ade6; /* Change the color to match the button */
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     width: 100%;
+}
+
+input {
+    font-family: 'Roboto', sans-serif;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #65a2c3; /* Teal color for material design */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #4a7da4; /* Darker teal on hover */
 }
 
 .error-message {
     color: red;
     margin-top: 10px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
 }
