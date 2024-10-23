@@ -1,0 +1,11 @@
+<div class="left-menu">
+  <div *ngFor="let workflow of workflows" class="menu-item">
+    <app-button 
+      [label]="workflow.name" 
+      color="primary" 
+      [ngClass]="{'active-button': selectedWorkflow === workflow}"
+      (click)="workflowSelected.emit(workflow)">
+    </app-button>
+  </div>
+</div>
+
