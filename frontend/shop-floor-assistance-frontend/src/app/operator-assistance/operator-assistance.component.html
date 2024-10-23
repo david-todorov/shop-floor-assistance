@@ -1,0 +1,50 @@
+<app-card>
+  <div class="card-title">
+    <div class="row space-between center">
+      <span class="title">Operator Guidance - {{ order.orderNumber }} - {{ order.name }}</span>
+      <div class="company-info">
+        <span class="company-title">Active Wizzard CC</span>
+        <img src="assets/logo.jpg" alt="Uhlmann Logo" class="company-logo">
+      </div>
+    </div>
+  </div>
+
+  <div class="card-content">
+    <div class="content-container">
+      <!-- Left Menu -->
+      <div class="left-menu">
+        <app-list [workflows]="order.workflows" (workflowSelected)="selectWorkflow($event)"></app-list>
+      </div>
+
+      <!-- Right Content -->
+      <div class="right-content">
+        <!-- Display Tasks as Tabs -->
+        <mat-tab-group [(selectedIndex)]="selectedTaskIndex">
+          <mat-tab *ngFor="let task of selectedWorkflow?.tasks; let i = index" [label]="task.name">
+            <div class="task-content">
+              <!-- Display Items for Each Task -->
+              <mat-accordion>
+                <mat-expansion-panel *ngFor="let item of task.items; let j = index">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <mat-checkbox [(ngModel)]="task.items[j].completed">
+                        {{ item.name }}
+                      </mat-checkbox>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <p>{{ item.longDescription }}</p>
+                  <p>Time Required: {{ item.timeRequired ? item.timeRequired + ' minutes' : 'N/A' }}</p>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+
+        <!-- Next Button -->
+        <div class="next-button">
+          <button mat-raised-button color="accent" [disabled]="!canProceedToNextTask()" (click)="goToNextTask()">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-card>

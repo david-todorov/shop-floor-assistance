@@ -1,0 +1,20 @@
+.row {
+  display: flex;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.center {
+  align-items: center;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.company-title {
+  font-size: 16px;
+}

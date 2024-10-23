@@ -3,12 +3,12 @@
     <form (ngSubmit)="onSubmit()">
         <mat-form-field class="form-group" appearance="fill">
             <mat-label>Username</mat-label>
-            <input matInput type="text" id="username" [(ngModel)]="username" name="username" required />
+            <input matInput placeholder="Enter username" title="Username" type="text" id="username" [(ngModel)]="username" name="username" required />
         </mat-form-field>
 
         <mat-form-field class="form-group" appearance="fill">
             <mat-label>Password</mat-label>
-            <input matInput type="password" id="password" [(ngModel)]="password" name="password" required />
+            <input matInput placeholder="Enter password" title="Password" type="password" id="password" [(ngModel)]="password" name="password" required />
         </mat-form-field>
 
         <button mat-raised-button color="primary" type="submit">Login</button>
