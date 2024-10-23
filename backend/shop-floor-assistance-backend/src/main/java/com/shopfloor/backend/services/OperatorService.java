@@ -1,5 +1,9 @@
 package com.shopfloor.backend.services;
 
+import com.shopfloor.backend.api.transferobjects.operators.OperatorOrderTO;
+
+import java.util.List;
+
 /**
  * This is where all needed public methods should be declared
  * Think what OperatorController would need and declare it here
@@ -11,4 +15,8 @@ package com.shopfloor.backend.services;
  * Have fun
  */
 public interface OperatorService {
+
+    List<OperatorOrderTO> getAllOrders();
+
+    OperatorOrderTO getOrder(long id);
 }
