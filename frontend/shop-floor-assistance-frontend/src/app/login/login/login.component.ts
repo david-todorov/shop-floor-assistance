@@ -28,11 +28,11 @@ export class LoginComponent implements OnInit{
       this.authService.logout();
       console.log('logedout');
       //easyhack, to be refactored 
-      this.router.navigate(['/login'], { replaceUrl: true }).then(() => {
-        history.pushState(null, '', '/login');
-        history.pushState(null, '', '/login');
-        history.go(-1);
-      });
+      // this.router.navigate(['/login'], { replaceUrl: true }).then(() => {
+      //   history.pushState(null, '', '/login');
+      //   history.pushState(null, '', '/login');
+      //   history.go(-1);
+      // });
     }
   }
 
@@ -42,14 +42,15 @@ export class LoginComponent implements OnInit{
         const token: any = localStorage.getItem("jwt_token")?.split('.')[1];
         const user: any = JSON.parse(atob(token)) as userTO;
         console.log(user)
+        // this.router.navigate(['/home']);
         if (user.roles.includes('ROLE_OPERATOR')) {
-          this.router.navigate(['/home/operator']);
+          this.router.navigate(['operator']);
         } else if (user.roles.includes('ROLE_EDITOR')) {
-          this.router.navigate(['/home/editor']);
+          this.router.navigate(['editor']);
         } else {
-          this.errorMessage = 'Unauthorized role';
-          alert(this.errorMessage);
+          alert('Unauthorized role');
         }
+
       },
       (error)=>{
         this.errorMessage= 'Invalid username or password';

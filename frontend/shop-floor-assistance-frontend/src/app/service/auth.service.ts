@@ -13,7 +13,7 @@ export class AuthService {
   private _isLoggedIn$= new BehaviorSubject<boolean>(false);
   private readonly TOKEN_NAME= "jwt_token";
   isLoggedIn$= this._isLoggedIn$.asObservable();
-  user!: userTO;
+  private user!: userTO;
 
   get token(): any {
     return localStorage.getItem(this.TOKEN_NAME);
@@ -21,7 +21,7 @@ export class AuthService {
 
   constructor(private http: HttpClient, private backendCommunicationService: BackendCommunicationService) { 
     this._isLoggedIn$.next(!!this.token);
-    // this.user= this.getUserCredentials(this.token);
+    //this.user= this.getUserCredentials(this.token);
   }
 
   login(username: string, password: string): Observable<any>{
@@ -38,7 +38,13 @@ export class AuthService {
     return JSON.parse(atob(token.split('.')[1])) as userTO;
   }
 
+  get isOperator(){
+    return this.user.roles.includes('ROLE_OPERATOR');
+  }
 
+  get isEditor(){
+    return this.user.roles.includes('ROLE_EDITOR');
+  }
 
   get isLoggedIn(): boolean {
   return this._isLoggedIn$.getValue();
