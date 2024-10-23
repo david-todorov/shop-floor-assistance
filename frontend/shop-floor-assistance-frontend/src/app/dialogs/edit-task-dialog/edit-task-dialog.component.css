@@ -1,0 +1,17 @@
+mat-form-field {
+    width: 100%;
+}
+
+mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.mat-dialog-container {
+    border-radius: 0 !important;
+}
+
+h1{
+    font-size: large;
+    font-weight: bold;
+}

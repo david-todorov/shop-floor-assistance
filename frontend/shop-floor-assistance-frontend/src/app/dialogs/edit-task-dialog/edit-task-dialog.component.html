@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>{{ data.isEditMode ? 'Edit Task' : 'Task Information' }}</h1>
+<div mat-dialog-content>
+    <mat-form-field>
+        <input matInput [(ngModel)]="data.task.name" placeholder="Task Name" [disabled]="!data.isEditMode">
+    </mat-form-field>
+    <mat-form-field>
+        <textarea matInput [(ngModel)]="data.task.description" placeholder="Task Description"
+            [disabled]="!data.isEditMode"></textarea>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button (click)="onSave()" *ngIf="data.isEditMode">Save</button>
+</div>

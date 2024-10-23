@@ -1,0 +1,131 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.order-details {
+    /* width: 100%; */
+    margin: 30px 30px 0 30px;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+}
+
+.content-container {
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+}
+
+.side-panel {
+    margin: auto 30px;
+    width: 300px;
+    height: calc(100% - 60px);
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.main-content {
+    margin: auto 30px;
+    flex-grow: 1;
+    /* Take remaining space */
+    height: calc(100% - 60px);
+    /* Adjust height to account for order details */
+    padding: 16px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    overflow-y: auto;
+    /* Scroll if content overflows */
+}
+
+.workflow-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.workflow-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.workflow-icons {
+    display: flex;
+    gap: 5px;
+}
+
+.tab-label-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.selected-tab {
+    background-color: #e0f7fa;
+    border-bottom: 2px solid #00796b;
+}
+
+.task-label {
+    margin: 5px;
+    padding: 5px;
+    flex-grow: 1;
+    min-height: max-content;
+    font-size: medium;
+}
+
+.tab-icons {
+    display: flex;
+    gap: 2px;
+}
+
+
+
+
+.tab-icons button {
+    padding: 2px;
+    font-size: 16px;
+}
+
+.item-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-icons {
+    display: flex;
+    gap: 0;
+}
+
+.item-icons button {
+    padding: 2px;
+    font-size: 16px;
+}
+
+.item-details {
+    margin-top: 10px;
+}
+
+mat-form-field {
+    width: 100%
+}
+
+.selected-element,
+.selected-tab {
+    background-color: #e0f7fa;
+    border-color: #00796b;
+}
