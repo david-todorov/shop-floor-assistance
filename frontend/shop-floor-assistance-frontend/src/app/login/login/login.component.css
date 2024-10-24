@@ -1,37 +1,54 @@
-.login-container {
+.main-container {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 10% auto;
-    padding: 30px;
-    background-color: #f0f4f8; /* Lighter background */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow */
-    width: 400px; /* Fixed width for uniformity */
-    height: auto;
+    height: 100vh; /* Full height of the viewport */
+    width: 100vw;  /* Full width of the viewport */
+    background-color: #f5f5f5;
+    position: relative;
 }
 
-h2 {
-    margin-bottom: 20px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    color: #74ade6; /* Change the color to match the button */
+.login-card {
+    width: 600px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background-color: white;
+    text-align: center;
+    z-index: 1; /* Keep it above the background logo */
 }
 
-.form-group {
-    margin-bottom: 20px;
+.logo-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
 }
 
-input {
+.company-logo {
+    width: 100%; /* Makes the logo take up the whole width */
+    height: auto;
+    max-width: 200px; /* Max width to avoid it being too large */
+    margin-bottom: 20px;
+}
+
+mat-card-title h2 {
     font-family: 'Roboto', sans-serif;
+    color: #00796b; /* Match your theme */
+    font-weight: 500;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    width: 80%;
 }
 
 button {
     width: 100%;
     padding: 12px;
-    background-color: #65a2c3; /* Teal color for material design */
+    background-color: #65a2c3;
     color: white;
     border: none;
     border-radius: 5px;
@@ -40,7 +57,14 @@ button {
 }
 
 button:hover {
-    background-color: #4a7da4; /* Darker teal on hover */
+    background-color: #4a7da4;
+}
+
+.custom-button {
+    width: 250px; 
+    height: 70px; 
+    font-size: 1.5rem;
+
 }
 
 .error-message {

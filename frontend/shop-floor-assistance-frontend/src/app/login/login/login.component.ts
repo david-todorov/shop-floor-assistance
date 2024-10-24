@@ -7,11 +7,20 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatInputModule } from '@angular/material/input';
 import { userTO } from '../../types/userTO';
+import { CardComponent } from '../../components/card/card.component';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatFormFieldModule, FormsModule, CommonModule, HttpClientModule, MatInputModule],
+  imports: [
+    MatFormFieldModule, 
+    FormsModule, 
+    CommonModule, 
+    HttpClientModule, 
+    MatInputModule,
+    CardComponent,
+    MatCardModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
