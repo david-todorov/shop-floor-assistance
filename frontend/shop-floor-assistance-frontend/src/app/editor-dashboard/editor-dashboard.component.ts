@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { sampleOrders } from '../types/dummyData';
 import { MatTableModule } from '@angular/material/table';
@@ -9,6 +9,7 @@ import { orderTO } from '../types/orderTO';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { ButtonComponent } from '../components/button/button.component';
+import { CardComponent } from '../components/card/card.component';
 
 @Component({
   selector: 'app-editor-dashboard',
@@ -19,10 +20,12 @@ import { ButtonComponent } from '../components/button/button.component';
     MatPaginatorModule,
     FormsModule,
     MatButtonModule,
-    ButtonComponent],
+    ButtonComponent, 
+    CardComponent],
   templateUrl: './editor-dashboard.component.html',
   styleUrl: './editor-dashboard.component.css',
-  providers:[RouterLink, RouterModule]
+  providers:[RouterLink, RouterModule],
+  encapsulation: ViewEncapsulation.None
 })
 export class EditorDashboardComponent {
   constructor(private routerLink: RouterLink){}

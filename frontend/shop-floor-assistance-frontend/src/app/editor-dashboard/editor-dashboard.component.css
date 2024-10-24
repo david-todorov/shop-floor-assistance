@@ -4,18 +4,32 @@
     align-items: center;
     margin: 20px;
 }
-
-h1 {
-    margin-bottom: 20px;
-    background-color: #d7d7d7;
-    padding: 20px 860px; /*Add padding to make the rectangle bigger */
-    display: flex;
-    border-radius: 8px; /* Optional: rounded corners */
-    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow effect */
-    margin-bottom: 20px;
-    text-align: center; 
-    font-size: 30px;
+* Container for title */
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
 }
+
+.title {
+  font-weight: bold;
+  font-size: 28px;
+}
+
+/* Company info container */
+.company-info {
+  display: flex;           /* To align the logo and text horizontally */
+  align-items: center;     
+}
+
+/* Company logo styling */
+.company-logo {
+  width: 125px;             
+  height: auto;
+  margin-right: 10px;      
+}
+
 
 .table-container {
     display: flex;
@@ -40,7 +54,7 @@ td.mat-cell {
 
 /* Styling for columns */
 .mat-column-orderNumber, .mat-column-name, .mat-column-shortDescription {
-    font-size: 18px;
+    font-size: 16px;
     text-align: center;
     border-right: 1px solid currentColor;
 }
@@ -49,6 +63,20 @@ td.mat-cell {
     padding-left: 50px;
     padding-right: 50px;
 }
+
+.custom-button {
+    width: 250px; /* Make buttons wider */
+    height: 70px; /* Increase button height */
+    margin: 0 300px; /* Spacing between the buttons */
+}
+
+
+
+
+
+
+
+
 
 
 

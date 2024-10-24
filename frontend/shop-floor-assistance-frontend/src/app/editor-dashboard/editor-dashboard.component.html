@@ -1,4 +1,10 @@
-<h1>Dashboard</h1>
+
+<div class="card-title">
+    <div class="row space-between center">
+        <span class="title">Dashboard</span>
+    <img src="assets/logo.jpg" alt="Uhlmann Logo" class="company-logo">
+      </div>
+</div>
 
 <table mat-table [dataSource]="orders" class="mat-elevation-z8">
     <!-- Order Number Column -->
@@ -23,4 +29,10 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<button mat-raised-button color="primary" [routerLink]="['/create-workflow']">Go to Create Workflow</button>
+<p> </p>
+
+ <ng-container buttons="buttons">
+        <button mat-raised-button class="custom-button" color="primary" [routerLink]="['/show-workflow']">View Selected Workflow</button>
+        <button mat-raised-button class="custom-button" color="primary" [routerLink]="['/create-workflow']">Go to Create Workflow</button>
+</ng-container>
+
