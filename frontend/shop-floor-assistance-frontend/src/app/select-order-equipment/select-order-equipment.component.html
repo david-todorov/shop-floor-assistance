@@ -1,0 +1,28 @@
+
+
+<div class="container">
+    
+    <div class="header">
+        <h6>Select Order and Equipment</h6>
+        <img src="assets/logo.png" alt="Company Logo" class="logo" />
+      </div>
+
+    <div class="form">
+      <div class="form-row">
+        <label for="order">Order:</label>
+        <select id="order" class="dropdown">
+          <option *ngFor="let order of orders" [value]="order">{{ order }}</option>
+        </select>
+      </div>
+      
+      <div class="form-row">
+        <label for="equipment">Equipment:</label>
+        <select id="equipment" class="dropdown">
+          <option *ngFor="let equipment of equipments" [value]="equipment">{{ equipment }}</option>
+        </select>
+      </div>
+    </div>
+  
+    <button class="start-button">Start Assistant</button>
+  </div>
+  

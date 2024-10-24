@@ -1,0 +1,15 @@
+nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  nav ul li {
+    display: inline; /* or inline-block */
+    margin-right: 15px; /* Adds spacing between items */
+  }
+  
+  nav ul li a {
+    text-decoration: none; /* No underline */
+    color: blue; 
+  }
+  

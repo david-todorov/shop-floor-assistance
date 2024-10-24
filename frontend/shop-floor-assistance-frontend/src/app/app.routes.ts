@@ -7,15 +7,17 @@ import { EditorDashboardComponent } from './editor-dashboard/editor-dashboard.co
 import { HomeGuard } from './guards/home.guard';
 import { EditorCreateWorkflowComponent } from './editor-create-workflow/editor-create-workflow.component';
 import { OperatorAssistanceComponent } from './operator-assistance/operator-assistance.component';
+import { SelectOrderEquipmentComponent } from './select-order-equipment/select-order-equipment.component';
+
 
 export const routes: Routes = [
     {path:"login",component:LoginComponent},
     {path:"home",component:HomeComponent},
-    {path:"", redirectTo:'/login', pathMatch:'full',},
+    //{path:"", redirectTo:'/login', pathMatch:'full',},
     {path: "operator", component: OperatorDashboardComponent,},
     {path: "editor", component: EditorDashboardComponent, },
     {path:"create-workflow",component:EditorCreateWorkflowComponent},
-    {path:"operator-guidance", component:OperatorAssistanceComponent
-    },
-    { path: "**", redirectTo: '/login' }
+    {path:"operator-guidance", component:OperatorAssistanceComponent},  //NAME MISMATCH!
+    {path:"select-order-equipment", component:SelectOrderEquipmentComponent},
+    //{ path: "**", redirectTo: '/login' }
 ];

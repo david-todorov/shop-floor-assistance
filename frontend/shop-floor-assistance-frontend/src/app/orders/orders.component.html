@@ -1,0 +1,32 @@
+<p>orders works!</p>
+
+<!-- src/app/components/orders/orders.component.html -->
+<div *ngIf="orders.length > 0; else noOrders">
+    <h2>Orders List</h2>
+    <div *ngFor="let order of orders">
+      <h3>{{ order.name }} ({{ order.orderNumber }})</h3>
+      <p>Description: {{ order.description }}</p>
+      <p>Created At: {{ order.createdAt }}</p>
+      <p>Workflows:</p>
+      <ul>
+        <li *ngFor="let workflow of order.workflows">
+          {{ workflow.name }} - {{ workflow.description }}
+          <ul>
+            <li *ngFor="let task of workflow.tasks">
+              Task: {{ task.name }} ({{ task.description }})
+              <ul>
+                <li *ngFor="let item of task.items">
+                  Item: {{ item.name }} ({{ item.description }}, Time Required: {{ item.timeRequired }} hours)
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <ng-template #noOrders>
+    <p>No orders available.</p>
+  </ng-template>
+  
