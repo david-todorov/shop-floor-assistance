@@ -1,22 +1,75 @@
-.login-container {
-    display: flex-flow;
-    flex-wrap: column;
+.main-container {
+    display: flex;
     justify-content: center;
     align-items: center;
-    margin: 10% auto;
-    padding: 30px;
-    background-color: lightblue;
-    width: fit-content;
-    height: fit-content;
-    box-sizing: border-box;
+    height: 100vh; /* Full height of the viewport */
+    width: 100vw;  /* Full width of the viewport */
+    background-color: #f5f5f5;
+    position: relative;
+}
+
+.login-card {
+    width: 600px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background-color: white;
+    text-align: center;
+    z-index: 1; /* Keep it above the background logo */
+}
+
+.logo-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.company-logo {
+    width: 100%; /* Makes the logo take up the whole width */
+    height: auto;
+    max-width: 200px; /* Max width to avoid it being too large */
+    margin-bottom: 20px;
+}
+
+mat-card-title h2 {
+    font-family: 'Roboto', sans-serif;
+    color: #00796b; /* Match your theme */
+    font-weight: 500;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
 }
 
 .form-group {
     margin-bottom: 15px;
+    width: 80%;
+}
+
+button {
     width: 100%;
+    padding: 12px;
+    background-color: #65a2c3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #4a7da4;
+}
+
+.custom-button {
+    width: 250px; 
+    height: 70px; 
+    font-size: 1.5rem;
+
 }
 
 .error-message {
     color: red;
     margin-top: 10px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
 }
