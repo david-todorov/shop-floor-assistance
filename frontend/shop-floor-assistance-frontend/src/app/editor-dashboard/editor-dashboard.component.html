@@ -1,38 +1,40 @@
+<mat-card class="dashboard-card">
+     <div class="company-info">
+     <span class="title">Dashboard</span>
+        <img src="assets/logo.jpg" alt="Uhlmann Logo" class="company-logo">
+    </div>
 
-<div class="card-title">
-    <div class="row space-between center">
-        <span class="title">Dashboard</span>
-    <img src="assets/logo.jpg" alt="Uhlmann Logo" class="company-logo">
-      </div>
-</div>
+  <!-- Table with orders -->
+  <table mat-table [dataSource]="orders" class="mat-elevation-z8">
+      <!-- Order Number Column -->
+      <ng-container matColumnDef="orderNumber">
+          <th mat-header-cell *matHeaderCellDef> Order Number </th>
+          <td mat-cell *matCellDef="let order"> {{ order.orderNumber }} </td>
+      </ng-container>
 
-<table mat-table [dataSource]="orders" class="mat-elevation-z8">
-    <!-- Order Number Column -->
-    <ng-container matColumnDef="orderNumber">
-        <th mat-header-cell *matHeaderCellDef> Order Number </th>
-        <td mat-cell *matCellDef="let order"> {{ order.orderNumber }} </td>
-    </ng-container>
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let order"> {{ order.name }} </td>
+      </ng-container>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let order"> {{ order.name }} </td>
-    </ng-container>
+      <!-- Description Column -->
+      <ng-container matColumnDef="shortDescription">
+          <th mat-header-cell *matHeaderCellDef> Description </th>
+          <td mat-cell *matCellDef="let order"> {{ order.shortDescription }} </td>
+      </ng-container>
 
-    <!-- Description Column -->
-    <ng-container matColumnDef="shortDescription">
-        <th mat-header-cell *matHeaderCellDef> Description </th>
-        <td mat-cell *matCellDef="let order"> {{ order.shortDescription }} </td>
-    </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-
-<p> </p>
-
- <ng-container buttons="buttons">
-        <button mat-raised-button class="custom-button" color="primary" [routerLink]="['/show-workflow']">View Selected Workflow</button>
-        <button mat-raised-button class="custom-button" color="primary" [routerLink]="['/create-workflow']">Go to Create Workflow</button>
-</ng-container>
-
+  <!-- Buttons placed in a row -->
+  <div class="button-container">
+      <button mat-raised-button class="custom-button" color="primary" [routerLink]="['/show-workflow']">
+          View Selected Workflow
+      </button>
+      <button mat-raised-button class="custom-button" color="primary" [routerLink]="['/create-workflow']">
+          Go to Create Workflow
+      </button>
+  </div>
+</mat-card>

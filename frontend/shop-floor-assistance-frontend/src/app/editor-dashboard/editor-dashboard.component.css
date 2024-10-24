@@ -1,9 +1,3 @@
-:host {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px;
-}
 * Container for title */
 .row {
   display: flex;
@@ -12,9 +6,18 @@
   padding: 10px 20px;
 }
 
-.title {
-  font-weight: bold;
-  font-size: 28px;
+/* Main Card */
+.dashboard-card {
+    margin: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 10px;
+    background-color: #fdffff; /* Change color as needed */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    width: 100%;
+
 }
 
 /* Company info container */
@@ -23,11 +26,18 @@
   align-items: center;     
 }
 
+.title {
+  font-weight: bold;
+  font-size: 28px;
+  margin-left: 20px;  
+}
+
 /* Company logo styling */
 .company-logo {
   width: 125px;             
   height: auto;
-  margin-right: 10px;      
+  margin-right: 10px; 
+  margin-left: 1550px;     
 }
 
 
@@ -42,7 +52,6 @@ table {
     width: 80%;
     max-width: 800px;
     border-bottom: 1px solid currentColor;
-    border-right: 1px solid currentColor;
     border-left: 1px solid currentColor;
     border-top: 1px solid currentColor;
 }
@@ -70,13 +79,8 @@ td.mat-cell {
     margin: 0 300px; /* Spacing between the buttons */
 }
 
-
-
-
-
-
-
-
-
-
+mat-card {
+  padding: 20px;
+  margin-top: 10px;
+}
 

@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { ButtonComponent } from '../components/button/button.component';
 import { CardComponent } from '../components/card/card.component';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-editor-dashboard',
@@ -21,11 +22,12 @@ import { CardComponent } from '../components/card/card.component';
     FormsModule,
     MatButtonModule,
     ButtonComponent, 
-    CardComponent],
+    CardComponent, 
+    MatCardModule],
   templateUrl: './editor-dashboard.component.html',
   styleUrl: './editor-dashboard.component.css',
   providers:[RouterLink, RouterModule],
-  encapsulation: ViewEncapsulation.None
+  // encapsulation: ViewEncapsulation.None
 })
 export class EditorDashboardComponent {
   constructor(private routerLink: RouterLink){}
