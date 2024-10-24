@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { sampleOrders } from '../types/dummyData';
 import { MatTableModule } from '@angular/material/table';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { orderTO } from '../types/orderTO';
-import { MatCheckbox } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { ButtonComponent } from '../components/button/button.component';
+import { CardComponent } from '../components/card/card.component';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-editor-dashboard',
@@ -18,10 +19,15 @@ import { FormsModule } from '@angular/forms';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    FormsModule],
+    FormsModule,
+    MatButtonModule,
+    ButtonComponent, 
+    CardComponent, 
+    MatCardModule],
   templateUrl: './editor-dashboard.component.html',
   styleUrl: './editor-dashboard.component.css',
-  providers:[RouterLink, RouterModule]
+  providers:[RouterLink, RouterModule],
+  // encapsulation: ViewEncapsulation.None
 })
 export class EditorDashboardComponent {
   constructor(private routerLink: RouterLink){}
