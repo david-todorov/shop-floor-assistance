@@ -54,6 +54,7 @@ public class DBInitializer {
         //Associating users with roles
         operator.getRoles().add(operatorRole);
         editor.getRoles().add(editorRole);
+        editor.getRoles().add(operatorRole);
 
         //Saving first the roles
         roleRepository.save(operatorRole);
