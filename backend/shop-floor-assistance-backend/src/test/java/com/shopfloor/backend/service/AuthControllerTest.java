@@ -1,6 +1,9 @@
 package com.shopfloor.backend.service;
 
 import com.shopfloor.backend.api.transferobjects.authentication.LoginUserRequestTO;
+import com.shopfloor.backend.database.repositories.OrderRepository;
+import com.shopfloor.backend.database.repositories.ProductRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,6 +17,19 @@ public class AuthControllerTest {
 
     @Autowired
     private ApiHelper apiHelper;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @AfterEach
+    public void tearDown() {
+        // Clear the repository after each test
+        orderRepository.deleteAll();
+        productRepository.deleteAll();
+    }
 
     @Test
     public void when_LoginWithValidEditorCredentials_ThenReturnsToken() throws Exception {

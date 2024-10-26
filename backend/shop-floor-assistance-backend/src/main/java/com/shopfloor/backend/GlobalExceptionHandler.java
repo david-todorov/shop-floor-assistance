@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * Global exception handler for managing various exceptions in the application.
  *
@@ -29,6 +26,22 @@ import java.util.stream.Collectors;
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(DuplicateProductException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ProblemDetail handleProductAlreadyExists(DuplicateProductException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problemDetail.setProperty("description", "The product you are trying to create already exists.");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleProductNotFound(ProductNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setProperty("description", "The requested product was not found.");
+        return problemDetail;
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -47,27 +60,6 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleValidationExceptions(MethodArgumentNotValidException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
         problemDetail.setProperty("description", "Input validation failed for the provided data.");
-
-        // Collect detailed validation error messages
-        List<String> errors = ex.getBindingResult().getFieldErrors().stream()
-                .map(fieldError -> {
-                    String field = fieldError.getField();
-                    String message = fieldError.getDefaultMessage();
-
-                    // Customize messages for specific fields
-                    if ("timeRequired".equals(field) && "must be greater than or equal to 1".equals(message)) {
-                        message = "Field 'timeRequired' must be greater than or equal to 1.";
-                    } else if ("must not be empty".equals(message)) {
-                        message = "Field '" + field + "' must not be null or empty.";
-                    }
-
-                    return String.format("Field '%s': %s", field, message);
-                })
-                .collect(Collectors.toList());
-
-        // Include the errors in the response
-        problemDetail.setProperty("errors", errors);
-
         return problemDetail;
     }
 

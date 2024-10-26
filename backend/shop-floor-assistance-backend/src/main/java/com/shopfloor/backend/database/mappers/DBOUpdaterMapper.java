@@ -1,13 +1,7 @@
 package com.shopfloor.backend.database.mappers;
 
-import com.shopfloor.backend.api.transferobjects.editors.EditorItemTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorTaskTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
-import com.shopfloor.backend.database.objects.ItemDBO;
-import com.shopfloor.backend.database.objects.OrderDBO;
-import com.shopfloor.backend.database.objects.TaskDBO;
-import com.shopfloor.backend.database.objects.WorkflowDBO;
+import com.shopfloor.backend.api.transferobjects.editors.*;
+import com.shopfloor.backend.database.objects.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +32,23 @@ public class DBOUpdaterMapper {
     @Autowired
     public DBOUpdaterMapper(DBOInitializerMapper dboInitializerMapper) {
         this.dboInitializerMapper = dboInitializerMapper;
+    }
+
+    public ProductDBO copyProductDboFrom(ProductDBO target, EditorProductTO source, Long updatedId) {
+
+        target.setProductNumber(source.getProductNumber());
+        target.setName(source.getName());
+        target.setType(source.getType());
+        target.setCountry(source.getCountry());
+        target.setPackageSize(source.getPackageSize());
+        target.setPackageType(source.getPackageType());
+        target.setLanguage(source.getLanguage());
+        target.setDescription(source.getDescription());
+
+        target.setUpdatedBy(updatedId);
+        target.setUpdatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+
+        return target;
     }
 
     public OrderDBO copyOrderDboFrom(OrderDBO target, EditorOrderTO source, Long updaterId) {

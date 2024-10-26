@@ -1,9 +1,6 @@
 package com.shopfloor.backend.service;
 
-import com.shopfloor.backend.api.transferobjects.editors.EditorItemTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorTaskTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
+import com.shopfloor.backend.api.transferobjects.editors.*;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorItemTO;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorOrderTO;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorTaskTO;
@@ -18,7 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Component
 public class OrderHelper {
 
-    public static EditorOrderTO buildCompleteEditorOrderTO(String orderNumber) {
+    public  EditorOrderTO buildCompleteEditorOrderTO(String orderNumber, EditorProductTO editorProduct) {
+        EditorOrderTO order = this.buildCompleteEditorOrderTO(orderNumber);
+        order.setProduct(editorProduct);
+
+        return order;
+    }
+
+    public  EditorOrderTO buildCompleteEditorOrderTO(String orderNumber) {
         EditorOrderTO editorOrderTO = new EditorOrderTO();
         editorOrderTO.setOrderNumber(orderNumber);
         editorOrderTO.setName("AAA");
@@ -85,6 +89,9 @@ public class OrderHelper {
         assertEquals(expected.getCreatedBy(), actual.getCreatedBy());
         assertEquals(expected.getUpdatedAt(), actual.getUpdatedAt());
         assertEquals(expected.getUpdatedBy(), actual.getUpdatedBy());
+
+        assertEditorProductsEqual(expected.getProduct(), actual.getProduct());
+
 
         // Compare workflows
         assertEquals(expected.getWorkflows().size(), actual.getWorkflows().size());
@@ -209,4 +216,18 @@ public class OrderHelper {
         assertEquals(expected.getTimeRequired(), actual.getTimeRequired());
     }
 
+    private void assertEditorProductsEqual(EditorProductTO expected, EditorProductTO actual) {
+        if(expected.getId() != null && actual.getId() != null) {
+            assertEquals(expected.getId(), actual.getId());
+        }
+
+        assertEquals(expected.getProductNumber(), actual.getProductNumber());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getType(), actual.getType());
+        assertEquals(expected.getCountry(), actual.getCountry());
+        assertEquals(expected.getPackageSize(), actual.getPackageSize());
+        assertEquals(expected.getPackageType(), actual.getPackageType());
+        assertEquals(expected.getLanguage(), actual.getLanguage());
+    }
 }

@@ -37,6 +37,9 @@ public class EditorOrderTO {
 
     private Date updatedAt;
 
+    @NotNull(message = "Product cannot be null")
+    private EditorProductTO product;
+
     public EditorOrderTO() {
         this.workflows = new ArrayList<EditorWorkflowTO>();
     }

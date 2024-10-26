@@ -1,6 +1,7 @@
 package com.shopfloor.backend.api.controllers;
 
 import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
 import com.shopfloor.backend.services.EditorService;
 import com.shopfloor.backend.services.EditorServiceImpl;
 import jakarta.validation.Valid;
@@ -23,7 +24,7 @@ import java.util.List;
  * Thank you for your time, now go implement
  **/
 @RestController
-@RequestMapping("/editor/orders")
+@RequestMapping("/editor")
 public class EditorController {
 
     private final EditorService editorService;
@@ -33,34 +34,70 @@ public class EditorController {
         this.editorService = editorService;
     }
 
-    @GetMapping
+    /**
+     * ORDERS
+     */
+    @GetMapping("orders")
     @ResponseStatus(HttpStatus.OK)
-    public List<EditorOrderTO> getAllOrders() {
+    public List<EditorOrderTO> getOrder() {
         return this.editorService.getAllOrders();
     }
 
-    @PostMapping
+    @PostMapping("orders")
     @ResponseStatus(HttpStatus.CREATED)
     public EditorOrderTO createOrder(@Valid @RequestBody EditorOrderTO newOrder) {
         return this.editorService.addOrder(newOrder);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("orders/{id}")
     @ResponseStatus(HttpStatus.OK)
     public EditorOrderTO updateOrder(@PathVariable Long id, @Valid @RequestBody EditorOrderTO updatedOrder) {
         return this.editorService.updateOrder(id, updatedOrder);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("orders/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOrder(@PathVariable Long id) {
         this.editorService.deleteOrder(id);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("orders/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EditorOrderTO getAllOrders(@PathVariable Long id) {
+    public EditorOrderTO getOrder(@PathVariable Long id) {
         return this.editorService.getOrder(id);
+    }
+
+    /**
+     * PRODUCTS
+     */
+    @GetMapping("products")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EditorProductTO> getAllProducts() {
+        return this.editorService.getAllProducts();
+    }
+
+    @PostMapping("products")
+    @ResponseStatus(HttpStatus.CREATED)
+    public EditorProductTO createProduct(@Valid @RequestBody EditorProductTO newProduct) {
+        return this.editorService.addProduct(newProduct);
+    }
+
+    @PutMapping("products/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public EditorProductTO updateProduct(@PathVariable Long id, @Valid @RequestBody EditorProductTO updatedProduct) {
+        return this.editorService.updateProduct(id, updatedProduct);
+    }
+
+    @DeleteMapping("products/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProduct(@PathVariable Long id) {
+        this.editorService.deleteProduct(id);
+    }
+
+    @GetMapping("products/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public EditorProductTO getProduct(@PathVariable Long id) {
+        return this.editorService.getProduct(id);
     }
 
 }
