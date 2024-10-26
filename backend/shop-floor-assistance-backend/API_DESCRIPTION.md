@@ -26,8 +26,8 @@ The login request requires a JSON body with the following parameters:
 
 ```json
 {
-  "username": "operators",
-  "password": "operators"
+  "username": "operator",
+  "password": "operator"
 }
 ```
 
@@ -81,8 +81,8 @@ Once authenticated, include the token in the `Authorization` header to access ot
 curl -X POST http:/localhost/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "username": "operators",
-    "password": "operators"
+    "username": "operator",
+    "password": "operator"
   }'
   ```
 ## Editors Endpoints
@@ -90,7 +90,6 @@ curl -X POST http:/localhost/auth/login \
 #### `GET /editor/orders`
 - **Description**: Returns a list of all available orders in the system.
 - **Response**: List of orders as TOs from the database.
-
 ---
 
 #### `POST /editor/orders`
@@ -132,6 +131,51 @@ curl -X POST http:/localhost/auth/login \
   - Exception if the provided `id` is `null`.
   - Exception if the order with the specified `id` does not exist in the database.
 - **Response**: The requested  order as TO
+---
+
+#### `GET /editor/products`
+- **Description**: Returns a list of all available products in the system.
+- **Response**: List of products as TOs from the database.
+
+#### `POST /editor/products`
+- **Description**: Creates and saves a new product, returning the saved product as a Transfer Object (TO).
+- **Throws**:
+  - Exception if the provided order number is `null`.
+  - Exception if an product with the same `product number` already exists.
+  - Exception if any mandatory property  is `null` or `empty`
+- **Response**: The saved order as TO
+---
+
+#### `PUT /editor/products/{id}`
+- **Description**: Updates an existing product.
+- **Parameters**:
+  - `{id}`: The unique identifier of the product to be updated.
+- **Throws**:
+  - Exception if the provided product number or ID is `null`.
+  - Exception if the provided ID does not exist in the database.
+  - Exception if another product has the same `product number`, as it cannot be renamed.
+  - Exception if any mandatory property  is `null` or `empty`
+- **Response**: The updated product as TO
+---
+
+#### `DELETE /editor/products/{id}`
+- **Description**: Deletes an existing product identified by the specified `id`.
+- **Parameters**:
+  - `{id}`: The unique identifier of the product to be deleted.
+- **Throws**:
+  - Exception if the provided `id` is `null`.
+  - Exception if the product with the specified `id` does not exist in the database.
+- **Response**: A confirmation message indicating successful deletion or an error message if the deletion fails.
+---
+
+#### `GET /editor/products/{id}`
+- **Description**: Retrieves an existing product identified by the specified `id`.
+- **Parameters**:
+  - `{id}`: The unique identifier of the product to be retrieved.
+- **Throws**:
+  - Exception if the provided `id` is `null`.
+  - Exception if the product with the specified `id` does not exist in the database.
+- **Response**: The requested  product as TO
 ---
 
 ## Operator Endpoints
