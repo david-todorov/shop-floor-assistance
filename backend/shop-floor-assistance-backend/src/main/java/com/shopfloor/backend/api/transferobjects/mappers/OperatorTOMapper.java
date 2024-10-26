@@ -1,13 +1,7 @@
 package com.shopfloor.backend.api.transferobjects.mappers;
 
-import com.shopfloor.backend.api.transferobjects.operators.OperatorItemTO;
-import com.shopfloor.backend.api.transferobjects.operators.OperatorOrderTO;
-import com.shopfloor.backend.api.transferobjects.operators.OperatorTaskTO;
-import com.shopfloor.backend.api.transferobjects.operators.OperatorWorkflowTO;
-import com.shopfloor.backend.database.objects.ItemDBO;
-import com.shopfloor.backend.database.objects.OrderDBO;
-import com.shopfloor.backend.database.objects.TaskDBO;
-import com.shopfloor.backend.database.objects.WorkflowDBO;
+import com.shopfloor.backend.api.transferobjects.operators.*;
+import com.shopfloor.backend.database.objects.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -16,13 +10,25 @@ import java.util.List;
 @Component
 public class OperatorTOMapper {
 
+    //TODO
+    public OperatorProductTO toProductTO(ProductDBO productDBO) {
+        return null;
+    }
+
+    public ArrayList<OperatorProductTO> toProductTOs(List<ProductDBO> productDBOS) {
+        ArrayList<OperatorProductTO> operatorProductTOs = new ArrayList<>();
+        productDBOS.forEach(productDBO -> operatorProductTOs.add(toProductTO(productDBO)));
+        return operatorProductTOs;
+    }
+
     public OperatorOrderTO toOrderTO(OrderDBO orderDBO) {
-        OperatorOrderTO operatorOrderTO = new OperatorOrderTO();
-        operatorOrderTO.setId(orderDBO.getId());
-        operatorOrderTO.setOrderNumber(orderDBO.getOrderNumber());
-        operatorOrderTO.setName(orderDBO.getName());
-        operatorOrderTO.setDescription(orderDBO.getDescription());
+        OperatorOrderTO operatorOrderTO = mapBasicOrderProperties(orderDBO);
         operatorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
+
+        //Mapping of single Product for order
+        OperatorProductTO operatorProductTO = mapBasicProductProperties(orderDBO.getProduct());
+
+        operatorOrderTO.setProduct(operatorProductTO);
 
         return operatorOrderTO;
     }
@@ -79,5 +85,30 @@ public class OperatorTOMapper {
         ArrayList<OperatorItemTO> operatorItemTOS = new ArrayList<>();
         itemDBOs.forEach(itemDBO -> operatorItemTOS.add(toItemTO(itemDBO)));
         return operatorItemTOS;
+    }
+
+    private OperatorOrderTO mapBasicOrderProperties(OrderDBO orderDBO) {
+        OperatorOrderTO operatorOrderTO = new OperatorOrderTO();
+        operatorOrderTO.setId(orderDBO.getId());
+        operatorOrderTO.setOrderNumber(orderDBO.getOrderNumber());
+        operatorOrderTO.setName(orderDBO.getName());
+        operatorOrderTO.setDescription(orderDBO.getDescription());
+
+        return operatorOrderTO;
+    }
+
+    private OperatorProductTO mapBasicProductProperties(ProductDBO productDBO) {
+        OperatorProductTO operatorProductTO = new OperatorProductTO();
+        operatorProductTO.setId(productDBO.getId());
+        operatorProductTO.setProductNumber(productDBO.getProductNumber());
+        operatorProductTO.setName(productDBO.getName());
+        operatorProductTO.setType(productDBO.getType());
+        operatorProductTO.setCountry(productDBO.getCountry());
+        operatorProductTO.setPackageSize(productDBO.getPackageSize());
+        operatorProductTO.setPackageType(productDBO.getPackageType());
+        operatorProductTO.setLanguage(productDBO.getLanguage());
+        operatorProductTO.setDescription(productDBO.getDescription());
+
+        return operatorProductTO;
     }
 }

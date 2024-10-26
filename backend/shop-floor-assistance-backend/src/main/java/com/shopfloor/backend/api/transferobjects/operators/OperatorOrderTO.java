@@ -28,6 +28,9 @@ public class OperatorOrderTO {
     @Valid
     private List<@NotNull(message = "Workflow cannot be null") OperatorWorkflowTO> workflows;
 
+    @NotNull(message = "Product cannot be null")
+    private OperatorProductTO product;
+
     public OperatorOrderTO() {
         this.workflows = new ArrayList<OperatorWorkflowTO>();
     }

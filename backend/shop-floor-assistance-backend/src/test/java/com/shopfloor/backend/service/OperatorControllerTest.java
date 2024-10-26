@@ -1,8 +1,10 @@
 package com.shopfloor.backend.service;
 
 import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorOrderTO;
 import com.shopfloor.backend.database.repositories.OrderRepository;
+import com.shopfloor.backend.database.repositories.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,21 +30,34 @@ public class OperatorControllerTest {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private ProductHelper productHelper;
+
     @AfterEach
     public void tearDown() {
         // Clear the repository after each test
         orderRepository.deleteAll();
+        productRepository.deleteAll();
     }
 
     @Test
     public void when_GetOperatorOrders_Then_OK() throws Exception{
         //Save five orders to the database
+        // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
-        EditorOrderTO orderOne = apiHelper.createEditorOrderPOST(OrderHelper.buildCompleteEditorOrderTO("W0001"), authorizationHeader, 201);
-        EditorOrderTO orderTwo = apiHelper.createEditorOrderPOST(OrderHelper.buildCompleteEditorOrderTO("W0002"), authorizationHeader, 201);
-        EditorOrderTO orderThree = apiHelper.createEditorOrderPOST(OrderHelper.buildCompleteEditorOrderTO("W0003"), authorizationHeader, 201);
-        EditorOrderTO orderFour = apiHelper.createEditorOrderPOST(OrderHelper.buildCompleteEditorOrderTO("W0004"), authorizationHeader, 201);
-        EditorOrderTO orderFive = apiHelper.createEditorOrderPOST(OrderHelper.buildCompleteEditorOrderTO("W0005"), authorizationHeader, 201);
+
+        //Saving a product
+        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
+        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
+
+        EditorOrderTO orderOne = apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0001", product), authorizationHeader, 201);
+        EditorOrderTO orderTwo = apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0002", product), authorizationHeader, 201);
+        EditorOrderTO orderThree = apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0003", product), authorizationHeader, 201);
+        EditorOrderTO orderFour = apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0004", product), authorizationHeader, 201);
+        EditorOrderTO orderFive = apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0005", product), authorizationHeader, 201);
 
 
         List<EditorOrderTO> expectedOrders = new ArrayList<>();
@@ -63,8 +78,14 @@ public class OperatorControllerTest {
 
     @Test
     public void when_GetOrder_Then_OK() throws Exception {
+        // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
-        EditorOrderTO expected = OrderHelper.buildCompleteEditorOrderTO("W0001");
+
+        //Saving a product
+        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
+        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
+
+        EditorOrderTO expected = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
         expected = apiHelper.createEditorOrderPOST(expected, authorizationHeader, 201);
 
         OperatorOrderTO actual = apiHelper.getOperatorOrderGET(expected.getId(), authorizationHeader, 200);

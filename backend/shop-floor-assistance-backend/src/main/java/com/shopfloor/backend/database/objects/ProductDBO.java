@@ -10,10 +10,10 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "workflows")
+@Table(name = "products")
 @Setter
 @Getter
-public class WorkflowDBO {
+public class ProductDBO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +21,26 @@ public class WorkflowDBO {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "product_number", nullable = false, unique = true, length = 255)
+    private String productNumber;
+
     @Column(name = "name", nullable = false, length = 255)
     private String name;
+
+    @Column(name = "type", nullable = false, length = 255)
+    private String type;
+
+    @Column(name = "country", nullable = false, length = 255)
+    private String country;
+
+    @Column(name = "package_size", nullable = false, length = 255)
+    private String packageSize;
+
+    @Column(name = "package_type", nullable = false, length = 255)
+    private String packageType;
+
+    @Column(name = "language", nullable = false, length = 255)
+    private String language;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
@@ -41,11 +59,10 @@ public class WorkflowDBO {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "workflow_id")
-    private List<TaskDBO> tasks;
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<OrderDBO> orders;
 
-    public WorkflowDBO() {
-        this.tasks = new ArrayList<TaskDBO>();
+    public ProductDBO() {
+        this.orders = new ArrayList<OrderDBO>();
     }
 }

@@ -1,13 +1,7 @@
 package com.shopfloor.backend.database.mappers;
 
-import com.shopfloor.backend.api.transferobjects.editors.EditorItemTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorTaskTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
-import com.shopfloor.backend.database.objects.ItemDBO;
-import com.shopfloor.backend.database.objects.OrderDBO;
-import com.shopfloor.backend.database.objects.TaskDBO;
-import com.shopfloor.backend.database.objects.WorkflowDBO;
+import com.shopfloor.backend.api.transferobjects.editors.*;
+import com.shopfloor.backend.database.objects.*;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -26,6 +20,25 @@ import java.util.stream.Collectors;
  */
 @Component
 public class DBOInitializerMapper {
+
+    public ProductDBO toProductDBO(EditorProductTO productTO, Long creatorId) {
+        ProductDBO productDBO = new ProductDBO();
+
+
+        productDBO.setProductNumber(productTO.getProductNumber());
+        productDBO.setName(productTO.getName());
+        productDBO.setType(productTO.getType());
+        productDBO.setCountry(productTO.getCountry());
+        productDBO.setPackageSize(productTO.getPackageSize());
+        productDBO.setPackageType(productTO.getPackageType());
+        productDBO.setLanguage(productTO.getLanguage());
+        productDBO.setDescription(productTO.getDescription());
+
+        productDBO.setCreatedBy(creatorId);
+        productDBO.setCreatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+
+        return productDBO;
+    }
 
     public OrderDBO toOrderDBO(EditorOrderTO editorOrderTO, Long creatorId) {
         OrderDBO orderDBO = new OrderDBO();

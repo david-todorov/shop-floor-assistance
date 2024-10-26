@@ -1,13 +1,7 @@
 package com.shopfloor.backend.api.transferobjects.mappers;
 
-import com.shopfloor.backend.api.transferobjects.editors.EditorItemTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorTaskTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
-import com.shopfloor.backend.database.objects.ItemDBO;
-import com.shopfloor.backend.database.objects.OrderDBO;
-import com.shopfloor.backend.database.objects.TaskDBO;
-import com.shopfloor.backend.database.objects.WorkflowDBO;
+import com.shopfloor.backend.api.transferobjects.editors.*;
+import com.shopfloor.backend.database.objects.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,17 +14,30 @@ import java.util.List;
 @Component
 public class EditorTOMapper {
 
-    public EditorOrderTO toOrderTO(OrderDBO orderDBO) {
-        EditorOrderTO editorOrderTO = new EditorOrderTO();
+    //TODO
+    public EditorProductTO toProductTO(ProductDBO productDBO) {
 
-        editorOrderTO.setId(orderDBO.getId());
-        editorOrderTO.setOrderNumber(orderDBO.getOrderNumber());
-        editorOrderTO.setName(orderDBO.getName());
-        editorOrderTO.setDescription(orderDBO.getDescription());
-        editorOrderTO.setCreatedBy(orderDBO.getCreatedBy());
-        editorOrderTO.setUpdatedBy(orderDBO.getUpdatedBy());
-        editorOrderTO.setCreatedAt(orderDBO.getCreatedAt());
-        editorOrderTO.setUpdatedAt(orderDBO.getUpdatedAt());
+        EditorProductTO editorProductTO = mapBasicProductProperties(productDBO);
+        List<EditorOrderTO> editorOrderTOs = new ArrayList<>();
+
+        productDBO.getOrders().forEach(order -> {
+            editorOrderTOs.add(mapBasicOrderProperties(order));
+        });
+        editorProductTO.setOrders(editorOrderTOs);
+
+        return editorProductTO;
+    }
+
+    public ArrayList<EditorProductTO> toProductTOs(List<ProductDBO> productDBOS) {
+        ArrayList<EditorProductTO> editorProductTOs = new ArrayList<>();
+        productDBOS.forEach(productDBO -> editorProductTOs.add(toProductTO(productDBO)));
+        return editorProductTOs;
+    }
+
+    public EditorOrderTO toOrderTO(OrderDBO orderDBO) {
+        EditorOrderTO editorOrderTO = mapBasicOrderProperties(orderDBO);
+        EditorProductTO editorProductTO = mapBasicProductProperties(orderDBO.getProduct());
+        editorOrderTO.setProduct(editorProductTO);
 
 
         editorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
@@ -103,5 +110,39 @@ public class EditorTOMapper {
         ArrayList<EditorItemTO> editorItemTOS = new ArrayList<>();
         itemDBOs.forEach(itemDBO -> editorItemTOS.add(toItemTO(itemDBO)));
         return editorItemTOS;
+    }
+
+    private EditorOrderTO mapBasicOrderProperties(OrderDBO orderDBO) {
+        EditorOrderTO editorOrderTO = new EditorOrderTO();
+        editorOrderTO.setId(orderDBO.getId());
+        editorOrderTO.setOrderNumber(orderDBO.getOrderNumber());
+        editorOrderTO.setName(orderDBO.getName());
+        editorOrderTO.setDescription(orderDBO.getDescription());
+        editorOrderTO.setCreatedBy(orderDBO.getCreatedBy());
+        editorOrderTO.setUpdatedBy(orderDBO.getUpdatedBy());
+        editorOrderTO.setCreatedAt(orderDBO.getCreatedAt());
+        editorOrderTO.setUpdatedAt(orderDBO.getUpdatedAt());
+
+        return editorOrderTO;
+    }
+
+    private EditorProductTO mapBasicProductProperties(ProductDBO productDBO) {
+        EditorProductTO editorProductTO = new EditorProductTO();
+        editorProductTO.setId(productDBO.getId());
+        editorProductTO.setProductNumber(productDBO.getProductNumber());
+        editorProductTO.setName(productDBO.getName());
+        editorProductTO.setType(productDBO.getType());
+        editorProductTO.setCountry(productDBO.getCountry());
+        editorProductTO.setPackageSize(productDBO.getPackageSize());
+        editorProductTO.setPackageType(productDBO.getPackageType());
+        editorProductTO.setLanguage(productDBO.getLanguage());
+        editorProductTO.setDescription(productDBO.getDescription());
+
+        editorProductTO.setCreatedBy(productDBO.getCreatedBy());
+        editorProductTO.setUpdatedBy(productDBO.getUpdatedBy());
+        editorProductTO.setCreatedAt(productDBO.getCreatedAt());
+        editorProductTO.setUpdatedAt(productDBO.getUpdatedAt());
+
+        return editorProductTO;
     }
 }
