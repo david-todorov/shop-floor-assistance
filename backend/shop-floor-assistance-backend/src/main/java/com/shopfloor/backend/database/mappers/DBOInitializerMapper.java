@@ -21,6 +21,19 @@ import java.util.stream.Collectors;
 @Component
 public class DBOInitializerMapper {
 
+    public EquipmentDBO toEquipmentDBO(EditorEquipmentTO editorEquipmentTO, Long creatorId) {
+        EquipmentDBO equipmentDBO = new EquipmentDBO();
+        equipmentDBO.setEquipmentNumber(editorEquipmentTO.getEquipmentNumber());
+        equipmentDBO.setName(editorEquipmentTO.getName());
+        equipmentDBO.setDescription(editorEquipmentTO.getDescription());
+        equipmentDBO.setType(editorEquipmentTO.getType());
+
+        equipmentDBO.setCreatedBy(creatorId);
+        equipmentDBO.setCreatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+
+        return equipmentDBO;
+    }
+
     public ProductDBO toProductDBO(EditorProductTO productTO, Long creatorId) {
         ProductDBO productDBO = new ProductDBO();
 

@@ -98,6 +98,9 @@ curl -X POST http:/localhost/auth/login \
   - Exception if the provided order number is `null`.
   - Exception if an order with the same `order number` already exists.
   - Exception if any name property from Order level to Item level is `null` or `empty`
+  - Excpetion if the provided `product` is `null` or does `not exists`
+  - Exception if the provided `equipment` list is `null` or `empty`
+  - Exception if any of the `equipment` list elements are `null` or does `not exists`
 - **Response**: The saved order as TO
 ---
 
@@ -110,6 +113,9 @@ curl -X POST http:/localhost/auth/login \
   - Exception if the provided ID does not exist in the database.
   - Exception if another order has the same `order number`, as it cannot be renamed.
   - Exception if any name property from Order level to Item level is `null` or `empty`
+  - Excpetion if the provided `product` is `null` or does `not exists`
+  - Exception if the provided `equipment` list is `null` or `empty`
+  - Exception if any of the `equipment` list elements are `null` or does `not exists`
 - **Response**: The updated order as TO
 ---
 
@@ -176,6 +182,51 @@ curl -X POST http:/localhost/auth/login \
   - Exception if the provided `id` is `null`.
   - Exception if the product with the specified `id` does not exist in the database.
 - **Response**: The requested  product as TO
+---
+
+#### `GET /editor/equipment`
+- **Description**: Returns a list of all available equipment in the system.
+- **Response**: List of equipment as TOs from the database.
+
+#### `POST /editor/equipment`
+- **Description**: Creates and saves a new equipment, returning the saved equipment as a Transfer Object (TO).
+- **Throws**:
+  - Exception if the provided equipment number is `null`.
+  - Exception if an equipment with the same `equipment number` already exists.
+  - Exception if any mandatory property  is `null` or `empty`
+- **Response**: The saved order as TO
+---
+
+#### `PUT /editor/equipment/{id}`
+- **Description**: Updates an existing equipment.
+- **Parameters**:
+  - `{id}`: The unique identifier of the equipment to be updated.
+- **Throws**:
+  - Exception if the provided equipment number or ID is `null`.
+  - Exception if the provided ID does not exist in the database.
+  - Exception if another equipment has the same `equipment number`, as it cannot be renamed.
+  - Exception if any mandatory property  is `null` or `empty`
+- **Response**: The updated equipment as TO
+---
+
+#### `DELETE /editor/equipment/{id}`
+- **Description**: Deletes an existing equipment identified by the specified `id`.
+- **Parameters**:
+  - `{id}`: The unique identifier of the equipment to be deleted.
+- **Throws**:
+  - Exception if the provided `id` is `null`.
+  - Exception if the equipment with the specified `id` does not exist in the database.
+- **Response**: A confirmation message indicating successful deletion or an error message if the deletion fails.
+---
+
+#### `GET /editor/equipment/{id}`
+- **Description**: Retrieves an existing equipment identified by the specified `id`.
+- **Parameters**:
+  - `{id}`: The unique identifier of the equipment to be retrieved.
+- **Throws**:
+  - Exception if the provided `id` is `null`.
+  - Exception if the equipment with the specified `id` does not exist in the database.
+- **Response**: The requested  equipment as TO
 ---
 
 ## Operator Endpoints

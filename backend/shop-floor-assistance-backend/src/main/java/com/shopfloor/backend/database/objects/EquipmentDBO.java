@@ -10,22 +10,24 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "equipment")
 @Setter
 @Getter
-public class OrderDBO {
-
+public class EquipmentDBO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "order_number", nullable = false, unique = true, length = 255)
-    private String orderNumber;
+    @Column(name = "equipment_number", nullable = false, unique = true, length = 255)
+    private String equipmentNumber;
 
     @Column(name = "name", nullable = false, length = 255)
     private String name;
+
+    @Column(name = "type", nullable = false, length = 255)
+    private String type;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
@@ -44,23 +46,6 @@ public class OrderDBO {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "order_id")
-    private List<WorkflowDBO> workflows;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private ProductDBO product;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "order_equipment",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "equipment_id")
-    )
-    private List<EquipmentDBO> equipment = new ArrayList<>();
-
-    public OrderDBO() {
-       this.workflows = new ArrayList<WorkflowDBO>();
-    }
+    @ManyToMany(mappedBy = "equipment", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private List<OrderDBO> orders = new ArrayList<>();
 }

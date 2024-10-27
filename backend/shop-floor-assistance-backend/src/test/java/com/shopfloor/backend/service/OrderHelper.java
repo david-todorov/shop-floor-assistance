@@ -15,13 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Component
 public class OrderHelper {
 
-    public  EditorOrderTO buildCompleteEditorOrderTO(String orderNumber, EditorProductTO editorProduct) {
-        EditorOrderTO order = this.buildCompleteEditorOrderTO(orderNumber);
-        order.setProduct(editorProduct);
-
-        return order;
-    }
-
     public  EditorOrderTO buildCompleteEditorOrderTO(String orderNumber) {
         EditorOrderTO editorOrderTO = new EditorOrderTO();
         editorOrderTO.setOrderNumber(orderNumber);
@@ -90,8 +83,14 @@ public class OrderHelper {
         assertEquals(expected.getUpdatedAt(), actual.getUpdatedAt());
         assertEquals(expected.getUpdatedBy(), actual.getUpdatedBy());
 
+        //Compare the product
         assertEditorProductsEqual(expected.getProduct(), actual.getProduct());
 
+        //Compare the equipment
+        assertEquals(expected.getEquipment().size(), actual.getEquipment().size());
+        for (int i = 0; i < expected.getEquipment().size(); i++) {
+            assertEditorEquipmentEqual(expected.getEquipment().get(i), actual.getEquipment().get(i));
+        }
 
         // Compare workflows
         assertEquals(expected.getWorkflows().size(), actual.getWorkflows().size());
@@ -158,64 +157,6 @@ public class OrderHelper {
         assertEquals(expected.getUpdatedBy(), actual.getUpdatedBy());
     }
 
-    public void assertEditorAndOperatorOrdersEqual(EditorOrderTO expected, OperatorOrderTO actual) {
-
-        if(expected.getId() != null && actual.getId() != null) {
-            assertEquals(expected.getId(), actual.getId());
-        }
-
-        assertEquals(expected.getOrderNumber(), actual.getOrderNumber());
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getDescription(), actual.getDescription());
-
-        assertEquals(expected.getWorkflows().size(), actual.getWorkflows().size());
-        for (int i = 0; i < expected.getWorkflows().size(); i++) {
-            assertEditorAndOperatorWorkflowsEqual(expected.getWorkflows().get(i), actual.getWorkflows().get(i));
-        }
-    }
-
-    private void assertEditorAndOperatorWorkflowsEqual(EditorWorkflowTO expected, OperatorWorkflowTO actual) {
-
-        if(expected.getId() != null && actual.getId() != null) {
-            assertEquals(expected.getId(), actual.getId());
-        }
-
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getDescription(), actual.getDescription());
-
-        assertEquals(expected.getTasks().size(), actual.getTasks().size());
-        for (int i = 0; i < expected.getTasks().size(); i++) {
-            assertEditorAndOperatorTasksEqual(expected.getTasks().get(i), actual.getTasks().get(i));
-        }
-    }
-
-    private void assertEditorAndOperatorTasksEqual(EditorTaskTO expected, OperatorTaskTO actual) {
-
-        if(expected.getId() != null && actual.getId() != null) {
-            assertEquals(expected.getId(), actual.getId());
-        }
-
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getDescription(), actual.getDescription());
-
-        // Compare items
-        assertEquals(expected.getItems().size(), actual.getItems().size());
-        for (int i = 0; i < expected.getItems().size(); i++) {
-            assertEditorAndOperatorItemsEqual(expected.getItems().get(i), actual.getItems().get(i));
-        }
-    }
-
-    private void assertEditorAndOperatorItemsEqual(EditorItemTO expected, OperatorItemTO actual) {
-
-        if(expected.getId() != null && actual.getId() != null) {
-            assertEquals(expected.getId(), actual.getId());
-        }
-
-        assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getDescription(), actual.getDescription());
-        assertEquals(expected.getTimeRequired(), actual.getTimeRequired());
-    }
-
     private void assertEditorProductsEqual(EditorProductTO expected, EditorProductTO actual) {
         if(expected.getId() != null && actual.getId() != null) {
             assertEquals(expected.getId(), actual.getId());
@@ -229,5 +170,26 @@ public class OrderHelper {
         assertEquals(expected.getPackageSize(), actual.getPackageSize());
         assertEquals(expected.getPackageType(), actual.getPackageType());
         assertEquals(expected.getLanguage(), actual.getLanguage());
+
+        assertEquals(expected.getCreatedAt(), actual.getCreatedAt());
+        assertEquals(expected.getCreatedBy(), actual.getCreatedBy());
+        assertEquals(expected.getUpdatedAt(), actual.getUpdatedAt());
+        assertEquals(expected.getUpdatedBy(), actual.getUpdatedBy());
+
+    }
+
+    private void assertEditorEquipmentEqual(EditorEquipmentTO expected, EditorEquipmentTO actual) {
+        if(expected.getId() != null && actual.getId() != null) {
+            assertEquals(expected.getId(), actual.getId());
+        }
+        assertEquals(expected.getEquipmentNumber(), actual.getEquipmentNumber());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getType(), actual.getType());
+        assertEquals(expected.getDescription(), actual.getDescription());
+
+        assertEquals(expected.getCreatedAt(), actual.getCreatedAt());
+        assertEquals(expected.getCreatedBy(), actual.getCreatedBy());
+        assertEquals(expected.getUpdatedAt(), actual.getUpdatedAt());
+        assertEquals(expected.getUpdatedBy(), actual.getUpdatedBy());
     }
 }

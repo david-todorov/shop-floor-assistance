@@ -1,6 +1,8 @@
 package com.shopfloor.backend.service;
 
 import com.shopfloor.backend.api.transferobjects.editors.*;
+import com.shopfloor.backend.database.objects.OrderDBO;
+import com.shopfloor.backend.database.repositories.EquipmentRepository;
 import com.shopfloor.backend.database.repositories.OrderRepository;
 import com.shopfloor.backend.database.repositories.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -33,13 +35,20 @@ public class EditorControllerTest {
     private ProductRepository productRepository;
 
     @Autowired
+    private EquipmentRepository equipmentRepository;
+
+    @Autowired
     private ProductHelper productHelper;
+
+    @Autowired
+    private EquipmentHelper equipmentHelper;
 
     @AfterEach
     public void tearDown() {
-        // Clear the repository after each test
-        orderRepository.deleteAll();
+             
         productRepository.deleteAll();
+        equipmentRepository.deleteAll();
+        orderRepository.deleteAll();
     }
 
     /**
@@ -50,15 +59,28 @@ public class EditorControllerTest {
 
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
+        this.populateProductAndEquipment();
 
-        EditorOrderTO orderOne = apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0001", product), authorizationHeader, 201);
-        EditorOrderTO orderTwo = apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0002", product), authorizationHeader, 201);
-        EditorOrderTO orderThree = apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0003", product), authorizationHeader, 201);
-        EditorOrderTO orderFour = apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0004", product), authorizationHeader, 201);
-        EditorOrderTO orderFive = apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0005", product), authorizationHeader, 201);
+
+        EditorOrderTO orderOne = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        EditorOrderTO orderTwo = this.orderHelper.buildCompleteEditorOrderTO("W0002");
+        EditorOrderTO orderThree = this.orderHelper.buildCompleteEditorOrderTO("W0003");
+        EditorOrderTO orderFour = this.orderHelper.buildCompleteEditorOrderTO("W0004");
+        EditorOrderTO orderFive = this.orderHelper.buildCompleteEditorOrderTO("W0005");
+
+
+        this.assignProductAndEquipmentFor(orderOne);
+        this.assignProductAndEquipmentFor(orderTwo);
+        this.assignProductAndEquipmentFor(orderThree);
+        this.assignProductAndEquipmentFor(orderFour);
+        this.assignProductAndEquipmentFor(orderFive);
+
+        orderOne = this.apiHelper.createEditorOrderPOST(orderOne, authorizationHeader, 201);
+        orderTwo = this.apiHelper.createEditorOrderPOST(orderTwo, authorizationHeader, 201);
+        orderThree = this.apiHelper.createEditorOrderPOST(orderThree, authorizationHeader, 201);
+        orderFour = this.apiHelper.createEditorOrderPOST(orderFour, authorizationHeader, 201);
+        orderFive = this.apiHelper.createEditorOrderPOST(orderFive, authorizationHeader, 201);
+
 
         List<EditorOrderTO> expectedOrders = new ArrayList<>();
         expectedOrders.add(orderOne);
@@ -80,10 +102,9 @@ public class EditorControllerTest {
     public void when_AddOrder_Then_Created() throws Exception {
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
-        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
+        this.populateProductAndEquipment();
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(newOrder);
 
 
         //Make POST request and save the response
@@ -100,12 +121,11 @@ public class EditorControllerTest {
 
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
+        this.populateProductAndEquipment();
 
         //Creating new order with negative time required
-        EditorOrderTO oderWithNegativeTimeRequired = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
+        EditorOrderTO oderWithNegativeTimeRequired = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(oderWithNegativeTimeRequired);
         oderWithNegativeTimeRequired.getWorkflows().get(0).getTasks().get(0).getItems().get(0).setTimeRequired(-1);
 
         apiHelper.createEditorOrderPOST(oderWithNegativeTimeRequired, authorizationHeader, 400);
@@ -113,16 +133,17 @@ public class EditorControllerTest {
 
     @Test
     public void when_AddOrder_WithExistingOrderNumber_Then_Conflict() throws Exception {
+        this.populateProductAndEquipment();
+
         // Create a fully populated EditorOrderTO object for testing
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
-
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
-        apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0001", product), authorizationHeader, 201);
+        EditorOrderTO existingOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(existingOrder);
+        apiHelper.createEditorOrderPOST(existingOrder, authorizationHeader, 201);
 
         //Create new order with order number which already exists
-        EditorOrderTO newOrderWithSameOrderNumber = this.orderHelper.buildCompleteEditorOrderTO("W0001",product);
+        EditorOrderTO newOrderWithSameOrderNumber = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(newOrderWithSameOrderNumber);
 
         //Make Post request and expect conflict
         apiHelper.createEditorOrderPOST(newOrderWithSameOrderNumber, authorizationHeader, 409);
@@ -133,14 +154,8 @@ public class EditorControllerTest {
 
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
-
         // Create an EditorOrderTO object with a null order
         EditorOrderTO newNullOrder = null;
-
-        // Get the authorization header for the authenticated user
 
         // Perform the POST request with null as order
         apiHelper.createEditorOrderPOST(newNullOrder, authorizationHeader, 400);
@@ -148,15 +163,15 @@ public class EditorControllerTest {
 
     @Test
     public void when_AddOrder_WithNullOrderNumber_Then_BadRequest() throws Exception {
+
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
-
         // Create an EditorOrderTO object with a null order number
-        EditorOrderTO newOrderWithNullNumber = this.orderHelper.buildCompleteEditorOrderTO(null, product);
+        EditorOrderTO newOrderWithNullNumber = this.orderHelper.buildCompleteEditorOrderTO(null);
+        this.assignProductAndEquipmentFor(newOrderWithNullNumber);
 
         //Make Post request with order with null order number
         apiHelper.createEditorOrderPOST(newOrderWithNullNumber, authorizationHeader, 400);
@@ -164,14 +179,14 @@ public class EditorControllerTest {
 
     @Test
     public void when_AddOrder_WithEmptyOrderNumber_Then_BadRequest() throws Exception {
+
+        this.populateProductAndEquipment();
+
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
-
         // Create an EditorOrderTO object with empty order number
-        EditorOrderTO newOrderWithNullNumber = this.orderHelper.buildCompleteEditorOrderTO("", product);
+        EditorOrderTO newOrderWithNullNumber = this.orderHelper.buildCompleteEditorOrderTO("");
+        this.assignProductAndEquipmentFor(newOrderWithNullNumber);
 
         //Make Post request with order with null order number
         apiHelper.createEditorOrderPOST(newOrderWithNullNumber, authorizationHeader, 400);
@@ -179,244 +194,256 @@ public class EditorControllerTest {
 
     @Test
     public void when_AddOrder_WithNullOrderName_Then_BadRequest() throws Exception {
+
+        this.populateProductAndEquipment();
+
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
-        // Create an EditorOrderTO object with a null name
-        EditorOrderTO newOrderWithNullName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
+        // Create an EditorOrderTO object with empty order number
+        EditorOrderTO newOrderWithNullName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
         newOrderWithNullName.setName(null);
+        this.assignProductAndEquipmentFor(newOrderWithNullName);
 
 
-        //Make Post request with order with null order name
+        //Make Post request with order with null order number
         apiHelper.createEditorOrderPOST(newOrderWithNullName, authorizationHeader, 400);
     }
 
     @Test
     public void when_AddOrder_WithEmptyOrderName_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
         // Create an EditorOrderTO object with empty name
-        EditorOrderTO newOrderWithNullName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        newOrderWithNullName.setName("");
+        EditorOrderTO newOrderWithEmptyName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrderWithEmptyName.setName("");
+        this.assignProductAndEquipmentFor(newOrderWithEmptyName);
 
 
 
         //Make Post request with order with null order name
-        apiHelper.createEditorOrderPOST(newOrderWithNullName, authorizationHeader, 400);
+        apiHelper.createEditorOrderPOST(newOrderWithEmptyName, authorizationHeader, 400);
     }
 
     @Test
     public void when_AddOrder_WithNullWorkflowName_Then_BadRequest() throws Exception {
 
+
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        // Create an EditorOrderTO object with a null workflow name
-        EditorOrderTO newOrderWithNullWorkflowName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
+        // Create an EditorOrderTO object with empty name
+        EditorOrderTO newOrderWithNullWorkflowName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
         newOrderWithNullWorkflowName.getWorkflows().get(0).setName(null);
+        this.assignProductAndEquipmentFor(newOrderWithNullWorkflowName);
 
 
+
+        //Make Post request with order with null order name
         apiHelper.createEditorOrderPOST(newOrderWithNullWorkflowName, authorizationHeader, 400);
     }
 
     @Test
     public void when_AddOrder_WithEmptyWorkflowName_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        // Create an EditorOrderTO object with empty workflow name
-        EditorOrderTO newOrderWithNullWorkflowName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        newOrderWithNullWorkflowName.getWorkflows().get(0).setName("");
+        // Create an EditorOrderTO object with empty name
+        EditorOrderTO newOrderWithEmptyWorkflowName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrderWithEmptyWorkflowName.getWorkflows().get(0).setName("");
+        this.assignProductAndEquipmentFor(newOrderWithEmptyWorkflowName);
 
 
-        apiHelper.createEditorOrderPOST(newOrderWithNullWorkflowName, authorizationHeader, 400);
+
+        //Make Post request with order with null order name
+        apiHelper.createEditorOrderPOST(newOrderWithEmptyWorkflowName, authorizationHeader, 400);
     }
 
     @Test
     public void when_AddOrder_WithNullTaskName_Then_BadRequest() throws Exception {
 
+
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        // Create an EditorOrderTO object with a null task name
-        EditorOrderTO newOrderWithNullTaskName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        newOrderWithNullTaskName.getWorkflows().get(0)
-                .getTasks().get(0)
-                .setName(null);
+        // Create an EditorOrderTO object with empty name
+        EditorOrderTO newOrderWithNullTaskName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrderWithNullTaskName.getWorkflows().get(0).getTasks().get(0).setName(null);
+        this.assignProductAndEquipmentFor(newOrderWithNullTaskName);
 
+
+
+        //Make Post request with order with null order name
         apiHelper.createEditorOrderPOST(newOrderWithNullTaskName, authorizationHeader, 400);
     }
 
     @Test
     public void when_AddOrder_WithEmptyTaskName_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        // Create an EditorOrderTO object with empty task name
-        EditorOrderTO newOrderWithNullTaskName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        newOrderWithNullTaskName.getWorkflows().get(0)
-                .getTasks().get(0)
-                .setName("");
+        // Create an EditorOrderTO object with empty name
+        EditorOrderTO newOrderWithEmptyTaskName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrderWithEmptyTaskName.getWorkflows().get(0).getTasks().get(0).setName("");
+        this.assignProductAndEquipmentFor(newOrderWithEmptyTaskName);
 
-        apiHelper.createEditorOrderPOST(newOrderWithNullTaskName, authorizationHeader, 400);
+
+
+        //Make Post request with order with null order name
+        apiHelper.createEditorOrderPOST(newOrderWithEmptyTaskName, authorizationHeader, 400);
     }
 
     @Test
     public void when_AddOrder_WithNullItemName_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        // Create an EditorOrderTO object with a null item name
-        EditorOrderTO newOrderWithNullItemName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        newOrderWithNullItemName.getWorkflows().get(0)
-                .getTasks().get(0)
-                .getItems().get(0)
-                .setName(null);
+        // Create an EditorOrderTO object with empty name
+        EditorOrderTO newOrderWithNullItemName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrderWithNullItemName.getWorkflows().get(0).getTasks().get(0).getItems().get(0).setName(null);
+        this.assignProductAndEquipmentFor(newOrderWithNullItemName);
 
+
+
+        //Make Post request with order with null order name
         apiHelper.createEditorOrderPOST(newOrderWithNullItemName, authorizationHeader, 400);
     }
 
     @Test
     public void when_AddOrder_WithEmptyItemName_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        // Create an EditorOrderTO object with a null item name
-        EditorOrderTO newOrderWithNullItemName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        newOrderWithNullItemName.getWorkflows().get(0)
-                .getTasks().get(0)
-                .getItems().get(0)
-                .setName("");
+        // Create an EditorOrderTO object with empty name
+        EditorOrderTO newOrderWithEmptyItemName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrderWithEmptyItemName.getWorkflows().get(0).getTasks().get(0).getItems().get(0).setName("");
+        this.assignProductAndEquipmentFor(newOrderWithEmptyItemName);
 
-        apiHelper.createEditorOrderPOST(newOrderWithNullItemName, authorizationHeader, 400);
+
+
+        //Make Post request with order with null order name
+        apiHelper.createEditorOrderPOST(newOrderWithEmptyItemName, authorizationHeader, 400);
     }
 
     @Test
     public void when_AddOrder_WithNullWorklowList_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        // Create an EditorOrderTO object with a null workflow list
-        EditorOrderTO newOrderWithNullWorkflowList = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        newOrderWithNullWorkflowList.setWorkflows(null);
+        // Create an EditorOrderTO object with empty name
+        EditorOrderTO newOrderWithNullWorklowList = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrderWithNullWorklowList.setWorkflows(null);
+        this.assignProductAndEquipmentFor(newOrderWithNullWorklowList);
 
-        apiHelper.createEditorOrderPOST(newOrderWithNullWorkflowList, authorizationHeader, 400);
+
+
+        //Make Post request with order with null order name
+        apiHelper.createEditorOrderPOST(newOrderWithNullWorklowList, authorizationHeader, 400);
     }
 
     @Test
     public void when_AddOrder_WithNullWorklowEntity_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        // Create an EditorOrderTO object with a null workflow entity
-        EditorOrderTO newOrderWithNullWorkflowList = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-       newOrderWithNullWorkflowList
-               .getWorkflows()
-               .add(null);
+        // Create an EditorOrderTO object with empty name
+        EditorOrderTO newOrderWithNullWorklowEntity = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrderWithNullWorklowEntity.getWorkflows().add(null);
+        this.assignProductAndEquipmentFor(newOrderWithNullWorklowEntity);
 
 
-        apiHelper.createEditorOrderPOST(newOrderWithNullWorkflowList, authorizationHeader, 400);
+
+        //Make Post request with order with null order name
+        apiHelper.createEditorOrderPOST(newOrderWithNullWorklowEntity, authorizationHeader, 400);
     }
 
     @Test
     public void when_AddOrder_WithNullTaskEntity_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        // Create an EditorOrderTO object with a null task entity
-        EditorOrderTO newOrderWithNullWorkflowList = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        newOrderWithNullWorkflowList
-                .getWorkflows().get(0)
-                .getTasks()
-                .add(null);
+        // Create an EditorOrderTO object with empty name
+        EditorOrderTO newOrderWithNullTaskEntity = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrderWithNullTaskEntity.getWorkflows().get(0).getTasks().add(null);
+        this.assignProductAndEquipmentFor(newOrderWithNullTaskEntity);
 
-        apiHelper.createEditorOrderPOST(newOrderWithNullWorkflowList, authorizationHeader, 400);
+
+
+        //Make Post request with order with null order name
+        apiHelper.createEditorOrderPOST(newOrderWithNullTaskEntity, authorizationHeader, 400);
     }
 
     @Test
     public void when_AddOrder_WithNullItemEntity_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
+
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        // Create an EditorOrderTO object with a null item entity
-        EditorOrderTO newOrderWithNullWorkflowList = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        newOrderWithNullWorkflowList.
-                getWorkflows().get(0)
-                .getTasks()
-                .add(null);
+        // Create an EditorOrderTO object with empty name
+        EditorOrderTO newOrderWithNullItemEntity = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrderWithNullItemEntity.getWorkflows().get(0).getTasks().get(0).getItems().add(null);
+        this.assignProductAndEquipmentFor(newOrderWithNullItemEntity);
 
-        apiHelper.createEditorOrderPOST(newOrderWithNullWorkflowList, authorizationHeader, 400);
+
+
+        //Make Post request with order with null order name
+        apiHelper.createEditorOrderPOST(newOrderWithNullItemEntity, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_Then_OK() throws Exception {
 
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
         //Preparing existing Order
-        EditorOrderTO expected = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
+        EditorOrderTO expected = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(expected);
         expected = apiHelper.createEditorOrderPOST(expected, authorizationHeader, 201);
+
 
         //Changing order completely from user perspective
         this.alteringOrderCompletely(expected);
@@ -435,234 +462,260 @@ public class EditorControllerTest {
     @Test
     public void when_UpdateOrder_WithNegativeTimeRequired_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        //Saving and order
-        EditorOrderTO orderWithNullNumber = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        orderWithNullNumber = apiHelper.createEditorOrderPOST(orderWithNullNumber, authorizationHeader, 201);
+        //Preparing existing Order
+        EditorOrderTO updatedOrderWithNegativeTimeRequired = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(updatedOrderWithNegativeTimeRequired);
+        updatedOrderWithNegativeTimeRequired = apiHelper.createEditorOrderPOST(updatedOrderWithNegativeTimeRequired, authorizationHeader, 201);
 
-        //Updating with null values
-        orderWithNullNumber.setOrderNumber(null);
-        apiHelper.updateEditorOrderPUT(orderWithNullNumber.getId(), orderWithNullNumber, authorizationHeader, 400);
+        //Setting with negative time
+        updatedOrderWithNegativeTimeRequired.getWorkflows().get(0).getTasks().get(0).getItems().get(0).setTimeRequired(-1);
+
+
+        //Expecting exception
+        apiHelper.updateEditorOrderPUT(updatedOrderWithNegativeTimeRequired.getId(), updatedOrderWithNegativeTimeRequired, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_WithNullOrderNumber_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        //Saving and order
-        EditorOrderTO oderWithNegativeTimeRequired = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        oderWithNegativeTimeRequired = apiHelper.createEditorOrderPOST(oderWithNegativeTimeRequired, authorizationHeader, 201);
+        //Preparing existing Order
+        EditorOrderTO updatedOrderWithNullOrderNumber = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(updatedOrderWithNullOrderNumber);
+        updatedOrderWithNullOrderNumber = apiHelper.createEditorOrderPOST(updatedOrderWithNullOrderNumber, authorizationHeader, 201);
 
-        //Updating with negative values
-        oderWithNegativeTimeRequired.getWorkflows().get(0).getTasks().get(0).getItems().get(0).setTimeRequired(-1);
-        apiHelper.updateEditorOrderPUT(oderWithNegativeTimeRequired.getId(), oderWithNegativeTimeRequired, authorizationHeader, 400);
+        //Setting with null
+        updatedOrderWithNullOrderNumber.setOrderNumber(null);
+
+
+        //Expecting exception
+        apiHelper.updateEditorOrderPUT(updatedOrderWithNullOrderNumber.getId(), updatedOrderWithNullOrderNumber, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_WithNullName_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        //Saving the order
-        EditorOrderTO orderWithNullNumber = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        orderWithNullNumber = apiHelper.createEditorOrderPOST(orderWithNullNumber, authorizationHeader, 201);
+        //Preparing existing Order
+        EditorOrderTO updatedOrderWithNullName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(updatedOrderWithNullName);
+        updatedOrderWithNullName = apiHelper.createEditorOrderPOST(updatedOrderWithNullName, authorizationHeader, 201);
 
-        //Updating with null values
-        orderWithNullNumber.setName(null);
-        apiHelper.updateEditorOrderPUT(orderWithNullNumber.getId(), orderWithNullNumber, authorizationHeader, 400);
+        //Setting with null
+        updatedOrderWithNullName.setName(null);
+
+
+        //Expecting exception
+        apiHelper.updateEditorOrderPUT(updatedOrderWithNullName.getId(), updatedOrderWithNullName, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_WithNullWorkflowName_Then_BadRequest() throws Exception {
 
+
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        //Saving the order
-        EditorOrderTO orderWithNullWorkflowName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        orderWithNullWorkflowName = apiHelper.createEditorOrderPOST(orderWithNullWorkflowName, authorizationHeader, 201);
+        //Preparing existing Order
+        EditorOrderTO updatedOrderWithNullWorkflowName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(updatedOrderWithNullWorkflowName);
+        updatedOrderWithNullWorkflowName = apiHelper.createEditorOrderPOST(updatedOrderWithNullWorkflowName, authorizationHeader, 201);
 
-        //Updating with null values
-        orderWithNullWorkflowName.getWorkflows().get(0).setName(null);
-        apiHelper.updateEditorOrderPUT(orderWithNullWorkflowName.getId(), orderWithNullWorkflowName, authorizationHeader, 400);
+        //Setting with null
+        updatedOrderWithNullWorkflowName.getWorkflows().get(0).setName(null);
+
+
+        //Expecting exception
+        apiHelper.updateEditorOrderPUT(updatedOrderWithNullWorkflowName.getId(), updatedOrderWithNullWorkflowName, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_WithNullTaskName_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        //Saving the order
-        EditorOrderTO orderWithNullTaskName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        orderWithNullTaskName = apiHelper.createEditorOrderPOST(orderWithNullTaskName, authorizationHeader, 201);
+        //Preparing existing Order
+        EditorOrderTO updatedOrderWithNullTaskName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(updatedOrderWithNullTaskName);
+        updatedOrderWithNullTaskName = apiHelper.createEditorOrderPOST(updatedOrderWithNullTaskName, authorizationHeader, 201);
 
-        //Updating the order with null values
-        orderWithNullTaskName.getWorkflows().get(0).getTasks().get(0).setName(null);
-        apiHelper.updateEditorOrderPUT(orderWithNullTaskName.getId(), orderWithNullTaskName, authorizationHeader, 400);
+        //Setting with null
+        updatedOrderWithNullTaskName.getWorkflows().get(0).getTasks().get(0).setName(null);
+
+
+        //Expecting exception
+        apiHelper.updateEditorOrderPUT(updatedOrderWithNullTaskName.getId(), updatedOrderWithNullTaskName, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_WithNullItemName_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        //Saving the order
-        EditorOrderTO orderWithNullItemName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        orderWithNullItemName = apiHelper.createEditorOrderPOST(orderWithNullItemName, authorizationHeader, 201);
+        //Preparing existing Order
+        EditorOrderTO updatedOrderWithNullItemName = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(updatedOrderWithNullItemName);
+        updatedOrderWithNullItemName = apiHelper.createEditorOrderPOST(updatedOrderWithNullItemName, authorizationHeader, 201);
 
-        //Updating the order with null values
-        orderWithNullItemName.getWorkflows().get(0).getTasks().get(0).getItems().get(0).setName(null);
-        apiHelper.updateEditorOrderPUT(orderWithNullItemName.getId(), orderWithNullItemName, authorizationHeader, 400);
+        //Setting with null
+        updatedOrderWithNullItemName.getWorkflows().get(0).getTasks().get(0).getItems().get(0).setName(null);
+
+
+        //Expecting exception
+        apiHelper.updateEditorOrderPUT(updatedOrderWithNullItemName.getId(), updatedOrderWithNullItemName, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_WithNullWorkflowList_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        //Saving the order
-        EditorOrderTO orderWithNullItemName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        orderWithNullItemName = apiHelper.createEditorOrderPOST(orderWithNullItemName, authorizationHeader, 201);
+        //Preparing existing Order
+        EditorOrderTO updatedOrderWithNullWorkflowList = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(updatedOrderWithNullWorkflowList);
+        updatedOrderWithNullWorkflowList = apiHelper.createEditorOrderPOST(updatedOrderWithNullWorkflowList, authorizationHeader, 201);
 
-        //Updating the order with null values
-        orderWithNullItemName.setWorkflows(null);
-        apiHelper.updateEditorOrderPUT(orderWithNullItemName.getId(), orderWithNullItemName, authorizationHeader, 400);
+        //Setting with null
+        updatedOrderWithNullWorkflowList.setWorkflows(null);
+
+
+        //Expecting exception
+        apiHelper.updateEditorOrderPUT(updatedOrderWithNullWorkflowList.getId(), updatedOrderWithNullWorkflowList, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_WithNullWorkflowEntity_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        //Saving the order
-        EditorOrderTO orderWithNullItemName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        orderWithNullItemName = apiHelper.createEditorOrderPOST(orderWithNullItemName, authorizationHeader, 201);
+        //Preparing existing Order
+        EditorOrderTO updatedOrderWithNullWorkflowEntity = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(updatedOrderWithNullWorkflowEntity);
+        updatedOrderWithNullWorkflowEntity = apiHelper.createEditorOrderPOST(updatedOrderWithNullWorkflowEntity, authorizationHeader, 201);
 
-        //Updating the order with null values
-        orderWithNullItemName.getWorkflows().add(null);
-        apiHelper.updateEditorOrderPUT(orderWithNullItemName.getId(), orderWithNullItemName, authorizationHeader, 400);
+        //Setting with null
+        updatedOrderWithNullWorkflowEntity.getWorkflows().add(null);
+
+
+        //Expecting exception
+        apiHelper.updateEditorOrderPUT(updatedOrderWithNullWorkflowEntity.getId(), updatedOrderWithNullWorkflowEntity, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_WithNullTaskList_Then_BadRequest() throws Exception {
 
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        //Saving the order
-        EditorOrderTO orderWithNullItemName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        orderWithNullItemName = apiHelper.createEditorOrderPOST(orderWithNullItemName, authorizationHeader, 201);
+        //Preparing existing Order
+        EditorOrderTO updatedOrderWithNullTaskList = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(updatedOrderWithNullTaskList);
+        updatedOrderWithNullTaskList = apiHelper.createEditorOrderPOST(updatedOrderWithNullTaskList, authorizationHeader, 201);
 
-        //Updating the order with null values
-        orderWithNullItemName.getWorkflows().get(0).setTasks(null);
-        apiHelper.updateEditorOrderPUT(orderWithNullItemName.getId(), orderWithNullItemName, authorizationHeader, 400);
+        //Setting with null
+        updatedOrderWithNullTaskList.getWorkflows().get(0).setTasks(null);
+
+
+        //Expecting exception
+        apiHelper.updateEditorOrderPUT(updatedOrderWithNullTaskList.getId(), updatedOrderWithNullTaskList, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_WithNullTaskEntity_Then_BadRequest() throws Exception {
+        this.populateProductAndEquipment();
+        // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        //Building the order
-        EditorOrderTO orderWithNullItemName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        orderWithNullItemName = apiHelper.createEditorOrderPOST(orderWithNullItemName, authorizationHeader, 201);
+        //Preparing existing Order
+        EditorOrderTO updatedOrderWithNullTaskEntity = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(updatedOrderWithNullTaskEntity);
+        updatedOrderWithNullTaskEntity = apiHelper.createEditorOrderPOST(updatedOrderWithNullTaskEntity, authorizationHeader, 201);
 
-        //Updating the order with null values
-        orderWithNullItemName.getWorkflows().get(0).getTasks().add(null);
-        apiHelper.updateEditorOrderPUT(orderWithNullItemName.getId(), orderWithNullItemName, authorizationHeader, 400);
+        //Setting with null
+        updatedOrderWithNullTaskEntity.getWorkflows().get(0).getTasks().add(null);
+
+
+        //Expecting exception
+        apiHelper.updateEditorOrderPUT(updatedOrderWithNullTaskEntity.getId(), updatedOrderWithNullTaskEntity, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_WithNullItemEntity_Then_BadRequest() throws Exception {
+        this.populateProductAndEquipment();
+        // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        //Saving the order
-        EditorOrderTO orderWithNullItemName = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
-        orderWithNullItemName = apiHelper.createEditorOrderPOST(orderWithNullItemName, authorizationHeader, 201);
+        //Preparing existing Order
+        EditorOrderTO updatedOrderWithNullItemEntity = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(updatedOrderWithNullItemEntity);
+        updatedOrderWithNullItemEntity = apiHelper.createEditorOrderPOST(updatedOrderWithNullItemEntity, authorizationHeader, 201);
 
-        //Updating the order with null values
-        orderWithNullItemName.getWorkflows().get(0).getTasks().get(0).getItems().add(null);
-        apiHelper.updateEditorOrderPUT(orderWithNullItemName.getId(), orderWithNullItemName, authorizationHeader, 400);
+        //Setting with null
+        updatedOrderWithNullItemEntity.getWorkflows().get(0).getTasks().get(0).getItems().add(null);
+
+
+        //Expecting exception
+        apiHelper.updateEditorOrderPUT(updatedOrderWithNullItemEntity.getId(), updatedOrderWithNullItemEntity, authorizationHeader, 400);
     }
 
     @Test
     public void when_UpdateOrder_WithNotExistingOrder_Then_NotFound() throws Exception {
+        this.populateProductAndEquipment();
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        EditorOrderTO orderWithNonExistingId = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
+        EditorOrderTO orderWithNonExistingId = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(orderWithNonExistingId);
         orderWithNonExistingId.setId(999L);
+
         apiHelper.updateEditorOrderPUT(orderWithNonExistingId.getId(), orderWithNonExistingId, authorizationHeader, 404);
     }
 
     @Test
     public void when_UpdateOrder_WithExistingOrderNumber_Then_Conflict() throws Exception {
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        apiHelper.createEditorOrderPOST(this.orderHelper.buildCompleteEditorOrderTO("W0001", product), authorizationHeader, 201);
+        EditorOrderTO existingOrderNumber = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(existingOrderNumber);
+        apiHelper.createEditorOrderPOST(existingOrderNumber, authorizationHeader, 201);
 
 
-        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0002", product);
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0002");
+        this.assignProductAndEquipmentFor(toBeUpdated);
         toBeUpdated = apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
 
         toBeUpdated.setOrderNumber("W0001");
@@ -677,14 +730,13 @@ public class EditorControllerTest {
 
     @Test
     public void when_DeleteOrder_Then_NoContent() throws Exception {
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        EditorOrderTO toBeDeleted = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
+        EditorOrderTO toBeDeleted = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(toBeDeleted);
         toBeDeleted = apiHelper.createEditorOrderPOST(toBeDeleted, authorizationHeader, 201);
 
         Long toDeleteId = toBeDeleted.getId();
@@ -697,14 +749,13 @@ public class EditorControllerTest {
 
     @Test
     public void when_GetOrder_Then_OK() throws Exception {
+        this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
-        //Saving a product
-        EditorProductTO product = this.productHelper.buildCompleteEditorProductTO("P0001");
-        product = this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201);
 
-        EditorOrderTO expected = this.orderHelper.buildCompleteEditorOrderTO("W0001", product);
+        EditorOrderTO expected = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(expected);
         expected = apiHelper.createEditorOrderPOST(expected, authorizationHeader, 201);
 
         EditorOrderTO actual = apiHelper.getEditorOrderGET(expected.getId(), authorizationHeader, 200);
@@ -814,6 +865,26 @@ public class EditorControllerTest {
 
         // Set updated workflows to the order
         toAlter.setWorkflows(updatedWorkflows);
+    }
+
+    private void populateProductAndEquipment() throws Exception{
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        EditorProductTO P0001 = this.productHelper.buildCompleteEditorProductTO("P0001");
+        EditorEquipmentTO E0001 = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+        EditorEquipmentTO E0002 = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0002");
+        EditorEquipmentTO E0003 = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0003");
+
+        P0001 = this.apiHelper.createEditorProductPOST(P0001, authorizationHeader, 201 );
+        E0001 = this.apiHelper.createEditorEquipmentPOST(E0001, authorizationHeader, 201 );
+        E0002 = this.apiHelper.createEditorEquipmentPOST(E0002, authorizationHeader, 201 );
+        E0003 = this.apiHelper.createEditorEquipmentPOST(E0003, authorizationHeader, 201 );
+
+    }
+
+    private void assignProductAndEquipmentFor(EditorOrderTO order) throws Exception{
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        order.setProduct(this.apiHelper.getEditorAllProductsGET(authorizationHeader, 200).get(0));
+        order.setEquipment(this.apiHelper.getEditorAllEquipmentGET(authorizationHeader, 200));
     }
 
     /**
@@ -1260,6 +1331,208 @@ public class EditorControllerTest {
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
         this.apiHelper.getEditorProductGET(999L, authorizationHeader, 404);
+    }
+
+    @Test
+    public void when_AddEquipment_Then_Created() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO equipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+
+        EditorEquipmentTO response = this.apiHelper.createEditorEquipmentPOST(equipment, authorizationHeader, 201);
+        EditorEquipmentTO actual = this.apiHelper.getEditorEquipmentGET(response.getId(), authorizationHeader, 200);
+
+        this.equipmentHelper.assertEditorEquipmentEqual(response, actual);
+    }
+
+    @Test
+    public void when_AddEquipment_WithNullEquipmentNumber_Then_BadRequest() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO equipmentWithNullNumber = this.equipmentHelper.buildCompleteEditorEquipmentTO(null);
+
+        this.apiHelper.createEditorEquipmentPOST(equipmentWithNullNumber, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_AddEquipment_WithEmptyEquipmentNumber_Then_BadRequest() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO equipmentWithEmptyName = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+        equipmentWithEmptyName.setName("");
+
+        this.apiHelper.createEditorEquipmentPOST(equipmentWithEmptyName, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_AddEquipment_WithEmptyType_Then_BadRequest() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO equipmentWithEmptyType = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+        equipmentWithEmptyType.setType("");
+
+        this.apiHelper.createEditorEquipmentPOST(equipmentWithEmptyType, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_AddEquipment_WithNullDescription_Then_Created() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO equipmentWithNullDescription = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+        equipmentWithNullDescription.setDescription(null);
+
+        this.apiHelper.createEditorEquipmentPOST(equipmentWithNullDescription, authorizationHeader, 201);
+    }
+
+    @Test
+    public void when_AddEquipment_WithEmptyDescription_Then_Created() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO equipmentWithEmptyDescription = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+        equipmentWithEmptyDescription.setDescription("");
+
+        this.apiHelper.createEditorEquipmentPOST(equipmentWithEmptyDescription, authorizationHeader, 201);
+    }
+
+    @Test
+    public void when_AddEquipment_WithExistingEquipmentNumber_Then_Conflict() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO existingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+        this.apiHelper.createEditorEquipmentPOST(existingEquipment, authorizationHeader, 201);
+
+        EditorEquipmentTO newEquipmentWithSameNumber = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+        this.apiHelper.createEditorEquipmentPOST(newEquipmentWithSameNumber, authorizationHeader, 409);
+    }
+
+    @Test
+    public void when_UpdateEquipment_Then_Ok() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO existingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+
+        EditorEquipmentTO updatedEquipment = this.apiHelper.createEditorEquipmentPOST(existingEquipment, authorizationHeader, 201);
+
+        updatedEquipment.setName("Updated");
+        updatedEquipment.setType("Updated");
+        updatedEquipment.setDescription("Updated");
+        Long id = updatedEquipment.getId();
+        updatedEquipment = this.apiHelper.updateEditorEquipmentPUT(id, updatedEquipment, authorizationHeader, 200);
+
+        EditorEquipmentTO actual = apiHelper.getEditorEquipmentGET(id, authorizationHeader, 200);
+        equipmentHelper.assertEditorEquipmentEqual(updatedEquipment, actual);
+    }
+
+    @Test
+    public void when_UpdateEquipment_WithNullEquipmentNumber_Then_BadRequest() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO existingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+
+        EditorEquipmentTO updatedEquipmentWithNullNumber = this.apiHelper.createEditorEquipmentPOST(existingEquipment, authorizationHeader, 201);
+
+        updatedEquipmentWithNullNumber.setEquipmentNumber(null);
+        Long id = updatedEquipmentWithNullNumber.getId();
+        this.apiHelper.updateEditorEquipmentPUT(id, updatedEquipmentWithNullNumber, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_UpdateEquipment_WithEmptyEquipmentNumber_Then_BadRequest() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO existingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+
+        EditorEquipmentTO updatedEquipmentWithEmptyNumber = this.apiHelper.createEditorEquipmentPOST(existingEquipment, authorizationHeader, 201);
+
+        updatedEquipmentWithEmptyNumber.setEquipmentNumber("");
+        Long id = updatedEquipmentWithEmptyNumber.getId();
+        this.apiHelper.updateEditorEquipmentPUT(id, updatedEquipmentWithEmptyNumber, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_UpdateEquipment_WithNullName_Then_BadRequest() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO existingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+
+        EditorEquipmentTO updatedEquipmentWithNullName = this.apiHelper.createEditorEquipmentPOST(existingEquipment, authorizationHeader, 201);
+
+        updatedEquipmentWithNullName.setName(null);
+        Long id = updatedEquipmentWithNullName.getId();
+        this.apiHelper.updateEditorEquipmentPUT(id, updatedEquipmentWithNullName, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_UpdateEquipment_WithEmptyName_Then_BadRequest() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO existingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+
+        EditorEquipmentTO updatedEquipmentWithEmptyName = this.apiHelper.createEditorEquipmentPOST(existingEquipment, authorizationHeader, 201);
+
+        updatedEquipmentWithEmptyName.setName("");
+        Long id = updatedEquipmentWithEmptyName.getId();
+        this.apiHelper.updateEditorEquipmentPUT(id, updatedEquipmentWithEmptyName, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_UpdateEquipment_WithNullType_Then_BadRequest() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO existingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+
+        EditorEquipmentTO updatedEquipmentWithNullType = this.apiHelper.createEditorEquipmentPOST(existingEquipment, authorizationHeader, 201);
+
+        updatedEquipmentWithNullType.setType(null);
+        Long id = updatedEquipmentWithNullType.getId();
+        this.apiHelper.updateEditorEquipmentPUT(id, updatedEquipmentWithNullType, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_UpdateEquipment_WithEmptyType_Then_BadRequest() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO existingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+
+        EditorEquipmentTO updatedEquipmentWithEmptyType = this.apiHelper.createEditorEquipmentPOST(existingEquipment, authorizationHeader, 201);
+
+        updatedEquipmentWithEmptyType.setType("");
+        Long id = updatedEquipmentWithEmptyType.getId();
+        this.apiHelper.updateEditorEquipmentPUT(id, updatedEquipmentWithEmptyType, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_UpdateEquipment_WithExistingEquipmentNumber_Then_Conflict() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO existingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+        EditorEquipmentTO secondExistingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0002");
+        this.apiHelper.createEditorEquipmentPOST(secondExistingEquipment, authorizationHeader, 201);
+
+        EditorEquipmentTO updatedEquipmentWithSameNumber = this.apiHelper.createEditorEquipmentPOST(existingEquipment, authorizationHeader, 201);
+
+        updatedEquipmentWithSameNumber.setEquipmentNumber("E0002");
+        Long id = updatedEquipmentWithSameNumber.getId();
+        this.apiHelper.updateEditorEquipmentPUT(id, updatedEquipmentWithSameNumber, authorizationHeader, 409);
+    }
+
+    @Test
+    public void when_DeleteEquipment_Then_Ok() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO existingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+        Long id = this.apiHelper.createEditorEquipmentPOST(existingEquipment, authorizationHeader, 201).getId();
+        this.apiHelper.deleteEditorEquipmentDELETE(id, authorizationHeader, 204);
+        assertFalse(this.equipmentRepository.existsById(id));
+    }
+
+    @Test
+    public void when_DeleteEquipmentWithNonExistingId_Then_BadRequest() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+
+        this.apiHelper.deleteEditorEquipmentDELETE(999L, authorizationHeader, 404);
+    }
+
+    @Test
+    public void when_GetEquipment_Then_Ok() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO existingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+        existingEquipment = this.apiHelper.createEditorEquipmentPOST(existingEquipment, authorizationHeader, 201);
+
+        EditorEquipmentTO actual = this.apiHelper.getEditorEquipmentGET(existingEquipment.getId(), authorizationHeader, 200);
+
+        equipmentHelper.assertEditorEquipmentEqual(existingEquipment, actual);
+    }
+
+    @Test
+    public void when_GetEquipmentWithNonExistingId_Then_BadRequest() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+
+        this.apiHelper.getEditorEquipmentGET(999L, authorizationHeader, 404);
     }
 
 }

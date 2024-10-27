@@ -1,5 +1,6 @@
 package com.shopfloor.backend.api.controllers;
 
+import com.shopfloor.backend.api.transferobjects.editors.EditorEquipmentTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
 import com.shopfloor.backend.services.EditorService;
@@ -98,6 +99,39 @@ public class EditorController {
     @ResponseStatus(HttpStatus.OK)
     public EditorProductTO getProduct(@PathVariable Long id) {
         return this.editorService.getProduct(id);
+    }
+
+    /**
+     * EQUIPMENT
+     */
+    @GetMapping("equipment")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EditorEquipmentTO> getAllEquipment() {
+        return this.editorService.getAllEquipment();
+    }
+
+    @PostMapping("equipment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public EditorEquipmentTO createEquipment(@Valid @RequestBody EditorEquipmentTO newEquipment) {
+        return this.editorService.addEquipment(newEquipment);
+    }
+
+    @PutMapping("equipment/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public EditorEquipmentTO updateEquipment(@PathVariable Long id, @Valid @RequestBody EditorEquipmentTO updatedEquipment) {
+        return this.editorService.updateEquipment(id, updatedEquipment);
+    }
+
+    @DeleteMapping("equipment/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteEquipment(@PathVariable Long id) {
+        this.editorService.deleteEquipment(id);
+    }
+
+    @GetMapping("equipment/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public EditorEquipmentTO getEquipment(@PathVariable Long id) {
+        return this.editorService.getEquipment(id);
     }
 
 }

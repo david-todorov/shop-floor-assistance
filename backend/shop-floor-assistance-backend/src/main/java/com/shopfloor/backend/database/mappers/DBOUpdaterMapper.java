@@ -34,7 +34,19 @@ public class DBOUpdaterMapper {
         this.dboInitializerMapper = dboInitializerMapper;
     }
 
-    public ProductDBO copyProductDboFrom(ProductDBO target, EditorProductTO source, Long updatedId) {
+    public EquipmentDBO copyEquipmentDboFrom(EquipmentDBO target, EditorEquipmentTO source, Long updaterId) {
+        target.setEquipmentNumber(source.getEquipmentNumber());
+        target.setName(source.getName());
+        target.setType(source.getType());
+        target.setDescription(source.getDescription());
+
+        target.setUpdatedBy(updaterId);
+        target.setUpdatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+
+        return target;
+    }
+
+    public ProductDBO copyProductDboFrom(ProductDBO target, EditorProductTO source, Long updaterId) {
 
         target.setProductNumber(source.getProductNumber());
         target.setName(source.getName());
@@ -45,7 +57,7 @@ public class DBOUpdaterMapper {
         target.setLanguage(source.getLanguage());
         target.setDescription(source.getDescription());
 
-        target.setUpdatedBy(updatedId);
+        target.setUpdatedBy(updaterId);
         target.setUpdatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
 
         return target;

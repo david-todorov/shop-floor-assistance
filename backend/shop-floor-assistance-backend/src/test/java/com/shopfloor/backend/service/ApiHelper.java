@@ -3,6 +3,7 @@ package com.shopfloor.backend.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shopfloor.backend.api.transferobjects.authentication.LoginUserRequestTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorEquipmentTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorOrderTO;
@@ -147,6 +148,59 @@ public class ApiHelper {
                 .andReturn().getResponse().getContentAsString();
 
         return objectMapper.readValue(responseContent, EditorProductTO.class);
+    }
+
+    /**
+     * EDITOR
+     * EQUIPMENT
+     */
+
+    public List<EditorEquipmentTO> getEditorAllEquipmentGET(String authorizationHeader, int expectedStatus) throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(get("/editor/equipment")
+                        .header("Authorization", authorizationHeader))
+                .andExpect(status().is(expectedStatus))
+                .andReturn().getResponse();
+
+        // Only attempt to parse the response body for successful status codes
+        if (response.getStatus() == 200) {
+            String responseContent = response.getContentAsString();
+            return objectMapper.readValue(responseContent, new TypeReference<List<EditorEquipmentTO>>() {});
+        } else {
+            // Return an empty list or handle the error case
+            return Collections.emptyList(); // or throw an exception if you prefer
+        }
+    }
+
+    public EditorEquipmentTO createEditorEquipmentPOST(EditorEquipmentTO editorEquipmentTO, String authorizationHeader, int expectedStatus) throws Exception {
+        String responseContent = mockMvc.perform(post("/editor/equipment").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(editorEquipmentTO)).header("Authorization", authorizationHeader)) // Add the authorization header
+                .andExpect(status().is(expectedStatus)) // Expect the provided status
+                .andReturn().getResponse().getContentAsString();
+
+        return objectMapper.readValue(responseContent, EditorEquipmentTO.class);
+    }
+
+    public EditorEquipmentTO updateEditorEquipmentPUT(Long equipmentId, EditorEquipmentTO editorEquipmentTO, String authorizationHeader, int expectedStatus) throws Exception {
+        String responseContent = mockMvc.perform(put("/editor/equipment/{id}", equipmentId) // Include the order ID as a path variable
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(editorEquipmentTO)).header("Authorization", authorizationHeader)) // Add the authorization header
+                .andExpect(status().is(expectedStatus)) // Expect the provided status
+                .andReturn().getResponse().getContentAsString();
+
+        return objectMapper.readValue(responseContent, EditorEquipmentTO.class);
+    }
+
+    public void deleteEditorEquipmentDELETE(Long equipmentId, String authorizationHeader, int expectedStatus) throws Exception {
+        mockMvc.perform(delete("/editor/equipment/{id}", equipmentId) // Include the order ID as a path variable
+                        .header("Authorization", authorizationHeader)) // Add the authorization header
+                .andExpect(status().is(expectedStatus)); // Expect the provided status
+    }
+
+    public EditorEquipmentTO getEditorEquipmentGET(Long equipmentId, String authorizationHeader, int expectedStatus) throws Exception {
+        String responseContent = mockMvc.perform(get("/editor/equipment/{id}", equipmentId) // Include the order ID as a path variable
+                        .header("Authorization", authorizationHeader)) // Add the authorization header
+                .andExpect(status().is(expectedStatus)) // Expect the provided status
+                .andReturn().getResponse().getContentAsString();
+
+        return objectMapper.readValue(responseContent, EditorEquipmentTO.class);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.shopfloor.backend.api.transferobjects.editors;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,8 +41,13 @@ public class EditorOrderTO {
     @NotNull(message = "Product cannot be null")
     private EditorProductTO product;
 
+    @NotNull(message = "Equipment list cannot be null")
+    @Size(min = 1, message = "Equipment list cannot be empty")
+    private List<@NotNull(message = "Equipment cannot be null")EditorEquipmentTO> equipment;
+
     public EditorOrderTO() {
         this.workflows = new ArrayList<EditorWorkflowTO>();
+        this.equipment = new ArrayList<EditorEquipmentTO>();
     }
 
 }
