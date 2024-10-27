@@ -31,6 +31,7 @@ public class EditorTOMapper {
         equipmentDBO.getOrders().forEach(order -> {
             editorOrderTOList.add(mapBasicOrderProperties(order));
         });
+        editorEquipmentTO.setOrders(editorOrderTOList);
 
         return editorEquipmentTO;
     }

@@ -15,6 +15,8 @@ import com.shopfloor.backend.database.repositories.OrderRepository;
 import com.shopfloor.backend.database.repositories.ProductRepository;
 import com.shopfloor.backend.security.AuthenticatedUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +56,20 @@ public class EditorServiceImpl implements EditorService {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.equipmentRepository = equipmentRepository;
+    }
+
+    @Override
+    public List<EditorEquipmentTO> getEquipmentSuggestions(int numberOfEquipments) {
+        Pageable pageable = PageRequest.of(0, numberOfEquipments);
+
+        return this.editorToMapper.toEquipmentTOs(this.equipmentRepository.findTopReferencedEquipment(pageable));
+    }
+
+    @Override
+    public List<EditorProductTO> getProductsSuggestions(int numberOfProducts) {
+        Pageable pageable = PageRequest.of(0, numberOfProducts);
+
+        return this.editorToMapper.toProductTOs(this.productRepository.findTopReferencedProducts(pageable));
     }
 
     @Override

@@ -58,9 +58,10 @@ public class OrderDBO {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "equipment_id")
     )
-    private List<EquipmentDBO> equipment = new ArrayList<>();
+    private List<EquipmentDBO> equipment;
 
     public OrderDBO() {
        this.workflows = new ArrayList<WorkflowDBO>();
+       equipment = new ArrayList<EquipmentDBO>();
     }
 }
