@@ -14,7 +14,27 @@ import java.util.List;
 @Component
 public class EditorTOMapper {
 
-    //TODO
+    public ArrayList<EditorEquipmentTO> toEquipmentTOs(List<EquipmentDBO> equipments) {
+        ArrayList<EditorEquipmentTO> equipmentTOs = new ArrayList<>();
+        equipments.forEach(equipment -> {
+            equipmentTOs.add(toEquipmentTO(equipment));
+        });
+
+        return equipmentTOs;
+    }
+
+    public EditorEquipmentTO toEquipmentTO(EquipmentDBO equipmentDBO) {
+        EditorEquipmentTO editorEquipmentTO = this.mapBasicEquipmentProperties(equipmentDBO);
+
+        List<EditorOrderTO> editorOrderTOList = new ArrayList<>();
+
+        equipmentDBO.getOrders().forEach(order -> {
+            editorOrderTOList.add(mapBasicOrderProperties(order));
+        });
+
+        return editorEquipmentTO;
+    }
+
     public EditorProductTO toProductTO(ProductDBO productDBO) {
 
         EditorProductTO editorProductTO = mapBasicProductProperties(productDBO);
@@ -36,9 +56,9 @@ public class EditorTOMapper {
 
     public EditorOrderTO toOrderTO(OrderDBO orderDBO) {
         EditorOrderTO editorOrderTO = mapBasicOrderProperties(orderDBO);
-        EditorProductTO editorProductTO = mapBasicProductProperties(orderDBO.getProduct());
-        editorOrderTO.setProduct(editorProductTO);
 
+        editorOrderTO.setProduct(mapBasicProductProperties(orderDBO.getProduct()));
+        editorOrderTO.setEquipment(toEquipmentTOs(orderDBO.getEquipment()));
 
         editorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
 
@@ -144,5 +164,21 @@ public class EditorTOMapper {
         editorProductTO.setUpdatedAt(productDBO.getUpdatedAt());
 
         return editorProductTO;
+    }
+
+    private EditorEquipmentTO mapBasicEquipmentProperties(EquipmentDBO equipmentDBO) {
+        EditorEquipmentTO editorEquipmentTO = new EditorEquipmentTO();
+        editorEquipmentTO.setId(equipmentDBO.getId());
+        editorEquipmentTO.setEquipmentNumber(equipmentDBO.getEquipmentNumber());
+        editorEquipmentTO.setName(equipmentDBO.getName());
+        editorEquipmentTO.setType(equipmentDBO.getType());
+        editorEquipmentTO.setDescription(equipmentDBO.getDescription());
+
+        editorEquipmentTO.setCreatedBy(equipmentDBO.getCreatedBy());
+        editorEquipmentTO.setUpdatedBy(equipmentDBO.getUpdatedBy());
+        editorEquipmentTO.setCreatedAt(equipmentDBO.getCreatedAt());
+        editorEquipmentTO.setUpdatedAt(equipmentDBO.getUpdatedAt());
+
+        return editorEquipmentTO;
     }
 }

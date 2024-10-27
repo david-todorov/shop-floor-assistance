@@ -27,6 +27,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(EquipmentNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleEquipmentNotFound(EquipmentNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setProperty("description", "The requested equipment was not found.");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(DuplicateEquipmentException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ProblemDetail handleEquipmentAlreadyExists(DuplicateEquipmentException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problemDetail.setProperty("description", "The equipment you are trying to create already exists.");
+        return problemDetail;
+    }
+
     @ExceptionHandler(DuplicateProductException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ProblemDetail handleProductAlreadyExists(DuplicateProductException ex) {

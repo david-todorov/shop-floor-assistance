@@ -1,48 +1,49 @@
 package com.shopfloor.backend.service;
 
+import com.shopfloor.backend.api.transferobjects.editors.EditorEquipmentTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Component
-public class ProductHelper {
+public class EquipmentHelper {
 
-    public EditorProductTO buildCompleteEditorProductTO(String productNumber){
-        EditorProductTO editorProduct = new EditorProductTO();
+    public EditorEquipmentTO buildCompleteEditorEquipmentTO(String equipmentNumber){
+        EditorEquipmentTO editorEquipment = new EditorEquipmentTO();
+        editorEquipment.setEquipmentNumber(equipmentNumber);
+        editorEquipment.setName("BEC");
+        editorEquipment.setType("500_123");
+        editorEquipment.setDescription("High end Uhlmann packaging Machine Type BEC500");
+        editorEquipment.setOrders(new ArrayList<EditorOrderTO>());
 
-        // Hardcoded values
-        editorProduct.setProductNumber(productNumber);
-        editorProduct.setName("Aspirin");
-        editorProduct.setType("XYZ");
-        editorProduct.setCountry("Germany");
-        editorProduct.setPackageSize("8x2");
-        editorProduct.setPackageType("Blister");
-        editorProduct.setLanguage("German language");
-        editorProduct.setDescription("Pain reliever used to reduce fever and relieve minor aches and pains.");
-        // Initialize orders list (empty but not null)
-        editorProduct.setOrders(new ArrayList<EditorOrderTO>());
-
-        return editorProduct;
+        return editorEquipment;
     }
 
-    //TODO
-    public void assertEditorProductsEqual(EditorProductTO expected, EditorProductTO actual){
+    public ArrayList<EditorEquipmentTO> buildCompleteEditorEquipmentTOs(){
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<>();
+        equipments.add(buildCompleteEditorEquipmentTO("E0001"));
+        equipments.add(buildCompleteEditorEquipmentTO("E0002"));
+        equipments.add(buildCompleteEditorEquipmentTO("E0003"));
+        equipments.add(buildCompleteEditorEquipmentTO("E0004"));
+
+        return equipments;
+    }
+
+    public void assertEditorEquipmentEqual(EditorEquipmentTO expected, EditorEquipmentTO actual){
         if(expected.getId() != null && actual.getId() != null) {
             assertEquals(expected.getId(), actual.getId());
         }
 
-        assertEquals(expected.getProductNumber(), actual.getProductNumber());
+        assertEquals(expected.getEquipmentNumber(), actual.getEquipmentNumber());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getDescription(), actual.getDescription());
         assertEquals(expected.getType(), actual.getType());
-        assertEquals(expected.getCountry(), actual.getCountry());
-        assertEquals(expected.getPackageSize(), actual.getPackageSize());
-        assertEquals(expected.getPackageType(), actual.getPackageType());
-        assertEquals(expected.getLanguage(), actual.getLanguage());
+
 
         assertEquals(expected.getOrders().size(), actual.getOrders().size());
         for (int i = 0; i < actual.getOrders().size(); i++) {

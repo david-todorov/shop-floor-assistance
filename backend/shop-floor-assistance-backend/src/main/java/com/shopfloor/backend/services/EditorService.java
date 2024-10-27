@@ -1,5 +1,6 @@
 package com.shopfloor.backend.services;
 
+import com.shopfloor.backend.api.transferobjects.editors.EditorEquipmentTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
 
@@ -42,4 +43,18 @@ public interface EditorService {
     EditorProductTO getProduct(Long productId);
 
     void deleteProduct(Long productId);
+
+
+    /**
+     * EQIPMENT
+     */
+    List<EditorEquipmentTO> getAllEquipment();
+
+    EditorEquipmentTO addEquipment(EditorEquipmentTO newEditorEquipmentTO);
+
+    EditorEquipmentTO updateEquipment(Long equipmentId, EditorEquipmentTO editorEquipmentTO);
+
+    EditorEquipmentTO getEquipment(Long equipmentId);
+
+    void deleteEquipment(Long equipmentId);
 }

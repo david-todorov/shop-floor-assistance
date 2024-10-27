@@ -11,11 +11,12 @@ import java.util.List;
 
 @Getter
 @Setter
-public class EditorProductTO {
+@NotNull(message = "Equipment can not be null")
+public class EditorEquipmentTO {
     private Long id;
 
-    @NotEmpty(message = "Product number can not be null or empty")
-    private String productNumber;
+    @NotEmpty(message = "Equipment number can not be null or empty")
+    private String equipmentNumber;
 
     @NotEmpty(message = "Name can not be null or empty")
     private String name;
@@ -23,17 +24,8 @@ public class EditorProductTO {
     @NotEmpty(message = "Type can not be null or empty")
     private String type;
 
-    @NotEmpty(message = "Country can not be null or empty")
-    private String country;
-
-    @NotEmpty(message = "Package size can not be null or empty")
-    private String packageSize;
-
-    @NotEmpty(message = "Package type can not be null or empty")
-    private String packageType;
-
-    @NotEmpty(message = "Language can not be null or empty")
-    private String language;
+    @NotNull(message = "Orders list cannot be null")
+    private List<EditorOrderTO> orders;
 
     private String description;
     private Long createdBy;
@@ -41,10 +33,7 @@ public class EditorProductTO {
     private Date createdAt;
     private Date updatedAt;
 
-    @NotNull(message = "Orders list cannot be null")
-    private List<EditorOrderTO> orders;
-
-    public EditorProductTO() {
+    public EditorEquipmentTO() {
         this.orders = new ArrayList<EditorOrderTO>();
     }
 }
