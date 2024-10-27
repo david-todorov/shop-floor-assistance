@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,9 +120,17 @@ public class EditorServiceImpl implements EditorService {
     @Transactional
     @Override
     public void deleteEquipment(Long equipmentId) {
+        // Find the equipment to delete
         EquipmentDBO equipmentDBO = this.equipmentRepository.findById(equipmentId)
                 .orElseThrow(() -> new EquipmentNotFoundException());
 
+        // Remove associations with orders before deletion
+        List<OrderDBO> associatedOrders = new ArrayList<>(equipmentDBO.getOrders());
+        for (OrderDBO order : associatedOrders) {
+            order.removeEquipment(equipmentDBO); // Use the helper method to maintain bidirectional consistency
+        }
+
+        // Finally, delete the equipment
         this.equipmentRepository.delete(equipmentDBO);
     }
 
@@ -139,7 +148,7 @@ public class EditorServiceImpl implements EditorService {
         ProductDBO toDeleteProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException());
 
-        this.productRepository.delete(toDeleteProduct);
+        this.productRepository.delete(toDeleteProduct); // Deletes associated orders automatically
     }
 
     @Override
@@ -186,44 +195,50 @@ public class EditorServiceImpl implements EditorService {
     @Transactional
     @Override
     public EditorOrderTO addOrder(EditorOrderTO newEditorOrderTO) {
-
-        //The id of the user
+        // The id of the user (creator of the order)
         Long creatorId = AuthenticatedUserDetails.getCurrentUserId();
 
-        //Checking if another order exists with the same order number
+        // Checking if another order exists with the same order number
         if (getOrderIfExists(newEditorOrderTO.getOrderNumber()) != null) {
             throw new DuplicatedOrderException();
         }
 
-        //Setting the basic properties of the order
+        // Setting the basic properties of the order
         OrderDBO newOrderDBO = this.dboInitializerMapper.toOrderDBO(newEditorOrderTO, creatorId);
 
-        //Fetching and setting the associated product
+        // Fetching the associated product from the database
         ProductDBO product = this.productRepository.findById(newEditorOrderTO.getProduct().getId())
                 .orElseThrow(() -> new ProductNotFoundException());
-        newOrderDBO.setProduct(product);
 
-        // Fetch and setting associated equipment with the order
+        // Set the product to the order
+        newOrderDBO.setProduct(product);
+        product.getOrders().add(newOrderDBO); // Bidirectional association
+
+        // Fetch and set associated equipment with the order
         List<EquipmentDBO> equipmentList = new ArrayList<>();
         for (EditorEquipmentTO equipmentTO : newEditorOrderTO.getEquipment()) {
             EquipmentDBO equipment = this.equipmentRepository.findById(equipmentTO.getId())
                     .orElseThrow(() -> new EquipmentNotFoundException());
+
+            equipment.getOrders().add(newOrderDBO); // Bidirectional association
             equipmentList.add(equipment);
         }
         newOrderDBO.setEquipment(equipmentList);
 
-        //Saving and returning the added order
-        return this.editorToMapper.toOrderTO(this.orderRepository.save(newOrderDBO));
+        // Saving the new order will automatically save associations if the entities are managed
+        this.orderRepository.save(newOrderDBO);
+
+        // Saving and returning the added order
+        return this.editorToMapper.toOrderTO(newOrderDBO);
     }
 
     @Transactional
     @Override
     public EditorOrderTO updateOrder(Long orderId, EditorOrderTO updatedEditorOrderTO) {
-
-        //The id of the user
+        // The id of the user
         Long updaterId = AuthenticatedUserDetails.getCurrentUserId();
 
-        //Checking if the order exists
+        // Checking if the order exists
         OrderDBO existingOrderDBO = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException());
 
@@ -232,23 +247,39 @@ public class EditorServiceImpl implements EditorService {
             throw new DuplicatedOrderException();
         }
 
-        //Updating the basic properties of the order
+        // Updating the basic properties of the order
         dboUpdaterMapper.copyOrderDboFrom(existingOrderDBO, updatedEditorOrderTO, updaterId);
 
-        // Update and set the product for the order
-        ProductDBO product = productRepository.findById(updatedEditorOrderTO.getProduct().getId())
+        // Update the product for the order, if it has changed
+        ProductDBO newProduct = productRepository.findById(updatedEditorOrderTO.getProduct().getId())
                 .orElseThrow(() -> new ProductNotFoundException());
-        existingOrderDBO.setProduct(product);
 
-        // Update and set the associated equipment list
+        // Dereference the old product from the order
+        existingOrderDBO.getProduct().getOrders().remove(existingOrderDBO);
+        existingOrderDBO.setProduct(newProduct); // Set the new product
+        newProduct.getOrders().add(existingOrderDBO); // Reference the new product
+
+        // Update the associated equipment list
         List<EquipmentDBO> newEquipments = updatedEditorOrderTO.getEquipment().stream()
                 .map(equipmentTO -> equipmentRepository.findById(equipmentTO.getId())
                         .orElseThrow(() -> new EquipmentNotFoundException()))
                 .collect(Collectors.toList());
-        existingOrderDBO.getEquipment().clear();
+
+        // Safely dereference the old equipment from the order
+        Iterator<EquipmentDBO> equipmentIterator = existingOrderDBO.getEquipment().iterator();
+        while (equipmentIterator.hasNext()) {
+            EquipmentDBO equipment = equipmentIterator.next();
+            equipment.getOrders().remove(existingOrderDBO); // Dereference the equipment from the order
+            equipmentIterator.remove(); // Safely remove the equipment from the order's list
+        }
+
+        // Clear and add the new equipment list
         existingOrderDBO.getEquipment().addAll(newEquipments);
 
-        //Saving and returning the updated order
+        // Update each equipment's order list to maintain references
+        newEquipments.forEach(equipment -> equipment.getOrders().add(existingOrderDBO));
+
+        // Saving and returning the updated order
         return editorToMapper.toOrderTO(orderRepository.save(existingOrderDBO));
     }
 
@@ -264,11 +295,26 @@ public class EditorServiceImpl implements EditorService {
     @Transactional
     @Override
     public void deleteOrder(Long orderId) {
-
+        // Find the order to delete
         OrderDBO toDeleteOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException());
 
-        this.orderRepository.delete(toDeleteOrder);
+        // Fetch the associated product
+        ProductDBO product = productRepository.findById(toDeleteOrder.getProduct().getId())
+                .orElseThrow(() -> new ProductNotFoundException());
+
+        // Safely remove references to associated equipment
+        Iterator<EquipmentDBO> equipmentIterator = toDeleteOrder.getEquipment().iterator();
+        while (equipmentIterator.hasNext()) {
+            EquipmentDBO equipment = equipmentIterator.next();
+            equipmentIterator.remove(); // Remove the equipment reference safely
+        }
+
+        // Remove reference to the associated product
+        toDeleteOrder.removeProduct(); // This assumes it does not modify the collection
+
+        // Now delete the order
+        orderRepository.delete(toDeleteOrder);
     }
 
     private OrderDBO getOrderIfExists(String orderNumber) {
