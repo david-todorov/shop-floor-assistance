@@ -48,19 +48,32 @@ public class OrderDBO {
     @JoinColumn(name = "order_id")
     private List<WorkflowDBO> workflows;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private ProductDBO product;
-
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "order_equipment",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "equipment_id")
     )
-    private List<EquipmentDBO> equipment = new ArrayList<>();
+    private List<EquipmentDBO> equipment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private ProductDBO product;
 
     public OrderDBO() {
        this.workflows = new ArrayList<WorkflowDBO>();
+       equipment = new ArrayList<EquipmentDBO>();
+    }
+
+    public void removeEquipment(EquipmentDBO equipment) {
+        this.equipment.remove(equipment);
+        equipment.getOrders().remove(this); // Maintain bidirectional consistency
+    }
+
+    public void removeProduct() {
+        if (this.product != null) {
+            this.product.getOrders().remove(this); // Remove the order from the product's list
+            this.product = null; // Clear the product reference
+        }
     }
 }

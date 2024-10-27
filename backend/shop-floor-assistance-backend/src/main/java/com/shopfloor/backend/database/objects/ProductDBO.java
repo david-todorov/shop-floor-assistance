@@ -59,7 +59,7 @@ public class ProductDBO {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<OrderDBO> orders;
 
     public ProductDBO() {

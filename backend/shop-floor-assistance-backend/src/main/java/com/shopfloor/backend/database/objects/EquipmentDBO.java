@@ -47,5 +47,9 @@ public class EquipmentDBO {
     private Date updatedAt;
 
     @ManyToMany(mappedBy = "equipment", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    private List<OrderDBO> orders = new ArrayList<>();
+    private List<OrderDBO> orders;
+
+    public EquipmentDBO() {
+        this.orders = new ArrayList<OrderDBO>();
+    }
 }

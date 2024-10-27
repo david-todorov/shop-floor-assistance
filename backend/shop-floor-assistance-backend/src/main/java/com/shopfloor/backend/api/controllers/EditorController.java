@@ -134,4 +134,20 @@ public class EditorController {
         return this.editorService.getEquipment(id);
     }
 
+    /**
+     * SUGGESTIONS
+     */
+    @GetMapping("equipment/suggestions")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EditorEquipmentTO> getEquipmentSuggestions() {
+        int limit = 5;
+        return this.editorService.getEquipmentSuggestions(limit);
+    }
+
+    @GetMapping("products/suggestions")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EditorProductTO> getProductsSuggestions() {
+        int limit = 5;
+        return this.editorService.getProductsSuggestions(limit);
+    }
 }

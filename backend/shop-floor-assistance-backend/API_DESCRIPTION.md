@@ -229,6 +229,17 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: The requested  equipment as TO
 ---
 
+###Suggestions
+#### `GET /editor/equipment/suggestions`
+- **Description**: Retrieves top `n` referenced equipment.
+- **Response**: List of `equipment`TO
+---
+#### `GET /editor/products/suggestions`
+- **Description**: Retrieves top `n` referenced products.
+- **Response**: List of `products` TO
+---
+
+
 ## Operator Endpoints
 
 #### `GET /operator/orders`

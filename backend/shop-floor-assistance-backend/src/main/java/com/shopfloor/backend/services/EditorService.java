@@ -57,4 +57,11 @@ public interface EditorService {
     EditorEquipmentTO getEquipment(Long equipmentId);
 
     void deleteEquipment(Long equipmentId);
+
+    /**
+     * SUGGESTIONS
+     */
+    List<EditorEquipmentTO> getEquipmentSuggestions(int numberOfEquipments);
+
+    List<EditorProductTO> getProductsSuggestions(int numberOfProducts);
 }
