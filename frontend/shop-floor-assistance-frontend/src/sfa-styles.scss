@@ -1,0 +1,29 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define your palette colors based on the colors above.
+$sfa-primary: #0477BF;
+$sfa-accent: #66ADD9;
+$sfa-warn: #595959;
+$sfa-background: #F2F2F2;
+$sfa-dark: #0D0D0D;
+
+// Define your custom Angular Material theme.
+$sfa-theme: mat-light-theme((color: (primary: $sfa-primary,
+                accent: $sfa-accent,
+                warn: $sfa-warn,
+            ),
+        ));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($sfa-theme);
