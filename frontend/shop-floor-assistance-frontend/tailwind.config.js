@@ -4,14 +4,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#0477BF',
-        accentLight: '#66ADD9',
+        // primary: '#0477BF',
+        primary: '#015CBB',
+        accent: '#66ADD9',
         background: '#F2F2F2',
         shade: '#595959',
-        accentDark:'#0D0D0D'
-      },
-      fontFamily: {
-        body: ['Nunito'],
+        dark:'#0D0D0D'
       }
     },
   },
