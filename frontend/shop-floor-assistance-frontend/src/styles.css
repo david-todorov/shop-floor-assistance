@@ -3,3 +3,16 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.custom-toolbar {
+    @apply  flex items-center justify-between pl-5 pr-5 bg-white !important;
+}
+
+.login-btn{
+        @apply flex items-center border border-primary 
+        rounded mr-10 shadow
+        hover:bg-background hover:text-primary hover:shadow-inner 
+        transform hover:scale-125 
+        hover:bg-opacity-50 
+        transition ease-out duration-300;
+}

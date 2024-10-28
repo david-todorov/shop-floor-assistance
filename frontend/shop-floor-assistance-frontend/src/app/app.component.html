@@ -1,11 +1,12 @@
 
-<h3 class="text-primary">
-    Welcome to Uhlmann Workflow Assistant..
-</h3>
-<div class="flex justify-center items-center pt-12">
-    <img src="./assets/img/uhl_grp_logo.png" alt="" srcset="">
-    <div class="container">
-    </div>
+
+<div class="custom-toolbar">
+    <span>
+        <img class="h-16 max-w-full" src="./assets/img/uhlmann-group-vector-logo.png" alt="Uhlmann Logo">
+    </span>
+    <button mat-icon-button class="login-btn" routerLink="/editor">
+        <mat-icon >login</mat-icon>
+        <div class="p-1">Log In</div>
+    </button>
 </div>
-
-
+<router-outlet></router-outlet>
