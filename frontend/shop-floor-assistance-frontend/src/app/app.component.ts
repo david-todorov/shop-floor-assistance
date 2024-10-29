@@ -12,12 +12,14 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [MatSlideToggleModule, 
+  imports: [
+    MatSlideToggleModule, 
     MatSliderModule, 
     MatToolbarModule, 
     MatIconModule,
-  RouterOutlet,
-RouterLink],
+    RouterOutlet,
+    RouterLink
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   providers: []
@@ -25,4 +27,5 @@ RouterLink],
 export class AppComponent {
   title = 'Digital Workflow Assistant';
   constructor() { }
+  btnLabel= 'Log Inn'
 }

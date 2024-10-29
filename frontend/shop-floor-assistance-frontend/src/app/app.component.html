@@ -4,9 +4,9 @@
     <span>
         <img class="h-16 max-w-full" src="./assets/img/uhlmann-group-vector-logo.png" alt="Uhlmann Logo">
     </span>
-    <button mat-icon-button class="login-btn" routerLink="/editor">
+    <button mat-icon-button class="login-btn"  routerLink="/login">
         <mat-icon >login</mat-icon>
-        <div class="p-1">Log In</div>
+        <div class="p-1">{{ btnLabel }}</div>
     </button>
 </div>
 <router-outlet></router-outlet>
