@@ -1,0 +1,23 @@
+.input-login {
+    @apply w-full
+     max-w-md 
+     border-b-2 
+     border-b-primary 
+     focus:border-primary focus:rounded-full focus:ring-1 focus:ring-primary 
+     text-lg 
+     m-2 
+     p-1 
+     pl-5 
+     !important;
+}
+.input-login:focus {
+    outline-width: 0;
+}
+
+.btn{
+    @apply w-full 
+    mt-4 max-w-md 
+
+    bg-primary 
+    text-white !important;
+}
