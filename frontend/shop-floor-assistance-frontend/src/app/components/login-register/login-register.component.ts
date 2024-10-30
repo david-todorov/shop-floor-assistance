@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { loginUIState } from '../../shared/component-elements/login-state';
+import { loginState } from '../../shared/component-elements/login-state';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
+import { tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-register',
@@ -26,17 +28,35 @@ import { BackendCommunicationService } from '../../services/backend-communicatio
   styleUrl: './login-register.component.css'
 })
 export class LoginRegisterComponent implements OnInit, OnDestroy{
+  
+  loginUIState!: loginState;
+  form !: FormGroup<any>;
 
-  constructor(private backendCommunicationService: BackendCommunicationService){
-    console.log('in login constructor')
+  constructor(
+    private backendCommunicationService: BackendCommunicationService,
+    private router : Router,
+    private fb: FormBuilder){
+      this.form = this.fb.group({
+        username: ['', Validators.required],
+        password: ['', Validators.required]
+      });
+    }
 
+  ngOnInit(): void {
+    this.backendCommunicationService.loginUIState$.subscribe(
+      (state) => {
+        this.loginUIState = state;
+      },
+      ()=>{
+         this.loginUIState= this.backendCommunicationService.getloginUIState();
+      }
+    );
   }
-  ngOnDestroy(): void {
-    this.loginUiState.isLoginVisible= true;
-    this.backendCommunicationService._loginUIState$.next(this.loginUiState);
-    this.backendCommunicationService.setLoginStates(this.loginUiState);
-    console.log('in destroy of login component',this.loginUiState);
 
+  ngOnDestroy(): void {
+    this.loginUIState.isLoginVisible= true;
+    this.backendCommunicationService._loginUIState$.next(this.loginUIState);
+    this.backendCommunicationService.setLoginStates(this.loginUIState);
   }
 
   @ViewChild('uname') uname!: ElementRef;
@@ -44,32 +64,45 @@ export class LoginRegisterComponent implements OnInit, OnDestroy{
     this.uname.nativeElement.focus(); // Sets focus to the input field
   }
 
-    form: FormGroup = new FormGroup({
-    username: new FormControl(''),
-    password: new FormControl(''),
-  });
+  loadUserPage(userRole: string) {
+    if(userRole === 'editor'){
+      this.router.navigateByUrl('/editor');
+    }else if(userRole === 'operator'){
+      this.router.navigateByUrl('/operator');
+    }
+  }
 
   submit() {
+    console.log('in submit')
     if (this.form.valid) {
-      this.submitEM.emit(this.form.value);
+      const {username, password}= this.form.value;
+      return this.backendCommunicationService.login(username, password).subscribe(
+        (response)=>{
+          // this._isLoggedIn$.next(true);
+          // localStorage.setItem(this.TOKEN_NAME, response.token);
+          // this.user= this.getUserCredentials(response.token);
+          const credentials= this.backendCommunicationService.getUserCredentials(response.token);
+          this.loginUIState.buttonIcon='logout'
+          this.loginUIState.buttonLabel='Log Out'
+          this.loginUIState.isLoggedIn= true
+          this.loginUIState.currentRole= credentials.sub
+          this.loginUIState.rolesAvailable= credentials.roles
+          this.loginUIState.jwtToken= response.token
+          
+          this.backendCommunicationService.setLoginStates(this.loginUIState);
+          console.log(this.backendCommunicationService.getUserCredentials(response.token))
+
+          this.loadUserPage(credentials.sub);
+        },
+        ()=>{
+          alert('Incorrect user credentials.')
+        }
+      );
     }
+    // this.error= 'Input fields cannot be empty!' #Todo later!
+    return;
   }
   @Input() error!: string | null;
 
-  @Output() submitEM = new EventEmitter();
-
-//----------------------------------------
-  loginButtonVisible = true;
-  loginUiState!: loginUIState;
-
-  ngOnInit(): void {
-    this.backendCommunicationService.loginUIState$.subscribe(
-      (state) => {
-        this.loginUiState = state;
-      },
-      ()=>{
-         this.loginUiState= this.backendCommunicationService.getloginUIState();
-      }
-    );
-  }
 }
+
