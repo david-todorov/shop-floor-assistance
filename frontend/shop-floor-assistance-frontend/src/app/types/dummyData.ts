@@ -1,31 +1,4 @@
-import { orderTO } from "./orderTO";
-
-export interface Workflow {
-  name: string;
-  description: string;
-  tasks: Task[];
-}
-
-export interface Task {
-  name: string;
-  description: string;
-  items: Item[];
-}
-
-export interface Item {
-  completed?: boolean;
-  name: string;
-  longDescription: string;
-  timeRequired: number | null;
-  expanded?: boolean;
-}
-
-export interface OrderTO {
-  orderNumber: string;
-  name: string;
-  shortDescription: string;
-  workflows: Workflow[];
-}
+import { orderTO } from "./orderTO"
 
 // Delete after debugging..
 export const dummyOrder: orderTO= {

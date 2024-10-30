@@ -10,6 +10,7 @@ import { loginState } from '../../shared/component-elements/login-state';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { ButtonComponent } from '../../shared/component-elements/button/button.component';
 
 @Component({
   selector: 'app-login-register',
@@ -23,12 +24,15 @@ import { Router } from '@angular/router';
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
+    ButtonComponent
   ],
   templateUrl: './login-register.component.html',
   styleUrl: './login-register.component.css'
 })
 export class LoginRegisterComponent implements OnInit, OnDestroy{
-  
+
+  btnLabel = "Log In"
+
   loginUIState!: loginState;
   form !: FormGroup<any>;
 
@@ -72,37 +76,31 @@ export class LoginRegisterComponent implements OnInit, OnDestroy{
     }
   }
 
-  submit() {
-    console.log('in submit')
-    if (this.form.valid) {
-      const {username, password}= this.form.value;
-      return this.backendCommunicationService.login(username, password).subscribe(
-        (response)=>{
-          // this._isLoggedIn$.next(true);
-          // localStorage.setItem(this.TOKEN_NAME, response.token);
-          // this.user= this.getUserCredentials(response.token);
-          const credentials= this.backendCommunicationService.getUserCredentials(response.token);
-          this.loginUIState.buttonIcon='logout'
-          this.loginUIState.buttonLabel='Log Out'
-          this.loginUIState.isLoggedIn= true
-          this.loginUIState.currentRole= credentials.sub
-          this.loginUIState.rolesAvailable= credentials.roles
-          this.loginUIState.jwtToken= response.token
-          
-          this.backendCommunicationService.setLoginStates(this.loginUIState);
-          console.log(this.backendCommunicationService.getUserCredentials(response.token))
+    resolveButtonClick(event: MouseEvent) {
+    if(event.type==='click' || this.form.valid){
+        const {username, password}= this.form.value;
+        return this.backendCommunicationService.login(username, password).subscribe(
+          (response)=>{
+            const credentials= this.backendCommunicationService.getUserCredentials(response.token);
+            this.loginUIState.buttonIcon='logout'
+            this.loginUIState.buttonLabel='Log Out'
+            this.loginUIState.isLoggedIn= true
+            this.loginUIState.currentRole= credentials.sub
+            this.loginUIState.rolesAvailable= credentials.roles
+            this.loginUIState.jwtToken= response.token
+            
+            this.backendCommunicationService.setLoginStates(this.loginUIState);
+            console.log(this.backendCommunicationService.getUserCredentials(response.token))
 
-          this.loadUserPage(credentials.sub);
-        },
-        ()=>{
-          alert('Incorrect user credentials.')
-        }
-      );
+            this.loadUserPage(credentials.sub);
+          },
+          ()=>{
+            alert('Incorrect user credentials.')
+          }
+        );
     }
-    // this.error= 'Input fields cannot be empty!' #Todo later!
-    return;
+      return;
   }
-  @Input() error!: string | null;
 
 }
 
