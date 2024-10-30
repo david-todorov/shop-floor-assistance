@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { orderTO } from '../../../types/orderTO';
@@ -15,19 +15,15 @@ import { sampleOrders } from '../../../types/dummyData';
 })
 export class OrderTableComponent implements OnInit{
 
-
-  dataSource!:any;
-  orders!: orderTO[];
+  @Input() orders!: orderTO[];
+  @Output() onClick = new EventEmitter<any>();
 
   constructor(){}
 
-  ngOnInit(): void {
-    this.orders= sampleOrders; 
-    this.dataSource = this.orders;
-  }
+  ngOnInit(): void {}
+
   displayedColumns: string[] = ['select', 'Order No.', 'Name', 'Description', ];
-  
   onRadioChange(order: orderTO) {
-    console.log('Selected row data:', order);
+    this.onClick.emit(order);
   }
 }
