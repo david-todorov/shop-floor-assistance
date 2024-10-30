@@ -13,6 +13,7 @@ export class BackendCommunicationService {
 
   public _loginUIState$ = new BehaviorSubject<loginState>(null as unknown as loginState);
   public loginUIState$= this._loginUIState$.asObservable();
+  
   public LOGIN_UI_SAVED_STATE= "login_ui_saved_state";
   public loginUIState: loginState= {
     isLoginVisible: true,

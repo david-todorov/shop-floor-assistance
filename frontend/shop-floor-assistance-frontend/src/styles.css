@@ -19,3 +19,7 @@
 .flex-col-justify-center{
     @apply flex flex-col justify-center items-center;
 }
+
+.flex-row-justify-center {
+    @apply flex flex-row justify-center items-center;
+}

@@ -2,10 +2,28 @@
     <span>
         <img class="h-16 max-w-full" src="./assets/img/uhlmann-group-vector-logo.png" alt="Uhlmann Logo">
     </span>
-    @if(btnVisible){
+    <div class="flex-row-justify-center ">
+            @if(showCurrentRole){
+            <div class="user-role">
+                <mat-icon>person</mat-icon>
+                <div class="p-1">Current Role: {{ userRole }}</div>
+            </div>
+            }
+
+                @if(btnVisible){
+                <button mat-icon-button class="login-btn" (click)="onSubmit()">
+                    <mat-icon>{{ btnIcon }}</mat-icon>
+                    <div class="p-1">{{ btnLabel }}</div>
+                </button>
+                }
+
+            
+    </div>
+    <!-- @if(btnVisible){
     <button mat-icon-button class="login-btn" (click)="onSubmit()">
         <mat-icon>{{ btnIcon }}</mat-icon>
         <div class="p-1">{{ btnLabel }}</div>
     </button>
-    }
+    } -->
+
 </div>
