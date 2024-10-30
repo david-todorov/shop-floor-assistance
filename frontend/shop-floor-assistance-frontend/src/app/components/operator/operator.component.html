@@ -1,2 +1,11 @@
-<app-order-table (onClick)="resolveButtonClick($event)" [orders]="loadedOrders"></app-order-table>
+
+<div class="  mx-auto w-4/5">
+    <app-order-table (onClick)="orderSelected($event)" [orders]="loadedOrders"></app-order-table>
+</div>
+<div class="  w-7/12 mx-auto">
+    <app-button (onClick)="resolveButtonClick($event)" [label]="btnLabel"></app-button>
+</div>
+
+
+
 

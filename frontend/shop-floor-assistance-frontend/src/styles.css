@@ -17,7 +17,7 @@
         transition ease-out duration-300;
 }
 .flex-col-justify-center{
-    @apply flex flex-col justify-center items-center;
+    @apply flex flex-col justify-center items-center ;
 }
 
 .flex-row-justify-center {
