@@ -19,5 +19,7 @@
     mt-4 max-w-md 
 
     bg-primary 
-    text-white !important;
+    text-white 
+    hover:bg-opacity-70 transition ease-in-out duration-300 
+    !important;
 }
