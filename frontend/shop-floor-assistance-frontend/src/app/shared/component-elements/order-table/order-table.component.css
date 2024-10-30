@@ -1,0 +1,34 @@
+:host {
+    --order-text-table-rows: #7777BF;
+}
+
+.mat-mdc-header-row { /* header */
+    color: white !important;
+    background-color: #0477BF !important;
+    border-radius: 5px !important;
+}
+
+.mat-mdc-row { /* row */
+    color: var(--text-table-rows) !important;
+    height: 45px !important;
+}
+
+.mat-mdc-row:nth-child(even) {
+    background-color: #F2F2F2 !important;
+}
+
+.mat-mdc-row:nth-child(odd) {
+    background-color: white !important;
+}
+
+.mat-mdc-cell {
+    border: none !important;
+}
+
+.mat-mdc-table {
+    border: 2px solid #0477BF;
+    border-collapse: separate;
+    border-radius: 15px !important;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}

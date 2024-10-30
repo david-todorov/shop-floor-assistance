@@ -64,7 +64,6 @@ export class HeaderComponent {
     );
 
     this.location.subscribe((event) => {
-      console.log(event)
       if(event.url=='/login'){
         this.loginUIState.isLoginVisible= false;
         console.log('in header browse back action',this.loginUIState);
