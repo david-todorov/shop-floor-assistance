@@ -3,13 +3,14 @@
         <p>Log In</p>
     </div>
     <div class="mt-16 w-1/4 ">
-        <form class="flex-col-justify-center" [formGroup]="form" (ngSubmit)="submit()">
+        <form class="flex-col-justify-center" [formGroup]="form">
             <input #uname class="input-login" type="text"  placeholder="Username" formControlName="username">
             <input class="input-login" type="password"  placeholder="Password" formControlName="password">
-            @if("error"){
-                <p class="error">{{ error }}</p>
-            }   
-            <button mat-raised-button type="submit" class="btn">Login</button>
+
+            <div class="w-full">
+                <app-button (onClick)="resolveButtonClick($event)" [label]="btnLabel"></app-button>
+            </div>  
+            <!-- <button mat-raised-button type="submit" class="btn">Login</button> -->
         </form>
     </div>
 
