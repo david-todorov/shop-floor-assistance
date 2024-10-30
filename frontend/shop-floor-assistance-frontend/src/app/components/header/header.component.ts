@@ -29,6 +29,8 @@ export class HeaderComponent {
   public btnIcon!: loginState['buttonIcon'];
   public btnVisible!: loginState['isLoginVisible'];
   private loginUIState!: loginState;
+  public showCurrentRole= false;
+  public userRole: string | null ='';
 
   constructor(
     private backendCommunicationService: BackendCommunicationService, 
@@ -40,6 +42,8 @@ export class HeaderComponent {
     this.btnLabel = this.loginUIState.buttonLabel;
     this.btnIcon = this.loginUIState.buttonIcon;
     this.btnVisible = this.loginUIState.isLoginVisible;
+    this.showCurrentRole= this.loginUIState.isLoggedIn;
+    this.userRole=this.loginUIState.currentRole;
   }
 
   // @HostListener('window:beforeunload', ['$event'])
@@ -72,15 +76,18 @@ export class HeaderComponent {
 
   onSubmit() {
     if(!this.loginUIState.isLoggedIn){
-      this.loginUIState.isLoginVisible= false;
 
+
+      this.loginUIState.isLoginVisible= false;
       this.loginUIState.buttonLabel= 'Log In';
       this.loginUIState.buttonIcon= 'login';
       this.backendCommunicationService._loginUIState$.next(this.loginUIState);
       this.backendCommunicationService.setLoginStates(this.loginUIState);
       this.router.navigateByUrl('/login');
-    }else if(this.loginUIState.isLoggedIn){
-      // this.loginUIState.isLoginVisible= false;
+    }
+    else if(this.loginUIState.isLoggedIn){
+      this.showCurrentRole= false;
+      this.userRole='';
 
       this.loginUIState.isLoggedIn= false;
       this.loginUIState.buttonIcon= 'restart_alt';
@@ -89,7 +96,6 @@ export class HeaderComponent {
       this.loginUIState.isLoginVisible= true;
       this.loginUIState.jwtToken= '';
       this.loginUIState.rolesAvailable= [null];
-
 
       this.backendCommunicationService._loginUIState$.next(this.loginUIState);
       this.backendCommunicationService.setLoginStates(this.loginUIState);
