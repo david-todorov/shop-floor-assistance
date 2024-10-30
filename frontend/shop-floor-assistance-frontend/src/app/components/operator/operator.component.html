@@ -1,2 +1,2 @@
-<app-order-table></app-order-table>
-<button mat></button>
+<app-order-table (onClick)="resolveButtonClick($event)" [orders]="loadedOrders"></app-order-table>
+
