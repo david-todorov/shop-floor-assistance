@@ -4,7 +4,7 @@
     </div>
     <div class="mt-16 w-1/4 ">
         <form class="flex-col-justify-center" [formGroup]="form" (ngSubmit)="submit()">
-            <input class="input-login" type="text"  placeholder="Username" formControlName="username">
+            <input #uname class="input-login" type="text"  placeholder="Username" formControlName="username">
             <input class="input-login" type="password"  placeholder="Password" formControlName="password">
             @if("error"){
                 <p class="error">{{ error }}</p>
@@ -14,5 +14,6 @@
     </div>
 
 </div>
+
 
 

@@ -24,27 +24,27 @@ export class AuthService {
     //this.user= this.getUserCredentials(this.token);
   }
 
-  login(username: string, password: string): Observable<any>{
-    return this.backendCommunicationService.login(username, password).pipe(
-      tap((response)=>{
-        this._isLoggedIn$.next(true);
-        localStorage.setItem(this.TOKEN_NAME, response.token);
-        this.user= this.getUserCredentials(response.token);
-      })
-    )
-  }
+  // login(username: string, password: string): Observable<any>{
+  //   return this.backendCommunicationService.login(username, password).pipe(
+  //     tap((response)=>{
+  //       this._isLoggedIn$.next(true);
+  //       localStorage.setItem(this.TOKEN_NAME, response.token);
+  //       this.user= this.getUserCredentials(response.token);
+  //     })
+  //   )
+  // }
 
   getUserCredentials(token: string): userTO {
     return JSON.parse(atob(token.split('.')[1])) as userTO;
   }
 
-  get isOperator(){
-    return this.user.roles.includes('ROLE_OPERATOR');
-  }
+  // get isOperator(){
+  //   return this.user.roles.includes('ROLE_OPERATOR');
+  // }
 
-  get isEditor(){
-    return this.user.roles.includes('ROLE_EDITOR');
-  }
+  // get isEditor(){
+  //   return this.user.roles.includes('ROLE_EDITOR');
+  // }
 
   get isLoggedIn(): boolean {
   return this._isLoggedIn$.getValue();
