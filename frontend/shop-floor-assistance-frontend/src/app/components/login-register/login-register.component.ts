@@ -77,7 +77,7 @@ export class LoginRegisterComponent implements OnInit, OnDestroy{
   }
 
     resolveButtonClick(event: MouseEvent) {
-    if(event.type==='click' || this.form.valid){
+    if(event.type==='click' && this.form.valid){
         const {username, password}= this.form.value;
         return this.backendCommunicationService.login(username, password).subscribe(
           (response)=>{
@@ -90,8 +90,6 @@ export class LoginRegisterComponent implements OnInit, OnDestroy{
             this.loginUIState.jwtToken= response.token
             
             this.backendCommunicationService.setLoginStates(this.loginUIState);
-            console.log(this.backendCommunicationService.getUserCredentials(response.token))
-
             this.loadUserPage(credentials.sub);
           },
           ()=>{
