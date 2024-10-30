@@ -4,53 +4,60 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { userRoleTO, userTO } from '../types/userTO';
-import { loginUIState } from '../shared/component-elements/login-state';
+import { loginState } from '../shared/component-elements/login-state';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BackendCommunicationService {
 
-  public _loginUIState$ = new BehaviorSubject<loginUIState>(null as unknown as loginUIState);
+  public _loginUIState$ = new BehaviorSubject<loginState>(null as unknown as loginState);
   public loginUIState$= this._loginUIState$.asObservable();
   public LOGIN_UI_SAVED_STATE= "login_ui_saved_state";
-  public loginUIState: loginUIState= {
+  public loginUIState: loginState= {
     isLoginVisible: true,
+    isLoggedIn: false,
     buttonLabel: 'Start',
-    buttonIcon: 'restart_alt'
+    buttonIcon: 'restart_alt',
+    rolesAvailable: [null],
+    currentRole: null,
+    jwtToken: ''
   };
+  
 
-  constructor() { 
-    const loginUISavedState: loginUIState | null = this.getloginUIState();
+  constructor(private http: HttpClient) { 
+    const loginUISavedState: loginState | null = this.getloginUIState();
     if(loginUISavedState != null){
       this.loginUIState=loginUISavedState;
     }
     this.setLoginStates(this.loginUIState);
   }
 
-  // private apiServerURL: string= environment.baseUrl;
+  private apiServerURL: string= environment.baseUrl;
   // private readonly TOKEN_NAME= "jwt_token";
 
   // _isLoggedIn$ = new BehaviorSubject<boolean>(false);
   // _userRole$ = new BehaviorSubject<userRoleTO | null>(null);
 
-  // login(username: string, password: string): Observable<any>{
-  //   return this.http.post(`${this.apiServerURL}auth/login`,{username, password});
-  // }
+  login(username: string, password: string): Observable<any>{
+    console.log('in login', username, password)
+    return this.http.post(`${this.apiServerURL}auth/login`,{username, password});
+  }
 
+  getUserCredentials(token: string): userTO {
+    return JSON.parse(atob(token.split('.')[1])) as userTO;
+  }
   //---------------------------------------------------
   //Managing loginUIStates
 
-  setLoginStates(loginUIState: loginUIState){
+  setLoginStates(loginUIState: loginState){
     this.loginUIState = loginUIState;
     this._loginUIState$.next(this.loginUIState);
     sessionStorage.setItem(this.LOGIN_UI_SAVED_STATE, JSON.stringify(this.loginUIState));
-    console.log('setLoginStates', this.loginUIState)
   }
 
-  public getloginUIState(): loginUIState {
+  public getloginUIState(): loginState {
     const data = sessionStorage.getItem(this.LOGIN_UI_SAVED_STATE);
-    console.log(' getloginUIState', this.loginUIState)
     return data ? JSON.parse(data) : null;
   }
 }
