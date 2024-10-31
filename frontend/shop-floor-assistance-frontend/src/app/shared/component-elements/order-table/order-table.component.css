@@ -48,7 +48,7 @@ table {
 }
 
 .container::-webkit-scrollbar-thumb {
-    @apply bg-scrollbar hover:bg-scrollbar-hover rounded-lg !important;
+    @apply bg-gray-300 hover:bg-scrollbar-hover rounded-lg !important;
 }
 
 .container::-webkit-scrollbar-track {
