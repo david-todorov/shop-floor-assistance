@@ -58,15 +58,7 @@ table {
 .container::-webkit-scrollbar-track-piece:start {
     margin-top: 56px;
 }
-/* .container::-webkit-scrollbar-track::before {
-    content: '' ;
-    position: absolute;
-    top: 0;
-    left: 0;
 
-    height: 20px;
-    width: 100%;
-
-    background-color: limegreen;
-
-} */
+.search-field{
+    @apply w-full max-w-md border-2 border-primary rounded-full  text-lg m-2 p-1 pl-5 !important;
+}

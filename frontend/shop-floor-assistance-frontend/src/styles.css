@@ -24,3 +24,10 @@
     @apply flex flex-row justify-center items-center;
 }
 
+.input-field {
+    @apply w-full max-w-md border-b-2 border-b-primary focus:border-primary focus:rounded-full focus:ring-1 focus:ring-primary text-lg m-2 p-1 pl-5 !important;
+}
+
+.input-field:focus {
+    outline-width: 0;
+}

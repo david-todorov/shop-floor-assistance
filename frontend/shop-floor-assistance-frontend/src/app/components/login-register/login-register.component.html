@@ -4,8 +4,8 @@
     </div>
     <div class="mt-16 w-1/4 ">
         <form class="flex-col-justify-center" [formGroup]="form">
-            <input #uname class="input-login" type="text"  placeholder="Username" formControlName="username">
-            <input class="input-login" type="password"  placeholder="Password" formControlName="password">
+            <input #uname class="input-field" type="text"  placeholder="Username" formControlName="username">
+            <input class="input-field" type="password"  placeholder="Password" formControlName="password">
 
             <div class="w-full">
                 <app-button (onClick)="resolveButtonClick($event)" [label]="btnLabel"></app-button>
