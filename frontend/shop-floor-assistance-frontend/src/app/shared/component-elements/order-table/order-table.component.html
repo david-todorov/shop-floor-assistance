@@ -1,4 +1,4 @@
-<div class="w-4/5 p-6 mx-auto">
+<div class="w-4/5 mt-10 mx-auto container">
     <table mat-table [dataSource]="orders">
         <!-- Radio Button Column -->
         <ng-container matColumnDef="select">
@@ -26,7 +26,7 @@
             <td mat-cell *matCellDef="let order"> {{order.shortDescription}} </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 </div>

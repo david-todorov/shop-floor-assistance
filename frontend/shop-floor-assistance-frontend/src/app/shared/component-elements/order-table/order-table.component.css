@@ -1,7 +1,7 @@
 :host {
     --order-text-table-rows: #7777BF;
 }
-
+/* Angular table elements */
 .mat-mdc-header-row { /* header */
     color: white !important;
     background-color: #0477BF !important;
@@ -26,9 +26,47 @@
 }
 
 .mat-mdc-table {
-    border: 2px solid #0477BF;
+    /* border: 2px solid #0477BF; */
     border-collapse: separate;
-    border-radius: 15px !important;
+    /* border-radius: 15px !important; */
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); */
+    width: 100%;
 }
+/* Overall container, scrollbar */
+.container {
+    @apply border-2 border-primary rounded-lg !important;
+    height: 500px;
+    overflow: auto; 
+}
+table {
+    width: 100%;
+}
+
+.container::-webkit-scrollbar {
+    @apply w-4 h-10;
+}
+
+.container::-webkit-scrollbar-thumb {
+    @apply bg-scrollbar hover:bg-scrollbar-hover rounded-lg !important;
+}
+
+.container::-webkit-scrollbar-track {
+    @apply bg-gray-200 rounded-tr-lg rounded-br-lg;
+    position: relative !important;
+}
+.container::-webkit-scrollbar-track-piece:start {
+    margin-top: 56px;
+}
+/* .container::-webkit-scrollbar-track::before {
+    content: '' ;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    height: 20px;
+    width: 100%;
+
+    background-color: limegreen;
+
+} */
