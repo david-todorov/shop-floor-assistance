@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, inject, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, Input, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { orderTO } from '../../../types/orderTO';
@@ -30,9 +30,15 @@ export class OrderTableComponent implements OnInit, AfterViewInit{
   constructor(){}
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<orderTO>(this.orders);
+    this.dataSource = new MatTableDataSource<orderTO>();
     // this.dataSource.sort = this.sort;
-    
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['orders'] && changes['orders'].currentValue) {
+      console.log('Orders loaded:', this.orders);
+       this.dataSource.data = this.orders;
+    }
   }
 
   displayedColumns: string[] = ['select', 'Order No.', 'Name', 'Description', ];

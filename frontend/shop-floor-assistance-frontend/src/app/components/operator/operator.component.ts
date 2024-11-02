@@ -4,6 +4,9 @@ import { orderTO } from '../../types/orderTO';
 import { sampleOrders } from '../../types/dummyData';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
 import { Router, RouterLink } from '@angular/router';
+import { BackendCommunicationService } from '../../services/backend-communication.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-operator',
@@ -18,19 +21,37 @@ export class OperatorComponent implements OnInit{
 
   btnLabel: string= 'Start Wizard';
   order!: orderTO;
-
-  constructor(private router:Router){}
-
-  ngOnInit(): void {
-    this.loadedOrders= sampleOrders;
-  }
-  
   loadedOrders!: orderTO[];
 
+  constructor(private router:Router,
+    private backendCommunicationService: BackendCommunicationService
+  ){}
+
+  ngOnInit(): void {
+    this.backendCommunicationService.getOperatorOrders().pipe(
+      catchError((err)=>{
+        console.log(err);
+        return of(null);
+      })
+    ).subscribe({
+      next:(response) => {
+        console.log(response);
+      },
+      error: (err)=>{
+        //for fallback method in complete
+      },
+      complete: ()=>{
+
+        this.loadedOrders= sampleOrders;// This is fallback, since apis do not function now. TAKE OUT IN PROD VERSION
+        console.log('done', this.loadedOrders)
+      }
+  });
+
+  }
+  
   orderSelected($event: any) {
     this.order= $event
   }
-
   resolveButtonClick($event: any) {
     if($event.type==='click' && this.order !== null && this.order !== undefined){
       console.log(this.order);
@@ -41,3 +62,5 @@ export class OperatorComponent implements OnInit{
   }
 
 }
+
+

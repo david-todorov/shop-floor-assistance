@@ -4,12 +4,13 @@ import { provideRouter, RouterLink, withComponentInputBinding } from '@angular/r
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes, withComponentInputBinding()), 
     provideAnimationsAsync(), provideAnimationsAsync(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
   ]
 };
