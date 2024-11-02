@@ -1,8 +1,12 @@
 package com.shopfloor.backend.api.controllers;
 
+import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorOrderTO;
 import com.shopfloor.backend.services.OperatorService;
 import com.shopfloor.backend.services.OperatorServiceImpl;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -35,13 +35,8 @@ export class BackendCommunicationService {
   }
 
   private apiServerURL: string= environment.baseUrl;
-  // private readonly TOKEN_NAME= "jwt_token";
-
-  // _isLoggedIn$ = new BehaviorSubject<boolean>(false);
-  // _userRole$ = new BehaviorSubject<userRoleTO | null>(null);
 
   login(username: string, password: string): Observable<any>{
-    console.log('in login', username, password)
     return this.http.post(`${this.apiServerURL}auth/login`,{username, password});
   }
 
@@ -61,4 +56,10 @@ export class BackendCommunicationService {
     const data = sessionStorage.getItem(this.LOGIN_UI_SAVED_STATE);
     return data ? JSON.parse(data) : null;
   }
+//--------------------------------------
+//api calls
+  getOperatorOrders(): Observable<any>{
+    return this.http.get(`${this.apiServerURL}operator/orders`);
+  }
+
 }
