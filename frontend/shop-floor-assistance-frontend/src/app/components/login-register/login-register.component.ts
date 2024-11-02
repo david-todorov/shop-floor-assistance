@@ -35,6 +35,7 @@ export class LoginRegisterComponent implements OnInit, OnDestroy{
 
   loginUIState!: loginState;
   form !: FormGroup<any>;
+  disabledd: boolean= false;
 
   constructor(
     private backendCommunicationService: BackendCommunicationService,

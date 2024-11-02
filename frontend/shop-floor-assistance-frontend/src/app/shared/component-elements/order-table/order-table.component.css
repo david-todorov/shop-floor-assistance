@@ -36,7 +36,7 @@
 /* Overall container, scrollbar */
 .container {
     @apply border-2 border-primary rounded-lg !important;
-    height: 500px;
+    height: 320px;
     overflow: auto; 
 }
 table {

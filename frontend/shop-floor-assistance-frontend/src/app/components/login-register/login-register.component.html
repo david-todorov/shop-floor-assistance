@@ -8,7 +8,7 @@
             <input class="input-field" type="password"  placeholder="Password" formControlName="password">
 
             <div class="w-full">
-                <app-button (onClick)="resolveButtonClick($event)" [label]="btnLabel"></app-button>
+                <app-button (onClick)="resolveButtonClick($event)" [disabled]="disabledd" [label]="btnLabel"></app-button>
             </div>  
             <!-- <button mat-raised-button type="submit" class="btn">Login</button> -->
         </form>
