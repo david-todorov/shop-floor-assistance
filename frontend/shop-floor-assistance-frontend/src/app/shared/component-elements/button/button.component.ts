@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class ButtonComponent {
 
   @Input() label!: string;
+  @Input() disabled!: boolean;
   @Output() onClick = new EventEmitter<any>();
 
   onClickButton(event: MouseEvent) {

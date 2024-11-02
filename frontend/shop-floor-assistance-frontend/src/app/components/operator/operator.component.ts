@@ -20,6 +20,7 @@ import { of } from 'rxjs';
 export class OperatorComponent implements OnInit{
 
   btnLabel: string= 'Start Wizard';
+  disabledd: boolean= false;
   order!: orderTO;
   loadedOrders!: orderTO[];
 
@@ -55,9 +56,8 @@ export class OperatorComponent implements OnInit{
   resolveButtonClick($event: any) {
     if($event.type==='click' && this.order !== null && this.order !== undefined){
       console.log(this.order);
+       console.log('in resolve');
       this.router.navigate(['/operator/', this.order.orderNumber ]);
-
-
     }
   }
 
