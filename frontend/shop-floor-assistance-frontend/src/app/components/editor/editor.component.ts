@@ -57,9 +57,15 @@ export class EditorComponent implements OnInit{
     this.order= $event
   }
   resolveButtonClick($event: any) {
-    if($event.type==='click' && this.order !== null && this.order !== undefined){
+    if($event.type==='click'){
+      if(this.order === null || this.order === undefined){
+        alert('You must specify an order!');
+      }else{
       console.log(this.order);
       this.router.navigate(['/editor/', this.order.orderNumber ]);
+     
+      }
     }
+     return;
   }
 }
