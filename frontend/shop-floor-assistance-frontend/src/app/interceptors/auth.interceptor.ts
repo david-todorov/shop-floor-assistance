@@ -4,7 +4,7 @@ import { inject } from '@angular/core';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const backendCommunicationService= inject(BackendCommunicationService);
-  
+
   const token= backendCommunicationService.getloginUIState().jwtToken;
   const clonedReq= req.clone({
     setHeaders:{Authorization: `Bearer ${token}`}
