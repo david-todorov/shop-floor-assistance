@@ -7,13 +7,13 @@ import { dummyOrder } from '../../types/dummyData';
 import { EditorAccordionComponent } from '../../shared/component-elements/editor-accordion/editor-accordion.component';
 
 @Component({
-  selector: 'app-editor-view-workflow',
+  selector: 'app-editor-edit-workflow',
   standalone: true,
   imports: [EditorAccordionComponent],
-  templateUrl: './editor-view-workflow.component.html',
-  styleUrl: './editor-view-workflow.component.css'
+  templateUrl: './editor-edit-workflow.component.html',
+  styleUrl: './editor-edit-workflow.component.css'
 })
-export class EditorViewWorkflowComponent {
+export class EditorEditWorkflowComponent {
 
   constructor(private backendCommunicationService:BackendCommunicationService,
     private route: ActivatedRoute,){
