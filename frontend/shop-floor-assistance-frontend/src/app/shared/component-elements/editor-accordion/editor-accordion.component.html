@@ -5,15 +5,17 @@
             <mat-expansion-panel [expanded]="expandedPanels[$index]">
                 <mat-expansion-panel-header (click)="selectWorkflow($index)" [ngClass]="{'selected-element': selectedWorkflowIndex === $index}">
                     <mat-panel-title>
-                        {{ workflow.name }}
+                        <ng-container *ngIf="!workFlowStates[$index].editMode">
+                            {{ workflow.name }}
+                        </ng-container>
+                        <ng-container *ngIf="workFlowStates[$index].editMode">
+                            <input class="edit-field" [(ngModel)]="workFlowStates[$index].updatedTitle" placeholder="Name">
+                        </ng-container>
                     </mat-panel-title>
                     <mat-panel-description class="flex flex-row justify-end">
                         <div >
                             <button mat-icon-button (click)="toggleEditMode($index, $event)">
-                                
-
-                                    <mat-icon>{{ workFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
-                                
+                                <mat-icon>{{ workFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
                             </button>
                             <button mat-icon-button (click)="deleteWorkflow($index)">
                                 <mat-icon>delete</mat-icon>
