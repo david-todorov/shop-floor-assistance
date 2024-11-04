@@ -1,38 +1,62 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { orderTO } from '../../../types/orderTO';
 import { workflowTO } from '../../../types/workflowTO';
-
-interface Item {
-  title: string;
-  content: string;
-}
-
+import { MatIconModule } from '@angular/material/icon';
+import { workflowStates } from '../workflowUI-state';
 
 @Component({
   selector: 'app-editor-accordion',
   standalone: true,
-  imports: [ MatExpansionModule,
+  imports: [
+    MatExpansionModule,
     MatButtonModule,
-  CommonModule],
+    MatIconModule,
+    CommonModule
+  ],
   templateUrl: './editor-accordion.component.html',
   styleUrl: './editor-accordion.component.css'
 })
-export class EditorAccordionComponent {
-  
+export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewInit{
+
   @Input() order!: orderTO;
+  @Input() doneAll: boolean= true;
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onSelect = new EventEmitter<number>();
-
+  orderExists: boolean= false;
   selectedWorkflowIndex: number | null = null;
+  workFlowStates: workflowStates= {};
+  expandedPanels: boolean[] = [];
 
+  constructor(private cdr:ChangeDetectorRef){}
   
+  ngOnInit(): void {}
+  
+  ngAfterViewInit(): void {
+    // this.cdr.detectChanges();
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['order']) {
+      this.initializeWorkflowStates();
+    }
+  }
+
+  initializeWorkflowStates() {
+    this.orderExists= (this.order!== null && this.order != undefined);
+    if(this.orderExists){
+      this.order.workflows.forEach((workflow: any, index: number) => {
+        this.workFlowStates[index] = { editMode: false, showDescription: false };
+      });
+      this.expandedPanels= new Array(this.order.workflows.length).fill(false);
+    }
+  }
+
   selectWorkflow(index: number) {
     this.selectedWorkflowIndex = index;
     this.onSelect.emit(this.selectedWorkflowIndex);
-    console.log('emitted', this.selectedWorkflowIndex)
   }
 
   editWorkflow(workflow: workflowTO) {
@@ -41,9 +65,23 @@ export class EditorAccordionComponent {
      this.onOrderUpdate.emit(this.order);
   }
 
-  deleteWorkflow(workflow: workflowTO) {
+  deleteWorkflow(index: number) {
     // Handle delete action
-    console.log('Deleting', workflow);
+    console.log('Deleting at index:', index);
      this.onOrderUpdate.emit(this.order);
+  }
+
+  toggleDescription(arg0: any,$event: MouseEvent) {
+    throw new Error('Method not implemented.');
+  }
+  
+
+  toggleEditMode(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.workFlowStates[index].editMode = !this.workFlowStates[index].editMode;
+    this.expandedPanels[index] = !this.expandedPanels[index]; // Expand the panel
+    this.selectedWorkflowIndex = index;
+    this.cdr.detectChanges();
+    //this.saveOrder();
   }
 }
