@@ -6,7 +6,7 @@ import { orderTO } from '../../../types/orderTO';
 import { workflowTO } from '../../../types/workflowTO';
 import { MatIconModule } from '@angular/material/icon';
 import { workflowStates } from '../workflowUI-state';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-editor-accordion',
@@ -16,7 +16,8 @@ import { FormsModule } from '@angular/forms';
     MatButtonModule,
     MatIconModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './editor-accordion.component.html',
   styleUrl: './editor-accordion.component.css'
@@ -28,9 +29,10 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onSelect = new EventEmitter<number>();
   orderExists: boolean= false;
-  selectedWorkflowIndex: number | null = null;
+  selectedWorkflowIndex: number= 0;
   workFlowStates: workflowStates= {};
   expandedPanels: boolean[] = [];
+
   
 
   constructor(private cdr:ChangeDetectorRef){}
@@ -53,8 +55,8 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
       this.order.workflows.forEach((workflow: any, index: number) => {
         this.workFlowStates[index] = { editMode: false, 
           showDescription: false, 
-          updatedTitle:'',
-          updatedDescription:''};
+          updatedTitle: workflow.name,
+          updatedDescription: workflow.description};
       });
       this.expandedPanels= new Array(this.order.workflows.length).fill(false);
     }
@@ -65,11 +67,7 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
     this.onSelect.emit(this.selectedWorkflowIndex);
   }
 
-  editWorkflow(workflow: workflowTO) {
-    // Handle edit action
-    console.log('Editing', workflow);
-     this.onOrderUpdate.emit(this.order);
-  }
+
 
   deleteWorkflow(index: number) {
     // Handle delete action
@@ -77,9 +75,15 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
      this.onOrderUpdate.emit(this.order);
   }
 
-  toggleDescription(arg0: any,$event: MouseEvent) {
-    throw new Error('Method not implemented.');
-  }
+  saveOrder(index: number){
+    if(this.workFlowStates[index].updatedTitle=='' || this.workFlowStates[index].updatedTitle==null){
+      alert('The workflow name cannot be empty!');
+      return;
+    }
+    this.order.workflows[index].name= this.workFlowStates[index].updatedTitle;
+    this.onOrderUpdate.emit(this.order);
+    this.onSelect.emit(this.selectedWorkflowIndex);
+  };
   
 
   toggleEditMode(index: number, event: MouseEvent) {
@@ -88,13 +92,13 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
     this.selectedWorkflowIndex = index;
     this.cdr.detectChanges();
     this.workFlowStates[index].editMode = !this.workFlowStates[index].editMode;
-    let editOn= this.workFlowStates[index].editMode;
-    if(!editOn){
-        this.order.workflows[index].name= this.workFlowStates[index].updatedTitle;
+    const saveMode= !this.workFlowStates[index].editMode; //sava emode is opposite of edit mode
+    if(saveMode){
+      this.saveOrder(index);
+      this.order.workflows.forEach((workflow)=>{
+        console.log(workflow.name);
+      })
     }
-    this.order.workflows.forEach((workflow: workflowTO)=>{
-      console.log(workflow.name, workflow.description)
-    });
-    //this.saveOrder();
+   
   }
 }

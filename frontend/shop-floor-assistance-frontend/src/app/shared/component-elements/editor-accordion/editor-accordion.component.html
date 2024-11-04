@@ -9,7 +9,7 @@
                             {{ workflow.name }}
                         </ng-container>
                         <ng-container *ngIf="workFlowStates[$index].editMode">
-                            <input class="edit-field" [(ngModel)]="workFlowStates[$index].updatedTitle" placeholder="Name">
+                            <input class="edit-field" [(ngModel)]="workFlowStates[$index].updatedTitle" [value]="workflow.name">
                         </ng-container>
                     </mat-panel-title>
                     <mat-panel-description class="flex flex-row justify-end">
@@ -21,7 +21,7 @@
                                 <mat-icon>delete</mat-icon>
                             </button>
                             @if(doneAll){
-                                <button class="done-all" mat-icon-button (click)="toggleDescription($index, $event)">
+                                <button class="done-all" mat-icon-button>
                                     <mat-icon>done_all</mat-icon>
                                 </button>
                             }

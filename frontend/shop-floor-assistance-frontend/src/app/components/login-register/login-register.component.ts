@@ -77,29 +77,29 @@ export class LoginRegisterComponent implements OnInit, OnDestroy{
     }
   }
 
-    resolveButtonClick(event: MouseEvent) {
+  resolveButtonClick(event: MouseEvent) {
     if(event.type==='click' && this.form.valid){
-        const {username, password}= this.form.value;
-        return this.backendCommunicationService.login(username, password).subscribe(
-          (response)=>{
-            const credentials= this.backendCommunicationService.getUserCredentials(response.token);
-            this.loginUIState.buttonIcon='logout'
-            this.loginUIState.buttonLabel='Log Out'
-            this.loginUIState.isLoggedIn= true
-            this.loginUIState.currentRole= credentials.sub
-            this.loginUIState.rolesAvailable= credentials.roles
-            this.loginUIState.jwtToken= response.token
-            
-            this.backendCommunicationService.setLoginStates(this.loginUIState);
-            this.loadUserPage(credentials.sub);
-          },
-          ()=>{
-            alert('Incorrect user credentials.')
-            //Todo: Handle errors gracefully
-          }
-        );
+      const {username, password}= this.form.value;
+      return this.backendCommunicationService.login(username, password).subscribe(
+        (response)=>{
+          const credentials= this.backendCommunicationService.getUserCredentials(response.token);
+          this.loginUIState.buttonIcon='logout'
+          this.loginUIState.buttonLabel='Log Out'
+          this.loginUIState.isLoggedIn= true
+          this.loginUIState.currentRole= credentials.sub
+          this.loginUIState.rolesAvailable= credentials.roles
+          this.loginUIState.jwtToken= response.token
+          
+          this.backendCommunicationService.setLoginStates(this.loginUIState);
+          this.loadUserPage(credentials.sub);
+        },
+        ()=>{
+          alert('Incorrect user credentials.')
+          //Todo: Handle errors gracefully
+        }
+      );
     }
-      return;
+    return;
   }
 
 }
