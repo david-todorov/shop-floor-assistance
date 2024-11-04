@@ -1,3 +1,12 @@
 .mat-accordion .mat-expansion-panel {
    @apply bg-white border border-accent !important;
 }
+
+.selected-element {
+   @apply bg-accent !important;
+}
+
+.selected-element * {
+   @apply text-white !important;
+}
+
