@@ -15,6 +15,7 @@ import { EditorAccordionComponent } from '../../shared/component-elements/editor
 })
 export class EditorEditWorkflowComponent {
 
+
   constructor(private backendCommunicationService:BackendCommunicationService,
     private route: ActivatedRoute,){
     this.route.params.subscribe(params => {
@@ -65,4 +66,10 @@ export class EditorEditWorkflowComponent {
   updateOrder(order: orderTO) {
     console.log('updated order')
   }
+
+  onSelect(selectedWorkflow: number) {
+    
+    console.log('selected workflow in accordion is: ', selectedWorkflow);
+  }
+
 }

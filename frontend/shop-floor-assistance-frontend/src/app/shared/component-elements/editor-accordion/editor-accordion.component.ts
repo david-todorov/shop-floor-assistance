@@ -23,19 +23,27 @@ interface Item {
 export class EditorAccordionComponent {
   
   @Input() order!: orderTO;
-  @Output() onClick = new EventEmitter<orderTO>();
+  @Output() onOrderUpdate = new EventEmitter<orderTO>();
+  @Output() onSelect = new EventEmitter<number>();
 
+  selectedWorkflowIndex: number | null = null;
 
+  
+  selectWorkflow(index: number) {
+    this.selectedWorkflowIndex = index;
+    this.onSelect.emit(this.selectedWorkflowIndex);
+    console.log('emitted', this.selectedWorkflowIndex)
+  }
 
   editWorkflow(workflow: workflowTO) {
     // Handle edit action
     console.log('Editing', workflow);
-     this.onClick.emit(this.order);
+     this.onOrderUpdate.emit(this.order);
   }
 
   deleteWorkflow(workflow: workflowTO) {
     // Handle delete action
     console.log('Deleting', workflow);
-     this.onClick.emit(this.order);
+     this.onOrderUpdate.emit(this.order);
   }
 }
