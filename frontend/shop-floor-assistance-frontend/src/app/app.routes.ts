@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { OperatorComponent } from './components/operator/operator.component';
 import { EditorAccordionComponent } from './shared/component-elements/editor-accordion/editor-accordion.component';
 import { OperatorViewWorkflowComponent } from './components/operator-view-workflow/operator-view-workflow.component';
-import { EditorViewWorkflowComponent } from './components/editor-view-workflow/editor-view-workflow.component';
+import { EditorEditWorkflowComponent } from './components/editor-edit-workflow/editor-edit-workflow.component';
 
 export const routes: Routes = [
     {path: '', component:WelcomeComponent},
@@ -15,5 +15,5 @@ export const routes: Routes = [
     {path: 'operator', component:OperatorComponent,},
     {path: 'operator/:id', component:OperatorViewWorkflowComponent,},
     {path: 'editor', component:EditorComponent,},
-    {path: 'editor/:id', component:EditorViewWorkflowComponent,},
+    {path: 'editor/:id', component:EditorEditWorkflowComponent,},
 ];

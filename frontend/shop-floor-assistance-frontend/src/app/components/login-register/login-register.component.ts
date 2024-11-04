@@ -95,6 +95,7 @@ export class LoginRegisterComponent implements OnInit, OnDestroy{
           },
           ()=>{
             alert('Incorrect user credentials.')
+            //Todo: Handle errors gracefully
           }
         );
     }
