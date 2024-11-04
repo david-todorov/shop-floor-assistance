@@ -6,6 +6,7 @@ import { orderTO } from '../../../types/orderTO';
 import { workflowTO } from '../../../types/workflowTO';
 import { MatIconModule } from '@angular/material/icon';
 import { workflowStates } from '../workflowUI-state';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-editor-accordion',
@@ -14,7 +15,8 @@ import { workflowStates } from '../workflowUI-state';
     MatExpansionModule,
     MatButtonModule,
     MatIconModule,
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   templateUrl: './editor-accordion.component.html',
   styleUrl: './editor-accordion.component.css'
@@ -29,6 +31,7 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
   selectedWorkflowIndex: number | null = null;
   workFlowStates: workflowStates= {};
   expandedPanels: boolean[] = [];
+  
 
   constructor(private cdr:ChangeDetectorRef){}
   
@@ -48,7 +51,10 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
     this.orderExists= (this.order!== null && this.order != undefined);
     if(this.orderExists){
       this.order.workflows.forEach((workflow: any, index: number) => {
-        this.workFlowStates[index] = { editMode: false, showDescription: false };
+        this.workFlowStates[index] = { editMode: false, 
+          showDescription: false, 
+          updatedTitle:'',
+          updatedDescription:''};
       });
       this.expandedPanels= new Array(this.order.workflows.length).fill(false);
     }
@@ -78,10 +84,17 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
 
   toggleEditMode(index: number, event: MouseEvent) {
     event.stopPropagation();
-    this.workFlowStates[index].editMode = !this.workFlowStates[index].editMode;
     this.expandedPanels[index] = !this.expandedPanels[index]; // Expand the panel
     this.selectedWorkflowIndex = index;
     this.cdr.detectChanges();
+    this.workFlowStates[index].editMode = !this.workFlowStates[index].editMode;
+    let editOn= this.workFlowStates[index].editMode;
+    if(!editOn){
+        this.order.workflows[index].name= this.workFlowStates[index].updatedTitle;
+    }
+    this.order.workflows.forEach((workflow: workflowTO)=>{
+      console.log(workflow.name, workflow.description)
+    });
     //this.saveOrder();
   }
 }

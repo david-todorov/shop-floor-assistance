@@ -6,7 +6,7 @@
    @apply bg-accent !important;
 }
 
-.selected-element * {
+.selected-element *:not(.edit-field) {
    @apply text-white !important;
 }
 .mat-mdc-icon-button{
@@ -20,4 +20,8 @@
 .expansion-panel-content {
    @apply mt-4 text-primary !important;
    /* Tailwind CSS class for margin-top: 1rem */
+}
+
+.edit-field{
+   @apply text-shade p-2 border border-primary rounded-lg focus:outline-none !important;
 }
