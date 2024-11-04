@@ -1,5 +1,5 @@
 .field{
-    @apply px-2 py-1 whitespace-nowrap text-sm font-medium text-shade !important;
+    @apply px-2 py-1 whitespace-nowrap text-lg font-medium text-shade !important;
 }
 
 .value{

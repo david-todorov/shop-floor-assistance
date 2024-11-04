@@ -32,7 +32,7 @@
     
     <div class="row-span-2 grid grid-cols-3">
         <div class="col-span-1 w-full h-full border border-gray-500">
-            Second Div
+            <app-editor-accordion (onClick)="updateOrder($event)" [order]="order"></app-editor-accordion>
         </div>
         <div class="col-span-2 w-full h-full border border-gray-500">
             Third Div
