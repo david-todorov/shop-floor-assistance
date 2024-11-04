@@ -1,16 +1,40 @@
 <!-- accordion.component.html -->
-<mat-accordion>
-    @for(workflow of order.workflows; track $index){
-        <mat-expansion-panel >
-            <mat-expansion-panel-header (click)="selectWorkflow($index)" [ngClass]="{'selected-element': selectedWorkflowIndex === $index}">
-                <mat-panel-title>
-                    {{ workflow.name }}
-                </mat-panel-title>
-                <mat-panel-description>
-                    <button mat-button (click)="editWorkflow(workflow)">Edit</button>
-                    <button mat-button (click)="deleteWorkflow(workflow)">Delete</button>
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <p>{{ workflow.description }}</p>
-        </mat-expansion-panel>
-    }
+@if(orderExists){
+    <mat-accordion>
+        @for(workflow of order.workflows; track $index){
+            <mat-expansion-panel [expanded]="expandedPanels[$index]">
+                <mat-expansion-panel-header (click)="selectWorkflow($index)" [ngClass]="{'selected-element': selectedWorkflowIndex === $index}">
+                    <mat-panel-title>
+                        {{ workflow.name }}
+                    </mat-panel-title>
+                    <mat-panel-description class="flex flex-row justify-end">
+                        <div >
+                            <button mat-icon-button (click)="toggleEditMode($index, $event)">
+                                
+
+                                    <mat-icon>{{ workFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
+                                
+                            </button>
+                            <button mat-icon-button (click)="deleteWorkflow($index)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            @if(doneAll){
+                                <button class="done-all" mat-icon-button (click)="toggleDescription($index, $event)">
+                                    <mat-icon>done_all</mat-icon>
+                                </button>
+                            }
+                        </div>
+                        <!-- <button mat-button (click)="editWorkflow(workflow)">Edit</button>
+                        <button mat-button (click)="deleteWorkflow(workflow)">Delete</button> -->
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="expansion-panel-content">
+                    <p>{{ workflow.description }}</p>
+                </div>
+                
+            </mat-expansion-panel>
+        }
+    </mat-accordion>
+}@else {
+    <h1>The specified order could not be found!</h1>
+}

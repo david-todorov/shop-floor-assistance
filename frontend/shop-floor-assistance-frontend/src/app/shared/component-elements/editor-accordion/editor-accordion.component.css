@@ -1,4 +1,4 @@
-.mat-accordion .mat-expansion-panel {
+.mat-expansion-panel {
    @apply bg-white border border-accent !important;
 }
 
@@ -9,4 +9,15 @@
 .selected-element * {
    @apply text-white !important;
 }
+.mat-mdc-icon-button{
+   @apply text-primary !important;
+}
 
+.done-all{
+   @apply text-purple-600 border !important;
+}
+
+.expansion-panel-content {
+   @apply mt-4 text-primary !important;
+   /* Tailwind CSS class for margin-top: 1rem */
+}
