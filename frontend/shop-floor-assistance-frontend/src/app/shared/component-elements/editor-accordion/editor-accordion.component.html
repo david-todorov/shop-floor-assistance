@@ -26,14 +26,16 @@
                                 </button>
                             }
                         </div>
-                        <!-- <button mat-button (click)="editWorkflow(workflow)">Edit</button>
-                        <button mat-button (click)="deleteWorkflow(workflow)">Delete</button> -->
                     </mat-panel-description>
                 </mat-expansion-panel-header>
                 <div class="expansion-panel-content">
-                    <p>{{ workflow.description }}</p>
+                    <ng-container *ngIf="!workFlowStates[$index].editMode">
+                        <p>{{ workflow.description }}</p>
+                    </ng-container>
+                    <ng-container *ngIf="workFlowStates[$index].editMode">
+                        <textarea class="edit-textarea" [(ngModel)]="workFlowStates[$index].updatedDescription" [value]="workflow.description"></textarea>
+                    </ng-container>
                 </div>
-                
             </mat-expansion-panel>
         }
     </mat-accordion>

@@ -25,3 +25,20 @@
 .edit-field{
    @apply text-shade p-2 border border-primary rounded-lg focus:outline-none !important;
 }
+
+.edit-textarea {
+   @apply text-shade w-full p-2 overflow-auto border border-primary rounded-lg focus:outline-none !important;
+}
+
+.edit-textarea::-webkit-scrollbar {
+   @apply w-4 h-10;
+}
+
+.edit-textarea::-webkit-scrollbar-thumb {
+   @apply bg-gray-300 hover:bg-scrollbar-hover rounded-lg !important;
+}
+
+.edit-textarea::-webkit-scrollbar-track {
+   @apply bg-gray-200 rounded-tr-lg ;
+   position: relative !important;
+}
