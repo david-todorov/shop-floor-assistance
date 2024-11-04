@@ -67,8 +67,6 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
     this.onSelect.emit(this.selectedWorkflowIndex);
   }
 
-
-
   deleteWorkflow(index: number) {
     // Handle delete action
     console.log('Deleting at index:', index);
@@ -81,6 +79,7 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
       return;
     }
     this.order.workflows[index].name= this.workFlowStates[index].updatedTitle;
+    this.order.workflows[index].description= this.workFlowStates[index].updatedDescription;
     this.onOrderUpdate.emit(this.order);
     this.onSelect.emit(this.selectedWorkflowIndex);
   };
@@ -96,9 +95,8 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
     if(saveMode){
       this.saveOrder(index);
       this.order.workflows.forEach((workflow)=>{
-        console.log(workflow.name);
+        console.log(workflow.name, workflow.description);
       })
     }
-   
   }
 }
