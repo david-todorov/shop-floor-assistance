@@ -29,11 +29,9 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onSelect = new EventEmitter<number>();
   orderExists: boolean= false;
-  selectedWorkflowIndex: number= 0;
+  selectedWorkflowIndex: number | null = 0;
   workFlowStates: workflowStates= {};
   expandedPanels: boolean[] = [];
-
-  
 
   constructor(private cdr:ChangeDetectorRef){}
   
@@ -67,11 +65,32 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
     this.onSelect.emit(this.selectedWorkflowIndex);
   }
 
-  deleteWorkflow(index: number) {
-    // Handle delete action
-    console.log('Deleting at index:', index);
-     this.onOrderUpdate.emit(this.order);
+   deleteWorkflow(index: number, event: MouseEvent) {
+    if (this.selectedWorkflowIndex !== null) {
+      event.stopPropagation();
+
+      // Remove the workflow from the order.workflows array
+      this.order.workflows.splice(index, 1);
+
+      // Remove the corresponding state from workFlowStates
+      delete this.workFlowStates[index];
+
+      // Update the selectedWorkflowIndex if necessary
+      if (this.selectedWorkflowIndex === index) {
+        this.selectedWorkflowIndex = null;
+      } else if (this.selectedWorkflowIndex > index) {
+        this.selectedWorkflowIndex--;
+      }
+
+      // Emit the updated order
+      this.onOrderUpdate.emit(this.order);
+
+      // Reinitialize workflow states to update the indices
+      this.initializeWorkflowStates();
+    }
   }
+
+
 
   saveOrder(index: number){
     if(this.workFlowStates[index].updatedTitle=='' || this.workFlowStates[index].updatedTitle==null){
@@ -81,7 +100,9 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
     this.order.workflows[index].name= this.workFlowStates[index].updatedTitle;
     this.order.workflows[index].description= this.workFlowStates[index].updatedDescription;
     this.onOrderUpdate.emit(this.order);
-    this.onSelect.emit(this.selectedWorkflowIndex);
+    if(this.selectedWorkflowIndex != null){
+      this.onSelect.emit(this.selectedWorkflowIndex);
+    }
   };
   
 
@@ -100,3 +121,7 @@ export class EditorAccordionComponent implements OnInit, OnChanges, AfterViewIni
     }
   }
 }
+
+
+
+

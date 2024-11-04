@@ -17,7 +17,7 @@
                             <button mat-icon-button (click)="toggleEditMode($index, $event)">
                                 <mat-icon>{{ workFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
                             </button>
-                            <button mat-icon-button (click)="deleteWorkflow($index)">
+                            <button mat-icon-button (click)="deleteWorkflow($index,$event)">
                                 <mat-icon>delete</mat-icon>
                             </button>
                             @if(doneAll){

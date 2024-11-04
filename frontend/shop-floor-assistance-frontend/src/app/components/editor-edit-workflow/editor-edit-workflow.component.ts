@@ -64,12 +64,12 @@ export class EditorEditWorkflowComponent {
   // }
 
   updateOrder(order: orderTO) {
-    console.log('updated order')
+    console.log('updated order in editor-main-component is: ', this.order)
   }
 
   onSelect(selectedWorkflow: number) {
     
-    console.log('selected workflow in accordion is: ', selectedWorkflow);
+    console.log('selected in editor-main-component is:', selectedWorkflow);
   }
 
 }
