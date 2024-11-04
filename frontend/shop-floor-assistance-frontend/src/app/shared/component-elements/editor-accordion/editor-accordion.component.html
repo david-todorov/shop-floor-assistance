@@ -1,0 +1,15 @@
+<!-- accordion.component.html -->
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let workflow of order.workflows">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{ workflow.name }}
+            </mat-panel-title>
+            <mat-panel-description>
+                <button mat-button (click)="editWorkflow(workflow)">Edit</button>
+                <button mat-button (click)="deleteWorkflow(workflow)">Delete</button>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <p>{{ workflow.description }}</p>
+    </mat-expansion-panel>

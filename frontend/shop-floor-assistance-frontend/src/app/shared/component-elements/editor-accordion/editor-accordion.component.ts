@@ -1,7 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { orderTO } from '../../../types/orderTO';
+import { workflowTO } from '../../../types/workflowTO';
+
+interface Item {
+  title: string;
+  content: string;
+}
+
 
 @Component({
   selector: 'app-editor-accordion',
@@ -14,5 +22,20 @@ import { MatExpansionModule } from '@angular/material/expansion';
 })
 export class EditorAccordionComponent {
   
+  @Input() order!: orderTO;
+  @Output() onClick = new EventEmitter<orderTO>();
 
+
+
+  editWorkflow(workflow: workflowTO) {
+    // Handle edit action
+    console.log('Editing', workflow);
+     this.onClick.emit(this.order);
+  }
+
+  deleteWorkflow(workflow: workflowTO) {
+    // Handle delete action
+    console.log('Deleting', workflow);
+     this.onClick.emit(this.order);
+  }
 }
