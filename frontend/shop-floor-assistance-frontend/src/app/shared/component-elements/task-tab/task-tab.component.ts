@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { orderTO } from '../../../types/orderTO';
@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './task-tab.component.html',
   styleUrl: './task-tab.component.css'
 })
-export class TaskTabComponent implements OnChanges{
+export class TaskTabComponent implements OnInit, OnChanges{
 
 
   @Input() workflowIndex!: number | null;
@@ -26,15 +26,34 @@ export class TaskTabComponent implements OnChanges{
   @Output() onSelect = new EventEmitter<number | null>();
 
   selectedTaskIndex: number | null = 0;
+  orderExists: boolean= false;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if(this.workflowIndex!=null){
-      console.log('updated order received in task-tab',this.orderUpdated,this.workflowIndex);
+  constructor(){}
+  
+  ngOnInit(): void {
+    this.initializeWorkflowStates();
+    if (this.workflowIndex === null || this.workflowIndex === undefined) {
+      this.workflowIndex = 0;
     }
   }
-  
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['orderUpdated']) {
+      this.initializeWorkflowStates();
+    }
+  }
+
+  getTasksForSelectedWorkflow() {
+    if (this.workflowIndex !== null && this.workflowIndex !== undefined &&  this.orderUpdated && this.orderUpdated.workflows) {
+      return this.orderUpdated.workflows[this.workflowIndex].tasks;
+    }
+    return [];
+  }
 
 
+  initializeWorkflowStates() {
+ 
+  }
 
 
 }

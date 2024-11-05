@@ -4,8 +4,8 @@
      @if(orderExists){
          <mat-accordion>
              @for(workflow of order.workflows; track $index){
-                 <mat-expansion-panel [expanded]="expandedPanels[$index]">
-                     <mat-expansion-panel-header (click)="selectWorkflow($index)" [ngClass]="{'selected-element': selectedWorkflowIndex === $index}">
+                 <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode() "> <!-- && !workFlowStates[$index].editMode -->
+                     <mat-expansion-panel-header (click)="!isAnyWorkflowInEditMode() && selectWorkflow($index)" [ngClass]="{'selected-element': selectedWorkflowIndex === $index}">
                          <mat-panel-title>
                              <ng-container *ngIf="!workFlowStates[$index].editMode">
                                  {{ workflow.name }}

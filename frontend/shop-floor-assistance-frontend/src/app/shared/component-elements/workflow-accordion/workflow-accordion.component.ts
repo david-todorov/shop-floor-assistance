@@ -64,9 +64,13 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
   }
 
   selectWorkflow(index: number) {
+    if (this.workFlowStates[index].editMode) {
+      return; // Do not trigger selectWorkflow if in edit mode
+    }
+    
     this.selectedWorkflowIndex = index;
-    //emit order and selected workflow index
-    this.onSelect.emit(this.selectedWorkflowIndex);
+    // Emit order and selected workflow index
+    this.onSelect.emit(this.selectedWorkflowIndex !== null ? this.selectedWorkflowIndex : undefined);
   }
 
    deleteWorkflow(index: number, event: MouseEvent) {
@@ -79,16 +83,10 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
       } else if (this.selectedWorkflowIndex > index) {
         this.selectedWorkflowIndex--;
       }
-      // this.onSelect.emit(this.selectedWorkflowIndex);
-      // this.onOrderUpdate.emit(this.order);
       this.initializeWorkflowStates();
-    }else{
-      //this.onSelect.emit(this.selectedWorkflowIndex);
-      //this.onOrderUpdate.emit(this.order);
     }
     this.onSelect.emit(this.selectedWorkflowIndex);
     this.onOrderUpdate.emit(this.order);
-      console.log('in delete', this.order, this.selectedWorkflowIndex)
   }
 
   saveOrder(index: number){
@@ -98,12 +96,7 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     }
     this.order.workflows[index].name= this.workFlowStates[index].updatedTitle;
     this.order.workflows[index].description= this.workFlowStates[index].updatedDescription;
-    // this.onOrderUpdate.emit(this.order);
-    this.onSelect.emit(this.selectedWorkflowIndex);
-    this.onOrderUpdate.emit(this.order);
-    // if(this.selectedWorkflowIndex != null){
-      // this.onSelect.emit(this.selectedWorkflowIndex);
-    // }
+    
   };
   
 
@@ -113,13 +106,18 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     this.selectedWorkflowIndex = index;
     this.cdr.detectChanges();
     this.workFlowStates[index].editMode = !this.workFlowStates[index].editMode;
-    const saveMode= !this.workFlowStates[index].editMode; //sava emode is opposite of edit mode
+    const saveMode= !this.workFlowStates[index].editMode; //save mode is opposite of edit mode
     if(saveMode){
       this.saveOrder(index);
-      this.order.workflows.forEach((workflow)=>{
-        console.log(workflow.name, workflow.description);
-      })
+      this.initializeWorkflowStates();
+      this.onOrderUpdate.emit(this.order);
+      this.onSelect.emit(this.selectedWorkflowIndex);
+
     }
+  }
+
+  isAnyWorkflowInEditMode(): boolean {
+    return Object.values(this.workFlowStates).some(state => state.editMode);
   }
 }
 
