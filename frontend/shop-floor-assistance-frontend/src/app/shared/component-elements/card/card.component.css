@@ -1,0 +1,16 @@
+.row {
+  @apply flex;
+}
+ 
+.space-between {
+  @apply justify-between;
+}
+ 
+/* .center {
+  @apply items-center;
+} */
+ 
+.title {
+  @apply text-lg font-bold;
+}
+ 

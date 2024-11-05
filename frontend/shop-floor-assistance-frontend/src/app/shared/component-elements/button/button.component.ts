@@ -16,5 +16,5 @@ export class ButtonComponent {
 
   onClickButton(event: MouseEvent) {
       this.onClick.emit(event);
-    }
+    }
 }
