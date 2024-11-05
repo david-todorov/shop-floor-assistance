@@ -29,8 +29,7 @@ export class TaskTabComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges): void {
     if(this.workflowIndex!=null){
-      console.log(this.orderUpdated)
-      console.log(this.orderUpdated.workflows[this.workflowIndex]);
+      console.log('updated order received in task-tab',this.orderUpdated,this.workflowIndex);
     }
   }
   

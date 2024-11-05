@@ -67,7 +67,7 @@ export class EditorEditWorkflowComponent {
   // }
 
   updateOrder(order: orderTO) {
-    this.order= order;
+    this.order= {...order};
   }
 
   onSelect(selectedWorkflow: number | null) {

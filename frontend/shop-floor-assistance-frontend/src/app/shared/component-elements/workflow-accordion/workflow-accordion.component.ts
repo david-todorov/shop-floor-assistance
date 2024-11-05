@@ -67,8 +67,6 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     this.selectedWorkflowIndex = index;
     //emit order and selected workflow index
     this.onSelect.emit(this.selectedWorkflowIndex);
-    this.onOrderUpdate.emit(this.order);
-    console.log('in select workflow')
   }
 
    deleteWorkflow(index: number, event: MouseEvent) {
@@ -90,7 +88,6 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     }
     this.onSelect.emit(this.selectedWorkflowIndex);
     this.onOrderUpdate.emit(this.order);
-      console.log('in delete')
       console.log('in delete', this.order, this.selectedWorkflowIndex)
   }
 
