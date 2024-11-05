@@ -12,8 +12,8 @@
                             <input class="edit-field" [(ngModel)]="workFlowStates[$index].updatedTitle" [value]="workflow.name">
                         </ng-container>
                     </mat-panel-title>
-                    <mat-panel-description class="flex flex-row justify-end">
-                        <div >
+                    <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
+                        <div class="whitespace-nowrap">
                             <button mat-icon-button (click)="toggleEditMode($index, $event)">
                                 <mat-icon>{{ workFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
                             </button>
