@@ -1,29 +1,19 @@
-<div class="custom-toolbar">
-    <span>
+<div class="custom-toolbar flex items-center justify-between p-4 bg-white">
+    <span class="flex-shrink-0">
         <img class="h-16 max-w-full" src="./assets/img/uhlmann-group-vector-logo.png" alt="Uhlmann Logo">
     </span>
-    <div class="flex-row-justify-center ">
-            @if(showCurrentRole){
-            <div class="user-role">
-                <mat-icon>person</mat-icon>
-                <div class="p-1">Current Role: {{ userRole }}</div>
-            </div>
-            }
-
-                @if(btnVisible){
-                <button mat-icon-button class="login-btn" (click)="onSubmit()">
-                    <mat-icon>{{ btnIcon }}</mat-icon>
-                    <div class="p-1">{{ btnLabel }}</div>
-                </button>
-                }
-
-            
+    <div class="flex items-center space-x-4">
+        @if(showCurrentRole){
+        <div class="user-role flex items-center space-x-2 whitespace-nowrap">
+            <mat-icon class="text-lg md:text-xl">person</mat-icon>
+            <div class="p-1 text-sm md:text-base">Current Role: {{ userRole }}</div>
+        </div>
+        }
+        @if(btnVisible){
+        <button mat-icon-button class="login-btn flex items-center space-x-2 whitespace-nowrap" (click)="onSubmit()">
+            <mat-icon>{{ btnIcon }}</mat-icon>
+            <div class="p-1">{{ btnLabel }}</div>
+        </button>
+        }
     </div>
-    <!-- @if(btnVisible){
-    <button mat-icon-button class="login-btn" (click)="onSubmit()">
-        <mat-icon>{{ btnIcon }}</mat-icon>
-        <div class="p-1">{{ btnLabel }}</div>
-    </button>
-    } -->
-
 </div>
