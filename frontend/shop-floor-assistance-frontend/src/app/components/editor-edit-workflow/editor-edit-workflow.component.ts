@@ -5,11 +5,14 @@ import { BackendCommunicationService } from '../../services/backend-communicatio
 import { catchError, of } from 'rxjs';
 import { dummyOrder } from '../../types/dummyData';
 import { WorkflowAccordionComponent } from '../../shared/component-elements/workflow-accordion/workflow-accordion.component';
+import { TaskTabComponent } from '../../shared/component-elements/task-tab/task-tab.component';
 
 @Component({
   selector: 'app-editor-edit-workflow',
   standalone: true,
-  imports: [WorkflowAccordionComponent],
+  imports: [
+    WorkflowAccordionComponent,
+  TaskTabComponent],
   templateUrl: './editor-edit-workflow.component.html',
   styleUrl: './editor-edit-workflow.component.css'
 })
@@ -42,7 +45,7 @@ export class EditorEditWorkflowComponent {
 
 
   order!: orderTO;
-
+  selectedWorkflowIndex!: number | null;
   // @Input() set id(orderId: string){//received from previous page
   //       this.backendCommunicationService.getEditorOrder(orderId).pipe(
   //     catchError((err)=>{
@@ -64,12 +67,11 @@ export class EditorEditWorkflowComponent {
   // }
 
   updateOrder(order: orderTO) {
-    console.log('updated order in editor-main-component is: ', this.order)
+    this.order= order;
   }
 
-  onSelect(selectedWorkflow: number) {
-    
-    console.log('selected in editor-main-component is:', selectedWorkflow);
+  onSelect(selectedWorkflow: number | null) {
+    this.selectedWorkflowIndex= selectedWorkflow;
   }
 
 }

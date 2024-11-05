@@ -1,0 +1,14 @@
+.mat-mdc-tab-group{
+    @apply  
+    /* border border-primary  */
+    rounded-lg !important;
+}
+
+
+::ng-deep .mat-mdc-tab-body{
+    @apply border rounded-sm bg-blue-50 !important;
+
+}
+
+
+
