@@ -26,9 +26,16 @@ public class OperatorTOMapper {
         operatorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
 
         //Mapping of single Product for order
-        OperatorProductTO operatorProductTO = mapBasicProductProperties(orderDBO.getProduct());
+        if (orderDBO.getBeforeProduct() != null) {
+            OperatorProductTO operatorProductBeforeTO = mapBasicProductProperties(orderDBO.getBeforeProduct());
+            operatorOrderTO.setProductBefore(operatorProductBeforeTO);
+        }
+        OperatorProductTO operatorProductAfterTO = mapBasicProductProperties(orderDBO.getAfterProduct());
+        operatorOrderTO.setProductAfter(operatorProductAfterTO);
 
-        operatorOrderTO.setProduct(operatorProductTO);
+        //Equipment
+        operatorOrderTO.setEquipment(toEquipmentTOs(orderDBO.getEquipment()));
+
 
         return operatorOrderTO;
     }
@@ -110,5 +117,38 @@ public class OperatorTOMapper {
         operatorProductTO.setDescription(productDBO.getDescription());
 
         return operatorProductTO;
+    }
+
+    private OperatorEquipmentTO mapBasicEquipmentProperties(EquipmentDBO equipmentDBO) {
+        OperatorEquipmentTO operatorEquipmentTO = new OperatorEquipmentTO();
+        operatorEquipmentTO.setId(equipmentDBO.getId());
+        operatorEquipmentTO.setEquipmentNumber(equipmentDBO.getEquipmentNumber());
+        operatorEquipmentTO.setName(equipmentDBO.getName());
+        operatorEquipmentTO.setType(equipmentDBO.getType());
+        operatorEquipmentTO.setDescription(equipmentDBO.getDescription());
+
+        return operatorEquipmentTO;
+    }
+
+    public ArrayList<OperatorEquipmentTO> toEquipmentTOs(List<EquipmentDBO> equipments) {
+        ArrayList<OperatorEquipmentTO> equipmentTOs = new ArrayList<>();
+        equipments.forEach(equipment -> {
+            equipmentTOs.add(toEquipmentTO(equipment));
+        });
+
+        return equipmentTOs;
+    }
+
+    public OperatorEquipmentTO toEquipmentTO(EquipmentDBO equipmentDBO) {
+        OperatorEquipmentTO operatorEquipmentTO = this.mapBasicEquipmentProperties(equipmentDBO);
+
+        List<OperatorOrderTO> operatorOrderTOList = new ArrayList<>();
+
+        equipmentDBO.getOrders().forEach(order -> {
+            operatorOrderTOList.add(mapBasicOrderProperties(order));
+        });
+        operatorEquipmentTO.setOrders(operatorOrderTOList);
+
+        return operatorEquipmentTO;
     }
 }

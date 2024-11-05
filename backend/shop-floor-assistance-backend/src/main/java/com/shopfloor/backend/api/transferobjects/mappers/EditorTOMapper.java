@@ -41,7 +41,7 @@ public class EditorTOMapper {
         EditorProductTO editorProductTO = mapBasicProductProperties(productDBO);
         List<EditorOrderTO> editorOrderTOs = new ArrayList<>();
 
-        productDBO.getOrders().forEach(order -> {
+        productDBO.getOrdersAsAfterProduct().forEach(order -> {
             editorOrderTOs.add(mapBasicOrderProperties(order));
         });
         editorProductTO.setOrders(editorOrderTOs);
@@ -58,7 +58,10 @@ public class EditorTOMapper {
     public EditorOrderTO toOrderTO(OrderDBO orderDBO) {
         EditorOrderTO editorOrderTO = mapBasicOrderProperties(orderDBO);
 
-        editorOrderTO.setProduct(mapBasicProductProperties(orderDBO.getProduct()));
+        if (orderDBO.getBeforeProduct() != null) {
+            editorOrderTO.setProductBefore(mapBasicProductProperties(orderDBO.getBeforeProduct()));
+        }
+        editorOrderTO.setProductAfter(mapBasicProductProperties(orderDBO.getAfterProduct()));
         editorOrderTO.setEquipment(toEquipmentTOs(orderDBO.getEquipment()));
 
         editorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));

@@ -883,7 +883,7 @@ public class EditorControllerTest {
 
     private void assignProductAndEquipmentFor(EditorOrderTO order) throws Exception{
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
-        order.setProduct(this.apiHelper.getEditorAllProductsGET(authorizationHeader, 200).get(0));
+        order.setProductAfter(this.apiHelper.getEditorAllProductsGET(authorizationHeader, 200).get(0));
         order.setEquipment(this.apiHelper.getEditorAllEquipmentGET(authorizationHeader, 200));
     }
 

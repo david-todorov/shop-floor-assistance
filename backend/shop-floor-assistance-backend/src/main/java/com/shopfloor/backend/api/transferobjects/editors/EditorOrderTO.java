@@ -3,7 +3,6 @@ package com.shopfloor.backend.api.transferobjects.editors;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,11 +37,12 @@ public class EditorOrderTO {
 
     private Date updatedAt;
 
+    private EditorProductTO productBefore;
+
     @NotNull(message = "Product cannot be null")
-    private EditorProductTO product;
+    private EditorProductTO productAfter;
 
     @NotNull(message = "Equipment list cannot be null")
-    @Size(min = 1, message = "Equipment list cannot be empty")
     private List<@NotNull(message = "Equipment cannot be null")EditorEquipmentTO> equipment;
 
     public EditorOrderTO() {

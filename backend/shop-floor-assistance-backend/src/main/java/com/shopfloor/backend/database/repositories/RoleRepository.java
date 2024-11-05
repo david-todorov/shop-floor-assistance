@@ -1,5 +1,6 @@
 package com.shopfloor.backend.database.repositories;
 
+import com.shopfloor.backend.database.objects.Role;
 import com.shopfloor.backend.database.objects.RoleDBO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,5 +14,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface RoleRepository extends JpaRepository<RoleDBO, Long> {
+    boolean existsByName(Role role);
 
+    RoleDBO findByName(Role role);
 }

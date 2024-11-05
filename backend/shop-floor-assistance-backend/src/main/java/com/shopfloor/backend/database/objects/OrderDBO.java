@@ -46,34 +46,82 @@ public class OrderDBO {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "order_id")
-    private List<WorkflowDBO> workflows;
+    private List<WorkflowDBO> workflows = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "order_equipment",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "equipment_id")
     )
-    private List<EquipmentDBO> equipment;
+    private List<EquipmentDBO> equipment = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private ProductDBO product;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "before_product_id")
+    private ProductDBO beforeProduct;
 
-    public OrderDBO() {
-       this.workflows = new ArrayList<WorkflowDBO>();
-       equipment = new ArrayList<EquipmentDBO>();
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "after_product_id", nullable = false)
+    private ProductDBO afterProduct;
+
+    public void setBeforeProduct(ProductDBO newBeforeProduct) {
+        // If there is an existing beforeProduct, remove the association
+        if (this.beforeProduct != null) {
+            this.beforeProduct.getOrdersAsBeforeProduct().remove(this);
+        }
+
+        // Set the new beforeProduct and add this order to its association list
+        this.beforeProduct = newBeforeProduct;
+        if (newBeforeProduct != null) {
+            newBeforeProduct.getOrdersAsBeforeProduct().add(this);
+        }
+    }
+
+    public void setAfterProduct(ProductDBO newAfterProduct) {
+        // If there is an existing afterProduct, remove the association
+        if (this.afterProduct != null) {
+            this.afterProduct.getOrdersAsAfterProduct().remove(this);
+        }
+
+        // Set the new afterProduct and add this order to its association list
+        this.afterProduct = newAfterProduct;
+        if (newAfterProduct != null) {
+            newAfterProduct.getOrdersAsAfterProduct().add(this);
+        }
+    }
+
+    public void clearBeforeProduct() {
+        if (this.beforeProduct != null) {
+            this.beforeProduct.getOrdersAsBeforeProduct().remove(this);
+            this.beforeProduct = null;
+        }
+    }
+
+    public void clearAfterProduct() {
+        if (this.afterProduct != null) {
+            this.afterProduct.getOrdersAsAfterProduct().remove(this);
+            this.afterProduct = null;
+        }
+    }
+
+    // In OrderDBO.java
+    public void addEquipment(EquipmentDBO equipment) {
+        if (!this.equipment.contains(equipment)) {
+            this.equipment.add(equipment);
+            equipment.getOrders().add(this); // Ensure bidirectional consistency
+        }
     }
 
     public void removeEquipment(EquipmentDBO equipment) {
-        this.equipment.remove(equipment);
-        equipment.getOrders().remove(this); // Maintain bidirectional consistency
+        if (this.equipment.contains(equipment)) {
+            this.equipment.remove(equipment);
+            equipment.getOrders().remove(this); // Ensure bidirectional consistency
+        }
     }
 
-    public void removeProduct() {
-        if (this.product != null) {
-            this.product.getOrders().remove(this); // Remove the order from the product's list
-            this.product = null; // Clear the product reference
+    public void clearEquipment() {
+        for (EquipmentDBO equipment : new ArrayList<>(this.equipment)) {
+            removeEquipment(equipment); // Use helper method to maintain bidirectional consistency
         }
     }
 }

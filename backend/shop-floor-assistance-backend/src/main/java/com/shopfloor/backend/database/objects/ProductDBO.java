@@ -59,10 +59,9 @@ public class ProductDBO {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<OrderDBO> orders;
+    @OneToMany(mappedBy = "beforeProduct", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<OrderDBO> ordersAsBeforeProduct = new ArrayList<>();
 
-    public ProductDBO() {
-        this.orders = new ArrayList<OrderDBO>();
-    }
+    @OneToMany(mappedBy = "afterProduct", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<OrderDBO> ordersAsAfterProduct = new ArrayList<>();
 }

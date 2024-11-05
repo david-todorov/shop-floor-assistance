@@ -18,17 +18,9 @@ public class AuthControllerTest {
     @Autowired
     private ApiHelper apiHelper;
 
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
     @AfterEach
     public void tearDown() {
-        // Clear the repository after each test
-        orderRepository.deleteAll();
-        productRepository.deleteAll();
+
     }
 
     @Test
