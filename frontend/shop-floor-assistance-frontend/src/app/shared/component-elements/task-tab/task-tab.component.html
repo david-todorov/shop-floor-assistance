@@ -1,11 +1,12 @@
 <div class="w-full">
-    <mat-tab-group>
+    <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true">
         <mat-tab *ngFor="let task of getTasksForSelectedWorkflow(); let i = index">
             <ng-template mat-tab-label>
                 <span>{{ task.name }}</span>
             </ng-template>
             <div class="p-4">
-                {{ task.description }}
+                <p class="text-primary m-2 text-lg underline">Description:</p>
+                <p class=" m-2">{{ task.description }}</p>
             </div>
         </mat-tab>
     </mat-tab-group>

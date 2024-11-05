@@ -1,7 +1,15 @@
 ::ng-deep .mat-mdc-tab-body{
-    @apply border rounded-sm bg-blue-50 !important;
+    @apply border-l border-r border-b border-accent 
+    rounded-l-md
+    bg-blue-50 
+    min-h-96
+    !important;
 
 }
 
+.selected-tab {
+    @apply bg-blue-200;
+    /* Apply a light blue background color */
+}
 
 
