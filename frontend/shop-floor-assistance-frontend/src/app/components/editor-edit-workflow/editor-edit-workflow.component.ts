@@ -4,12 +4,12 @@ import { orderTO } from '../../types/orderTO';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
 import { dummyOrder } from '../../types/dummyData';
-import { EditorAccordionComponent } from '../../shared/component-elements/editor-accordion/editor-accordion.component';
+import { WorkflowAccordionComponent } from '../../shared/component-elements/workflow-accordion/workflow-accordion.component';
 
 @Component({
   selector: 'app-editor-edit-workflow',
   standalone: true,
-  imports: [EditorAccordionComponent],
+  imports: [WorkflowAccordionComponent],
   templateUrl: './editor-edit-workflow.component.html',
   styleUrl: './editor-edit-workflow.component.css'
 })

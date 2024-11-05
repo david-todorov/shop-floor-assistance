@@ -2,9 +2,7 @@ import { Routes } from '@angular/router';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { LoginRegisterComponent } from './components/login-register/login-register.component';
-import { AppComponent } from './app.component';
 import { OperatorComponent } from './components/operator/operator.component';
-import { EditorAccordionComponent } from './shared/component-elements/editor-accordion/editor-accordion.component';
 import { OperatorViewWorkflowComponent } from './components/operator-view-workflow/operator-view-workflow.component';
 import { EditorEditWorkflowComponent } from './components/editor-edit-workflow/editor-edit-workflow.component';
 
