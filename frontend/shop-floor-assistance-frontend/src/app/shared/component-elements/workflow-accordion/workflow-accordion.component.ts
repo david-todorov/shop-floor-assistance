@@ -7,6 +7,7 @@ import { workflowTO } from '../../../types/workflowTO';
 import { MatIconModule } from '@angular/material/icon';
 import { workflowStates } from '../workflowUI-state';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { taskTO } from '../../../types/taskTO';
 
 @Component({
   selector: 'app-workflow-accordion',
@@ -28,6 +29,7 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
   @Input() doneAll: boolean= true;
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onSelect = new EventEmitter<number | null>();
+
   orderExists: boolean= false;
   selectedWorkflowIndex: number | null = 0;
   workFlowStates: workflowStates= {};

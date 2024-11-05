@@ -1,9 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { orderTO } from '../../../types/orderTO';
-import { workflowTO } from '../../../types/workflowTO';
-import { taskTO } from '../../../types/taskTO';
+
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -22,9 +21,11 @@ export class TaskTabComponent implements OnChanges{
 
   @Input() workflowIndex!: number | null;
   @Input() orderUpdated!: orderTO;
-  selectedTaskIndex!: number | null;
-  selectedWorkflowTasks!: taskTO[];
 
+  @Output() onOrderUpdate = new EventEmitter<orderTO>();
+  @Output() onSelect = new EventEmitter<number | null>();
+
+  selectedTaskIndex: number | null = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
     if(this.workflowIndex!=null){
