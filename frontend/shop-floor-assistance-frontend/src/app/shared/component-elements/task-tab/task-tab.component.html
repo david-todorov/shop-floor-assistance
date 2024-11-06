@@ -1,5 +1,5 @@
 <div class="w-full">
-    <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group">
+    <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" (selectedIndexChange)="onTabChange($event)">
         @for(task of tasks;track $index){
             <mat-tab ><!-- *ngFor="let task of tasks; let i = index" -->
                 <ng-template mat-tab-label>
@@ -21,6 +21,12 @@
                 <div class="p-4">
                     <p class="text-primary m-2 text-lg underline">Description:</p>
                     <p class=" m-2">{{ task.description }}</p>
+                </div>
+                <div class="m-4 p-2 border border-red-500">
+                    <app-item-accordion 
+                        [selectedTab]="selectedTaskIndex ?? -1"
+                        [selectedTasks]="tasks">
+                    </app-item-accordion>
                 </div>
             </mat-tab>
         }

@@ -9,6 +9,7 @@ import { workflowStates } from '../workflowUI-state';
 import { taskTO } from '../../../types/taskTO';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
+import { ItemAccordionComponent } from '../item-accordion/item-accordion.component';
 
 @Component({
   selector: 'app-task-tab',
@@ -18,13 +19,13 @@ import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.co
     MatTabsModule,
     CommonModule,
     MatDialogModule,
-    EditTaskDialogComponent
+    EditTaskDialogComponent,
+    ItemAccordionComponent
   ],
   templateUrl: './task-tab.component.html',
   styleUrl: './task-tab.component.css'
 })
 export class TaskTabComponent implements OnInit, OnChanges{
-
 
   @Input() workflowIndex!: number | null;
   @Input() orderUpdated!: orderTO;
@@ -106,5 +107,10 @@ export class TaskTabComponent implements OnInit, OnChanges{
       this.orderUpdateFromTasks.emit(this.orderUpdated);
     });
 
+  }
+
+  onTabChange(index: number): void {
+    this.selectedTaskIndex = index;
+    console.log('Selected tab index:', this.selectedTaskIndex);
   }
 }
