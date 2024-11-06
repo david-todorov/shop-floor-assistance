@@ -1055,24 +1055,6 @@ public class EditorControllerTest {
     }
 
     @Test
-    public void when_AddProduct_WithNullOrderList_Then_BadRequest() throws Exception {
-        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
-        EditorProductTO productWithNullLanguage = this.productHelper.buildCompleteEditorProductTO("P0001");
-        productWithNullLanguage.setOrders(null);
-
-        this.apiHelper.createEditorProductPOST(productWithNullLanguage, authorizationHeader, 400);
-    }
-
-    @Test
-    public void when_AddProduct_WithEmptyOrderList_Then_Created() throws Exception {
-        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
-        EditorProductTO productWithEmptyLanguage = this.productHelper.buildCompleteEditorProductTO("P0001");
-        productWithEmptyLanguage.setOrders(new ArrayList<EditorOrderTO>());
-
-        this.apiHelper.createEditorProductPOST(productWithEmptyLanguage, authorizationHeader, 201);
-    }
-
-    @Test
     public void when_UpdateProduct_Then_Ok() throws Exception {
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
         EditorProductTO existingProduct = this.productHelper.buildCompleteEditorProductTO("P0001");

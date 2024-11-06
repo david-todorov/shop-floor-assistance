@@ -24,7 +24,8 @@ public class ProductHelper {
         editorProduct.setLanguage("German language");
         editorProduct.setDescription("Pain reliever used to reduce fever and relieve minor aches and pains.");
         // Initialize orders list (empty but not null)
-        editorProduct.setOrders(new ArrayList<EditorOrderTO>());
+        editorProduct.setOrdersBefore(new ArrayList<EditorOrderTO>());
+        editorProduct.setOrdersAfter(new ArrayList<EditorOrderTO>());
 
         return editorProduct;
     }
@@ -44,9 +45,9 @@ public class ProductHelper {
         assertEquals(expected.getPackageType(), actual.getPackageType());
         assertEquals(expected.getLanguage(), actual.getLanguage());
 
-        assertEquals(expected.getOrders().size(), actual.getOrders().size());
-        for (int i = 0; i < actual.getOrders().size(); i++) {
-            assertEditorProductsOrdersEqual(expected.getOrders().get(i), actual.getOrders().get(i));
+        assertEquals(expected.getOrdersAfter().size(), actual.getOrdersAfter().size());
+        for (int i = 0; i < actual.getOrdersAfter().size(); i++) {
+            assertEditorProductsOrdersEqual(expected.getOrdersAfter().get(i), actual.getOrdersAfter().get(i));
         }
 
         assertEquals(expected.getCreatedAt(), actual.getCreatedAt());
