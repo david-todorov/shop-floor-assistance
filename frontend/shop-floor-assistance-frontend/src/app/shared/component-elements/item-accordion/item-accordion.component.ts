@@ -44,6 +44,7 @@ isAnyWorkflowInEditMode(): void {
   doneAll: boolean= true;
 
   items!:itemTO[];
+  selectedItem!: number | null;
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('in item-accord-change')
@@ -51,6 +52,10 @@ isAnyWorkflowInEditMode(): void {
       if(this.selectedTab != null && this.selectedTab >=0)
         this.items= this.selectedTasks[this.selectedTab].items;
     }
-    
+  }
+
+  onAccordionClick(index: number): void {
+    // console.log('Accordion element clicked:', index);
+    // this.selectedItem= index;
   }
 }

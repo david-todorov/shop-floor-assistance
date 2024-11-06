@@ -2,12 +2,12 @@
 
 <mat-accordion>
     @for(item of items; track $index){
-    <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode() ">
+    <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode()" >
         <!-- && !workFlowStates[$index].editMode -->
         <!-- <mat-expansion-panel-header (click)="!isAnyWorkflowInEditMode() && selectWorkflow($index)" -->
         <!-- [ngClass]="{'selected-element': selectedTab === $index}"> -->
-        <mat-expansion-panel-header
-            [ngClass]="{'selected-element': selectedTab === $index}">
+        <mat-expansion-panel-header [ngClass]="{'selected-element': selectedItem === $index}" (click)="onAccordionClick($index)">
+        <!-- <mat-expansion-panel-header (click)="onAccordionClick($index)"> -->
             <mat-panel-title>
                 <!-- <ng-container *ngIf="!workFlowStates[$index].editMode"> -->
                 <ng-container>
