@@ -42,3 +42,20 @@
     @apply bg-gray-200 rounded-tr-lg;
     position: relative !important;
 }
+
+.mat-expansion-panel-header-title {
+    @apply flex-auto !important;
+
+}
+
+.mat-expansion-panel-header-description {
+    @apply flex-shrink !important;
+}
+
+
+
+/* .mat-expansion-panel-header-title,
+.mat-expansion-panel-header-description {
+    display: flex;
+    flex-grow: 1;
+} */

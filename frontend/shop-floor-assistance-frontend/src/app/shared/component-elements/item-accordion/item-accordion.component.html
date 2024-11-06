@@ -8,10 +8,13 @@
         <!-- [ngClass]="{'selected-element': selectedTab === $index}"> -->
         <mat-expansion-panel-header [ngClass]="{'selected-element': selectedItem === $index}" (click)="onAccordionClick($index)">
         <!-- <mat-expansion-panel-header (click)="onAccordionClick($index)"> -->
-            <mat-panel-title>
+            <mat-panel-title class="flex flex-row justify-between w-1/2">
                 <!-- <ng-container *ngIf="!workFlowStates[$index].editMode"> -->
-                <ng-container>
-                    {{ item.name }}
+                <ng-container >
+                    <p>{{ item.name }}</p>
+                    </ng-container>
+                    <ng-container>
+                    <p class="">Time required (minutes): {{ item.timeRequired }} </p>
                 </ng-container>
                 <!-- <ng-container *ngIf="workFlowStates[$index].editMode">
                     <input class="edit-field" [(ngModel)]="workFlowStates[$index].updatedTitle" [value]="workflow.name">
@@ -36,6 +39,7 @@
         </mat-expansion-panel-header>
         <div class="expansion-panel-content">
             <!-- <ng-container *ngIf="!workFlowStates[$index].editMode"> -->
+
             <ng-container>
                 <p>{{ item.longDescription }}</p>
             </ng-container>
