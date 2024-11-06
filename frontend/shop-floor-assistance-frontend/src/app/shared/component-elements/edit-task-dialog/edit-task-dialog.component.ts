@@ -42,8 +42,6 @@ export class EditTaskDialogComponent {
 
   onSave(): void {
     this.dialogRef.close(this.form.value);
-    // console.log(this.form.value['taskname'],this.form.value['description'])
-    // console.log(this.data.name, this.data.description);
   }
 
   onCancel(): void {

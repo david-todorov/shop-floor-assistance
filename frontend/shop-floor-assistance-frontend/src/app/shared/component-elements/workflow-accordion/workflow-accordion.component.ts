@@ -37,7 +37,9 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
 
   constructor(private cdr:ChangeDetectorRef){}
   
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.selectedWorkflowIndex= 0;
+  }
   
   ngAfterViewInit(): void {
     // this.cdr.detectChanges();
@@ -59,7 +61,7 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
           updatedDescription: workflow.description};
       });
       this.expandedPanels= new Array(this.order.workflows.length).fill(false);
-      this.selectedWorkflowIndex= 0;
+      // this.selectedWorkflowIndex= 0;
     }
   }
 
@@ -74,16 +76,28 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
   }
 
    deleteWorkflow(index: number, event: MouseEvent) {
+    console.log('workflow index is', this.selectedWorkflowIndex, 'index is', index)
     if (this.selectedWorkflowIndex !== null) {
       event.stopPropagation();
       this.order.workflows.splice(index, 1);
+      
       delete this.workFlowStates[index];
-      if (this.selectedWorkflowIndex === index) {//no elements left case
-        this.selectedWorkflowIndex = null;
-      } else if (this.selectedWorkflowIndex > index) {
-        this.selectedWorkflowIndex--;
+
+      if(this.order.workflows.length>0){
+        this.selectedWorkflowIndex=0;
+      }else{
+        this.selectedWorkflowIndex=null;
       }
+      // if (this.selectedWorkflowIndex === index) {//no elements left case
+      //   this.selectedWorkflowIndex = null;
+      //  } 
+      // else if (this.selectedWorkflowIndex != index) {
+      //   this.selectedWorkflowIndex--;
+      // }
       this.initializeWorkflowStates();
+      // if(this.selectedWorkflowIndex!=null){
+      //    this.selectedWorkflowIndex= 0;
+      // }
     }
     this.onSelect.emit(this.selectedWorkflowIndex);
     this.onOrderUpdate.emit(this.order);

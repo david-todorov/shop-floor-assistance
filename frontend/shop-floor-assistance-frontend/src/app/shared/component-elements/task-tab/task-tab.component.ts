@@ -57,11 +57,15 @@ export class TaskTabComponent implements OnInit, OnChanges{
   }
 
   getTasksForSelectedWorkflow() {
+    console.log('The selected workflow is:',this.workflowIndex)
+    console.log('The selected order is:',this.orderUpdated)
     if(this.workflowIndex !== null && 
       this.workflowIndex !== undefined &&  
       this.orderUpdated && 
       this.orderUpdated.workflows) {
       this.tasks=  this.orderUpdated.workflows[this.workflowIndex].tasks;
+    }else{
+      this.tasks=[];
     }
   }
 
@@ -69,17 +73,17 @@ export class TaskTabComponent implements OnInit, OnChanges{
 
   }
 
-  deleteWorkflow(index: any,event: MouseEvent) {
-    console.log('delete action', this.tasks[index].name )
+  deleteTasks(index: any,event: MouseEvent) {
+
     if (this.workflowIndex !== null) {
       event.stopPropagation();
       this.orderUpdated.workflows[this.workflowIndex].tasks.splice(index, 1);
-      delete this.taskFlowStates[index];
-      if (this.workflowIndex === index) {//no elements left case
-        this.workflowIndex = null;
-      } else if (this.workflowIndex > index) {
-        this.workflowIndex--;
-      }
+// delete this.taskFlowStates[index];
+// if (this.workflowIndex === index) {//no elements left case
+//   this.workflowIndex = null;
+// } else if (this.workflowIndex > index) {
+//   this.workflowIndex--;
+// }
       // this.initializeWorkflowStates();
     }
     // this.onSelect.emit(this.workflowIndex);
@@ -87,10 +91,19 @@ export class TaskTabComponent implements OnInit, OnChanges{
   }
 
   editTask(task: taskTO) {
-        const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      const dialogRef = this.dialog.open(EditTaskDialogComponent, {
       width: '750px',
       data: { ...task },
       panelClass: 'custom-dialog-container' 
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && this.workflowIndex!=null && this.selectedTaskIndex!=null) {
+        console.log(result)
+        this.orderUpdated.workflows[this.workflowIndex].tasks[this.selectedTaskIndex].name= result.taskname;
+        this.orderUpdated.workflows[this.workflowIndex].tasks[this.selectedTaskIndex].description= result.description;
+      }
+      this.orderUpdateFromTasks.emit(this.orderUpdated);
     });
 
   }

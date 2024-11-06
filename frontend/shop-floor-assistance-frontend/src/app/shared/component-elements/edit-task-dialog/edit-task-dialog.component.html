@@ -3,9 +3,6 @@
         <mat-icon>close</mat-icon>
     </button>
     <mat-dialog-content>
-        <!-- <header>
-            <h3 mat-dialog-title>Edit Task</h3>
-        </header> -->
         <div class="m-4 w-full">
             <form class="flex flex-col justify-start" [formGroup]="form">
                 <label for="taskname" class="font-bold text-primary">Task name</label>
@@ -19,9 +16,11 @@
     <mat-dialog-actions  class="m-4 flex flex-row gap-3 justify-end">
 
         <app-button (click)="onSave()" 
-                    [label]="saveBtnLabel"></app-button>
+                    [label]="saveBtnLabel">
+        </app-button>
         <app-button (click)="onCancel()" 
-                    [label]="cancelBtnLabel"></app-button>
+                    [label]="cancelBtnLabel">
+        </app-button>
             
     </mat-dialog-actions>
 </div>
