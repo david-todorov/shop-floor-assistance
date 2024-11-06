@@ -9,13 +9,19 @@
                     <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode() "> <!-- && !workFlowStates[$index].editMode -->
                         <mat-expansion-panel-header (click)="!isAnyWorkflowInEditMode() && selectWorkflow($index)" [ngClass]="{'selected-element': selectedWorkflowIndex === $index}">
                             <mat-panel-title>
-                                <ng-container *ngIf="!workFlowStates[$index].editMode">
+                                @if(!workFlowStates[$index].editMode){
+                                    {{ workflow.name }}
+                                }@else{
+                                    <input class="edit-field" [(ngModel)]="workFlowStates[$index].updatedTitle" [value]="workflow.name">
+                                }
+                                <!-- <ng-container *ngIf="!workFlowStates[$index].editMode">
                                     {{ workflow.name }}
                                 </ng-container>
                                 <ng-container *ngIf="workFlowStates[$index].editMode">
                                     <input class="edit-field" [(ngModel)]="workFlowStates[$index].updatedTitle" [value]="workflow.name">
-                                </ng-container>
+                                </ng-container> -->
                             </mat-panel-title>
+
                             <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
                                 <div class="whitespace-nowrap">
                                     <button mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="selectedWorkflowIndex !== $index">
@@ -32,13 +38,20 @@
                                 </div>
                             </mat-panel-description>
                         </mat-expansion-panel-header>
+
                         <div class="expansion-panel-content">
-                            <ng-container *ngIf="!workFlowStates[$index].editMode">
+                            @if(!workFlowStates[$index].editMode){
+                                <p>{{ workflow.description }}</p>
+                            }@else {
+                                <textarea class="edit-textarea" [(ngModel)]="workFlowStates[$index].updatedDescription" 
+                                [value]="workflow.description"></textarea>
+                            }
+                            <!-- <ng-container *ngIf="!workFlowStates[$index].editMode">
                                 <p>{{ workflow.description }}</p>
                             </ng-container>
                             <ng-container *ngIf="workFlowStates[$index].editMode">
                                 <textarea class="edit-textarea" [(ngModel)]="workFlowStates[$index].updatedDescription" [value]="workflow.description"></textarea>
-                            </ng-container>
+                            </ng-container> -->
                         </div>
                     </mat-expansion-panel>
                 }
