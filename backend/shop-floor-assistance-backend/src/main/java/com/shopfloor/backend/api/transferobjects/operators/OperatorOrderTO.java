@@ -3,6 +3,7 @@ package com.shopfloor.backend.api.transferobjects.operators;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,11 +29,18 @@ public class OperatorOrderTO {
     @Valid
     private List<@NotNull(message = "Workflow cannot be null") OperatorWorkflowTO> workflows;
 
+    private OperatorProductTO productBefore;
+
     @NotNull(message = "Product cannot be null")
-    private OperatorProductTO product;
+    private OperatorProductTO productAfter;
+
+    @NotNull(message = "Equipment list cannot be null")
+    @Size(min = 1, message = "Equipment list cannot be empty")
+    private List<@NotNull(message = "Equipment cannot be null") OperatorEquipmentTO> equipment;
 
     public OperatorOrderTO() {
         this.workflows = new ArrayList<OperatorWorkflowTO>();
+        this.equipment = new ArrayList<OperatorEquipmentTO>();
     }
 
 }

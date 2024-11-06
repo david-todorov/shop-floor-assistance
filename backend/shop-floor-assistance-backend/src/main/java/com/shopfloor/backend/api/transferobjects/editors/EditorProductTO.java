@@ -1,7 +1,6 @@
 package com.shopfloor.backend.api.transferobjects.editors;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,10 +40,12 @@ public class EditorProductTO {
     private Date createdAt;
     private Date updatedAt;
 
-    @NotNull(message = "Orders list cannot be null")
-    private List<EditorOrderTO> orders;
+    private List<EditorOrderTO> ordersAfter;
+
+    private List<EditorOrderTO> ordersBefore;
 
     public EditorProductTO() {
-        this.orders = new ArrayList<EditorOrderTO>();
+        this.ordersAfter = new ArrayList<EditorOrderTO>();
+        this.ordersBefore = new ArrayList<EditorOrderTO>();
     }
 }

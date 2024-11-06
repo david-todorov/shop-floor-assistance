@@ -15,13 +15,12 @@ public interface ProductRepository extends JpaRepository<ProductDBO, Long> {
     boolean existsByProductNumberAndIdNot(String productNumber, Long id);
 
     @Query("SELECT p "
-            +
-            "FROM ProductDBO p "
-            +
-            "JOIN p.orders o "
-            +
-            "GROUP BY p "
-            +
-            "ORDER BY COUNT(o) DESC")
+            + "FROM ProductDBO p "
+            + "JOIN p.ordersAsAfterProduct o "
+            + "GROUP BY p "
+            + "ORDER BY COUNT(o) DESC")
     List<ProductDBO> findTopReferencedProducts(Pageable pageable);
+
+    Optional<ProductDBO> findById(Long productId);
+
 }

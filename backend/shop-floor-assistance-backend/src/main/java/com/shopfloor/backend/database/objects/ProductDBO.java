@@ -59,10 +59,26 @@ public class ProductDBO {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<OrderDBO> orders;
+    @OneToMany(mappedBy = "beforeProduct", fetch = FetchType.EAGER)
+    private List<OrderDBO> ordersAsBeforeProduct;
+
+    @OneToMany(mappedBy = "afterProduct", fetch = FetchType.EAGER)
+    private List<OrderDBO> ordersAsAfterProduct;
 
     public ProductDBO() {
-        this.orders = new ArrayList<OrderDBO>();
+        this.ordersAsBeforeProduct = new ArrayList<OrderDBO>();
+        this.ordersAsAfterProduct = new ArrayList<OrderDBO>();
     }
+
+    public void clearOrderReferences() {
+        // Clear associations in ordersAsBeforeProduct
+        for (OrderDBO order : new ArrayList<>(ordersAsBeforeProduct)) {
+            order.clearBeforeProduct();
+        }
+        // Clear associations in ordersAsAfterProduct
+        for (OrderDBO order : new ArrayList<>(ordersAsAfterProduct)) {
+            order.clearAfterProduct();
+        }
+    }
+
 }

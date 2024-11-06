@@ -84,7 +84,7 @@ public class OrderHelper {
         assertEquals(expected.getUpdatedBy(), actual.getUpdatedBy());
 
         //Compare the product
-        assertEditorProductsEqual(expected.getProduct(), actual.getProduct());
+        assertEditorProductsEqual(expected.getProductAfter(), actual.getProductAfter());
 
         //Compare the equipment
         assertEquals(expected.getEquipment().size(), actual.getEquipment().size());

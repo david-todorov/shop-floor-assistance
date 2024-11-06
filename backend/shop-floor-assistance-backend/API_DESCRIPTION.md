@@ -16,6 +16,7 @@
 
 ## User Login Endpoint
 
+#STABLE
 `POST /auth/login`
 
 ### Description
@@ -87,23 +88,27 @@ curl -X POST http:/localhost/auth/login \
   ```
 ## Editors Endpoints
 
+#STABLE
 #### `GET /editor/orders`
 - **Description**: Returns a list of all available orders in the system.
 - **Response**: List of orders as TOs from the database.
 ---
 
+#STABLE
 #### `POST /editor/orders`
 - **Description**: Creates and saves a new order, returning the saved order as a Transfer Object (TO).
 - **Throws**:
   - Exception if the provided order number is `null`.
   - Exception if an order with the same `order number` already exists.
   - Exception if any name property from Order level to Item level is `null` or `empty`
-  - Excpetion if the provided `product` is `null` or does `not exists`
-  - Exception if the provided `equipment` list is `null` or `empty`
+  - Exception if the provided `product after` is `null` or does `not exists`
+  - Exception if the provided `product before`  does `not exists` but can be null
+  - Exception if the provided `equipment` list is `null` but can be empty
   - Exception if any of the `equipment` list elements are `null` or does `not exists`
 - **Response**: The saved order as TO
 ---
 
+#STABLE
 #### `PUT /editor/orders/{id}`
 - **Description**: Updates an existing order.
 - **Parameters**:
@@ -113,12 +118,14 @@ curl -X POST http:/localhost/auth/login \
   - Exception if the provided ID does not exist in the database.
   - Exception if another order has the same `order number`, as it cannot be renamed.
   - Exception if any name property from Order level to Item level is `null` or `empty`
-  - Excpetion if the provided `product` is `null` or does `not exists`
-  - Exception if the provided `equipment` list is `null` or `empty`
+  - Exception if the provided `product after` is `null` or does `not exists`
+  - Exception if the provided `product before`  does `not exists` but can be null
+  - Exception if the provided `equipment` list is `null` but can be empty
   - Exception if any of the `equipment` list elements are `null` or does `not exists`
 - **Response**: The updated order as TO
 ---
 
+#STABLE
 #### `DELETE /editor/orders/{id}`
 - **Description**: Deletes an existing order identified by the specified `id`.
 - **Parameters**:
@@ -129,6 +136,7 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: A confirmation message indicating successful deletion or an error message if the deletion fails.
 ---
 
+#STABLE
 #### `GET /editor/orders/{id}`
 - **Description**: Retrieves an existing order identified by the specified `id`.
 - **Parameters**:
@@ -139,19 +147,22 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: The requested  order as TO
 ---
 
+#STABLE
 #### `GET /editor/products`
 - **Description**: Returns a list of all available products in the system.
 - **Response**: List of products as TOs from the database.
 
+#STABLE
 #### `POST /editor/products`
 - **Description**: Creates and saves a new product, returning the saved product as a Transfer Object (TO).
 - **Throws**:
   - Exception if the provided order number is `null`.
-  - Exception if an product with the same `product number` already exists.
+  - Exception if a product with the same `product number` already exists.
   - Exception if any mandatory property  is `null` or `empty`
 - **Response**: The saved order as TO
 ---
 
+#STABLE
 #### `PUT /editor/products/{id}`
 - **Description**: Updates an existing product.
 - **Parameters**:
@@ -164,6 +175,7 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: The updated product as TO
 ---
 
+#STABLE
 #### `DELETE /editor/products/{id}`
 - **Description**: Deletes an existing product identified by the specified `id`.
 - **Parameters**:
@@ -174,6 +186,7 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: A confirmation message indicating successful deletion or an error message if the deletion fails.
 ---
 
+#STABLE
 #### `GET /editor/products/{id}`
 - **Description**: Retrieves an existing product identified by the specified `id`.
 - **Parameters**:
@@ -184,19 +197,22 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: The requested  product as TO
 ---
 
+#STABLE
 #### `GET /editor/equipment`
 - **Description**: Returns a list of all available equipment in the system.
 - **Response**: List of equipment as TOs from the database.
 
+#STABLE
 #### `POST /editor/equipment`
 - **Description**: Creates and saves a new equipment, returning the saved equipment as a Transfer Object (TO).
 - **Throws**:
   - Exception if the provided equipment number is `null`.
-  - Exception if an equipment with the same `equipment number` already exists.
+  - Exception if equipment with the same `equipment number` already exists.
   - Exception if any mandatory property  is `null` or `empty`
 - **Response**: The saved order as TO
 ---
 
+#STABLE
 #### `PUT /editor/equipment/{id}`
 - **Description**: Updates an existing equipment.
 - **Parameters**:
@@ -209,8 +225,9 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: The updated equipment as TO
 ---
 
+#STABLE
 #### `DELETE /editor/equipment/{id}`
-- **Description**: Deletes an existing equipment identified by the specified `id`.
+- **Description**: Deletes existing equipment identified by the specified `id`.
 - **Parameters**:
   - `{id}`: The unique identifier of the equipment to be deleted.
 - **Throws**:
@@ -219,8 +236,9 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: A confirmation message indicating successful deletion or an error message if the deletion fails.
 ---
 
+#STABLE
 #### `GET /editor/equipment/{id}`
-- **Description**: Retrieves an existing equipment identified by the specified `id`.
+- **Description**: Retrieves existing equipment identified by the specified `id`.
 - **Parameters**:
   - `{id}`: The unique identifier of the equipment to be retrieved.
 - **Throws**:
@@ -229,11 +247,15 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: The requested  equipment as TO
 ---
 
+
 ###Suggestions
+#STABLE, BUT WITHOUT ORDERS IS USELESS
 #### `GET /editor/equipment/suggestions`
 - **Description**: Retrieves top `n` referenced equipment.
 - **Response**: List of `equipment`TO
 ---
+
+#STABLE, BUT WITHOUT ORDERS IS USELESS
 #### `GET /editor/products/suggestions`
 - **Description**: Retrieves top `n` referenced products.
 - **Response**: List of `products` TO
@@ -241,7 +263,6 @@ curl -X POST http:/localhost/auth/login \
 
 
 ## Operator Endpoints
-
 #### `GET /operator/orders`
 - **Description**: Returns a list of all available orders in the system
 - **Response**: List of orders as TOs from the database.

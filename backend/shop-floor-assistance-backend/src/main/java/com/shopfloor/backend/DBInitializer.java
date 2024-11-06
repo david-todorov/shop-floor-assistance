@@ -42,26 +42,35 @@ public class DBInitializer {
     @PostConstruct
     public void init() {
 
-        //Creating two users without roles
-        //The password is encoded with BCryptPasswordEncoder
-        UserDBO operator = new UserDBO("operator", passwordEncoder.encode("operator"));
-        UserDBO editor = new UserDBO("editor", passwordEncoder.encode("editor"));
+        // Check if both roles already exist
+        if (roleRepository.existsByName(Role.OPERATOR) && roleRepository.existsByName(Role.EDITOR)) {
+            // If both roles exist, check if users already exist
+            if (userRepository.existsByUsername("operator") || userRepository.existsByUsername("editor")) {
+                return; // Exit if the users and roles already exist
+            }
+        } else {
+            // Create roles if they don't exist
+            RoleDBO operatorRole = new RoleDBO(Role.OPERATOR);
+            RoleDBO editorRole = new RoleDBO(Role.EDITOR);
 
-        //Creating two roles
-        RoleDBO operatorRole = new RoleDBO(Role.OPERATOR);
-        RoleDBO editorRole = new RoleDBO(Role.EDITOR);
+            roleRepository.save(operatorRole);
+            roleRepository.save(editorRole);
+        }
 
-        //Associating users with roles
-        operator.getRoles().add(operatorRole);
-        editor.getRoles().add(editorRole);
-        editor.getRoles().add(operatorRole);
+        // Check if users already exist
+        if (!userRepository.existsByUsername("operator")) {
+            // Creating the operator user
+            UserDBO operator = new UserDBO("operator", passwordEncoder.encode("operator"));
+            operator.getRoles().add(roleRepository.findByName(Role.OPERATOR)); // Assign role
+            userRepository.save(operator);
+        }
 
-        //Saving first the roles
-        roleRepository.save(operatorRole);
-        roleRepository.save(editorRole);
-
-        //Saving secondly the users
-        userRepository.save(operator);
-        userRepository.save(editor);
+        if (!userRepository.existsByUsername("editor")) {
+            // Creating the editor user
+            UserDBO editor = new UserDBO("editor", passwordEncoder.encode("editor"));
+            editor.getRoles().add(roleRepository.findByName(Role.EDITOR)); // Assign role
+            editor.getRoles().add(roleRepository.findByName(Role.OPERATOR)); // Also assign operator role
+            userRepository.save(editor);
+        }
     }
 }
