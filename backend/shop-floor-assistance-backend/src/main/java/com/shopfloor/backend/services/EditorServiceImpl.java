@@ -116,8 +116,10 @@ public class EditorServiceImpl implements EditorService {
     @Transactional
     @Override
     public void deleteEquipment(Long equipmentId) {
-        // Find the equipment to delete
         EquipmentDBO equipmentDBO = this.equipmentRepository.findById(equipmentId).orElseThrow(EquipmentNotFoundException::new);
+
+        // Clear order references to the equipment
+        equipmentDBO.clearOrderReferences();
 
         this.equipmentRepository.delete(equipmentDBO);
     }
@@ -134,7 +136,10 @@ public class EditorServiceImpl implements EditorService {
     public void deleteProduct(Long productId) {
         ProductDBO toDeleteProduct = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 
-        this.productRepository.delete(toDeleteProduct); // Deletes associated orders automatically
+        // Clear order references to the product
+        toDeleteProduct.clearOrderReferences();
+
+        this.productRepository.delete(toDeleteProduct);
     }
 
     @Override
@@ -189,7 +194,7 @@ public class EditorServiceImpl implements EditorService {
             throw new DuplicatedOrderException();
         }
 
-        // Retrieve the "before" product if provided in newEditorOrderTO
+        // Retrieve the "before" product if provided
         ProductDBO productBefore = null;
         if (newEditorOrderTO.getProductBefore() != null) {
             productBefore = this.productRepository.findById(newEditorOrderTO.getProductBefore().getId())
@@ -204,14 +209,14 @@ public class EditorServiceImpl implements EditorService {
         OrderDBO newOrderDBO = this.dboInitializerMapper.toOrderDBO(newEditorOrderTO, creatorId);
 
         // Use helper methods to set products in OrderDBO and maintain bidirectional relationships
-        newOrderDBO.setBeforeProduct(productBefore);  // Nullable
-        newOrderDBO.setAfterProduct(productAfter);    // Required
+        newOrderDBO.setBeforeProduct(productBefore);
+        newOrderDBO.setAfterProduct(productAfter);
 
         // Ensure each equipment exists and add it to the order using the helper method
         for (EditorEquipmentTO equipmentTO : newEditorOrderTO.getEquipment()) {
             EquipmentDBO equipment = this.equipmentRepository.findById(equipmentTO.getId())
                     .orElseThrow(EquipmentNotFoundException::new);
-            newOrderDBO.addEquipment(equipment); // Use helper method to add equipment and maintain consistency
+            newOrderDBO.addEquipment(equipment);
         }
 
         // Save the new order to the database
@@ -235,28 +240,22 @@ public class EditorServiceImpl implements EditorService {
             throw new DuplicatedOrderException();
         }
 
-        // Initialize product references to null
-        ProductDBO productBefore = null;
-        ProductDBO productAfter = null;
-
-        // Retrieve and validate the required productAfter
-        productAfter = this.getProductIfExistsById(updatedEditorOrderTO.getProductAfter().getId());
-        if (productAfter == null) {
-            throw new ProductNotFoundException();
-        }
 
         // Retrieve and validate the optional productBefore
+        ProductDBO productBefore = null;
         if (updatedEditorOrderTO.getProductBefore() != null) {
-            productBefore = this.getProductIfExistsById(updatedEditorOrderTO.getProductBefore().getId());
-            if (productBefore == null) {
-                throw new ProductNotFoundException();
-            }
+            productBefore = this.productRepository.findById(updatedEditorOrderTO.getProductBefore().getId())
+                    .orElseThrow(ProductNotFoundException::new);
         }
 
-        // Update beforeProduct association using the helper method
-        existingOrderDBO.setBeforeProduct(productBefore);
+        // Retrieve and validate the required productAfter
+        ProductDBO productAfter = this.productRepository.findById(updatedEditorOrderTO.getProductAfter().getId())
+                .orElseThrow(ProductNotFoundException::new);
 
+
+        // Update beforeProduct association using the helper method
         // Update afterProduct association using the helper method
+        existingOrderDBO.setBeforeProduct(productBefore);
         existingOrderDBO.setAfterProduct(productAfter);
 
         // Get the new equipment list
@@ -272,7 +271,6 @@ public class EditorServiceImpl implements EditorService {
         for (EquipmentDBO newEquipment : newEquipmentList) {
             existingOrderDBO.addEquipment(newEquipment); // Use the helper method to maintain bidirectional consistency
         }
-
 
         // Save the updated order
         existingOrderDBO = this.dboUpdaterMapper.copyOrderDboFrom(existingOrderDBO, updatedEditorOrderTO, updaterId);
@@ -297,11 +295,11 @@ public class EditorServiceImpl implements EditorService {
         OrderDBO existingOrderDBO = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
 
         // Use helper methods to maintain bidirectional relationships
-        existingOrderDBO.clearBeforeProduct(); // Remove reference from productBefore
-        existingOrderDBO.clearAfterProduct();  // Remove reference from productAfter
+        existingOrderDBO.clearBeforeProduct();
+        existingOrderDBO.clearAfterProduct();
 
         // Clear equipment references using the helper method
-        existingOrderDBO.clearEquipment(); // This will remove all equipment and maintain bidirectional consistency
+        existingOrderDBO.clearEquipment();
 
         // Finally, delete the order itself from the repository
         orderRepository.delete(existingOrderDBO);
@@ -313,10 +311,6 @@ public class EditorServiceImpl implements EditorService {
 
     private ProductDBO getProductIfExists(String productNumber) {
         return this.productRepository.findByProductNumber(productNumber).orElse(null);
-    }
-
-    private ProductDBO getProductIfExistsById(Long productId) {
-        return this.productRepository.findById(productId).orElse(null);
     }
 
     private EquipmentDBO getEquipmentIfExists(String equipmentNumber) {

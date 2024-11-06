@@ -52,4 +52,11 @@ public class EquipmentDBO {
     public EquipmentDBO() {
         this.orders = new ArrayList<OrderDBO>();
     }
+
+    public void clearOrderReferences() {
+        // Clear associations in ordersAsBeforeProduct
+        for (OrderDBO order : new ArrayList<>(orders)) {
+            order.removeEquipment(this);
+        }
+    }
 }

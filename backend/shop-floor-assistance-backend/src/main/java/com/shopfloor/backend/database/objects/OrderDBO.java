@@ -46,7 +46,7 @@ public class OrderDBO {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "order_id")
-    private List<WorkflowDBO> workflows = new ArrayList<>();
+    private List<WorkflowDBO> workflows;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
@@ -54,15 +54,20 @@ public class OrderDBO {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "equipment_id")
     )
-    private List<EquipmentDBO> equipment = new ArrayList<>();
+    private List<EquipmentDBO> equipment;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "before_product_id")
     private ProductDBO beforeProduct;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "after_product_id", nullable = false)
+    @JoinColumn(name = "after_product_id")
     private ProductDBO afterProduct;
+
+    public OrderDBO() {
+        this.equipment = new ArrayList<EquipmentDBO>();
+        this.workflows = new ArrayList<WorkflowDBO>();
+    }
 
     public void setBeforeProduct(ProductDBO newBeforeProduct) {
         // If there is an existing beforeProduct, remove the association

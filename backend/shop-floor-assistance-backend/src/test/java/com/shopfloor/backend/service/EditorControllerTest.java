@@ -45,10 +45,10 @@ public class EditorControllerTest {
 
     @AfterEach
     public void tearDown() {
-             
+
+        orderRepository.deleteAll();
         productRepository.deleteAll();
         equipmentRepository.deleteAll();
-        orderRepository.deleteAll();
     }
 
     /**

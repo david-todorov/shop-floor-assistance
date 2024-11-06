@@ -39,12 +39,19 @@ public class EditorTOMapper {
     public EditorProductTO toProductTO(ProductDBO productDBO) {
 
         EditorProductTO editorProductTO = mapBasicProductProperties(productDBO);
-        List<EditorOrderTO> editorOrderTOs = new ArrayList<>();
 
-        productDBO.getOrdersAsAfterProduct().forEach(order -> {
-            editorOrderTOs.add(mapBasicOrderProperties(order));
+        List<EditorOrderTO> editorOrderBefore = new ArrayList<>();
+        productDBO.getOrdersAsBeforeProduct().forEach(order -> {
+            editorOrderBefore.add(mapBasicOrderProperties(order));
         });
-        editorProductTO.setOrders(editorOrderTOs);
+        editorProductTO.setOrdersBefore(editorOrderBefore);
+
+        List<EditorOrderTO> editorOrderAfter = new ArrayList<>();
+        productDBO.getOrdersAsAfterProduct().forEach(order -> {
+            editorOrderAfter.add(mapBasicOrderProperties(order));
+        });
+        editorProductTO.setOrdersAfter(editorOrderAfter);
+
 
         return editorProductTO;
     }
