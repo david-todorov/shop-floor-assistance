@@ -1,3 +1,50 @@
-<p>THE SELECTED TAB IS {{ selectedTab }}</p>
-<p>THE SELECTED TAB IS {{ selectedTasks[selectedTab??-1].name }}</p>
-<p>THE SELECTED TAB IS {{ selectedTasks[selectedTab??-1].items[0].name }}</p>
+@if(items && items.length>0){
+
+<mat-accordion>
+    @for(item of items; track $index){
+    <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode() ">
+        <!-- && !workFlowStates[$index].editMode -->
+        <!-- <mat-expansion-panel-header (click)="!isAnyWorkflowInEditMode() && selectWorkflow($index)" -->
+        <!-- [ngClass]="{'selected-element': selectedTab === $index}"> -->
+        <mat-expansion-panel-header
+            [ngClass]="{'selected-element': selectedTab === $index}">
+            <mat-panel-title>
+                <!-- <ng-container *ngIf="!workFlowStates[$index].editMode"> -->
+                <ng-container>
+                    {{ item.name }}
+                </ng-container>
+                <!-- <ng-container *ngIf="workFlowStates[$index].editMode">
+                    <input class="edit-field" [(ngModel)]="workFlowStates[$index].updatedTitle" [value]="workflow.name">
+                </ng-container> -->
+            </mat-panel-title>
+            <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
+                <div class="whitespace-nowrap">
+                    <button mat-icon-button (click)="toggleEditMode($index, $event)">
+                        <!-- <mat-icon>{{ workFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon> -->
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="deleteWorkflow($index,$event)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    @if(doneAll){
+                    <button class="done-all" mat-icon-button>
+                        <mat-icon>done_all</mat-icon>
+                    </button>
+                    }
+                </div>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="expansion-panel-content">
+            <!-- <ng-container *ngIf="!workFlowStates[$index].editMode"> -->
+            <ng-container>
+                <p>{{ item.longDescription }}</p>
+            </ng-container>
+            <!-- <ng-container *ngIf="workFlowStates[$index].editMode">
+                <textarea class="edit-textarea" [(ngModel)]="workFlowStates[$index].updatedDescription"
+                    [value]="workflow.description"></textarea>
+            </ng-container> -->
+        </div>
+    </mat-expansion-panel>
+    }
+</mat-accordion>
+}

@@ -34,14 +34,16 @@ export class TaskTabComponent implements OnInit, OnChanges{
   @Output() orderUpdateFromTasks = new EventEmitter<orderTO>();
   // @Output() onSelect = new EventEmitter<number | null>();
 
-  selectedTaskIndex: number | null = 0;
+  selectedTaskIndex: number  = 0;
   orderExists: boolean= false;
 
   taskFlowStates: workflowStates= {};
 
   tasks!: taskTO[];
 
-  constructor(public dialog: MatDialog){}
+  constructor(public dialog: MatDialog,
+              private cdr:ChangeDetectorRef
+  ){}
   
   ngOnInit(): void {
     // this.initializeWorkflowStates();
@@ -58,13 +60,15 @@ export class TaskTabComponent implements OnInit, OnChanges{
   }
 
   getTasksForSelectedWorkflow() {
-    console.log('The selected workflow is:',this.workflowIndex)
-    console.log('The selected order is:',this.orderUpdated)
+
     if(this.workflowIndex !== null && 
       this.workflowIndex !== undefined &&  
       this.orderUpdated && 
       this.orderUpdated.workflows) {
-      this.tasks=  this.orderUpdated.workflows[this.workflowIndex].tasks;
+      // this.tasks=  this.orderUpdated.workflows[this.workflowIndex].tasks;
+      this.tasks = [...this.orderUpdated.workflows[this.workflowIndex].tasks]; // Create a new array reference
+          console.log('The selected index is:',this.selectedTaskIndex)
+    console.log('The selected tasks are is:',this.tasks)
     }else{
       this.tasks=[];
     }
@@ -75,7 +79,6 @@ export class TaskTabComponent implements OnInit, OnChanges{
   }
 
   deleteTasks(index: any,event: MouseEvent) {
-
     if (this.workflowIndex !== null) {
       event.stopPropagation();
       this.orderUpdated.workflows[this.workflowIndex].tasks.splice(index, 1);
@@ -86,9 +89,18 @@ export class TaskTabComponent implements OnInit, OnChanges{
 //   this.workflowIndex--;
 // }
       // this.initializeWorkflowStates();
-    }
+    
     // this.onSelect.emit(this.workflowIndex);
+//     if(index>0){
+// this.selectedTaskIndex= index-1;
+    // }
+    console.log('index before', this.selectedTaskIndex)
+    if(index<0) this.selectedTaskIndex= -1;
+    else if(index>0 && index< this.tasks.length) this.selectedTaskIndex= index-1;
+ console.log('index after', this.selectedTaskIndex)
+    this.tasks = [...this.orderUpdated.workflows[this.workflowIndex].tasks]; // Create a new array reference
     this.orderUpdateFromTasks.emit(this.orderUpdated);
+    }
   }
 
   editTask(task: taskTO) {
