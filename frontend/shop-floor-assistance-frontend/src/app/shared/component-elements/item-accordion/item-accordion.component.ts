@@ -49,8 +49,10 @@ isAnyWorkflowInEditMode(): void {
   ngOnChanges(changes: SimpleChanges): void {
     console.log('in item-accord-change')
     if(changes['selectedTasks'] || changes['selectedTab']){
-      if(this.selectedTab != null && this.selectedTab >=0)
+      if(this.selectedTab != null && this.selectedTab >=0){
+         console.log('in item-accord-change-selected tab', this.selectedTab);
         this.items= this.selectedTasks[this.selectedTab].items;
+      }
     }
   }
 

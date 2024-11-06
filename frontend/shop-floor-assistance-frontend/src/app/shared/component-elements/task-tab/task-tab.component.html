@@ -5,10 +5,10 @@
                 <ng-template mat-tab-label>
                     <span class="mr-10">{{ task.name }}</span>
                     <div class="whitespace-nowrap flex flex-row gap-x-3 justify-between ">
-                        <button mat-icon-button (click)="editTask(task)" [disabled]="selectedTaskIndex !== $index">
+                        <button mat-icon-button (click)="editTask(task)" [hidden]="selectedTaskIndex !== $index">
                             <mat-icon>edit</mat-icon>
                         </button>
-                        <button mat-icon-button (click)="deleteTasks($index,$event)" [disabled]="selectedTaskIndex !== $index">
+                        <button mat-icon-button (click)="deleteTasks($index,$event)" [hidden]="selectedTaskIndex !== $index">
                             <mat-icon>delete</mat-icon>
                         </button>
                         @if(doneAll){

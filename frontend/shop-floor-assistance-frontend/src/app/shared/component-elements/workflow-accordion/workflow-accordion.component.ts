@@ -88,6 +88,11 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
       }else{
         this.selectedWorkflowIndex=null;
       }
+
+    console.log('workflowindex before', this.selectedWorkflowIndex)
+    if(index<0) this.selectedWorkflowIndex= -1;
+    else if(index>0 && index< this.order.workflows.length) this.selectedWorkflowIndex= index-1;
+     console.log('workflowindex after', this.selectedWorkflowIndex)
       // if (this.selectedWorkflowIndex === index) {//no elements left case
       //   this.selectedWorkflowIndex = null;
       //  } 

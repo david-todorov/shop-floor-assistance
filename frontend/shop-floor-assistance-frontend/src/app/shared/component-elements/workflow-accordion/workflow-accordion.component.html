@@ -18,10 +18,10 @@
                             </mat-panel-title>
                             <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
                                 <div class="whitespace-nowrap">
-                                    <button mat-icon-button (click)="toggleEditMode($index, $event)">
+                                    <button mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="selectedWorkflowIndex !== $index">
                                         <mat-icon>{{ workFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
                                     </button>
-                                    <button mat-icon-button (click)="deleteWorkflow($index,$event)" [disabled]="selectedWorkflowIndex !== $index">
+                                    <button mat-icon-button (click)="deleteWorkflow($index,$event)" [hidden]="selectedWorkflowIndex !== $index">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                     @if(doneAll){
