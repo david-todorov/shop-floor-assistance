@@ -4,6 +4,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { orderTO } from '../../../types/orderTO';
 
 import { CommonModule } from '@angular/common';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-task-tab',

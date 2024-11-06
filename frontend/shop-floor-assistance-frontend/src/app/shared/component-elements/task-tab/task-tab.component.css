@@ -1,6 +1,6 @@
 ::ng-deep .mat-mdc-tab-body{
     @apply border-l border-r border-b border-accent 
-    rounded-l-md
+    rounded-bl-lg rounded-br-lg 
     bg-blue-50 
     min-h-96
     !important;
@@ -12,4 +12,10 @@
     /* Apply a light blue background color */
 }
 
+::ng-deep .mat-mdc-tab.mdc-tab--active {
+    @apply bg-accent border rounded-tl-md rounded-tr-md;
+}
 
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+    @apply text-white !important;
+}
