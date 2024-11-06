@@ -5,7 +5,7 @@
                 <ng-template mat-tab-label>
                     <span class="mr-10">{{ task.name }}</span>
                     <div class="whitespace-nowrap flex flex-row gap-x-3 justify-between ">
-                        <button mat-icon-button>
+                        <button mat-icon-button (click)="editTask(task)">
                             <mat-icon>edit</mat-icon>
                         </button>
                         <button mat-icon-button (click)="deleteWorkflow($index,$event)">

@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { ThemePalette } from '@angular/material/core';
 import { workflowStates } from '../workflowUI-state';
 import { taskTO } from '../../../types/taskTO';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 
 @Component({
   selector: 'app-task-tab',
@@ -15,11 +17,14 @@ import { taskTO } from '../../../types/taskTO';
     MatIconModule,
     MatTabsModule,
     CommonModule,
+    MatDialogModule,
+    EditTaskDialogComponent
   ],
   templateUrl: './task-tab.component.html',
   styleUrl: './task-tab.component.css'
 })
 export class TaskTabComponent implements OnInit, OnChanges{
+
 
   @Input() workflowIndex!: number | null;
   @Input() orderUpdated!: orderTO;
@@ -35,7 +40,7 @@ export class TaskTabComponent implements OnInit, OnChanges{
 
   tasks!: taskTO[];
 
-  constructor(){}
+  constructor(public dialog: MatDialog){}
   
   ngOnInit(): void {
     // this.initializeWorkflowStates();
@@ -79,5 +84,14 @@ export class TaskTabComponent implements OnInit, OnChanges{
     }
     // this.onSelect.emit(this.workflowIndex);
     this.orderUpdateFromTasks.emit(this.orderUpdated);
+  }
+
+  editTask(task: taskTO) {
+        const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      width: '750px',
+      data: { ...task },
+      panelClass: 'custom-dialog-container' 
+    });
+
   }
 }
