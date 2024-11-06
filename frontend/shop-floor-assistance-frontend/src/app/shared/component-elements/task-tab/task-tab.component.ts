@@ -10,6 +10,7 @@ import { taskTO } from '../../../types/taskTO';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { ItemAccordionComponent } from '../item-accordion/item-accordion.component';
+import { itemTO } from '../../../types/itemTO';
 
 @Component({
   selector: 'app-task-tab',
@@ -124,5 +125,12 @@ export class TaskTabComponent implements OnInit, OnChanges{
   onTabChange(index: number): void {
     this.selectedTaskIndex = index;
     console.log('Selected tab index:', this.selectedTaskIndex);
+  }
+
+  updateItemsInOrder(event: itemTO[]){
+    if(this.workflowIndex!=null){
+      this.orderUpdated.workflows[this.workflowIndex].tasks[this.selectedTaskIndex].items= event;
+      this.orderUpdateFromTasks.emit(this.orderUpdated);
+    }
   }
 }

@@ -6,7 +6,7 @@
         <!-- && !workFlowStates[$index].editMode -->
         <!-- <mat-expansion-panel-header (click)="!isAnyWorkflowInEditMode() && selectWorkflow($index)" -->
         <!-- [ngClass]="{'selected-element': selectedTab === $index}"> -->
-        <mat-expansion-panel-header [ngClass]="{'selected-element': selectedItem === $index}" (click)="onAccordionClick($index)">
+        <mat-expansion-panel-header [ngClass]="{'selected-element': selectedItemIndex === $index}" (click)="onAccordionClick($index)">
         <!-- <mat-expansion-panel-header (click)="onAccordionClick($index)"> -->
             <mat-panel-title class="flex flex-row justify-between w-1/2">
                 <!-- <ng-container *ngIf="!workFlowStates[$index].editMode"> -->
@@ -26,7 +26,7 @@
                         <!-- <mat-icon>{{ workFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon> -->
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button (click)="deleteWorkflow($index,$event)">
+                    <button mat-icon-button (click)="deleteItems($index,$event)" [hidden]="selectedItemIndex !== $index">
                         <mat-icon>delete</mat-icon>
                     </button>
                     @if(doneAll){

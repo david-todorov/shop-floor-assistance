@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { itemTO } from '../../../types/itemTO';
 import { taskTO } from '../../../types/taskTO';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -23,9 +23,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 })
 export class ItemAccordionComponent implements OnChanges{
 
-deleteWorkflow(_t4: number,$event: MouseEvent) {
-// throw new Error('Method not implemented.');
-}
+
 toggleEditMode(_t4: number,$event: MouseEvent) {
 // throw new Error('Method not implemented.');
 }
@@ -40,24 +38,52 @@ isAnyWorkflowInEditMode(): void {
   @Input() selectedTasks!: taskTO[];
   @Input() selectedTab!: number | null;
 
+  @Output() updatedItemsFromTasks = new EventEmitter<itemTO[]>();
+ 
+
+
   expandedPanels: boolean[] = [];
   doneAll: boolean= true;
 
   items!:itemTO[];
-  selectedItem!: number | null;
+  selectedItemIndex!: number | null;
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('in item-accord-change')
     if(changes['selectedTasks'] || changes['selectedTab']){
       if(this.selectedTab != null && this.selectedTab >=0){
-         console.log('in item-accord-change-selected tab', this.selectedTab);
-        this.items= this.selectedTasks[this.selectedTab].items;
+        this.getItemsForSelectedTask();
       }
     }
   }
 
+
   onAccordionClick(index: number): void {
-    // console.log('Accordion element clicked:', index);
-    // this.selectedItem= index;
+    console.log('Accordion element clicked:', index);
+    this.selectedItemIndex= index;
+  }
+
+   getItemsForSelectedTask() {
+    if(this.selectedTab !== null && 
+      this.selectedTab !== undefined) {
+      this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
+    }else{
+      this.items=[];
+    }
+  }
+
+
+
+  deleteItems(index: number,event: MouseEvent) {
+    if(this.selectedTab!=null){
+      event.stopPropagation();
+      this.selectedTasks[this.selectedTab].items.splice(index, 1);
+      console.log('index before', this.selectedItemIndex)
+      if(index<0) this.selectedItemIndex= -1;
+      else if(index>0 && index< this.selectedTasks[this.selectedTab].items.length) this.selectedItemIndex= index-1;
+      
+      this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
+      this.updatedItemsFromTasks.emit(this.items);
+      console.log('in delete items', this.selectedTasks[this.selectedTab].items)
+    }
   }
 }

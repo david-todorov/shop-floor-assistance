@@ -24,6 +24,7 @@
                 </div>
                 <div class="m-4 p-2  overflow-hidden">
                     <app-item-accordion 
+                        (updatedItemsFromTasks)="updateItemsInOrder($event)" 
                         [selectedTab]="selectedTaskIndex"
                         [selectedTasks]="tasks">
                     </app-item-accordion>
