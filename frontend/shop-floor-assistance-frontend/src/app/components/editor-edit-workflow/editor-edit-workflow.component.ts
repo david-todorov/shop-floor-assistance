@@ -12,12 +12,11 @@ import { TaskTabComponent } from '../../shared/component-elements/task-tab/task-
   standalone: true,
   imports: [
     WorkflowAccordionComponent,
-  TaskTabComponent],
+    TaskTabComponent],
   templateUrl: './editor-edit-workflow.component.html',
   styleUrl: './editor-edit-workflow.component.css'
 })
 export class EditorEditWorkflowComponent {
-
 
   constructor(private backendCommunicationService:BackendCommunicationService,
     private route: ActivatedRoute,){
@@ -68,6 +67,7 @@ export class EditorEditWorkflowComponent {
 
   updateOrder(order: orderTO) {
     this.order= {...order};
+    console.log('updates order received at parent', this.order)
   }
 
   onSelect(selectedWorkflow: number | null) {

@@ -6,6 +6,7 @@ import { orderTO } from '../../../types/orderTO';
 import { CommonModule } from '@angular/common';
 import { ThemePalette } from '@angular/material/core';
 import { workflowStates } from '../workflowUI-state';
+import { taskTO } from '../../../types/taskTO';
 
 @Component({
   selector: 'app-task-tab',
@@ -19,53 +20,64 @@ import { workflowStates } from '../workflowUI-state';
   styleUrl: './task-tab.component.css'
 })
 export class TaskTabComponent implements OnInit, OnChanges{
-toggleEditMode(arg0: any,$event: MouseEvent) {
-throw new Error('Method not implemented.');
-}
-deleteWorkflow(arg0: any,$event: MouseEvent) {
-throw new Error('Method not implemented.');
-}
-
 
   @Input() workflowIndex!: number | null;
   @Input() orderUpdated!: orderTO;
   @Input() doneAll: boolean= true;
 
-  @Output() onOrderUpdate = new EventEmitter<orderTO>();
-  @Output() onSelect = new EventEmitter<number | null>();
+  @Output() orderUpdateFromTasks = new EventEmitter<orderTO>();
+  // @Output() onSelect = new EventEmitter<number | null>();
 
   selectedTaskIndex: number | null = 0;
   orderExists: boolean= false;
 
   taskFlowStates: workflowStates= {};
-$index: any;
+
+  tasks!: taskTO[];
 
   constructor(){}
   
   ngOnInit(): void {
-    this.initializeWorkflowStates();
+    // this.initializeWorkflowStates();
     if (this.workflowIndex === null || this.workflowIndex === undefined) {
       this.workflowIndex = 0;
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['orderUpdated']) {
-      this.initializeWorkflowStates();
+    if (changes['orderUpdated'] || changes['workflowIndex']) {
+      // this.initializeWorkflowStates();
+      this.getTasksForSelectedWorkflow();
     }
   }
 
   getTasksForSelectedWorkflow() {
-    if (this.workflowIndex !== null && this.workflowIndex !== undefined &&  this.orderUpdated && this.orderUpdated.workflows) {
-      return this.orderUpdated.workflows[this.workflowIndex].tasks;
+    if(this.workflowIndex !== null && 
+      this.workflowIndex !== undefined &&  
+      this.orderUpdated && 
+      this.orderUpdated.workflows) {
+      this.tasks=  this.orderUpdated.workflows[this.workflowIndex].tasks;
     }
-    return [];
   }
-
 
   initializeWorkflowStates() {
- 
+
   }
 
-
+  deleteWorkflow(index: any,event: MouseEvent) {
+    console.log('delete action', this.tasks[index].name )
+    if (this.workflowIndex !== null) {
+      event.stopPropagation();
+      this.orderUpdated.workflows[this.workflowIndex].tasks.splice(index, 1);
+      delete this.taskFlowStates[index];
+      if (this.workflowIndex === index) {//no elements left case
+        this.workflowIndex = null;
+      } else if (this.workflowIndex > index) {
+        this.workflowIndex--;
+      }
+      // this.initializeWorkflowStates();
+    }
+    // this.onSelect.emit(this.workflowIndex);
+    this.orderUpdateFromTasks.emit(this.orderUpdated);
+  }
 }

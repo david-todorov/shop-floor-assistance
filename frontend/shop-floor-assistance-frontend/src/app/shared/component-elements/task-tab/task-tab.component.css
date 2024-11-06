@@ -29,10 +29,6 @@
     @apply text-white !important;
 }
 
-.mat-mdc-icon-button {
-    @apply text-primary !important;
-}
-
 .done-all {
     @apply text-green-600  !important;
 }
