@@ -35,10 +35,10 @@ export class TaskTabComponent implements OnInit, OnChanges{
   @Output() orderUpdateFromTasks = new EventEmitter<orderTO>();
   // @Output() onSelect = new EventEmitter<number | null>();
 
-  selectedTaskIndex: number  = 0;
+  selectedTaskIndex: number | null = 0;
   orderExists: boolean= false;
 
-  taskFlowStates: workflowStates= {};
+  // taskFlowStates: workflowStates= {};
 
   tasks!: taskTO[];
 
@@ -80,27 +80,15 @@ export class TaskTabComponent implements OnInit, OnChanges{
   }
 
   deleteTasks(index: any,event: MouseEvent) {
-    if (this.workflowIndex !== null) {
+      if (this.workflowIndex !== null) {
       event.stopPropagation();
       this.orderUpdated.workflows[this.workflowIndex].tasks.splice(index, 1);
-// delete this.taskFlowStates[index];
-// if (this.workflowIndex === index) {//no elements left case
-//   this.workflowIndex = null;
-// } else if (this.workflowIndex > index) {
-//   this.workflowIndex--;
-// }
-      // this.initializeWorkflowStates();
-    
-    // this.onSelect.emit(this.workflowIndex);
-//     if(index>0){
-// this.selectedTaskIndex= index-1;
-    // }
-    console.log('index before', this.selectedTaskIndex)
-    if(index<0) this.selectedTaskIndex= -1;
-    else if(index>0 && index< this.tasks.length) this.selectedTaskIndex= index-1;
- console.log('index after', this.selectedTaskIndex)
-    this.tasks = [...this.orderUpdated.workflows[this.workflowIndex].tasks]; // Create a new array reference
-    this.orderUpdateFromTasks.emit(this.orderUpdated);
+      if(index>=this.orderUpdated.workflows[this.workflowIndex].tasks.length && this.selectedTaskIndex !=null){
+        this.selectedTaskIndex-=1;
+      }
+
+      this.tasks = [...this.orderUpdated.workflows[this.workflowIndex].tasks]; // Create a new array reference
+      this.orderUpdateFromTasks.emit(this.orderUpdated);
     }
   }
 
@@ -128,7 +116,7 @@ export class TaskTabComponent implements OnInit, OnChanges{
   }
 
   updateItemsInOrder(event: itemTO[]){
-    if(this.workflowIndex!=null){
+    if(this.workflowIndex!=null && this.selectedTaskIndex!=null){
       this.orderUpdated.workflows[this.workflowIndex].tasks[this.selectedTaskIndex].items= event;
       this.orderUpdateFromTasks.emit(this.orderUpdated);
     }

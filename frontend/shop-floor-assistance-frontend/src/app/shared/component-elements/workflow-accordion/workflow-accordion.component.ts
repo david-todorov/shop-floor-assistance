@@ -75,7 +75,7 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     this.onSelect.emit(this.selectedWorkflowIndex !== null ? this.selectedWorkflowIndex : undefined);
   }
 
-   deleteWorkflow(index: number, event: MouseEvent) {
+  deleteWorkflow(index: number, event: MouseEvent) {
     console.log('workflow index is', this.selectedWorkflowIndex, 'index is', index)
     if (this.selectedWorkflowIndex !== null) {
       event.stopPropagation();
@@ -89,20 +89,7 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
         this.selectedWorkflowIndex=null;
       }
 
-    console.log('workflowindex before', this.selectedWorkflowIndex)
-    if(index<0) this.selectedWorkflowIndex= -1;
-    else if(index>0 && index< this.order.workflows.length) this.selectedWorkflowIndex= index-1;
-     console.log('workflowindex after', this.selectedWorkflowIndex)
-      // if (this.selectedWorkflowIndex === index) {//no elements left case
-      //   this.selectedWorkflowIndex = null;
-      //  } 
-      // else if (this.selectedWorkflowIndex != index) {
-      //   this.selectedWorkflowIndex--;
-      // }
       this.initializeWorkflowStates();
-      // if(this.selectedWorkflowIndex!=null){
-      //    this.selectedWorkflowIndex= 0;
-      // }
     }
     this.onSelect.emit(this.selectedWorkflowIndex);
     this.onOrderUpdate.emit(this.order);

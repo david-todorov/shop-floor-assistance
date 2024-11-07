@@ -1,9 +1,6 @@
-<!-- accordion.component.html -->
 <div class="min-w-[300px] min-h-[200px]">
-
-     @if(orderExists){
+    @if(orderExists){
         @if(order.workflows.length>0){
-
             <mat-accordion>
                 @for(workflow of order.workflows; track $index){
                     <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode() "> <!-- && !workFlowStates[$index].editMode -->
@@ -14,12 +11,6 @@
                                 }@else{
                                     <input class="edit-field" [(ngModel)]="workFlowStates[$index].updatedTitle" [value]="workflow.name">
                                 }
-                                <!-- <ng-container *ngIf="!workFlowStates[$index].editMode">
-                                    {{ workflow.name }}
-                                </ng-container>
-                                <ng-container *ngIf="workFlowStates[$index].editMode">
-                                    <input class="edit-field" [(ngModel)]="workFlowStates[$index].updatedTitle" [value]="workflow.name">
-                                </ng-container> -->
                             </mat-panel-title>
 
                             <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
@@ -46,12 +37,6 @@
                                 <textarea class="edit-textarea" [(ngModel)]="workFlowStates[$index].updatedDescription" 
                                 [value]="workflow.description"></textarea>
                             }
-                            <!-- <ng-container *ngIf="!workFlowStates[$index].editMode">
-                                <p>{{ workflow.description }}</p>
-                            </ng-container>
-                            <ng-container *ngIf="workFlowStates[$index].editMode">
-                                <textarea class="edit-textarea" [(ngModel)]="workFlowStates[$index].updatedDescription" [value]="workflow.description"></textarea>
-                            </ng-container> -->
                         </div>
                     </mat-expansion-panel>
                 }
@@ -59,7 +44,7 @@
         }@else {
             <h1 class="font-bold text-red-600 text-lg">There are no workflows in the specified order!</h1>
         }
-     }@else {
-         <h1>The specified order could not be found!</h1>
-     }
+    }@else {
+        <h1>The specified order could not be found!</h1>
+    }
  </div>

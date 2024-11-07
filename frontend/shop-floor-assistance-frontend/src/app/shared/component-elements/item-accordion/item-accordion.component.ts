@@ -52,6 +52,7 @@ isAnyWorkflowInEditMode(): void {
     if(changes['selectedTasks'] || changes['selectedTab']){
       if(this.selectedTab != null && this.selectedTab >=0){
         this.getItemsForSelectedTask();
+        console.log(' received in items', this.selectedTab)
       }
     }
   }
@@ -65,6 +66,7 @@ isAnyWorkflowInEditMode(): void {
    getItemsForSelectedTask() {
     if(this.selectedTab !== null && 
       this.selectedTab !== undefined) {
+        console.log('selectedtab',this.selectedTab, this.selectedTasks)
       this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
     }else{
       this.items=[];
@@ -78,9 +80,16 @@ isAnyWorkflowInEditMode(): void {
       event.stopPropagation();
       this.selectedTasks[this.selectedTab].items.splice(index, 1);
       console.log('index before', this.selectedItemIndex)
-      if(index<0) this.selectedItemIndex= -1;
-      else if(index>0 && index< this.selectedTasks[this.selectedTab].items.length) this.selectedItemIndex= index-1;
+
+      // if(index<0) this.selectedItemIndex= -1;
+      // else if(index>0 && index< this.selectedTasks[this.selectedTab].items.length) this.selectedItemIndex= index-1;
       
+      if(this.selectedTasks[this.selectedTab].items.length>0){
+        this.selectedItemIndex=0;
+      }else{
+        this.selectedItemIndex=null;
+      }
+
       this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
       this.updatedItemsFromTasks.emit(this.items);
       console.log('in delete items', this.selectedTasks[this.selectedTab].items)
