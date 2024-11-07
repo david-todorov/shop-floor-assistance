@@ -1,29 +1,36 @@
 <div class="w-full">
-    <mat-tab-group>
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon class="example-tab-icon">thumb_up</mat-icon>
-                First
-            </ng-template>
-            Content 1
-        </mat-tab>
-    
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon class="example-tab-icon">thumb_up</mat-icon>
-                Second
-            </ng-template>
-            Content 2
-        </mat-tab>
-    
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon class="example-tab-icon">thumb_up</mat-icon>
-                Third
-            </ng-template>
-    
-            Content 3
-        </mat-tab>
+    <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" (selectedIndexChange)="onTabChange($event)">
+        @for(task of tasks;track $index){
+            <mat-tab ><!-- *ngFor="let task of tasks; let i = index" -->
+                <ng-template mat-tab-label>
+                    <span class="mr-10">{{ task.name }}</span>
+                    <div class="whitespace-nowrap flex flex-row gap-x-3 justify-between ">
+                        <button mat-icon-button (click)="editTask(task)" [hidden]="selectedTaskIndex !== $index">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="deleteTasks($index,$event)" [hidden]="selectedTaskIndex !== $index">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        @if(doneAll[$index]){
+                        <button class="done-all" mat-icon-button>
+                            <mat-icon>done_all</mat-icon>
+                        </button>
+                        }
+                    </div>
+                </ng-template>
+                <div class="p-4">
+                    <p class="text-primary m-2 text-lg underline">Description:</p>
+                    <p class=" m-2">{{ task.description }}</p>
+                </div>
+                <div class="m-4 p-2  overflow-hidden">
+                    <app-item-accordion 
+                        (updatedItemsFromTasks)="updateItemsInOrder($event)" 
+                        [selectedTab]="selectedTaskIndex"
+                        [selectedTasks]="tasks">
+                        <!-- (itemsCheckStatus)="resolveCheck($event, $index)"> -->
+                    </app-item-accordion>
+                </div>
+            </mat-tab>
+        }
     </mat-tab-group>
 </div>
-

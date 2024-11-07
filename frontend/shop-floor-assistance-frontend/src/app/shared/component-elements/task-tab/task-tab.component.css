@@ -1,14 +1,47 @@
-.mat-mdc-tab-group{
-    @apply  
-    /* border border-primary  */
-    rounded-lg !important;
-}
-
-
 ::ng-deep .mat-mdc-tab-body{
-    @apply border rounded-sm bg-blue-50 !important;
+    @apply border-l border-r border-b border-t border-accent 
+    rounded-bl-lg rounded-br-lg 
+    bg-blue-50 
+    min-h-96
+    !important;
 
 }
 
+.selected-tab {
+    @apply bg-blue-200;
+    /* Apply a light blue background color */
+}
 
+::ng-deep .mat-mdc-tab.mdc-tab--active {
+    @apply bg-accent border rounded-tl-md rounded-tr-md;
+}
 
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+    @apply text-white !important;
+}
+
+/* ----------- */
+.selected-element {
+    @apply bg-accent !important;
+}
+
+.selected-element *:not(.edit-field) {
+    @apply text-white !important;
+}
+
+.done-all {
+    @apply text-green-600  !important;
+}
+
+.expansion-panel-content {
+    @apply mt-4 text-primary !important;
+    /* Tailwind CSS class for margin-top: 1rem */
+}
+
+.edit-field {
+    @apply text-shade p-2 border border-primary rounded-lg focus:outline-none !important;
+}
+
+.edit-textarea {
+    @apply text-shade w-full p-2 overflow-auto border border-primary rounded-lg focus:outline-none !important;
+}

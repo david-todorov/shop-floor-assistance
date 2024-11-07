@@ -14,12 +14,11 @@
 }
 
 .done-all{
-   @apply text-purple-600 border !important;
+   @apply text-green-600 border !important;
 }
 
 .expansion-panel-content {
-   @apply mt-4 text-primary !important;
-   /* Tailwind CSS class for margin-top: 1rem */
+   @apply mt-4 text-gray-600 !important;
 }
 
 .edit-field{

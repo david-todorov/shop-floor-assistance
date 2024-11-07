@@ -1,0 +1,26 @@
+<div class="m-4 border border-blue-400 rounded-2xl bg-white">
+    <button mat-icon-button class="float-right m-1.5" matDialogClose>
+        <mat-icon>close</mat-icon>
+    </button>
+    <mat-dialog-content>
+        <div class="m-4 w-full">
+            <form class="flex flex-col justify-start" [formGroup]="form">
+                <label for="taskname" class="font-bold text-primary">Task name</label>
+                <input class="edit-field m-2 ml-0" type="text" placeholder="" formControlName="taskname">
+                <label for="description" class="font-bold text-primary">Task Description</label>
+                <textarea class="edit-textarea m-2 ml-0" type="text" placeholder=""
+                    formControlName="description"></textarea>
+            </form>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions  class="m-4 flex flex-row gap-3 justify-end">
+
+        <app-button (click)="onSave()" 
+                    [label]="saveBtnLabel">
+        </app-button>
+        <app-button (click)="onCancel()" 
+                    [label]="cancelBtnLabel">
+        </app-button>
+            
+    </mat-dialog-actions>
+</div>

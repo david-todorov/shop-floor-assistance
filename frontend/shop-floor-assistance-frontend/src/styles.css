@@ -36,8 +36,3 @@
 .input-field:focus {
     outline-width: 0;
 }
-
-.button-primary::before,
-.button-primary::after {
-  content: none;
-}

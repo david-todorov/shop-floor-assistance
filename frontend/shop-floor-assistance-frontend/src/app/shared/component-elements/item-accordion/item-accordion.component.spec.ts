@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TaskTabComponent } from './task-tab.component';
+import { ItemAccordionComponent } from './item-accordion.component';
 
-describe('TaskTabComponent', () => {
-  let component: TaskTabComponent;
-  let fixture: ComponentFixture<TaskTabComponent>;
+describe('ItemAccordionComponent', () => {
+  let component: ItemAccordionComponent;
+  let fixture: ComponentFixture<ItemAccordionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TaskTabComponent]
+      imports: [ItemAccordionComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TaskTabComponent);
+    fixture = TestBed.createComponent(ItemAccordionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
