@@ -30,7 +30,7 @@
                             <mat-icon>done_all</mat-icon>
                         </button>
                         }
-                        <mat-checkbox [(ngModel)]="itemFlowStates[$index].checkStatus" (click)="$event.stopPropagation()"/>
+                        <mat-checkbox [(ngModel)]="itemFlowStates[$index].checkStatus" (click)="resolveItemsChecked($event)"/>
                                     
                                     <!-- </mat-checkbox> -->
                     </div>

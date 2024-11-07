@@ -28,6 +28,7 @@ export class ItemAccordionComponent implements OnChanges{
 
 
 
+
 selectItemflow(index: number) {
   if (this.itemFlowStates[index].editMode) {
     return; // Do not trigger selectWorkflow if in edit mode
@@ -44,6 +45,7 @@ isAnyWorkflowInEditMode(): boolean {
   @Input() selectedTab!: number | null;
 
   @Output() updatedItemsFromTasks = new EventEmitter<itemTO[]>();
+  @Output() itemsCheckStatus = new EventEmitter<boolean>();
  
   constructor(private cdr:ChangeDetectorRef){}
 
@@ -145,5 +147,13 @@ isAnyWorkflowInEditMode(): boolean {
     }
   }
 
+  resolveItemsChecked(event: MouseEvent) {
+    event.stopPropagation();
+    const allChecked = Object.values(this.itemFlowStates).every(state => state.checkStatus);
+    if(allChecked){
+      this.itemsCheckStatus.emit(true);
+    }
+    console.log('All items checked:', allChecked);
+  }
 
 }

@@ -11,7 +11,7 @@
                         <button mat-icon-button (click)="deleteTasks($index,$event)" [hidden]="selectedTaskIndex !== $index">
                             <mat-icon>delete</mat-icon>
                         </button>
-                        @if(doneAll){
+                        @if(doneAll[$index]){
                         <button class="done-all" mat-icon-button>
                             <mat-icon>done_all</mat-icon>
                         </button>
@@ -26,7 +26,9 @@
                     <app-item-accordion 
                         (updatedItemsFromTasks)="updateItemsInOrder($event)" 
                         [selectedTab]="selectedTaskIndex"
-                        [selectedTasks]="tasks">
+                        [selectedTasks]="tasks"
+                        (itemsCheckStatus)="resolveCheck($event, $index)"
+                        >
                     </app-item-accordion>
                 </div>
             </mat-tab>
