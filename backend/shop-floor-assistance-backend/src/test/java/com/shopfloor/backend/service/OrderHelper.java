@@ -86,6 +86,10 @@ public class OrderHelper {
         //Compare the product
         assertEditorProductsEqual(expected.getProductAfter(), actual.getProductAfter());
 
+        if(expected.getProductBefore() != null && actual.getProductBefore() != null) {
+            assertEditorProductsEqual(expected.getProductBefore(), actual.getProductBefore());
+        }
+
         //Compare the equipment
         assertEquals(expected.getEquipment().size(), actual.getEquipment().size());
         for (int i = 0; i < expected.getEquipment().size(); i++) {
