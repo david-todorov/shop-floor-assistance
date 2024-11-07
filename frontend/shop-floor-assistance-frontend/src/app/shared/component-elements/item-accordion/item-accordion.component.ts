@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { itemTO } from '../../../types/itemTO';
 import { taskTO } from '../../../types/taskTO';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -25,14 +25,16 @@ import { itemFlowStates } from '../workflowUI-state';
 export class ItemAccordionComponent implements OnChanges{
 
 
-toggleEditMode(_t4: number,$event: MouseEvent) {
-// throw new Error('Method not implemented.');
+
+selectItemflow(index: number) {
+  if (this.itemFlowStates[index].editMode) {
+    return; // Do not trigger selectWorkflow if in edit mode
+  }
+  this.selectedItemIndex = index;
 }
-selectWorkflow(_t4: number) {
-// throw new Error('Method not implemented.');
-}
-isAnyWorkflowInEditMode(): void {
-// throw new Error('Method not implemented.');
+
+isAnyWorkflowInEditMode(): boolean {
+  return Object.values(this.itemFlowStates).some(state => state.editMode);
 }
 
 
@@ -41,6 +43,7 @@ isAnyWorkflowInEditMode(): void {
 
   @Output() updatedItemsFromTasks = new EventEmitter<itemTO[]>();
  
+  constructor(private cdr:ChangeDetectorRef){}
 
 
   expandedPanels: boolean[] = [];
@@ -112,4 +115,30 @@ isAnyWorkflowInEditMode(): void {
       console.log('in delete items', this.selectedTasks[this.selectedTab].items)
     }
   }
+
+  saveItems(index: number){
+    if(this.itemFlowStates[index].updatedTitle=='' || this.itemFlowStates[index].updatedTitle==null){
+      alert('The item name cannot be empty!');
+      return;
+    }
+    this.items[index].name= this.itemFlowStates[index].updatedTitle;
+    this.items[index].longDescription= this.itemFlowStates[index].updatedDescription;
+    this.items[index].timeRequired= this.itemFlowStates[index].upDatedTimeReq;
+  };
+
+  toggleEditMode(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.expandedPanels[index] = !this.expandedPanels[index]; // Expand the panel
+    this.selectedItemIndex = index;
+    this.cdr.detectChanges();
+    this.itemFlowStates[index].editMode = !this.itemFlowStates[index].editMode;
+    const saveMode= !this.itemFlowStates[index].editMode; //save mode is opposite of edit mode
+    if(saveMode){
+      this.saveItems(index);
+      this.initializeItemflowStates();
+      this.updatedItemsFromTasks.emit(this.items);
+    }
+  }
+
+
 }
