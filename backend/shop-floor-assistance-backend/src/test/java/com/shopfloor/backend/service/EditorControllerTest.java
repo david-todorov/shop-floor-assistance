@@ -1,7 +1,6 @@
 package com.shopfloor.backend.service;
 
 import com.shopfloor.backend.api.transferobjects.editors.*;
-import com.shopfloor.backend.database.objects.OrderDBO;
 import com.shopfloor.backend.database.repositories.EquipmentRepository;
 import com.shopfloor.backend.database.repositories.OrderRepository;
 import com.shopfloor.backend.database.repositories.ProductRepository;
@@ -13,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -723,6 +723,435 @@ public class EditorControllerTest {
     }
 
     @Test
+    public void when_UpdateOrder_WithValidProductAfterAndBeforeAndEquipment_Then_OK() throws Exception {
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 200);
+        EditorOrderTO actual = this.apiHelper.getEditorOrderGET(toBeUpdated.getId(), authorizationHeader, 200);
+        this.orderHelper.assertEditorOrdersEqual(toBeUpdated, actual);
+    }
+
+    @Test
+    public void when_Update_WithValidProductAfterAndNullProductBeforeAndEquipment_Then_OK() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+        toBeUpdated.setProductBefore(null);
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 200);
+        EditorOrderTO actual = this.apiHelper.getEditorOrderGET(toBeUpdated.getId(), authorizationHeader, 200);
+        this.orderHelper.assertEditorOrdersEqual(toBeUpdated, actual);
+    }
+
+    @Test
+    public void when_UpdateOrder_WithNullProductAfterAndValidProductBeforeAndValidEquipment_Then_BadRequest() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+        toBeUpdated.setProductAfter(null);
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_UpdateOrder_WithNonExistingProductAfter_Then_NotFound() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+        EditorProductTO nonExistingProduct = this.productHelper.buildCompleteEditorProductTO("Non Existing Product");
+        nonExistingProduct.setId(999L);
+        toBeUpdated.setProductAfter(nonExistingProduct);
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 404);
+
+    }
+
+    @Test
+    public void when_UpdateOrder_WithNonExistingProductBefore_Then_NotFound() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+        EditorProductTO nonExistingProduct = this.productHelper.buildCompleteEditorProductTO("Non Existing Product");
+        nonExistingProduct.setId(999L);
+        toBeUpdated.setProductBefore(nonExistingProduct);
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 404);
+    }
+
+    @Test
+    public void when_UpdateOrder_WithNonExistingProductBeforeAndProductAfter_Then_NotFound() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+        EditorProductTO nonExistingProduct = this.productHelper.buildCompleteEditorProductTO("Non Existing Product");
+        nonExistingProduct.setId(999L);
+        toBeUpdated.setProductBefore(nonExistingProduct);
+        toBeUpdated.setProductAfter(nonExistingProduct);
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 404);
+    }
+
+    @Test
+    public void when_UpdateOrder_WithNullEquipmentList_Then_BadRequest() throws Exception {
+
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+        toBeUpdated.setEquipment(null);
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_UpdateOrder_WithEmptyEquipmentList_Then_OK() throws Exception {
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+        toBeUpdated.setEquipment(Collections.emptyList());
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 200);
+        EditorOrderTO actual = this.apiHelper.getEditorOrderGET(toBeUpdated.getId(), authorizationHeader, 200);
+        this.orderHelper.assertEditorOrdersEqual(toBeUpdated, actual);
+
+    }
+
+    @Test
+    public void when_UpdateOrder_WithNullEquipmentEntity_Then_BadRequest() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+        toBeUpdated.getEquipment().add(null);
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 400);
+
+    }
+
+    @Test
+    public void when_UpdateOrder_WithNonExistingEquipmentEntity_Then_NotFound() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+        EditorEquipmentTO nonExistingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("NonExisting");
+        nonExistingEquipment.setId(999L);
+        toBeUpdated.getEquipment().add(nonExistingEquipment);
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 404);
+    }
+    @Test
+    public void when_UpdateOrder_WithNewExistingProductAfter_Then_OK() throws Exception {
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+        EditorProductTO newProductAfter = this.productHelper.buildCompleteEditorProductTO("New After");
+        newProductAfter = this.saveProductInDatabase(newProductAfter);
+        toBeUpdated.setProductAfter(newProductAfter);
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 200);
+        EditorOrderTO actual = this.apiHelper.getEditorOrderGET(toBeUpdated.getId(), authorizationHeader, 200);
+        this.orderHelper.assertEditorOrdersEqual(toBeUpdated, actual);
+    }
+
+    @Test
+    public void when_UpdateOrder_WithNewExistingProductBefore_Then_OK() throws Exception {
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeUpdated = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeUpdated.setProductAfter(productAfter);
+        toBeUpdated.setProductBefore(productBefore);
+        toBeUpdated.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeUpdated = this.apiHelper.createEditorOrderPOST(toBeUpdated, authorizationHeader, 201);
+        alteringOrderCompletely(toBeUpdated);
+
+        EditorProductTO newProductBefore = this.productHelper.buildCompleteEditorProductTO("New Before");
+        newProductBefore = this.saveProductInDatabase(newProductBefore);
+        toBeUpdated.setProductAfter(newProductBefore);
+
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 200);
+        EditorOrderTO actual = this.apiHelper.getEditorOrderGET(toBeUpdated.getId(), authorizationHeader, 200);
+        this.orderHelper.assertEditorOrdersEqual(toBeUpdated, actual);
+    }
+
+    @Test
     public void when_DeleteOrder_WithNonExistingId_Then_NotFound() throws Exception {
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
         apiHelper.deleteEditorOrderDELETE(999L, authorizationHeader, 404);
@@ -748,6 +1177,141 @@ public class EditorControllerTest {
     }
 
     @Test
+    public void when_DeleteOrder_TheReferencesWithProductAfterDeleted_Then_NoContent() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeDeleted = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeDeleted.setProductAfter(productAfter);
+        toBeDeleted.setProductBefore(productBefore);
+        toBeDeleted.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeDeleted = this.apiHelper.createEditorOrderPOST(toBeDeleted, authorizationHeader, 201);
+        Long orderId = toBeDeleted.getId();
+        Long productAfterId = toBeDeleted.getProductAfter().getId();
+
+        productAfter = this.apiHelper.getEditorProductGET(productAfterId, authorizationHeader, 200);
+        assertTrue(productAfter.getOrdersAfter().stream()
+                .anyMatch(order -> order.getId().equals(orderId)));
+
+        apiHelper.deleteEditorOrderDELETE(toBeDeleted.getId(), authorizationHeader, 204);
+
+        productAfter = this.apiHelper.getEditorProductGET(productAfterId, authorizationHeader, 200);
+        assertTrue(productAfter.getOrdersAfter().stream()
+                .noneMatch(order -> order.getId().equals(orderId)));
+
+        assertFalse(orderRepository.existsById(orderId));
+        assertTrue(productRepository.existsById(productAfterId));
+
+    }
+
+    @Test
+    public void when_DeleteOrder_TheReferencesWithProductBeforeDeleted_Then_NoContent() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        ArrayList<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeDeleted = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeDeleted.setProductAfter(productAfter);
+        toBeDeleted.setProductBefore(productBefore);
+        toBeDeleted.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeDeleted = this.apiHelper.createEditorOrderPOST(toBeDeleted, authorizationHeader, 201);
+        Long orderId = toBeDeleted.getId();
+        Long productBeforeId = toBeDeleted.getProductBefore().getId();
+
+        productAfter = this.apiHelper.getEditorProductGET(productBeforeId, authorizationHeader, 200);
+        assertTrue(productAfter.getOrdersBefore().stream()
+                .anyMatch(order -> order.getId().equals(orderId)));
+
+        apiHelper.deleteEditorOrderDELETE(toBeDeleted.getId(), authorizationHeader, 204);
+
+        productAfter = this.apiHelper.getEditorProductGET(productBeforeId, authorizationHeader, 200);
+        assertTrue(productAfter.getOrdersBefore().stream()
+                .noneMatch(order -> order.getId().equals(orderId)));
+
+        assertFalse(orderRepository.existsById(orderId));
+        assertTrue(productRepository.existsById(productBeforeId));
+    }
+
+    @Test
+    public void when_DeleteOrder_TheReferencesWithEquipmentDeleted_Then_NoContent() throws Exception {
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO toBeDeleted = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        toBeDeleted.setProductAfter(productAfter);
+        toBeDeleted.setProductBefore(productBefore);
+        toBeDeleted.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        toBeDeleted = this.apiHelper.createEditorOrderPOST(toBeDeleted, authorizationHeader, 201);
+        Long orderId = toBeDeleted.getId();
+
+        equipments = this.apiHelper.getEditorAllEquipmentGET(authorizationHeader, 200);
+        equipments.forEach(
+                (equipment) -> assertTrue(equipment.getOrders().stream().anyMatch((order) -> order.getId().equals(orderId)))
+        );
+
+        apiHelper.deleteEditorOrderDELETE(toBeDeleted.getId(), authorizationHeader, 204);
+
+        equipments = this.apiHelper.getEditorAllEquipmentGET(authorizationHeader, 200);
+        equipments.forEach(
+                (equipment) -> assertTrue(equipment.getOrders().stream().noneMatch((order) -> order.getId().equals(orderId)))
+        );
+
+        assertFalse(orderRepository.existsById(orderId));
+        equipments.forEach(
+                (equipment) -> assertTrue(this.equipmentRepository.existsById(equipment.getId()))
+        );
+    }
+
+    @Test
     public void when_GetOrder_Then_OK() throws Exception {
         this.populateProductAndEquipment();
         // Get the authorization header for the authenticated user
@@ -767,6 +1331,290 @@ public class EditorControllerTest {
     public void when_GetOrder_WithNonExistingId_Then_NotFound() throws Exception {
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
         apiHelper.getEditorOrderGET(999L, authorizationHeader, 404);
+    }
+
+    @Test
+    public void when_AddOrder_WithValidProductAfterAndBeforeAndEquipment_Then_Created() throws Exception {
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrder.setProductAfter(productAfter);
+        newOrder.setProductBefore(productBefore);
+        newOrder.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 201);
+
+        EditorOrderTO actual = apiHelper.getEditorOrderGET(newOrder.getId(), authorizationHeader, 200);
+
+        this.orderHelper.assertEditorOrdersEqual(newOrder, actual);
+        this.orderRepository.existsById(newOrder.getId());
+        this.orderRepository.existsByOrderNumber(newOrder.getOrderNumber());
+    }
+
+    @Test
+    public void when_AddOrder_WithValidProductAfterAndNullProductBeforeAndEquipment_Then_Created() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrder.setProductAfter(productAfter);
+        newOrder.setProductBefore(null);
+        newOrder.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 201);
+
+        EditorOrderTO actual = apiHelper.getEditorOrderGET(newOrder.getId(), authorizationHeader, 200);
+
+        this.orderHelper.assertEditorOrdersEqual(newOrder, actual);
+    }
+
+    @Test
+    public void when_AddOrder_WithNullProductAfterAndValidProductBeforeAndValidEquipment_Then_BadRequest() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrder.setProductAfter(null);
+        newOrder.setProductBefore(productBefore);
+        newOrder.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_AddOrder_WithNonExistingProductAfter_Then_NotFound() throws Exception {
+
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        EditorProductTO nonExistingProductAfter = this.productHelper.buildCompleteEditorProductTO("NonExistingProductAfter");
+        nonExistingProductAfter.setId(999L);
+        newOrder.setProductAfter(nonExistingProductAfter);
+        newOrder.setProductBefore(productBefore);
+        newOrder.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 404);
+    }
+
+    @Test
+    public void when_AddOrder_WithNonExistingProductBefore_Then_NotFound() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        EditorProductTO nonExistingProductBefore = this.productHelper.buildCompleteEditorProductTO("NonExistingProductBefore");
+        nonExistingProductBefore.setId(999L);
+        newOrder.setProductAfter(productBefore);
+        newOrder.setProductBefore(nonExistingProductBefore);
+        newOrder.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 404);
+    }
+
+    @Test
+    public void when_AddOrder_WithNullEquipmentList_Then_BadRequest() throws Exception {
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrder.setProductAfter(productAfter);
+        newOrder.setProductBefore(productBefore);
+        newOrder.setEquipment(null);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 400);
+
+    }
+
+    @Test
+    public void when_AddOrder_WithEmptyEquipmentList_Then_Created() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrder.setProductAfter(productAfter);
+        newOrder.setProductBefore(productBefore);
+        newOrder.setEquipment(Collections.emptyList());
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 201);
+
+        EditorOrderTO actual = apiHelper.getEditorOrderGET(newOrder.getId(), authorizationHeader, 200);
+
+        this.orderHelper.assertEditorOrdersEqual(newOrder, actual);
+    }
+
+    @Test
+    public void when_AddOrder_WithNullEquipmentEntity_Then_BadRequest() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+        equipments.add(null);
+
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrder.setProductAfter(productAfter);
+        newOrder.setProductBefore(productBefore);
+        newOrder.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 400);
+    }
+
+    @Test
+    public void when_AddOrder_WithNonExistingEquipmentEntity_Then_NotFound() throws Exception {
+
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+        EditorEquipmentTO nonExistingEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("NonExisting");
+        nonExistingEquipment.setId(999L);
+        equipments.add(nonExistingEquipment);
+
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrder.setProductAfter(productAfter);
+        newOrder.setProductBefore(productBefore);
+        newOrder.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 404);
+
     }
 
     private void alteringOrderCompletely(EditorOrderTO toAlter){
@@ -885,6 +1733,16 @@ public class EditorControllerTest {
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
         order.setProductAfter(this.apiHelper.getEditorAllProductsGET(authorizationHeader, 200).get(0));
         order.setEquipment(this.apiHelper.getEditorAllEquipmentGET(authorizationHeader, 200));
+    }
+
+    private EditorProductTO saveProductInDatabase(EditorProductTO product) throws Exception{
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        return this.apiHelper.createEditorProductPOST(product, authorizationHeader, 201 );
+    }
+
+    private EditorEquipmentTO saveEquipmentInDatabase(EditorEquipmentTO equipment) throws Exception{
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        return this.apiHelper.createEditorEquipmentPOST(equipment, authorizationHeader, 201 );
     }
 
     /**
@@ -1298,6 +2156,11 @@ public class EditorControllerTest {
     }
 
     @Test
+    public void when_DeleteProductTheReferencesWithOrdersAsBeforeDeleted_Then_NoContent() throws Exception {
+
+    }
+
+    @Test
     public void when_GetProduct_Then_Ok() throws Exception {
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
         EditorProductTO existingProduct = this.productHelper.buildCompleteEditorProductTO("P0001");
@@ -1497,6 +2360,11 @@ public class EditorControllerTest {
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
 
         this.apiHelper.deleteEditorEquipmentDELETE(999L, authorizationHeader, 404);
+    }
+
+    @Test
+    public void when_DeleteEquipmentTheReferencesWithOrders_Then_NoContent() throws Exception {
+
     }
 
     @Test
