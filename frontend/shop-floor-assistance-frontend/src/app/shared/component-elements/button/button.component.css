@@ -1,5 +1,5 @@
 .btn {
-    @apply w-full mt-4 
+    @apply w-44 mt-4 
     bg-primary text-white 
     hover:bg-opacity-70 
     transition ease-in-out duration-300 !important;
@@ -11,6 +11,6 @@
 }
 
 .button-div{
-    @apply w-full !important;
+    @apply flex justify-center !important;
 }
  

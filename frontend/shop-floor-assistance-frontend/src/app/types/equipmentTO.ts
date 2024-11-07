@@ -1,3 +1,4 @@
+
 export type equipmentTO = {
     number: string;            // To match equipmentNumber from backend
     name: string;

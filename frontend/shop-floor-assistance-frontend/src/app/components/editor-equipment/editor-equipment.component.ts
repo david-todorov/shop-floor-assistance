@@ -5,6 +5,7 @@ import { catchError, of } from 'rxjs';
 import { EquipmentTableComponent } from '../../shared/component-elements/equipment-table/equipment-table.component';
 import { equipmentTO } from '../../types/equipmentTO';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
+import { EquipmentTable } from '../../types/EquipmentTable';
 
 @Component({
   selector: 'app-editor-equipment',
@@ -18,7 +19,7 @@ export class EditorEquipmentComponent implements OnInit {
   
   equipment!: equipmentTO;
   loadedEquipment!: equipmentTO[];
-  editDisabled: boolean = true;
+  editDisabled: boolean = false;
   createDisabled: boolean = false;
   editBtnLabel: string = 'Edit Equipment';
   createBtnLabel: string = 'Create Equipment';
@@ -55,7 +56,8 @@ export class EditorEquipmentComponent implements OnInit {
         console.log('An error occurred:', err);
       },
       complete: () => {
-        console.log('Equipment retrieval completed');
+        this.loadedEquipment= EquipmentTable;
+        console.log('done', this.loadedEquipment);
       }
     });
   }

@@ -6,6 +6,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { productTO } from '../../../types/productTO';
 
+
 @Component({
   selector: 'app-product-table',
   standalone: true,
@@ -31,7 +32,7 @@ export class ProductTableComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['product'] && changes['product'].currentValue) {
+    if (changes['Product'] && changes['Product'].currentValue) {
       console.log('Product loaded:', this.Product);
        this.dataSource.data = this.Product;
     }

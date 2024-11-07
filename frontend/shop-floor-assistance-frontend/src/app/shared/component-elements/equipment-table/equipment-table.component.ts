@@ -31,7 +31,7 @@ export class EquipmentTableComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['equipment'] && changes['equipment'].currentValue) {
+    if (changes['Equipment'] && changes['Equipment'].currentValue) {
       console.log('Equipment loaded:', this.Equipment);
        this.dataSource.data = this.Equipment;
     }
@@ -47,8 +47,8 @@ export class EquipmentTableComponent {
     // this.dataSource.sort = this.sort;
     }
 
-  onRadioChange(equipment: equipmentTO) {
-    this.onClick.emit(equipment);
+  onRadioChange(Equipment: equipmentTO) {
+    this.onClick.emit(Equipment);
   }
 
   applyFilter($event: Event) {

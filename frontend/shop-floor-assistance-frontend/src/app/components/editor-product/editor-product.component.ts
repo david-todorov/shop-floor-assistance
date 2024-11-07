@@ -5,9 +5,11 @@ import { catchError, of } from 'rxjs';
 import { ProductTableComponent } from '../../shared/component-elements/product-table/product-table.component';
 import { productTO } from '../../types/productTO';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
+import { ProductTabl} from '../../types/ProductTabl';
+
 
 @Component({
-  selector: 'app-editor-equipment',
+  selector: 'app-editor-product',
   standalone: true,
   imports: [ProductTableComponent, ButtonComponent],
   templateUrl: './editor-product.component.html',
@@ -18,7 +20,7 @@ export class EditorProductComponent implements OnInit {
   
   product!: productTO;
   loadedProduct!: productTO[];
-  editDisabled: boolean = true;
+  editDisabled: boolean = false;
   createDisabled: boolean = false;
   editBtnLabel: string = 'Edit Product';
   createBtnLabel: string = 'Create Product';
@@ -36,26 +38,28 @@ export class EditorProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProduct();
+    console.log("in console")
   }
 
   loadProduct(): void {
     this.backendCommunicationService.getEditorProduct().pipe(
       catchError((err) => {
         console.error('Error fetching product:', err);
-        return of([]);
+        return of(null);
       })
     ).subscribe({
       next: (response) => {
         if (response) {
           this.loadedProduct = response; // Assign API response to loadedEquipment
-          console.log('Equipment loaded:', this.loadedProduct);
+          console.log('Product loaded:', this.loadedProduct);
         }
       },
       error: (err) => {
         console.log('An error occurred:', err);
       },
       complete: () => {
-        console.log('Equipment retrieval completed');
+        this.loadedProduct= ProductTabl;
+        console.log('done', this.loadedProduct);
       }
     });
   }
