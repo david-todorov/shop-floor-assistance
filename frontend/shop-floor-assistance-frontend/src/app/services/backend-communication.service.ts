@@ -10,7 +10,7 @@ import { loginState } from '../shared/component-elements/login-state';
   providedIn: 'root'
 })
 export class BackendCommunicationService {
-
+  
   public _loginUIState$ = new BehaviorSubject<loginState>(null as unknown as loginState);
   public loginUIState$= this._loginUIState$.asObservable();
   
@@ -66,4 +66,19 @@ export class BackendCommunicationService {
     return this.http.get(`${this.apiServerURL}editor/orders/${id}`);
   }
 
+  getEditorEquipment(): Observable<any> {
+    return this.http.get(`${this.apiServerURL}editor/equipment`);
+  }
+
+  createEquipment(equipmentData: any): Observable<any> {
+    return this.http.post(`${this.apiServerURL}editor/equipment`, equipmentData);
+  }
+
+  getEditorProduct(): Observable<any> {
+    return this.http.get(`${this.apiServerURL}editor/product`);
+  }
+
+  createProduct(productData: any): Observable<any> {
+    return this.http.post(`${this.apiServerURL}editor/product`, productData);
+  }
 }

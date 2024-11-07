@@ -8,6 +8,8 @@ import { EditorEditWorkflowComponent } from './components/editor-edit-workflow/e
 import { EditorHomepageComponent } from './components/editor-homepage/editor-homepage.component';
 import { EditorEquipmentComponent } from './components/editor-equipment/editor-equipment.component';
 import { EditorProductComponent } from './components/editor-product/editor-product.component';
+import { EditorCreateEquipmentComponent } from './components/editor-create-equipment/editor-create-equipment.component';
+import { EditorCreateProductComponent } from './components/editor-create-product/editor-create-product.component';
 
 export const routes: Routes = [
     {path: '', component:WelcomeComponent},
@@ -19,5 +21,7 @@ export const routes: Routes = [
     {path: 'editor/:id', component:EditorEditWorkflowComponent,},
     {path: 'editor-homepage', component:EditorHomepageComponent,},
     {path: 'editor-equipment', component:EditorEquipmentComponent,},
+    {path: 'editor-equipment/create', component:EditorCreateEquipmentComponent,},
     {path: 'editor-product', component:EditorProductComponent,},
+    {path: 'editor-product/create', component:EditorCreateProductComponent}
 ];

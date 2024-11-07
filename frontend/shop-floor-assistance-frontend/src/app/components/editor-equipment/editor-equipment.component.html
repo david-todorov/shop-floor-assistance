@@ -1,1 +1,14 @@
-<p>editor-equipment works!</p>
+<div class="  mx-auto w-4/5 ">
+    <app-equipment-table (onClick)="equipmentSelected($event)" [Equipment]="loadedEquipment"></app-equipment-table>
+</div>
+<div class="w-7/12 mx-auto  mt-6  flex justify-around">
+    <div class="w-7/12 mx-4">
+        <app-button (onClick)="resolveButtonClick($event, 'edit')" [disabled]="editDisabled"
+            [label]="editBtnLabel"></app-button>
+    </div>
+    <div class="w-7/12 mx-4">
+        <app-button (onClick)="resolveButtonClick($event, 'create')" [disabled]="createDisabled"
+            [label]="createBtnLabel"></app-button>
+    </div>
+
+</div>
