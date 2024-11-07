@@ -60,7 +60,7 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
           updatedTitle: workflow.name,
           updatedDescription: workflow.description};
       });
-      this.expandedPanels= new Array(this.order.workflows.length).fill(false);
+      // this.expandedPanels= new Array(this.order.workflows.length).fill(false);
       // this.selectedWorkflowIndex= 0;
     }
   }
@@ -90,6 +90,8 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
       }
 
       this.initializeWorkflowStates();
+      this.expandedPanels = new Array(this.order.workflows.length).fill(false); // Ensure all panels are closed
+
     }
     this.onSelect.emit(this.selectedWorkflowIndex);
     this.onOrderUpdate.emit(this.order);
@@ -116,6 +118,7 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     if(saveMode){
       this.saveOrder(index);
       this.initializeWorkflowStates();
+      this.expandedPanels = new Array(this.order.workflows.length).fill(false); // Ensure all panels are closed
       this.onOrderUpdate.emit(this.order);
       this.onSelect.emit(this.selectedWorkflowIndex);
 

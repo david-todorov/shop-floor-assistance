@@ -73,7 +73,7 @@ isAnyWorkflowInEditMode(): boolean {
           upDatedTimeReq: item.timeRequired,
           checkStatus: false};
       });
-      this.expandedPanels= new Array(this.items.length).fill(false);
+      // this.expandedPanels= new Array(this.items.length).fill(false);
     }
 
 
@@ -111,6 +111,8 @@ isAnyWorkflowInEditMode(): boolean {
 
       this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
       this.initializeItemflowStates(); 
+      this.expandedPanels= new Array(this.items.length).fill(false);
+
       this.updatedItemsFromTasks.emit(this.items);
       console.log('in delete items', this.selectedTasks[this.selectedTab].items)
     }
@@ -136,6 +138,7 @@ isAnyWorkflowInEditMode(): boolean {
     if(saveMode){
       this.saveItems(index);
       this.initializeItemflowStates();
+      this.expandedPanels= new Array(this.items.length).fill(false);
       this.updatedItemsFromTasks.emit(this.items);
     }
   }
