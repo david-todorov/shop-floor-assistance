@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { itemFlowStates } from '../workflowUI-state';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-item-accordion',
@@ -17,7 +18,8 @@ import { itemFlowStates } from '../workflowUI-state';
     MatIconModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatCheckboxModule
   ],
   templateUrl: './item-accordion.component.html',
   styleUrl: './item-accordion.component.css'
