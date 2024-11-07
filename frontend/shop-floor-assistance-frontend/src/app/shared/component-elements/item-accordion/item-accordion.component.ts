@@ -51,7 +51,7 @@ isAnyWorkflowInEditMode(): boolean {
 
 
   expandedPanels: boolean[] = [];
-  doneAll: boolean= true;
+  doneAll: boolean= false;
 
   items!:itemTO[];
   itemFlowStates: itemFlowStates= {};
@@ -152,6 +152,7 @@ isAnyWorkflowInEditMode(): boolean {
     const allChecked = Object.values(this.itemFlowStates).every(state => state.checkStatus);
     if(allChecked){
       this.itemsCheckStatus.emit(true);
+      console.log('itemFlowStates when check true', this.itemFlowStates)
     }
     console.log('All items checked:', allChecked);
   }

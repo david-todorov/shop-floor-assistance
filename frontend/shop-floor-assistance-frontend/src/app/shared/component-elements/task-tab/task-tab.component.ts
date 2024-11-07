@@ -123,8 +123,9 @@ export class TaskTabComponent implements OnInit, OnChanges{
   }
 
   resolveCheck(event: boolean, index: number) {
-    
     this.doneAll[index]=event;
+    const allTasksDone= this.doneAll.every(state => state);
+    console.log('all tasks done', allTasksDone)
   }
 
 }
