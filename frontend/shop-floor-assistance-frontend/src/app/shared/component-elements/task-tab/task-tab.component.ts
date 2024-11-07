@@ -30,7 +30,7 @@ export class TaskTabComponent implements OnInit, OnChanges{
 
   @Input() workflowIndex!: number | null;
   @Input() orderUpdated!: orderTO;
-  @Input() doneAll: boolean[]= [false];
+  @Input() doneAll: boolean[]= [];
 
   @Output() orderUpdateFromTasks = new EventEmitter<orderTO>();
   // @Output() onSelect = new EventEmitter<number | null>();
@@ -123,9 +123,9 @@ export class TaskTabComponent implements OnInit, OnChanges{
   }
 
   resolveCheck(event: boolean, index: number) {
-    this.doneAll[index]=event;
-    const allTasksDone= this.doneAll.every(state => state);
-    console.log('all tasks done', allTasksDone)
+    // this.doneAll[index]=event;
+    // const allTasksDone= this.doneAll.every(state => state);
+    // console.log('all tasks done', allTasksDone)
   }
 
 }

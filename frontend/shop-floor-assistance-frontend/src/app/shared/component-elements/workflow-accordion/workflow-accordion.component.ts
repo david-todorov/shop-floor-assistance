@@ -27,6 +27,9 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
 
   @Input() order!: orderTO;
   @Input() doneAll: boolean= true;
+
+
+
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onSelect = new EventEmitter<number | null>();
 
@@ -39,6 +42,7 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
   
   ngOnInit(): void {
     this.selectedWorkflowIndex= 0;
+    
   }
   
   ngAfterViewInit(): void {

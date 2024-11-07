@@ -26,9 +26,8 @@
                     <app-item-accordion 
                         (updatedItemsFromTasks)="updateItemsInOrder($event)" 
                         [selectedTab]="selectedTaskIndex"
-                        [selectedTasks]="tasks"
-                        (itemsCheckStatus)="resolveCheck($event, $index)"
-                        >
+                        [selectedTasks]="tasks">
+                        <!-- (itemsCheckStatus)="resolveCheck($event, $index)"> -->
                     </app-item-accordion>
                 </div>
             </mat-tab>
