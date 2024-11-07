@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { itemFlowStates } from '../workflowUI-state';
 
 @Component({
   selector: 'app-item-accordion',
@@ -46,16 +47,33 @@ isAnyWorkflowInEditMode(): void {
   doneAll: boolean= true;
 
   items!:itemTO[];
+  itemFlowStates: itemFlowStates= {};
   selectedItemIndex!: number | null;
+  itemsExist!: boolean;
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['selectedTasks'] || changes['selectedTab']){
       if(this.selectedTab != null && this.selectedTab >=0){
         this.getItemsForSelectedTask();
-        console.log(' received in items', this.selectedTab)
+        this.initializeItemflowStates(); 
       }
     }
   }
+
+
+   initializeItemflowStates() {
+      this.items.forEach((item: itemTO, index: number) => {
+        this.itemFlowStates[index] = { editMode: false, 
+          showDescription: false, 
+          updatedTitle: item.name,
+          updatedDescription: item.longDescription,
+          upDatedTimeReq: item.timeRequired,
+          checkStatus: false};
+      });
+      this.expandedPanels= new Array(this.items.length).fill(false);
+    }
+
+
 
 
   onAccordionClick(index: number): void {
@@ -66,13 +84,11 @@ isAnyWorkflowInEditMode(): void {
    getItemsForSelectedTask() {
     if(this.selectedTab !== null && 
       this.selectedTab !== undefined) {
-        console.log('selectedtab',this.selectedTab, this.selectedTasks)
       this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
     }else{
       this.items=[];
     }
   }
-
 
 
   deleteItems(index: number,event: MouseEvent) {
@@ -91,6 +107,7 @@ isAnyWorkflowInEditMode(): void {
       }
 
       this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
+      this.initializeItemflowStates(); 
       this.updatedItemsFromTasks.emit(this.items);
       console.log('in delete items', this.selectedTasks[this.selectedTab].items)
     }
