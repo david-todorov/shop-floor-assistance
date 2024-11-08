@@ -5,7 +5,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { orderTO } from '../../../types/orderTO';
 import { workflowTO } from '../../../types/workflowTO';
 import { MatIconModule } from '@angular/material/icon';
-import { workflowStates } from '../workflowUI-state';
+import { workflowCheckedStatus, workflowStates } from '../workflowUI-state';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { taskTO } from '../../../types/taskTO';
 
@@ -26,12 +26,14 @@ import { taskTO } from '../../../types/taskTO';
 export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewInit{
 
   @Input() order!: orderTO;
-  @Input() doneAll: boolean= true;
+  @Input() operatorCheckedStatus_workflow!: workflowCheckedStatus[];
+
 
 
 
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onSelect = new EventEmitter<number | null>();
+  // @Output() onAllWorkflowsChecked = new EventEmitter<boolean>();
 
   orderExists: boolean= false;
   selectedWorkflowIndex: number | null = 0;

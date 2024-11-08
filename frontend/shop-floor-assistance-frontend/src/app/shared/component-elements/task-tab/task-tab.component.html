@@ -26,7 +26,10 @@
                     <app-item-accordion 
                         (updatedItemsFromTasks)="updateItemsInOrder($event)" 
                         [selectedTab]="selectedTaskIndex"
-                        [selectedTasks]="tasks">
+                        [selectedTasks]="tasks"
+                        (tabselected)="resolveCheck($event)"
+                        [checksArray]="operatorCheckedStatus_tasks"
+                        >
                         <!-- (itemsCheckStatus)="resolveCheck($event, $index)"> -->
                     </app-item-accordion>
                 </div>

@@ -17,3 +17,17 @@ export type itemFlowStates= {
         checkStatus: boolean;
     }
 }
+
+
+
+export type itemCheckedStatus= {
+  checked: boolean;
+}
+
+export type taskCheckedStatus= {
+  items: itemCheckedStatus[];
+}
+
+export type workflowCheckedStatus= {
+  tasks: taskCheckedStatus[];
+}

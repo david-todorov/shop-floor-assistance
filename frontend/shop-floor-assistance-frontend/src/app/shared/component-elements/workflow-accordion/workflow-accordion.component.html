@@ -21,11 +21,11 @@
                                     <button mat-icon-button (click)="deleteWorkflow($index,$event)" [hidden]="selectedWorkflowIndex !== $index">
                                         <mat-icon>delete</mat-icon>
                                     </button>
-                                    @if(doneAll){
+                                    <!-- @if(){ -->
                                         <button class="done-all" mat-icon-button>
                                             <mat-icon>done_all</mat-icon>
                                         </button>
-                                    }
+                                    <!-- } -->
                                 </div>
                             </mat-panel-description>
                         </mat-expansion-panel-header>

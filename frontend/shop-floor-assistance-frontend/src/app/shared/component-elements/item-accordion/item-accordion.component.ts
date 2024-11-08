@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, input, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { itemTO } from '../../../types/itemTO';
 import { taskTO } from '../../../types/taskTO';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { itemFlowStates } from '../workflowUI-state';
+import { itemFlowStates, workflowCheckedStatus } from '../workflowUI-state';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
@@ -24,39 +24,32 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   templateUrl: './item-accordion.component.html',
   styleUrl: './item-accordion.component.css'
 })
-export class ItemAccordionComponent implements OnChanges{
-
-
-
-
-selectItemflow(index: number) {
-  if (this.itemFlowStates[index].editMode) {
-    return; // Do not trigger selectWorkflow if in edit mode
-  }
-  this.selectedItemIndex = index;
-}
-
-isAnyWorkflowInEditMode(): boolean {
-  return Object.values(this.itemFlowStates).some(state => state.editMode);
-}
-
+export class ItemAccordionComponent implements OnInit, OnChanges{
 
   @Input() selectedTasks!: taskTO[];
   @Input() selectedTab!: number | null;
+  @Input() checksArray!: workflowCheckedStatus[];
 
   @Output() updatedItemsFromTasks = new EventEmitter<itemTO[]>();
   @Output() itemsCheckStatus = new EventEmitter<boolean>();
- 
+
+
+  @Output() tabselected = new EventEmitter<number>();
   constructor(private cdr:ChangeDetectorRef){}
+
+  ngOnInit(): void {
+  
+  }
 
 
   expandedPanels: boolean[] = [];
-  doneAll: boolean= false;
+  
+  itemsDoneStatus:boolean[]= [];
 
   items!:itemTO[];
   itemFlowStates: itemFlowStates= {};
   selectedItemIndex!: number | null;
-  itemsExist!: boolean;
+
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['selectedTasks'] || changes['selectedTab']){
@@ -147,14 +140,32 @@ isAnyWorkflowInEditMode(): boolean {
     }
   }
 
-  resolveItemsChecked(event: MouseEvent) {
-    event.stopPropagation();
-    const allChecked = Object.values(this.itemFlowStates).every(state => state.checkStatus);
-    if(allChecked){
-      this.itemsCheckStatus.emit(true);
-      console.log('itemFlowStates when check true', this.itemFlowStates)
-    }
-    console.log('All items checked:', allChecked);
+  resolveItemsChecked(event: MouseEvent, index: number) {
+    // event.stopPropagation();
+    // const allChecked = Object.values(this.itemFlowStates).every(state => state.checkStatus);
+    // if(allChecked){
+    //   this.itemsCheckStatus.emit(true);
+    //   console.log('itemFlowStates when check true', this.itemFlowStates)
+    // }
+    // console.log('All items checked:', allChecked);
+    this.tabselected.emit(this.selectedTab??-1);
+    console.log(this.itemFlowStates[index].updatedTitle,
+      this.itemFlowStates[index].checkStatus
+    )
+
+
   }
+
+  selectItemflow(index: number) {
+  if (this.itemFlowStates[index].editMode) {
+    return; // Do not trigger selectWorkflow if in edit mode
+  }
+  this.selectedItemIndex = index;
+  }
+
+  isAnyWorkflowInEditMode(): boolean {
+    return Object.values(this.itemFlowStates).some(state => state.editMode);
+  }
+
 
 }

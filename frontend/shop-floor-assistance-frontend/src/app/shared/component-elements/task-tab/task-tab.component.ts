@@ -5,7 +5,7 @@ import { orderTO } from '../../../types/orderTO';
 
 import { CommonModule } from '@angular/common';
 import { ThemePalette } from '@angular/material/core';
-import { workflowStates } from '../workflowUI-state';
+import { workflowCheckedStatus, workflowStates } from '../workflowUI-state';
 import { taskTO } from '../../../types/taskTO';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
@@ -31,6 +31,9 @@ export class TaskTabComponent implements OnInit, OnChanges{
   @Input() workflowIndex!: number | null;
   @Input() orderUpdated!: orderTO;
   @Input() doneAll: boolean[]= [];
+
+  @Input() operatorCheckedStatus_tasks!: workflowCheckedStatus[];
+  @Output() onTasksChecked = new EventEmitter<workflowCheckedStatus[]>();
 
   @Output() orderUpdateFromTasks = new EventEmitter<orderTO>();
   // @Output() onSelect = new EventEmitter<number | null>();
@@ -122,10 +125,11 @@ export class TaskTabComponent implements OnInit, OnChanges{
     }
   }
 
-  resolveCheck(event: boolean, index: number) {
+  resolveCheck(event: any) {
     // this.doneAll[index]=event;
     // const allTasksDone= this.doneAll.every(state => state);
     // console.log('all tasks done', allTasksDone)
+    console.log('tab received is:', event)
   }
 
 }

@@ -17,7 +17,7 @@ import { sampleOrders } from '../../types/dummyData';
   styleUrl: './editor.component.css'
 })
 export class EditorComponent implements OnInit{
-    btnLabel: string= 'Start Wizard';
+  btnLabel: string= 'Start Wizard';
   order!: orderTO;
   loadedOrders!: orderTO[];
   viewDisabled: boolean= false;

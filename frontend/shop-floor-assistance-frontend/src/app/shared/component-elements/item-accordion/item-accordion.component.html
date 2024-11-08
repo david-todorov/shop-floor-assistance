@@ -25,12 +25,12 @@
                             <mat-icon>delete</mat-icon>
                         </button>
 
-                        @if(doneAll){
+                        @if(itemFlowStates[$index].checkStatus){
                         <button class="done-all" mat-icon-button>
                             <mat-icon>done_all</mat-icon>
                         </button>
                         }
-                        <mat-checkbox [(ngModel)]="itemFlowStates[$index].checkStatus" (click)="resolveItemsChecked($event)"/>
+                        <mat-checkbox [(ngModel)]="itemFlowStates[$index].checkStatus" (click)="resolveItemsChecked($event, $index)"/>
                                     
                                     <!-- </mat-checkbox> -->
                     </div>
