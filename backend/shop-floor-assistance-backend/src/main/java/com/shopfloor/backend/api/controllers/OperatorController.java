@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping("/operator")
 public class OperatorController {
 
-    private OperatorService operatorService;
+    private final OperatorService operatorService;
 
     @Autowired
     public OperatorController(OperatorServiceImpl operatorService) {
@@ -52,13 +52,13 @@ public class OperatorController {
         return this.operatorService.startExecution(orderId);
     }
 
-    @PostMapping("finish/{executionId}")
+    @PutMapping("finish/{executionId}")
     @ResponseStatus(HttpStatus.CREATED)
     public OperatorExecutionTO finishOrder(@PathVariable Long executionId) {
         return this.operatorService.finishExecution(executionId);
     }
 
-    @PostMapping("abort/{executionId}")
+    @PutMapping("abort/{executionId}")
     @ResponseStatus(HttpStatus.CREATED)
     public OperatorExecutionTO abortOrder(@PathVariable Long executionId) {
         return this.operatorService.abortExecution(executionId);

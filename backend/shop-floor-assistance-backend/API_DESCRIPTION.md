@@ -288,7 +288,7 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: Started execution as `execution TO`
 ---
 
-#### `POST /operator/finish/{executionId}`
+#### `PUT /operator/finish/{executionId}`
 - **Description**:  Finish an execution of an order and returns `finished` execution TO.
 - **Parameters**:
   - `{executionId}`: The unique identifier of the started execution.
@@ -298,7 +298,7 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: Finished execution as `execution TO`
 ---
 
-#### `POST /operator/abort/{executionId}`
+#### `PUT /operator/abort/{executionId}`
 - **Description**:  Abort an execution of an order and returns `aborted` execution TO.
 - **Parameters**:
   - `{executionId}`: The unique identifier of the started execution.
