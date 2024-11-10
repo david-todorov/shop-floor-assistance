@@ -2,15 +2,11 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, O
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { orderTO } from '../../../types/orderTO';
-
 import { CommonModule } from '@angular/common';
-import { ThemePalette } from '@angular/material/core';
-import { workflowCheckedStatus, workflowStates } from '../workflowUI-state';
 import { taskTO } from '../../../types/taskTO';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { ItemAccordionComponent } from '../item-accordion/item-accordion.component';
-import { itemTO } from '../../../types/itemTO';
 
 @Component({
   selector: 'app-task-tab',
@@ -27,21 +23,15 @@ import { itemTO } from '../../../types/itemTO';
 })
 export class TaskTabComponent implements OnInit, OnChanges{
 
+  @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
-  @Input() orderUpdated!: orderTO;
-  @Input() doneAll: boolean[]= [];
+  
+  @Output() onOrderUpdate = new EventEmitter<orderTO>();
+  @Output() onWorkflowChange = new EventEmitter<number | null>();
+  @Output() ontaskChange = new EventEmitter<number | null>();
 
-  @Input() operatorCheckedStatus_tasks!: workflowCheckedStatus[];
-  @Output() onTasksChecked = new EventEmitter<workflowCheckedStatus[]>();
-
-  @Output() orderUpdateFromTasks = new EventEmitter<orderTO>();
-  // @Output() onSelect = new EventEmitter<number | null>();
-
-  selectedTaskIndex: number | null = 0;
+  taskIndex: number | null = 0;
   orderExists: boolean= false;
-
-  // taskFlowStates: workflowStates= {};
-
   tasks!: taskTO[];
 
   constructor(public dialog: MatDialog,
@@ -56,18 +46,18 @@ export class TaskTabComponent implements OnInit, OnChanges{
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['workflowIndex']) {
-      this.selectedTaskIndex = 0;
+      this.taskIndex = 0;
+      this.onWorkflowChange.emit(this.workflowIndex);
     }
-    if (changes['workflowIndex'] || changes['orderUpdated']) {
+    if (changes['workflowIndex'] || changes['order'] || changes['taskIndex']) {
       this.getTasksForSelectedWorkflow();
       console.log('Relevant changes detected:', changes);
     }
   }
 
   getTasksForSelectedWorkflow() {
-    if(this.workflowIndex != null && 
-      this.orderUpdated.workflows) {
-      this.tasks = [...this.orderUpdated.workflows[this.workflowIndex].tasks];
+    if(this.workflowIndex != null && this.order.workflows) {
+      this.tasks = [...this.order.workflows[this.workflowIndex].tasks];
     }else{
       this.tasks=[];
     }
@@ -76,13 +66,13 @@ export class TaskTabComponent implements OnInit, OnChanges{
   deleteTasks(index: any,event: MouseEvent) {
       if (this.workflowIndex !== null) {
       event.stopPropagation();
-      this.orderUpdated.workflows[this.workflowIndex].tasks.splice(index, 1);
-      if(index>=this.orderUpdated.workflows[this.workflowIndex].tasks.length && this.selectedTaskIndex !=null){
-        this.selectedTaskIndex-=1;
+      this.order.workflows[this.workflowIndex].tasks.splice(index, 1);
+      if(index>=this.order.workflows[this.workflowIndex].tasks.length && this.taskIndex !=null){
+        this.taskIndex-=1;
       }
 
-      this.tasks = [...this.orderUpdated.workflows[this.workflowIndex].tasks]; // Create a new array reference
-      this.orderUpdateFromTasks.emit(this.orderUpdated);
+      this.tasks = [...this.order.workflows[this.workflowIndex].tasks];
+      this.onOrderUpdate.emit(this.order);
     }
   }
 
@@ -94,28 +84,23 @@ export class TaskTabComponent implements OnInit, OnChanges{
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result && this.workflowIndex!=null && this.selectedTaskIndex!=null) {
-        console.log(result)
-        this.orderUpdated.workflows[this.workflowIndex].tasks[this.selectedTaskIndex].name= result.taskname;
-        this.orderUpdated.workflows[this.workflowIndex].tasks[this.selectedTaskIndex].description= result.description;
+      if (result && this.workflowIndex!=null && this.taskIndex!=null) {
+        this.order.workflows[this.workflowIndex].tasks[this.taskIndex].name= result.taskname;
+        this.order.workflows[this.workflowIndex].tasks[this.taskIndex].description= result.description;
       }
-      this.orderUpdateFromTasks.emit(this.orderUpdated);
+      this.onOrderUpdate.emit(this.order);
     });
 
   }
 
-  updateItemsInOrder(event: itemTO[]){
-    if(this.workflowIndex!=null && this.selectedTaskIndex!=null){
-      this.orderUpdated.workflows[this.workflowIndex].tasks[this.selectedTaskIndex].items= event;
-      this.orderUpdateFromTasks.emit(this.orderUpdated);
-    }
+  updateItemsInOrder(event: orderTO){
+    // if(this.workflowIndex!=null && this.taskIndex!=null){
+      this.onOrderUpdate.emit(this.order);
+    // }
   }
 
-  resolveCheck(event: any) {
-    // this.doneAll[index]=event;
-    // const allTasksDone= this.doneAll.every(state => state);
-    // console.log('all tasks done', allTasksDone)
-    console.log('tab received is:', event)
+  onTaskSelected(taskIndex: number) {
+    this.ontaskChange.emit(taskIndex);
   }
 
 }

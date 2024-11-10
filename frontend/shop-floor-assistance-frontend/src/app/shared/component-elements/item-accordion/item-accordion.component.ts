@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { itemFlowStates, workflowCheckedStatus } from '../workflowUI-state';
+import { itemUIStates, workflowCheckedStatus } from '../workflowUI-state';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { orderTO } from '../../../types/orderTO';
 
@@ -27,112 +27,100 @@ import { orderTO } from '../../../types/orderTO';
 })
 export class ItemAccordionComponent implements OnInit, OnChanges{
 
-  @Input() selectedTasks!: taskTO[];
-  @Input() selectedTab!: number | null;
-
-  @Output() updatedItemsFromTasks = new EventEmitter<itemTO[]>();
-  @Output() itemsCheckStatus = new EventEmitter<boolean>();
-  @Output() tabselected = new EventEmitter<number>();
+  @Input() order!:orderTO;
+  @Input() workflowIndex!:number | null;
+  @Input() taskIndex!: number | null;
+  
+  @Output() onOrderUpdate= new EventEmitter<orderTO>();
 
   expandedPanels: boolean[] = [];
   items!:itemTO[];
-  itemFlowStates: itemFlowStates= {};
-  selectedItemIndex!: number | null;
-
-
+  itemUIStates: itemUIStates= {};
+  itemIndex!: number | null;
 
   constructor(private cdr:ChangeDetectorRef){}
 
   ngOnInit(): void {}
+
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['selectedTasks'] || changes['selectedTab']){
-      if(this.selectedTab != null && this.selectedTab >=0){
+    console.log('wflowindex:',this.workflowIndex, 'taskIndex',this.taskIndex)
+    if(changes['order'] || changes['workflowIndex'] || changes['taskIndex']){
+      if(this.taskIndex != null && this.taskIndex >=0){
         this.getItemsForSelectedTask();
-        this.initializeItemflowStates(); 
+        this.initializeItemUIStates(); 
       }
     }
   }
 
-  initializeItemflowStates() {
+  initializeItemUIStates() {//keep the itemUIStates in tandem with item update/delete/ etc.
     this.items.forEach((item: itemTO, index: number) => {
-      this.itemFlowStates[index] = { editMode: false, 
+      this.itemUIStates[index] = { editMode: false, 
         showDescription: false, 
         updatedTitle: item.name,
         updatedDescription: item.longDescription,
-        upDatedTimeReq: item.timeRequired,
-        checkStatus: false};
+        upDatedTimeReq: item.timeRequired};
     });
   }
 
-  // onAccordionClick(index: number): void {
-  //   console.log('Accordion element clicked:', index);
-  //   this.selectedItemIndex= index;
-  // }
 
   getItemsForSelectedTask() {
-  if(this.selectedTab != null){
-    this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
-  }else{
-    this.items=[];
+    if(this.taskIndex != null && this.workflowIndex !=null){
+      const task= this.order.workflows[this.workflowIndex].tasks[this.taskIndex]
+      this.items = [...task.items]; // Create a new array reference
+    }else{
+      this.items=[];
+    }
   }
-}
 
 
   deleteItems(index: number,event: MouseEvent) {
-    if(this.selectedTab!=null){
+    if(this.taskIndex!=null && this.workflowIndex !=null){
       event.stopPropagation();
-      this.selectedTasks[this.selectedTab].items.splice(index, 1);
-      // if(this.selectedTasks[this.selectedTab].items.length>0){
-      //   this.selectedItemIndex=0;
-      // }else{
-      //   this.selectedItemIndex=null;
-      // }
-      this.selectedItemIndex= this.selectedTasks[this.selectedTab].items.length>0?0:null;
-      this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
-      this.initializeItemflowStates(); 
+      const task= this.order.workflows[this.workflowIndex].tasks[this.taskIndex];
+      task.items.splice(index, 1);
+
+      this.itemIndex= task.items.length>0?0:null;
+      this.items = [...task.items]; // Create a new array reference
+      this.initializeItemUIStates(); 
       this.expandedPanels= new Array(this.items.length).fill(false);
-      this.updatedItemsFromTasks.emit(this.items);
+      this.onOrderUpdate.emit(this.order);
     }
   }
 
   saveItems(index: number){
-    if(this.itemFlowStates[index].updatedTitle=='' || this.itemFlowStates[index].updatedTitle==null){
+    if(this.itemUIStates[index].updatedTitle=='' || this.itemUIStates[index].updatedTitle==null){
       alert('The item name cannot be empty!');
       return;
     }
-    this.items[index].name= this.itemFlowStates[index].updatedTitle;
-    this.items[index].longDescription= this.itemFlowStates[index].updatedDescription;
-    this.items[index].timeRequired= this.itemFlowStates[index].upDatedTimeReq;
-  };
+    this.items[index].name= this.itemUIStates[index].updatedTitle;
+    this.items[index].longDescription= this.itemUIStates[index].updatedDescription;
+    this.items[index].timeRequired= this.itemUIStates[index].upDatedTimeReq;
+  }
 
   toggleEditMode(index: number, event: MouseEvent) {
     event.stopPropagation();
     this.expandedPanels[index] = !this.expandedPanels[index]; // Expand the panel
-    this.selectedItemIndex = index;
+    this.itemIndex = index;
     this.cdr.detectChanges();
-    this.itemFlowStates[index].editMode = !this.itemFlowStates[index].editMode;
-    const saveMode= !this.itemFlowStates[index].editMode; //save mode is opposite of edit mode
+    this.itemUIStates[index].editMode = !this.itemUIStates[index].editMode;
+    const saveMode= !this.itemUIStates[index].editMode; //save mode is opposite of edit mode
     if(saveMode){
       this.saveItems(index);
-      this.initializeItemflowStates();
+      this.initializeItemUIStates();
       this.expandedPanels= new Array(this.items.length).fill(false);
-      this.updatedItemsFromTasks.emit(this.items);
+      this.onOrderUpdate.emit(this.order);
     }
   }
 
-  resolveItemsChecked(event: MouseEvent, index: number) {
-
-  }
-
   selectItemflow(index: number) {
-  if (this.itemFlowStates[index].editMode) {
+  if (this.itemUIStates[index].editMode) {
     return; // Do not trigger selectWorkflow if in edit mode
   }
-  this.selectedItemIndex = index;
+  this.itemIndex = index;
   }
 
   isAnyWorkflowInEditMode(): boolean {
-    return Object.values(this.itemFlowStates).some(state => state.editMode);
+    return Object.values(this.itemUIStates).some(state => state.editMode);
   }
 
 }

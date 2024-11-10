@@ -2,45 +2,43 @@
     <mat-accordion>
         @for(item of items; track $index){
         <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode()" >
-            <mat-expansion-panel-header [ngClass]="{'selected-element': selectedItemIndex === $index}" 
+            <mat-expansion-panel-header [ngClass]="{'selected-element': itemIndex === $index}" 
             (click)="!isAnyWorkflowInEditMode() && selectItemflow($index)">
                 <mat-panel-title class="flex flex-row justify-between w-1/2">
-                    @if(!itemFlowStates[$index].editMode){
+                    @if(!itemUIStates[$index].editMode){
                     {{ item.name }}
                     <p class="">Time required (minutes): {{ item.timeRequired }} </p>
                     }@else{
                         <div class="flex flex-row gap-x-5">                  
-                            <input class="edit-field" [(ngModel)]="itemFlowStates[$index].updatedTitle" [value]="item.name">
+                            <input class="edit-field" [(ngModel)]="itemUIStates[$index].updatedTitle" [value]="item.name">
                             <label for="timeReq" class="text-sm w-fit">Time required (minutes):</label>
-                            <input class="edit-field w-1/2" [(ngModel)]="itemFlowStates[$index].upDatedTimeReq" [value]="item.timeRequired" name="timeReq">
+                            <input class="edit-field w-1/2" [(ngModel)]="itemUIStates[$index].upDatedTimeReq" [value]="item.timeRequired" name="timeReq">
                         </div>
                     }
                 </mat-panel-title>
                 <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
                     <div class="whitespace-nowrap flex flex-row items-center justify-center">
-                        <button mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="selectedItemIndex !== $index">
-                            <mat-icon>{{ itemFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
+                        <button mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="itemIndex !== $index">
+                            <mat-icon>{{ itemUIStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
                         </button>
-                        <button mat-icon-button (click)="deleteItems($index,$event)" [hidden]="selectedItemIndex !== $index">
+                        <button mat-icon-button (click)="deleteItems($index,$event)" [hidden]="itemIndex !== $index">
                             <mat-icon>delete</mat-icon>
                         </button>
 
-                        @if(itemFlowStates[$index].checkStatus){
+                        <!-- @if(itemUIStates[$index].checkStatus){ -->
                         <button class="done-all" mat-icon-button>
                             <mat-icon>done_all</mat-icon>
                         </button>
-                        }
+                        <!-- } -->
                         <mat-checkbox />
-                                    
-                                    <!-- </mat-checkbox> -->
                     </div>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <div class="expansion-panel-content">
-                @if(!itemFlowStates[$index].editMode){
+                @if(!itemUIStates[$index].editMode){
                 <p>{{ item.longDescription }}</p>
                 }@else {
-                <textarea class="edit-textarea" [(ngModel)]="itemFlowStates[$index].updatedDescription"
+                <textarea class="edit-textarea" [(ngModel)]="itemUIStates[$index].updatedDescription"
                     [value]="item.longDescription"></textarea>
                 }
             </div>
