@@ -20,7 +20,6 @@ import { itemTO } from '../../../types/itemTO';
     MatTabsModule,
     CommonModule,
     MatDialogModule,
-    EditTaskDialogComponent,
     ItemAccordionComponent
   ],
   templateUrl: './task-tab.component.html',
@@ -57,29 +56,21 @@ export class TaskTabComponent implements OnInit, OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['orderUpdated'] || changes['workflowIndex']) {
-      // this.initializeWorkflowStates();
+    const relevantChanges=['workflowIndex', 'orderUpdated']
+    if(Object.keys(changes).some(key=>relevantChanges.includes(key))){
+      this.selectedTaskIndex = 0;
       this.getTasksForSelectedWorkflow();
+      console.log('Relevant changes detected:', changes);
     }
   }
 
   getTasksForSelectedWorkflow() {
-
-    if(this.workflowIndex !== null && 
-      this.workflowIndex !== undefined &&  
-      this.orderUpdated && 
+    if(this.workflowIndex != null && 
       this.orderUpdated.workflows) {
-      // this.tasks=  this.orderUpdated.workflows[this.workflowIndex].tasks;
-      this.tasks = [...this.orderUpdated.workflows[this.workflowIndex].tasks]; // Create a new array reference
-          console.log('The selected index is:',this.selectedTaskIndex)
-    console.log('The selected tasks are is:',this.tasks)
+      this.tasks = [...this.orderUpdated.workflows[this.workflowIndex].tasks];
     }else{
       this.tasks=[];
     }
-  }
-
-  initializeWorkflowStates() {
-
   }
 
   deleteTasks(index: any,event: MouseEvent) {
@@ -111,11 +102,6 @@ export class TaskTabComponent implements OnInit, OnChanges{
       this.orderUpdateFromTasks.emit(this.orderUpdated);
     });
 
-  }
-
-  onTabChange(index: number): void {
-    this.selectedTaskIndex = index;
-    console.log('Selected tab index:', this.selectedTaskIndex);
   }
 
   updateItemsInOrder(event: itemTO[]){
