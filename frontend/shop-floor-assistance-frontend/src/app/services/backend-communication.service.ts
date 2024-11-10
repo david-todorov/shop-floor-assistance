@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { userRoleTO, userTO } from '../types/userTO';
 import { loginState } from '../shared/component-elements/login-state';
+// import { productTO } from '../types/productTO';
 
 @Injectable({
   providedIn: 'root'
@@ -91,7 +92,11 @@ deleteEditorEquipment(id: number): Observable<any>{
     return this.http.delete(`${this.apiServerURL}editor/equipment/${id}`);
   }
 
-  getEditorProducts(): Observable<any> {
+ getAllEditorProduct(): Observable<any> {
+    return this.http.get(`${this.apiServerURL}editor/products`);
+  }
+
+  getEditorProducts(id: number): Observable<any> {
     return this.http.get(`${this.apiServerURL}editor/products`);
   }
 
@@ -100,7 +105,17 @@ deleteEditorEquipment(id: number): Observable<any>{
   }
 
   createProduct(productData: any): Observable<any> {
-    return this.http.post(`${this.apiServerURL}editor/products`, productData);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(`${this.apiServerURL}editor/products`, JSON.stringify(productData), {headers});
+  
+  }
+
+  updateEditorProduct(id: number, productData: any): Observable<any>  {
+    return this.http.put(`${this.apiServerURL}editor/product/${id}`, productData);
+  }
+
+  deleteEditorProduct(id: number): Observable<any>{
+    return this.http.delete(`${this.apiServerURL}editor/product/${id}`);
   }
 
 }

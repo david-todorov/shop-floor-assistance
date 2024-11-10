@@ -8,5 +8,5 @@ export type equipmentTO = {
     updatedBy?: string;       
     createdAt?: Date;          
     updatedAt?: Date;          
-    orders: [];            
+    orders?: [];            
 };

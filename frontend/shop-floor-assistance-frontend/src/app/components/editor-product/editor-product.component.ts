@@ -34,20 +34,18 @@ export class EditorProductComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.backendCommunicationService.getEditorProducts().pipe(
+    this.backendCommunicationService.getAllEditorProduct().pipe(
       catchError((err) => {
         console.error('Error fetching product:', err);
         return of([]);
       })
     ).subscribe({
       next: (response: productTO[]) => {
-        if (response) {
           this.loadedProduct = response; // Assign API response to loadedProduct
           console.log('Product loaded:', this.loadedProduct);
-        }
-      },
+        },
       error: (err) => {
-        console.log('An error occurred:', err);
+        console.log('An error occurred while loading product', err);
       },
       complete: () => {
         console.log('Products loaded complete');
@@ -68,8 +66,8 @@ export class EditorProductComponent implements OnInit {
         if (this.product == null || this.product === undefined) {
           alert('You must specify a product!');
         } else {
-          console.log(this.product);
-          this.router.navigate(['/editor/product/', this.product.productNumber]);
+          console.log('Selected product:', this.product);
+          this.router.navigate(['/editor/product/', this.product.id]);
         }
       }
 

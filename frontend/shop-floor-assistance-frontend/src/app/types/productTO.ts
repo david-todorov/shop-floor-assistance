@@ -1,4 +1,5 @@
 export type productTO = {
+    id?: number;
     productNumber: string;            // To match equipmentNumber from backend
     name: string;
     type: string;             
