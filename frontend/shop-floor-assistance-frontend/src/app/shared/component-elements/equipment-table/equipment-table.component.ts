@@ -1,4 +1,3 @@
-
 import { AfterViewInit, Component, EventEmitter, inject, Input, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -37,14 +36,9 @@ export class EquipmentTableComponent {
     }
   }
 
-  displayedColumns: string[] = ['select', 'Equipment No.', 'Name', 'Description' ];
+  displayedColumns: string[] = ['select', 'Equipment No.', 'Name', 'Description', 'Type' ];
 
-  
-  // Paginator if required
-  // @ViewChild(MatPaginator) paginator!: MatPaginator;
   ngAfterViewInit() {
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
     }
 
   onRadioChange(Equipment: equipmentTO) {

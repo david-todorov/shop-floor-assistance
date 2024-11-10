@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -70,19 +70,28 @@ export class BackendCommunicationService {
     return this.http.get(`${this.apiServerURL}editor/orders/${id}`);
   }
 
-  getEditorEquipment(): Observable<any> {
+  getAllEditorEquipment(): Observable<any> {
     return this.http.get(`${this.apiServerURL}editor/equipment`);
   }
 
-  createEquipment(equipmentData: any): Observable<any> {
-    return this.http.post(`${this.apiServerURL}editor/equipment`, equipmentData);
+  getEditorEquipment(id: string): Observable<any>{
+    return this.http.get(`${this.apiServerURL}editor/equipment/${id}`);
   }
 
-  getEditorProduct(): Observable<any> {
-    return this.http.get(`${this.apiServerURL}editor/product`);
+  createEquipment(equipmentData: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(`${this.apiServerURL}editor/equipment`, JSON.stringify(equipmentData), {headers});
+  }
+
+  getEditorProducts(): Observable<any> {
+    return this.http.get(`${this.apiServerURL}editor/products`);
+  }
+
+   getEditorProduct(id: string): Observable<any>{
+    return this.http.get(`${this.apiServerURL}editor/products/${id}`);
   }
 
   createProduct(productData: any): Observable<any> {
-    return this.http.post(`${this.apiServerURL}editor/product`, productData);
+    return this.http.post(`${this.apiServerURL}editor/products`, productData);
   }
 }

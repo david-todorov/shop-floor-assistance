@@ -7,13 +7,20 @@
   
   <div class="grid grid-cols-2 gap-4 mb-5">
     <div class="font-semibold">Equipment Number</div>
-    <div><input type="text" placeholder="Enter Equipment Number" class="input-field" [(ngModel)]="equipment.number" (input)="checkFormCompletion()"></div>
+    <div><input type="text" placeholder="Enter Equipment Number" class="input-field" [(ngModel)]="equipment.equipmentNumber" (input)="checkFormCompletion()"></div>
 
     <div class="font-semibold">Name</div>
     <div><input type="text" placeholder="Enter Name" class="input-field" [(ngModel)]="equipment.name" (input)="checkFormCompletion()"></div>
 
     <div class="font-semibold">Description</div>
     <div><input type="text" placeholder="Enter Description" class="input-field" [(ngModel)]="equipment.description" (input)="checkFormCompletion()"></div>
+
+     <div class="font-semibold">Type</div>
+    <div><input type="text" placeholder="Enter Type" class="input-field" [(ngModel)]="equipment.type" (input)="checkFormCompletion()"></div>
+
+     <!-- <div class="font-semibold">Orders</div>
+    <div><input type="text" placeholder="Enter Orders" class="input-field" [(ngModel)]="equipment.orders" (input)="checkFormCompletion()"></div> -->
+
   </div>
 </div>
 

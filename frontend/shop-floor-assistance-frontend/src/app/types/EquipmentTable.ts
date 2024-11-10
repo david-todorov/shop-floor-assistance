@@ -2,23 +2,27 @@ import { equipmentTO } from "./equipmentTO";
 
 export const EquipmentTable: equipmentTO[] = [
   {
-    "number": "E0001",
+    "equipmentNumber": "E0001",
     "name": "BEC 500_123",
-    "description": "High end Uhlmann packaging Machine Type BEC500"
+    "description": "High end Uhlmann packaging Machine",
+    "type": "Type BEC500"
   },
   {
-    "number": "E0002",
+    "equipmentNumber": "E0002",
     "name": "Format set abdc",
-    "description": "Specific format set for BEC 500; 8x2 blister"
+    "description": "Specific format set for BEC 500",
+    "type": "8x2 blister"
   },
   {
-    "number": "E0003",
+    "equipmentNumber": "E0003",
     "name": "Format set defg",
-    "description": "Specific format set for BEC 500; 10x3 blister"
+    "description": "Specific format set for BEC 500",
+    "type": "10x3 blister"
   },
   {
-    "number": "E0004",
+    "equipmentNumber": "E0004",
     "name": "BEC 500_456",
-    "description": "High end Uhlmann packaging Machine Type BEC500"
+    "description": "High end Uhlmann packaging Machine",
+    "type": "Type BEC500"
   }
 ]

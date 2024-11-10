@@ -5,7 +5,6 @@ import { catchError, of } from 'rxjs';
 import { EquipmentTableComponent } from '../../shared/component-elements/equipment-table/equipment-table.component';
 import { equipmentTO } from '../../types/equipmentTO';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
-import { EquipmentTable } from '../../types/EquipmentTable';
 
 @Component({
   selector: 'app-editor-equipment',
@@ -24,11 +23,6 @@ export class EditorEquipmentComponent implements OnInit {
   editBtnLabel: string = 'Edit Equipment';
   createBtnLabel: string = 'Create Equipment';
 
-  // newEquipmentData: any = {
-  //   number:'',
-  //   name: '',
-  //   description: ''
-  // };
 
   constructor(
     private router: Router,
@@ -36,34 +30,31 @@ export class EditorEquipmentComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadEquipment();
+    this.loadAllEquipment();
   }
 
-  loadEquipment(): void {
-    this.backendCommunicationService.getEditorEquipment().pipe(
+  loadAllEquipment(): void {
+    this.backendCommunicationService.getAllEditorEquipment().pipe(
       catchError((err) => {
         console.error('Error fetching equipment:', err);
         return of([]);
       })
     ).subscribe({
-      next: (response) => {
-        if (response) {
-          this.loadEquipment = response; // Assign API response to loadedEquipment
-          console.log('Equipment loaded:', this.loadEquipment);
-        }
+      next: (response: equipmentTO[]) => {
+        this.loadedEquipment = response; // Directly assign the API response to loadedEquipment
+        console.log('Equipment loaded:', this.loadedEquipment);
       },
       error: (err) => {
-        console.log('An error occurred:', err);
+        console.error('An error occurred while loading equipment:', err);
       },
       complete: () => {
-        this.loadedEquipment= EquipmentTable;
-        console.log('done', this.loadedEquipment);
+        console.log('Equipment loading complete');
       }
     });
   }
 
-  equipmentSelected($event: any): void {
-    this.equipment = $event;
+  equipmentSelected($event: any){
+    this.equipment = $event
   }
 
   resolveButtonClick($event: any, action: string): void {
@@ -76,7 +67,7 @@ export class EditorEquipmentComponent implements OnInit {
           alert('You must specify an equipment!');
         } else {
           console.log(this.equipment);
-          this.router.navigateByUrl('/editor/equipment'),( this.equipment.number);
+          this.router.navigate(['/editor/equipment/', this.equipment.equipmentNumber]);
         }
       }
 

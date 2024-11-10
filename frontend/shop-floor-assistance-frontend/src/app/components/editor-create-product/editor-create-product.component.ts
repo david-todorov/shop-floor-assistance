@@ -18,14 +18,18 @@ import { Component } from '@angular/core';
 
 export class EditorCreateProductComponent {
   product: productTO = {
-    number: '',
+    productNumber: '',
     name: '',
     description: '',
     language:'',
     country:'',
+    type: '',
+    packageSize: '',
+    packageType: '',
   };
   createDisabled: boolean = true;
   createBtnLabel: string = 'Save Product';
+
   // Initialize equipmentState without an interface
   productState = {
     buttonIcon: 'save',
@@ -39,36 +43,20 @@ export class EditorCreateProductComponent {
     private backendCommunicationService: BackendCommunicationService
   ) { }
 
-  // Method to handle Save Equipment button click
-  //  saveEquipment(event: MouseEvent) {
-  //   if (event.type==='click' && this.equipment.number && this.equipment.name && this.equipment.description) {
-  //     this.backendCommunicationService.createEquipment(this.equipment).pipe(
-  //       catchError(error => {
-  //         console.error('Error creating equipment:', error);
-  //         return of(null);
-  //       })
-  //     ).subscribe({
-  //       next: (response) => {
-  //         if (response) {
-  //           console.log('Equipment created successfully:', response);
-  //           // Display a success message
-  //           alert('Equipment created successfully!');
-
-  //           // Delay navigation to allow the user to see the message
-  //           setTimeout(() => {
-  //             this.router.navigateByUrl('/editor-equipment');
-  //           }, 1000); // 1-second delay
-  //         }
-  //       }
-  //     });
-  //   } else {
-  //     console.error('All fields are required');
-  //   }
-  // }
-
-  // Method to handle Save Equipment button click with error handling
+  // Method to handle Save Product button click with error handling
   saveProduct(event: MouseEvent) {
-    if (event.type === 'click' && this.product.number && this.product.name && this.product.description) {
+    if (
+      event.type === 'click' &&
+      this.product.productNumber &&
+      this.product.name &&
+      this.product.description &&
+      this.product.language &&
+      this.product.country &&
+      this.product.type &&
+      this.product.packageSize &&
+      this.product.packageType
+    ) {
+      console.log("Payload:", this.product); // Debugging line to check payload
       this.backendCommunicationService.createProduct(this.product)
         .pipe(
           catchError((error) => {
@@ -91,12 +79,11 @@ export class EditorCreateProductComponent {
 
               // Delay navigation to allow the user to see the message
               setTimeout(() => {
-                this.router.navigateByUrl('/editor-product');
+                this.router.navigateByUrl('/editor/product');
               }, 1000); // 1-second delay
             }
           },
           error: () => {
-            // Handle any additional errors if needed
             console.error('Unexpected error occurred during product creation.');
           }
         });
@@ -108,6 +95,25 @@ export class EditorCreateProductComponent {
 
   // Enable the button when all fields have values
   checkFormCompletion() {
-    this.createDisabled = !(this.product.number && this.product.name && this.product.description);
+    console.log("Product Number:", this.product.productNumber);
+    console.log("Name:", this.product.name);
+    console.log("Description:", this.product.description);
+    console.log("Language:", this.product.language);
+    console.log("Country:", this.product.country);
+    console.log("Type:", this.product.type);
+    console.log("Package Size:", this.product.packageSize);
+    console.log("Package Type:", this.product.packageType);
+
+    this.createDisabled = !(
+      this.product.productNumber &&
+      this.product.name &&
+      this.product.description &&
+      this.product.language &&
+      this.product.country &&
+      this.product.type &&
+      this.product.packageSize &&
+      this.product.packageType
+    );
+    console.log("Create Disabled:", this.createDisabled);
   }
 }

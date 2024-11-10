@@ -5,8 +5,6 @@ import { catchError, of } from 'rxjs';
 import { ProductTableComponent } from '../../shared/component-elements/product-table/product-table.component';
 import { productTO } from '../../types/productTO';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
-import { ProductTabl} from '../../types/ProductTabl';
-
 
 @Component({
   selector: 'app-editor-product',
@@ -25,32 +23,26 @@ export class EditorProductComponent implements OnInit {
   editBtnLabel: string = 'Edit Product';
   createBtnLabel: string = 'Create Product';
 
-  // newEquipmentData: any = {
-  //   number:'',
-  //   name: '',
-  //   description: ''
-  // };
-
   constructor(
     private router: Router,
     private backendCommunicationService: BackendCommunicationService
   ) { }
 
   ngOnInit(): void {
-    this.loadProduct();
-    console.log("in console")
+    this.loadProducts();
+    console.log("Loading products in console")
   }
 
-  loadProduct(): void {
-    this.backendCommunicationService.getEditorProduct().pipe(
+  loadProducts(): void {
+    this.backendCommunicationService.getEditorProducts().pipe(
       catchError((err) => {
         console.error('Error fetching product:', err);
-        return of(null);
+        return of([]);
       })
     ).subscribe({
-      next: (response) => {
+      next: (response: productTO[]) => {
         if (response) {
-          this.loadedProduct = response; // Assign API response to loadedEquipment
+          this.loadedProduct = response; // Assign API response to loadedProduct
           console.log('Product loaded:', this.loadedProduct);
         }
       },
@@ -58,8 +50,7 @@ export class EditorProductComponent implements OnInit {
         console.log('An error occurred:', err);
       },
       complete: () => {
-        this.loadedProduct= ProductTabl;
-        console.log('done', this.loadedProduct);
+        console.log('Products loaded complete');
       }
     });
   }
@@ -78,7 +69,7 @@ export class EditorProductComponent implements OnInit {
           alert('You must specify a product!');
         } else {
           console.log(this.product);
-          this.router.navigateByUrl('/editor/product'),( this.product.number);
+          this.router.navigate(['/editor/product/', this.product.productNumber]);
         }
       }
 

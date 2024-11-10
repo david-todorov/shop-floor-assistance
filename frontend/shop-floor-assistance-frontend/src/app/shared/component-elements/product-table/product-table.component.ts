@@ -38,7 +38,7 @@ export class ProductTableComponent {
     }
   }
 
-  displayedColumns: string[] = ['select', 'Product No.', 'Name', 'Description', 'Language', 'Country' ];
+  displayedColumns: string[] = ['select', 'Product No.', 'Name', 'Type', 'Description', 'Language', 'Country', 'Package Size', 'Package Type' ];
 
   
   // Paginator if required
