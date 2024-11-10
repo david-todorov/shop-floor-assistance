@@ -169,4 +169,17 @@ public class DBOUpdaterMapper {
         return target;
     }
 
+    public ExecutionDBO finishExecution(ExecutionDBO executionDBO, Long finisherId) {
+        executionDBO.setFinishedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        executionDBO.setFinishedBy(finisherId);
+
+        return executionDBO;
+    }
+
+    public ExecutionDBO abortExecution(ExecutionDBO executionDBO) {
+        executionDBO.setAborted(true);
+
+        return executionDBO;
+    }
+
 }

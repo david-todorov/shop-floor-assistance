@@ -301,6 +301,9 @@ public class EditorServiceImpl implements EditorService {
         // Clear equipment references using the helper method
         existingOrderDBO.clearEquipment();
 
+        // Clear Execution references using helper method
+        existingOrderDBO.clearExecutions();
+
         // Finally, delete the order itself from the repository
         orderRepository.delete(existingOrderDBO);
     }
