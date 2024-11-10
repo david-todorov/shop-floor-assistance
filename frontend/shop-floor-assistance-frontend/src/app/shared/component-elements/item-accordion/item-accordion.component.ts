@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { itemFlowStates, workflowCheckedStatus } from '../workflowUI-state';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { orderTO } from '../../../types/orderTO';
 
 @Component({
   selector: 'app-item-accordion',
@@ -28,29 +29,21 @@ export class ItemAccordionComponent implements OnInit, OnChanges{
 
   @Input() selectedTasks!: taskTO[];
   @Input() selectedTab!: number | null;
-  @Input() checksArray!: workflowCheckedStatus[];
 
   @Output() updatedItemsFromTasks = new EventEmitter<itemTO[]>();
   @Output() itemsCheckStatus = new EventEmitter<boolean>();
-
-
   @Output() tabselected = new EventEmitter<number>();
-  constructor(private cdr:ChangeDetectorRef){}
-
-  ngOnInit(): void {
-  
-  }
-
 
   expandedPanels: boolean[] = [];
-  
-  itemsDoneStatus:boolean[]= [];
-
   items!:itemTO[];
   itemFlowStates: itemFlowStates= {};
   selectedItemIndex!: number | null;
 
 
+
+  constructor(private cdr:ChangeDetectorRef){}
+
+  ngOnInit(): void {}
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['selectedTasks'] || changes['selectedTab']){
       if(this.selectedTab != null && this.selectedTab >=0){
@@ -60,58 +53,45 @@ export class ItemAccordionComponent implements OnInit, OnChanges{
     }
   }
 
-
-   initializeItemflowStates() {
-      this.items.forEach((item: itemTO, index: number) => {
-        this.itemFlowStates[index] = { editMode: false, 
-          showDescription: false, 
-          updatedTitle: item.name,
-          updatedDescription: item.longDescription,
-          upDatedTimeReq: item.timeRequired,
-          checkStatus: false};
-      });
-      // this.expandedPanels= new Array(this.items.length).fill(false);
-    }
-
-
-
-
-  onAccordionClick(index: number): void {
-    console.log('Accordion element clicked:', index);
-    this.selectedItemIndex= index;
+  initializeItemflowStates() {
+    this.items.forEach((item: itemTO, index: number) => {
+      this.itemFlowStates[index] = { editMode: false, 
+        showDescription: false, 
+        updatedTitle: item.name,
+        updatedDescription: item.longDescription,
+        upDatedTimeReq: item.timeRequired,
+        checkStatus: false};
+    });
   }
 
-   getItemsForSelectedTask() {
-    if(this.selectedTab !== null && 
-      this.selectedTab !== undefined) {
-      this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
-    }else{
-      this.items=[];
-    }
+  // onAccordionClick(index: number): void {
+  //   console.log('Accordion element clicked:', index);
+  //   this.selectedItemIndex= index;
+  // }
+
+  getItemsForSelectedTask() {
+  if(this.selectedTab != null){
+    this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
+  }else{
+    this.items=[];
   }
+}
 
 
   deleteItems(index: number,event: MouseEvent) {
     if(this.selectedTab!=null){
       event.stopPropagation();
       this.selectedTasks[this.selectedTab].items.splice(index, 1);
-      console.log('index before', this.selectedItemIndex)
-
-      // if(index<0) this.selectedItemIndex= -1;
-      // else if(index>0 && index< this.selectedTasks[this.selectedTab].items.length) this.selectedItemIndex= index-1;
-      
-      if(this.selectedTasks[this.selectedTab].items.length>0){
-        this.selectedItemIndex=0;
-      }else{
-        this.selectedItemIndex=null;
-      }
-
+      // if(this.selectedTasks[this.selectedTab].items.length>0){
+      //   this.selectedItemIndex=0;
+      // }else{
+      //   this.selectedItemIndex=null;
+      // }
+      this.selectedItemIndex= this.selectedTasks[this.selectedTab].items.length>0?0:null;
       this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
       this.initializeItemflowStates(); 
       this.expandedPanels= new Array(this.items.length).fill(false);
-
       this.updatedItemsFromTasks.emit(this.items);
-      console.log('in delete items', this.selectedTasks[this.selectedTab].items)
     }
   }
 
@@ -141,18 +121,6 @@ export class ItemAccordionComponent implements OnInit, OnChanges{
   }
 
   resolveItemsChecked(event: MouseEvent, index: number) {
-    // event.stopPropagation();
-    // const allChecked = Object.values(this.itemFlowStates).every(state => state.checkStatus);
-    // if(allChecked){
-    //   this.itemsCheckStatus.emit(true);
-    //   console.log('itemFlowStates when check true', this.itemFlowStates)
-    // }
-    // console.log('All items checked:', allChecked);
-    this.tabselected.emit(this.selectedTab??-1);
-    console.log(this.itemFlowStates[index].updatedTitle,
-      this.itemFlowStates[index].checkStatus
-    )
-
 
   }
 
@@ -166,6 +134,5 @@ export class ItemAccordionComponent implements OnInit, OnChanges{
   isAnyWorkflowInEditMode(): boolean {
     return Object.values(this.itemFlowStates).some(state => state.editMode);
   }
-
 
 }

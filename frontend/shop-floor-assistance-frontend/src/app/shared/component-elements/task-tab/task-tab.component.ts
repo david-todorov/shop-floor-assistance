@@ -49,16 +49,16 @@ export class TaskTabComponent implements OnInit, OnChanges{
   ){}
   
   ngOnInit(): void {
-    // this.initializeWorkflowStates();
-    if (this.workflowIndex === null || this.workflowIndex === undefined) {
+    if (this.workflowIndex == null) {
       this.workflowIndex = 0;
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const relevantChanges=['workflowIndex', 'orderUpdated']
-    if(Object.keys(changes).some(key=>relevantChanges.includes(key))){
+    if (changes['workflowIndex']) {
       this.selectedTaskIndex = 0;
+    }
+    if (changes['workflowIndex'] || changes['orderUpdated']) {
       this.getTasksForSelectedWorkflow();
       console.log('Relevant changes detected:', changes);
     }
