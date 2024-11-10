@@ -72,7 +72,7 @@ export class EditorCreateEquipmentComponent {
 
               // Delay navigation to allow the user to see the message
               setTimeout(() => {
-                this.router.navigateByUrl('/editor-equipment');
+                this.router.navigateByUrl('/editor/equipment');
               }, 1000); // 1-second delay
             }
           },

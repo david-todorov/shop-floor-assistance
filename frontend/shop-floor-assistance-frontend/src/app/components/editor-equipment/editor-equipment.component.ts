@@ -15,7 +15,7 @@ import { ButtonComponent } from '../../shared/component-elements/button/button.c
 })
 
 export class EditorEquipmentComponent implements OnInit {
-  
+
   equipment!: equipmentTO;
   loadedEquipment!: equipmentTO[];
   editDisabled: boolean = false;
@@ -53,21 +53,21 @@ export class EditorEquipmentComponent implements OnInit {
     });
   }
 
-  equipmentSelected($event: any){
+  equipmentSelected($event: any) {
     this.equipment = $event
   }
 
   resolveButtonClick($event: any, action: string): void {
-   if ($event.type === 'click') {
+    if ($event.type === 'click') {
       if (action === 'create') {
         // Directly navigate to the create equipment route without checking for equipment
         this.router.navigateByUrl('/editor-equipment/create');
       } else if (action === 'edit') {
-        if (this.equipment == null || this.equipment === undefined) {
-          alert('You must specify an equipment!');
+        if (!this.equipment || this.equipment.id === undefined) {
+          alert('You must specify an equipment with a valid ID!');
         } else {
-          console.log(this.equipment);
-          this.router.navigate(['/editor/equipment/', this.equipment.equipmentNumber]);
+          console.log('Selected equipment:', this.equipment);
+          this.router.navigate(['/editor/equipment', this.equipment.id]); // Use the numeric ID for navigation
         }
       }
 

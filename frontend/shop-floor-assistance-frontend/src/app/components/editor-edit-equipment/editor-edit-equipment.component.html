@@ -1,1 +1,40 @@
-<p>editor-edit-equipment works!</p>
+<div class="p-4 border rounded-lg shadow max-w-lg mx-auto">
+  <span class="text-2xl font-semibold mb-5 block text-center">Editor Workspace</span>
+  
+  <div class="text-center mb-5">
+    <span class="text-xl font-semibold">Edit Equipment Information:</span>
+  </div>
+  
+  <div class="grid grid-cols-2 gap-4 mb-5">
+    <div class="font-semibold">Equipment Number</div>
+    <div>
+      <input type="text" class="input-field" [(ngModel)]="equipment.equipmentNumber" (input)="checkFormCompletion()" placeholder="Enter Equipment Number">
+    </div>
+
+    <div class="font-semibold">Name</div>
+    <div>
+      <input type="text" class="input-field" [(ngModel)]="equipment.name" (input)="checkFormCompletion()" placeholder="Enter Name">
+    </div>
+
+    <div class="font-semibold">Description</div>
+    <div>
+      <input type="text" class="input-field" [(ngModel)]="equipment.description" (input)="checkFormCompletion()" placeholder="Enter Description">
+    </div>
+
+    <div class="font-semibold">Type</div>
+    <div>
+      <input type="text" class="input-field" [(ngModel)]="equipment.type" (input)="checkFormCompletion()" placeholder="Enter Type">
+    </div>
+  </div>
+</div>
+
+<div class="w-7/12 mx-auto  mt-6  flex justify-around">
+    <div class="w-7/12 mx-4">
+        <app-button (onClick)="resolveButtonClick($event, 'edit')" [disabled]="updateDisabled"
+            [label]="updateBtnLabel"></app-button>
+    </div>
+    <div class="w-7/12 mx-4">
+        <app-button (onClick)="resolveButtonClick($event, 'delete')"[label]="deleteBtnLabel"></app-button>
+    </div>
+
+</div>

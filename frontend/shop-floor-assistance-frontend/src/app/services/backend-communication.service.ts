@@ -74,13 +74,21 @@ export class BackendCommunicationService {
     return this.http.get(`${this.apiServerURL}editor/equipment`);
   }
 
-  getEditorEquipment(id: string): Observable<any>{
+  getEditorEquipment(id: number): Observable<any>{
     return this.http.get(`${this.apiServerURL}editor/equipment/${id}`);
   }
 
   createEquipment(equipmentData: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(`${this.apiServerURL}editor/equipment`, JSON.stringify(equipmentData), {headers});
+  }
+
+  updateEditorEquipment(id: number, equipmentData: any): Observable<any> {
+  return this.http.put(`${this.apiServerURL}editor/equipment/${id}`, equipmentData);
+}
+
+deleteEditorEquipment(id: number): Observable<any>{
+    return this.http.delete(`${this.apiServerURL}editor/equipment/${id}`);
   }
 
   getEditorProducts(): Observable<any> {
@@ -94,4 +102,5 @@ export class BackendCommunicationService {
   createProduct(productData: any): Observable<any> {
     return this.http.post(`${this.apiServerURL}editor/products`, productData);
   }
+
 }
