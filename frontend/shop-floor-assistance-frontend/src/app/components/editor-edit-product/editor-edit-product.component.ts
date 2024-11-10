@@ -54,10 +54,11 @@ export class EditorEditProductComponent {
   }
   fetchProductDetails() {
      if (this.numericId !== null) {
-      this.backendCommunicationService.getEditorProducts(this.numericId).subscribe({
+      this.backendCommunicationService.getEditorProduct(this.numericId).subscribe({
         next: (data) => {
           this.product = data;
-          this.checkFormCompletion();
+          console.log('Fetched product details:', this.product); // Log the product details for debugging
+          this.checkFormCompletion(); 
         },
         error: (error) => {
           console.error('Error loading product:', error);

@@ -96,11 +96,11 @@ deleteEditorEquipment(id: number): Observable<any>{
     return this.http.get(`${this.apiServerURL}editor/products`);
   }
 
-  getEditorProducts(id: number): Observable<any> {
-    return this.http.get(`${this.apiServerURL}editor/products`);
-  }
+  // getEditorProducts(id: number): Observable<any> {
+  //   return this.http.get(`${this.apiServerURL}editor/products`);
+  // }
 
-   getEditorProduct(id: string): Observable<any>{
+   getEditorProduct(id: number): Observable<any>{
     return this.http.get(`${this.apiServerURL}editor/products/${id}`);
   }
 
@@ -111,11 +111,11 @@ deleteEditorEquipment(id: number): Observable<any>{
   }
 
   updateEditorProduct(id: number, productData: any): Observable<any>  {
-    return this.http.put(`${this.apiServerURL}editor/product/${id}`, productData);
+    return this.http.put(`${this.apiServerURL}editor/products/${id}`, productData);
   }
 
   deleteEditorProduct(id: number): Observable<any>{
-    return this.http.delete(`${this.apiServerURL}editor/product/${id}`);
+    return this.http.delete(`${this.apiServerURL}editor/products/${id}`);
   }
 
 }
