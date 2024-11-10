@@ -1,5 +1,7 @@
 <div class="w-full">
-    <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" (selectedIndexChange)="onTabChange($event)">
+    <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" 
+         [(selectedIndex)]="selectedTaskIndex">
+         <!-- (selectedIndexChange)="onTabChange($event)"> -->
         @for(task of tasks;track $index){
             <mat-tab ><!-- *ngFor="let task of tasks; let i = index" -->
                 <ng-template mat-tab-label>
