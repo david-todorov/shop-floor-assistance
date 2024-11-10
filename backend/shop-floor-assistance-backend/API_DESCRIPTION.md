@@ -109,12 +109,12 @@ curl -X POST http:/localhost/auth/login \
 ---
 
 #STABLE
-#### `PUT /editor/orders/{id}`
+#### `PUT /editor/orders/{orderId}`
 - **Description**: Updates an existing order.
 - **Parameters**:
-  - `{id}`: The unique identifier of the order to be updated.
+  - `{orderId}`: The unique identifier of the order to be updated.
 - **Throws**:
-  - Exception if the provided order number or ID is `null`.
+  - Exception if the provided order number or orderId is `null`.
   - Exception if the provided ID does not exist in the database.
   - Exception if another order has the same `order number`, as it cannot be renamed.
   - Exception if any name property from Order level to Item level is `null` or `empty`
@@ -126,24 +126,24 @@ curl -X POST http:/localhost/auth/login \
 ---
 
 #STABLE
-#### `DELETE /editor/orders/{id}`
-- **Description**: Deletes an existing order identified by the specified `id`.
+#### `DELETE /editor/orders/{orderId}`
+- **Description**: Deletes an existing order identified by the specified `orderId`.
 - **Parameters**:
-  - `{id}`: The unique identifier of the order to be deleted.
+  - `{orderId}`: The unique identifier of the order to be deleted.
 - **Throws**:
-  - Exception if the provided `id` is `null`.
-  - Exception if the order with the specified `id` does not exist in the database.
+  - Exception if the provided `orderId` is `null`.
+  - Exception if the order with the specified `orderId` does not exist in the database.
 - **Response**: A confirmation message indicating successful deletion or an error message if the deletion fails.
 ---
 
 #STABLE
-#### `GET /editor/orders/{id}`
-- **Description**: Retrieves an existing order identified by the specified `id`.
+#### `GET /editor/orders/{orderId}`
+- **Description**: Retrieves an existing order identified by the specified `orderId`.
 - **Parameters**:
-  - `{id}`: The unique identifier of the order to be retrieved.
+  - `{orderId}`: The unique identifier of the order to be retrieved.
 - **Throws**:
-  - Exception if the provided `id` is `null`.
-  - Exception if the order with the specified `id` does not exist in the database.
+  - Exception if the provided `orderId` is `null`.
+  - Exception if the order with the specified `orderId` does not exist in the database.
 - **Response**: The requested  order as TO
 ---
 
@@ -163,37 +163,37 @@ curl -X POST http:/localhost/auth/login \
 ---
 
 #STABLE
-#### `PUT /editor/products/{id}`
+#### `PUT /editor/products/{productId}`
 - **Description**: Updates an existing product.
 - **Parameters**:
-  - `{id}`: The unique identifier of the product to be updated.
+  - `{productId}`: The unique identifier of the product to be updated.
 - **Throws**:
-  - Exception if the provided product number or ID is `null`.
-  - Exception if the provided ID does not exist in the database.
+  - Exception if the provided product number or productId is `null`.
+  - Exception if the provided productId does not exist in the database.
   - Exception if another product has the same `product number`, as it cannot be renamed.
   - Exception if any mandatory property  is `null` or `empty`
 - **Response**: The updated product as TO
 ---
 
 #STABLE
-#### `DELETE /editor/products/{id}`
-- **Description**: Deletes an existing product identified by the specified `id`.
+#### `DELETE /editor/products/{productId}`
+- **Description**: Deletes an existing product identified by the specified `productId`.
 - **Parameters**:
-  - `{id}`: The unique identifier of the product to be deleted.
+  - `{productId}`: The unique identifier of the product to be deleted.
 - **Throws**:
-  - Exception if the provided `id` is `null`.
-  - Exception if the product with the specified `id` does not exist in the database.
+  - Exception if the provided `productId` is `null`.
+  - Exception if the product with the specified `productId` does not exist in the database.
 - **Response**: A confirmation message indicating successful deletion or an error message if the deletion fails.
 ---
 
 #STABLE
-#### `GET /editor/products/{id}`
-- **Description**: Retrieves an existing product identified by the specified `id`.
+#### `GET /editor/products/{productId}`
+- **Description**: Retrieves an existing product identified by the specified `productId`.
 - **Parameters**:
   - `{id}`: The unique identifier of the product to be retrieved.
 - **Throws**:
-  - Exception if the provided `id` is `null`.
-  - Exception if the product with the specified `id` does not exist in the database.
+  - Exception if the provided `productId` is `null`.
+  - Exception if the product with the specified `productId` does not exist in the database.
 - **Response**: The requested  product as TO
 ---
 
@@ -213,12 +213,12 @@ curl -X POST http:/localhost/auth/login \
 ---
 
 #STABLE
-#### `PUT /editor/equipment/{id}`
+#### `PUT /editor/equipment/{equipmentId}`
 - **Description**: Updates an existing equipment.
 - **Parameters**:
-  - `{id}`: The unique identifier of the equipment to be updated.
+  - `{equipmentId}`: The unique identifier of the equipment to be updated.
 - **Throws**:
-  - Exception if the provided equipment number or ID is `null`.
+  - Exception if the provided equipment number or equipmentId is `null`.
   - Exception if the provided ID does not exist in the database.
   - Exception if another equipment has the same `equipment number`, as it cannot be renamed.
   - Exception if any mandatory property  is `null` or `empty`
@@ -226,24 +226,24 @@ curl -X POST http:/localhost/auth/login \
 ---
 
 #STABLE
-#### `DELETE /editor/equipment/{id}`
-- **Description**: Deletes existing equipment identified by the specified `id`.
+#### `DELETE /editor/equipment/{equipmentId}`
+- **Description**: Deletes existing equipment identified by the specified `equipmentId`.
 - **Parameters**:
-  - `{id}`: The unique identifier of the equipment to be deleted.
+  - `{equipmentId}`: The unique identifier of the equipment to be deleted.
 - **Throws**:
-  - Exception if the provided `id` is `null`.
-  - Exception if the equipment with the specified `id` does not exist in the database.
+  - Exception if the provided `equipmentId` is `null`.
+  - Exception if the equipment with the specified `equipmentId` does not exist in the database.
 - **Response**: A confirmation message indicating successful deletion or an error message if the deletion fails.
 ---
 
 #STABLE
-#### `GET /editor/equipment/{id}`
-- **Description**: Retrieves existing equipment identified by the specified `id`.
+#### `GET /editor/equipment/{equipmentId}`
+- **Description**: Retrieves existing equipment identified by the specified `equipmentId`.
 - **Parameters**:
-  - `{id}`: The unique identifier of the equipment to be retrieved.
+  - `{equipmentId}`: The unique identifier of the equipment to be retrieved.
 - **Throws**:
-  - Exception if the provided `id` is `null`.
-  - Exception if the equipment with the specified `id` does not exist in the database.
+  - Exception if the provided `equipmentId` is `null`.
+  - Exception if the equipment with the specified `equipmentId` does not exist in the database.
 - **Response**: The requested  equipment as TO
 ---
 
@@ -268,12 +268,52 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: List of orders as TOs from the database.
 ---
 
-#### `GET /operator/orders/{id}`
-- **Description**: Retrieves an existing order identified by the specified `id`.
+#### `GET /operator/orders/{orderId}`
+- **Description**: Retrieves an existing order identified by the specified `orderId`.
 - **Parameters**:
-  - `{id}`: The unique identifier of the order to be retrieved.
+  - `{orderId}`: The unique identifier of the order to be retrieved.
 - **Throws**:
-  - Exception if the provided `id` is `null`.
-  - Exception if the order with the specified `id` does not exist in the database.
-- **Response**: The requested  order as TO
+  - Exception if the provided `orderId` is `null`.
+  - Exception if the order with the specified `orderId` does not exist in the database.
+- **Response**: The requested  order as TO, examine please the OperatorOrderTO, if some questions ask me
+---
+
+#### `POST /operator/start/{orderId}`
+- **Description**:  Starts an execution of an order and returns `started` execution TO.
+- **Parameters**:
+  - `{orderId}`: The unique identifier of the order to be started.
+- **Throws**:
+  - Exception if the provided `orderId` is `null`.
+  - Exception if the order with the specified `orderId` does not exist in the database.
+- **Response**: Started execution as `execution TO`
+---
+
+#### `POST /operator/finish/{executionId}`
+- **Description**:  Finish an execution of an order and returns `finished` execution TO.
+- **Parameters**:
+  - `{executionId}`: The unique identifier of the started execution.
+- **Throws**:
+  - Exception if the provided `executionId` is `null`.
+  - Exception if the execution with the specified `executionId` does not exist in the database.
+- **Response**: Finished execution as `execution TO`
+---
+
+#### `POST /operator/abort/{executionId}`
+- **Description**:  Abort an execution of an order and returns `aborted` execution TO.
+- **Parameters**:
+  - `{executionId}`: The unique identifier of the started execution.
+- **Throws**:
+  - Exception if the provided `executionId` is `null`.
+  - Exception if the execution with the specified `executionId` does not exist in the database.
+- **Response**: Aborted execution as `execution TO`
+---
+
+#### `GET /operator/forecast/{orderId}`
+- **Description**: Retrieves a forecast for an order by the specified `orderId`.
+- **Parameters**:
+  - `{orderId}`: The unique identifier of the order to be forecasted.
+- **Throws**:
+  - Exception if the provided `orderId` is `null`.
+  - Exception if the order with the specified `orderId` does not exist in the database.
+- **Response**: The requested  forecast as TO
 ---

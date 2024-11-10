@@ -113,4 +113,13 @@ public class DBOInitializerMapper {
         itemDBO.setCreatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
         return itemDBO;
     }
+
+    public ExecutionDBO toExecutionDBO(Long executorId) {
+
+        ExecutionDBO executionDBO = new ExecutionDBO();
+        executionDBO.setStartedBy(executorId);
+        executionDBO.setStartedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+
+        return executionDBO;
+    }
 }

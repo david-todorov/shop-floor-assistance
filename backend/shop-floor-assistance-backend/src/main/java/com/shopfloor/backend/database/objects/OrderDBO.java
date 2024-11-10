@@ -64,9 +64,13 @@ public class OrderDBO {
     @JoinColumn(name = "after_product_id")
     private ProductDBO afterProduct;
 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "order")
+    private List<ExecutionDBO> executions;
+
     public OrderDBO() {
         this.equipment = new ArrayList<EquipmentDBO>();
         this.workflows = new ArrayList<WorkflowDBO>();
+        this.executions = new ArrayList<ExecutionDBO>();
     }
 
     public void setBeforeProduct(ProductDBO newBeforeProduct) {
@@ -109,7 +113,6 @@ public class OrderDBO {
         }
     }
 
-    // In OrderDBO.java
     public void addEquipment(EquipmentDBO equipment) {
         if (!this.equipment.contains(equipment)) {
             this.equipment.add(equipment);
@@ -126,7 +129,28 @@ public class OrderDBO {
 
     public void clearEquipment() {
         for (EquipmentDBO equipment : new ArrayList<>(this.equipment)) {
-            removeEquipment(equipment); // Use helper method to maintain bidirectional consistency
+            removeEquipment(equipment);
         }
     }
+
+    public void addExecution(ExecutionDBO execution) {
+        if (!this.executions.contains(execution)) {
+            this.executions.add(execution);
+            execution.setOrder(this); // Ensure bidirectional consistency
+        }
+    }
+
+    public void removeExecution(ExecutionDBO execution) {
+        if (this.executions.contains(execution)) {
+            this.executions.remove(execution);
+            execution.setOrder(null); // Remove reference but keep ExecutionDBO
+        }
+    }
+
+    public void clearExecutions() {
+        for (ExecutionDBO execution : new ArrayList<>(this.executions)) {
+            removeExecution(execution);
+        }
+    }
+
 }

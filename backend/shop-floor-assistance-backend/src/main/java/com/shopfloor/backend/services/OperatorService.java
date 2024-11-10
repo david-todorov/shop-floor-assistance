@@ -1,5 +1,7 @@
 package com.shopfloor.backend.services;
 
+import com.shopfloor.backend.api.transferobjects.operators.OperatorExecutionTO;
+import com.shopfloor.backend.api.transferobjects.operators.OperatorForecastTO;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorOrderTO;
 
 import java.util.List;
@@ -18,5 +20,13 @@ public interface OperatorService {
 
     List<OperatorOrderTO> getAllOrders();
 
-    OperatorOrderTO getOrder(long id);
+    OperatorOrderTO getOrder(Long id);
+
+    OperatorExecutionTO startExecution(Long orderId);
+
+    OperatorExecutionTO finishExecution(Long executionId);
+
+    OperatorExecutionTO abortExecution(Long executionId);
+
+    OperatorForecastTO getForecast(Long orderId);
 }

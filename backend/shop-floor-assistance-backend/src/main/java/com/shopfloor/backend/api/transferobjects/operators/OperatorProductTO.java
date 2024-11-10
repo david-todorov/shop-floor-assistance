@@ -18,9 +18,13 @@ public class OperatorProductTO {
     private String packageType;
     private String language;
     private String description;
-    private List<OperatorOrderTO> orders;
+    private List<OperatorOrderTO> ordersBefore;
+    private List<OperatorOrderTO> ordersAfter;
+
 
     public OperatorProductTO() {
-        this.orders = new ArrayList<OperatorOrderTO>();
+        this.ordersBefore = new ArrayList<OperatorOrderTO>();
+        this.ordersAfter = new ArrayList<OperatorOrderTO>();
+
     }
 }
