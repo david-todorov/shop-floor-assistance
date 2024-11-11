@@ -19,10 +19,8 @@ export class EditorOrderComponent implements OnInit{
   btnLabel: string= 'Start Wizard';
   order!: orderTO;
   loadedOrders!: orderTO[];
-  viewDisabled: boolean= false;
   editDisabled: boolean= false;
-  createDisabled: boolean= true;
-  viewBtnLabel: string= 'View Order';
+  createDisabled: boolean= false;
   editBtnLabel: string= 'Edit Order';
   createBtnLabel: string= 'Create Order';
 
@@ -59,8 +57,7 @@ export class EditorOrderComponent implements OnInit{
         alert('You must specify an order!');
       }else{
       console.log(this.order);
-      this.router.navigate(['/editor/orders', this.order.orderNumber ]);
-     
+      this.router.navigate(['/editor/orders', this.order.id ]);
       }
     }
      return;

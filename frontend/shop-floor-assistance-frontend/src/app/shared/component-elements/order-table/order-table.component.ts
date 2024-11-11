@@ -42,7 +42,7 @@ export class OrderTableComponent implements OnInit, AfterViewInit{
     }
   }
 
-  displayedColumns: string[] = ['select', 'Order No.', 'Name', 'Description', 'Equipment' ];
+  displayedColumns: string[] = ['select', 'Order No.', 'Name', 'Description', 'Equipment', 'Product Before', 'Product After'];
 
   
   // Paginator if required

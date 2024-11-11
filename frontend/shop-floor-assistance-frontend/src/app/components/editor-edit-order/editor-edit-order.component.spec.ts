@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditorEditWorkflowComponent } from './editor-edit-workflow.component';
+import { EditorEditOrderComponent } from './editor-edit-order.component';
 
 describe('EditorViewWorkflowComponent', () => {
-  let component: EditorEditWorkflowComponent;
-  let fixture: ComponentFixture<EditorEditWorkflowComponent>;
+  let component: EditorEditOrderComponent;
+  let fixture: ComponentFixture<EditorEditOrderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditorEditWorkflowComponent]
+      imports: [EditorEditOrderComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EditorEditWorkflowComponent);
+    fixture = TestBed.createComponent(EditorEditOrderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

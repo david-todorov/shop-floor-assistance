@@ -4,7 +4,7 @@ import { LoginRegisterComponent } from './components/login-register/login-regist
 import { OperatorComponent } from './components/operator/operator.component';
 import { OperatorViewWorkflowComponent } from './components/operator-view-workflow/operator-view-workflow.component';
 import { EditorOrderComponent } from './components/editor-order/editor-order.component';
-//import { EditorEditWorkflowComponent } from './components/editor-edit-workflow/editor-edit-workflow.component';
+import { EditorEditOrderComponent } from './components/editor-edit-order/editor-edit-order.component';
 import { EditorHomepageComponent } from './components/editor-homepage/editor-homepage.component';
 import { EditorEquipmentComponent } from './components/editor-equipment/editor-equipment.component';
 import { EditorProductComponent } from './components/editor-product/editor-product.component';
@@ -19,7 +19,7 @@ export const routes: Routes = [
     { path: 'operator', component: OperatorComponent, },
     { path: 'operator/:id', component: OperatorViewWorkflowComponent, },
     { path: 'editor/orders', component: EditorOrderComponent, },
-    //{path: 'editor/:id', component:EditorEditWorkflowComponent,},
+    {path: 'editor/orders/:id', component:EditorEditOrderComponent,},
     { path: 'editor-homepage', component: EditorHomepageComponent, },
     { path: 'editor/equipment', component: EditorEquipmentComponent, },
     { path: 'editor/equipment/:id', component: EditorEditEquipmentComponent, },
