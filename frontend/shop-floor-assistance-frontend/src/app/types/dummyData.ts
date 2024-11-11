@@ -1,10 +1,9 @@
-import { orderTO } from "./orderTO"
 
 // Delete after debugging..
-export const dummyOrder: orderTO= {
+export const dummyOrder = {
                 orderNumber: "W0001",
                 name: "AAA",
-                shortDescription: "Aspirin max",
+                description: "Aspirin max",
                 workflows: [
                     {
                         name: "Change Over",
@@ -203,7 +202,7 @@ export const dummyOrder: orderTO= {
                 ]
             }
 
-export const sampleOrders: orderTO[]= [
+export const sampleOrders = [
     {
         "orderNumber": "W00011",
         "name": "AAA",

@@ -5,52 +5,49 @@ import { Router, RouterLink } from '@angular/router';
 import { orderTO } from '../../types/orderTO';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
-import { sampleOrders } from '../../types/dummyData';
 
 @Component({
-  selector: 'app-editor',
+  selector: 'app-editor-order',
   standalone: true,
     imports: [OrderTableComponent,
     ButtonComponent,
   ],
-  templateUrl: './editor.component.html',
-  styleUrl: './editor.component.css'
+  templateUrl: './editor-order.component.html',
+  styleUrl: './editor-order.component.css'
 })
-export class EditorComponent implements OnInit{
-    btnLabel: string= 'Start Wizard';
+export class EditorOrderComponent implements OnInit{
+  btnLabel: string= 'Start Wizard';
   order!: orderTO;
   loadedOrders!: orderTO[];
   viewDisabled: boolean= false;
   editDisabled: boolean= false;
   createDisabled: boolean= true;
-  viewBtnLabel: string= 'View Workflow';
-  editBtnLabel: string= 'Edit Workflow';
-  createBtnLabel: string= 'Create Workflow';
+  viewBtnLabel: string= 'View Order';
+  editBtnLabel: string= 'Edit Order';
+  createBtnLabel: string= 'Create Order';
 
   constructor(private router:Router,
     private backendCommunicationService: BackendCommunicationService
   ){}
 
   ngOnInit(): void {
-    this.backendCommunicationService.getOperatorOrders().pipe(
-      catchError((err)=>{
-        console.log(err);
-        return of(null);
+    this.backendCommunicationService.getEditorOrders().pipe(
+      catchError((err) => {
+        console.error('Error fetching orders:', err);
+        return of([]); // Return an empty array if there's an error
       })
     ).subscribe({
-      next:(response) => {
-        console.log(response);
+      next: (response: orderTO[]) => {
+        this.loadedOrders = response; // Assign the API response to loadedOrders
+        console.log('Orders loaded:', this.loadedOrders);
       },
-      error: (err)=>{
-        //for fallback method in complete
+      error: (err) => {
+        console.error('An error occurred while loading orders:', err);
       },
-      complete: ()=>{
-
-        this.loadedOrders= sampleOrders;// This is fallback, since apis do not function now. TAKE OUT IN PROD VERSION
-        console.log('done', this.loadedOrders)
+      complete: () => {
+        console.log('Order loading complete');
       }
-  });
-
+    });
   }
   
   orderSelected($event: any) {
@@ -62,7 +59,7 @@ export class EditorComponent implements OnInit{
         alert('You must specify an order!');
       }else{
       console.log(this.order);
-      this.router.navigate(['/editor/', this.order.orderNumber ]);
+      this.router.navigate(['/editor/orders', this.order.orderNumber ]);
      
       }
     }

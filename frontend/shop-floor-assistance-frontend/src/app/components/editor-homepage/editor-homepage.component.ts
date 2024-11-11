@@ -17,13 +17,13 @@ export class EditorHomepageComponent {
     switch (index) {
       case 0:
         // this.router.navigateByUrl('/editor/:id'); // Example of navigating with a parameter
-        this.router.navigateByUrl('/editor'); // Example of navigating with a parameter
+        this.router.navigateByUrl('/editor/orders'); // Example of navigating with a parameter
         break;
       case 1:
         this.router.navigateByUrl('/editor/equipment');
         break;
       case 2:
-        this.router.navigateByUrl('/editor/product');
+        this.router.navigateByUrl('/editor/products');
         break;
       default:
         console.error('Invalid option selected');

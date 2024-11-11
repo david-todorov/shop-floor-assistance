@@ -43,7 +43,7 @@ export class OperatorComponent implements OnInit{
       },
       complete: ()=>{
 
-        this.loadedOrders= sampleOrders;// This is fallback, since apis do not function now. TAKE OUT IN PROD VERSION
+        //this.loadedOrders= sampleOrders;// This is fallback, since apis do not function now. TAKE OUT IN PROD VERSION
         console.log('done', this.loadedOrders)
       }
   });

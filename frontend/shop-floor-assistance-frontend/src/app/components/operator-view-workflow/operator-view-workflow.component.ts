@@ -53,7 +53,7 @@ export class OperatorViewWorkflowComponent {
           //for fallback method in complete
         },
         complete: ()=>{
-          this.order= dummyOrder;// This is fallback, since apis do not function now. TAKE OUT IN PROD VERSION
+          //this.order= dummyOrder;// This is fallback, since apis do not function now. TAKE OUT IN PROD VERSION
           console.log('done', this.order)
         }
       });

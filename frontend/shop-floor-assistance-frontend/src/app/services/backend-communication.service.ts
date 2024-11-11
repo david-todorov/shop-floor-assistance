@@ -67,6 +67,10 @@ export class BackendCommunicationService {
     return this.http.get(`${this.apiServerURL}operator/orders/${id}`);
   }
 
+  getEditorOrders(): Observable<any> {
+    return this.http.get(`${this.apiServerURL}editor/orders`);
+  }
+
   getEditorOrder(id: string): Observable<any>{
     return this.http.get(`${this.apiServerURL}editor/orders/${id}`);
   }
@@ -95,10 +99,6 @@ deleteEditorEquipment(id: number): Observable<any>{
  getAllEditorProduct(): Observable<any> {
     return this.http.get(`${this.apiServerURL}editor/products`);
   }
-
-  // getEditorProducts(id: number): Observable<any> {
-  //   return this.http.get(`${this.apiServerURL}editor/products`);
-  // }
 
    getEditorProduct(id: number): Observable<any>{
     return this.http.get(`${this.apiServerURL}editor/products/${id}`);

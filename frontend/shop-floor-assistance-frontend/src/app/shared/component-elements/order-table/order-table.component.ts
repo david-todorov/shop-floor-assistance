@@ -2,10 +2,10 @@ import { AfterViewInit, Component, EventEmitter, inject, Input, OnInit, Output, 
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { orderTO } from '../../../types/orderTO';
-
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-order-table',
@@ -15,6 +15,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
     MatRadioModule,
     MatPaginatorModule,
     MatSortModule,
+    CommonModule
   ],
   templateUrl: './order-table.component.html',
   styleUrl: './order-table.component.css',
@@ -41,7 +42,7 @@ export class OrderTableComponent implements OnInit, AfterViewInit{
     }
   }
 
-  displayedColumns: string[] = ['select', 'Order No.', 'Name', 'Description', ];
+  displayedColumns: string[] = ['select', 'Order No.', 'Name', 'Description', 'Equipment' ];
 
   
   // Paginator if required
