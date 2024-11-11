@@ -6,26 +6,29 @@ import { catchError, of } from 'rxjs';
 import { dummyOrder } from '../../types/dummyData';
 import { WorkflowAccordionComponent } from '../../shared/component-elements/workflow-accordion/workflow-accordion.component';
 import { TaskTabComponent } from '../../shared/component-elements/task-tab/task-tab.component';
-import { workflowCheckedStatus } from '../../shared/component-elements/workflowUI-state';
-
-
-
-
+import { ButtonComponent } from "../../shared/component-elements/button/button.component";
+import { workflowTO } from '../../types/workflowTO';
+import { itemUIStates } from '../../shared/component-elements/workflowUI-state';
 
 @Component({
   selector: 'app-editor-edit-workflow',
   standalone: true,
   imports: [
     WorkflowAccordionComponent,
-    TaskTabComponent],
+    TaskTabComponent,
+    ButtonComponent
+],
   templateUrl: './editor-edit-workflow.component.html',
   styleUrl: './editor-edit-workflow.component.css'
 })
 export class EditorEditWorkflowComponent implements OnInit {
 
+
   order!: orderTO;
   selectedWorkflowIndex!: number | null;
-  operatorCheckedStatus!: workflowCheckedStatus[];
+  btnLabelAddWorkflow: string= 'Add Workflow';
+
+  itemUIStates: { [workflowIndex: number]: itemUIStates } = {};
 
   constructor(private backendCommunicationService:BackendCommunicationService,
     private route: ActivatedRoute,){
@@ -52,20 +55,8 @@ export class EditorEditWorkflowComponent implements OnInit {
     });
   }
 
-  
-  ngOnInit(): void {
-     this.initializeOperatorCheckedStatus();
-  }
 
-  initializeOperatorCheckedStatus(): void {
-    if (this.order && this.order.workflows) {
-      this.operatorCheckedStatus = this.order.workflows.map(workflow => ({
-        tasks: workflow.tasks.map(task => ({
-          items: task.items.map(() => ({ checked: false }))
-        }))
-      }));
-    }
-  }
+  ngOnInit(): void {}
 
   // @Input() set id(orderId: string){//received from previous page
   //       this.backendCommunicationService.getEditorOrder(orderId).pipe(
@@ -96,12 +87,29 @@ export class EditorEditWorkflowComponent implements OnInit {
     this.selectedWorkflowIndex= selectedWorkflow;
   }
 
-  // allWorkflowsComplete($event: boolean) {
-  //   console.log('allworkflows complete')
-  // }
-  
-  onTasksChecked($event: workflowCheckedStatus[]) {
-    console.log('tasks checked received')
+  resolveAddWorkflow(event: MouseEvent): void {
+    event.stopPropagation();
+    const newWorkflow: workflowTO = {
+      name: 'New Workflow',
+      description: 'New workflow: Description',
+      tasks: [
+        {
+          name: 'New Task',
+          description: 'New Task: Description',
+          items: [
+            {
+              name: 'INew Item',
+              longDescription: 'New item: Description',
+              timeRequired: null,
+            }
+          ]
+        }
+      ]
+    };
+    this.order.workflows.push(newWorkflow);
+    this.order= {...this.order};
+    console.log('updated order', this.order)
+
   }
 
 }

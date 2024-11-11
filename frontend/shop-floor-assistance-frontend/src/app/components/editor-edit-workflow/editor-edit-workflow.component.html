@@ -33,24 +33,20 @@
     </div>
 
     <div class="row-span-2 grid grid-cols-3 relative pt-12" >
-        <div class="col-span-1 overflow-auto w-full h-full  p-4 min-w-[350px] min-h-[200px]">
+        <div class="col-span-1 overflow-auto w-full h-full  p-4 min-w-[350px] min-h-[200px] border border-red-300">
             <app-workflow-accordion 
                 (onOrderUpdate)="updateOrder($event)" 
                 (onSelect)="onSelect($event)" 
                 [order]="order" 
-                [operatorCheckedStatus_workflow]="operatorCheckedStatus" >
-          
-                <!-- (onAllWorkflowsChecked)="allWorkflowsComplete($event)"  -->
-                <!-- > -->
-        </app-workflow-accordion>
+                >
+            </app-workflow-accordion>
+            <app-button (onClick)="resolveAddWorkflow($event)" [label]="btnLabelAddWorkflow"></app-button>
         </div>
         <div class="col-span-2 h-fulloverflow-auto w-2/3 p-4 min-w-[650px] min-h-[200px]  absolute top-0 left-1/3">
                 <app-task-tab 
                     [order]="order" 
                     [workflowIndex]="selectedWorkflowIndex"
                     (onOrderUpdate)="updateOrder($event)" 
-          
-
                 ></app-task-tab>
         </div>
     </div>
