@@ -10,6 +10,7 @@ import { itemUIStates } from '../workflowUI-state';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { orderTO } from '../../../types/orderTO';
 import { UIService } from '../../../services/ui.service';
+import { ButtonComponent } from '../button/button.component';
 
 
 @Component({
@@ -22,12 +23,14 @@ import { UIService } from '../../../services/ui.service';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    ButtonComponent,
   ],
   templateUrl: './item-accordion.component.html',
   styleUrl: './item-accordion.component.css'
 })
 export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
+
 
   @Input() order!:orderTO;
   @Input() workflowIndex!:number | null;
@@ -37,6 +40,8 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
 
   expandedPanels: boolean[] = [];
   items!:itemTO[];
+  btnLabelAddItem: string= 'Add Item'
+
   //-Helper variables to maintain UI state
   itemUIStates: itemUIStates= {};
   itemIndices: {[workflowIndex: number]:{ [taskIndex: number]: number } } = {};
@@ -238,6 +243,21 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   closeAllPanels(): void {
     if (this.accordion) {
       this.accordion.closeAll();
+    }
+  }
+
+  resolveAddItem(event: any) {
+    if(this.workflowIndex!=null && this.taskIndex!=null){
+      event.stopPropagation();
+      const newItem: itemTO= { 
+        name: 'New Item', 
+        longDescription: 'Item description', 
+        timeRequired: null 
+      };
+      this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items.push(newItem);
+      console.log(this.order)
+      this.order= {...this.order};
+      this.onOrderUpdate.emit(this.order);
     }
   }
 

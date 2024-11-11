@@ -27,9 +27,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class TaskTabComponent implements OnInit, OnChanges{
 
   resolveAddTAsk(event: any) {
-    console.log('in add task', this.workflowIndex)
     if(this.workflowIndex!=null){
-      console.log('in add atsk')
       event.stopPropagation();
       const newTask: taskTO= {
         name: 'New Task', 

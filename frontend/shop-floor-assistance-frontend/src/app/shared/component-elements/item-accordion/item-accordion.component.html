@@ -1,51 +1,54 @@
-@if(items && items.length>0){
-    <mat-accordion>
-        @for(item of items; track $index){
-        <mat-expansion-panel   [disabled]="isAnyWorkflowInEditMode()" >
-            <mat-expansion-panel-header [ngClass]="{'selected-element': itemIndices[workflowIndex??-1][taskIndex??-1] === $index}" 
-            (click)="!isAnyWorkflowInEditMode() && selectItem($index)">
-                <mat-panel-title class="flex flex-row justify-between w-1/2">
-                    @if(!itemUIStates[$index].editMode){
-                    {{ item.name }}
-                    <p class="">Time required (minutes): {{ item.timeRequired }} </p>
-                    <!-- <p>w:{{workflowIndex}}, t:{{taskIndex}}, i:{{itemIndices[workflowIndex??-1][taskIndex??-1]}}, ind:{{$index}}</p> -->
-                    <!-- <p>current itemindex{{itemIndices[workflowIndex??-1][taskIndex??-1]}}</p> -->
-                    }@else{
-                        <div class="flex flex-row gap-x-5">                  
-                            <input class="edit-field" [(ngModel)]="itemUIStates[$index].updatedTitle" [value]="item.name">
-                            <label for="timeReq" class="text-sm w-fit">Time required (minutes):</label>
-                            <input class="edit-field w-1/2" [(ngModel)]="itemUIStates[$index].upDatedTimeReq" [value]="item.timeRequired" name="timeReq">
+<div class="border border-red-500 p-2">
+    @if(items && items.length>0){
+        <mat-accordion>
+            @for(item of items; track $index){
+            <mat-expansion-panel   [disabled]="isAnyWorkflowInEditMode()" >
+                <mat-expansion-panel-header [ngClass]="{'selected-element': itemIndices[workflowIndex??-1][taskIndex??-1] === $index}" 
+                (click)="!isAnyWorkflowInEditMode() && selectItem($index)">
+                    <mat-panel-title class="flex flex-row justify-between w-1/2">
+                        @if(!itemUIStates[$index].editMode){
+                        {{ item.name }}
+                        <p class="">Time required (minutes): {{ item.timeRequired }} </p>
+                        <!-- <p>w:{{workflowIndex}}, t:{{taskIndex}}, i:{{itemIndices[workflowIndex??-1][taskIndex??-1]}}, ind:{{$index}}</p> -->
+                        <!-- <p>current itemindex{{itemIndices[workflowIndex??-1][taskIndex??-1]}}</p> -->
+                        }@else{
+                            <div class="flex flex-row gap-x-5">                  
+                                <input class="edit-field" [(ngModel)]="itemUIStates[$index].updatedTitle" [value]="item.name">
+                                <label for="timeReq" class="text-sm w-fit">Time required (minutes):</label>
+                                <input class="edit-field w-1/2" [(ngModel)]="itemUIStates[$index].upDatedTimeReq" [value]="item.timeRequired" name="timeReq">
+                            </div>
+                        }
+                    </mat-panel-title>
+                    <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
+                        <div class="whitespace-nowrap flex flex-row items-center justify-center">
+                            <button mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
+                                <mat-icon>{{ itemUIStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
+                            </button>
+                            <button mat-icon-button (click)="deleteItems($index,$event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+    
+                            <!-- @if(itemUIStates[$index].checkStatus){ -->
+                            <button class="done-all"  [hidden]="!checkStatuses[workflowIndex??-1][taskIndex??-1][$index]" mat-icon-button>
+                                <mat-icon>done_all</mat-icon>
+                            </button>
+                            <!-- } -->
+                            <mat-checkbox [(ngModel)]="checkStatuses[workflowIndex??-1][taskIndex??-1][$index]" 
+                                            (change)="updateCheckStatus(workflowIndex??-1, taskIndex??-1, $index, $event.checked)"/>
                         </div>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="expansion-panel-content">
+                    @if(!itemUIStates[$index].editMode){
+                    <p>{{ item.longDescription }}</p>
+                    }@else {
+                    <textarea class="edit-textarea" [(ngModel)]="itemUIStates[$index].updatedDescription"
+                        [value]="item.longDescription"></textarea>
                     }
-                </mat-panel-title>
-                <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
-                    <div class="whitespace-nowrap flex flex-row items-center justify-center">
-                        <button mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
-                            <mat-icon>{{ itemUIStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
-                        </button>
-                        <button mat-icon-button (click)="deleteItems($index,$event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-
-                        <!-- @if(itemUIStates[$index].checkStatus){ -->
-                        <button class="done-all"  [hidden]="!checkStatuses[workflowIndex??-1][taskIndex??-1][$index]" mat-icon-button>
-                            <mat-icon>done_all</mat-icon>
-                        </button>
-                        <!-- } -->
-                        <mat-checkbox [(ngModel)]="checkStatuses[workflowIndex??-1][taskIndex??-1][$index]" 
-                                        (change)="updateCheckStatus(workflowIndex??-1, taskIndex??-1, $index, $event.checked)"/>
-                    </div>
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <div class="expansion-panel-content">
-                @if(!itemUIStates[$index].editMode){
-                <p>{{ item.longDescription }}</p>
-                }@else {
-                <textarea class="edit-textarea" [(ngModel)]="itemUIStates[$index].updatedDescription"
-                    [value]="item.longDescription"></textarea>
-                }
-            </div>
-        </mat-expansion-panel>
-        }
-    </mat-accordion>
-}
+                </div>
+            </mat-expansion-panel>
+            }
+        </mat-accordion>
+    }
+    <app-button (onClick)="resolveAddItem($event)" [label]="btnLabelAddItem"></app-button>
+</div>
