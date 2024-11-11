@@ -3,6 +3,7 @@ package com.shopfloor.backend.services;
 import com.shopfloor.backend.api.transferobjects.editors.EditorEquipmentTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
 import com.shopfloor.backend.api.transferobjects.mappers.EditorTOMapper;
 import com.shopfloor.backend.database.exceptions.*;
 import com.shopfloor.backend.database.mappers.DBOInitializerMapper;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,8 +73,33 @@ public class EditorServiceImpl implements EditorService {
     }
 
     @Override
+    public List<EditorWorkflowTO> getWorkflowSuggestions(EditorProductTO productAfter) {
+
+        List<EditorWorkflowTO> suggested = new ArrayList<EditorWorkflowTO>();
+        Long productId = productAfter.getId();
+
+        ProductDBO productAfterDBO = this.productRepository.findById(productId).orElse(null);
+        if(productAfterDBO == null) {
+            throw new ProductNotFoundException();
+        }
+
+        productAfterDBO.getOrdersAsBeforeProduct().forEach(
+                (ordersAsBefore) -> suggested.addAll(this.editorToMapper.toWorkflowTOs(ordersAsBefore.getWorkflows()))
+        );
+
+        return suggested;
+    }
+
+    @Override
     public List<EditorEquipmentTO> getAllEquipment() {
         return this.editorToMapper.toEquipmentTOs(this.equipmentRepository.findAll());
+    }
+
+    @Override
+    public EditorEquipmentTO getEquipment(Long equipmentId) {
+        EquipmentDBO equipmentDBO = this.equipmentRepository.findById(equipmentId).orElseThrow(EquipmentNotFoundException::new);
+
+        return this.editorToMapper.toEquipmentTO(equipmentDBO);
     }
 
     @Transactional
@@ -106,13 +133,6 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toEquipmentTO(this.equipmentRepository.save(existingEquipmentDBO));
     }
 
-    @Override
-    public EditorEquipmentTO getEquipment(Long equipmentId) {
-        EquipmentDBO equipmentDBO = this.equipmentRepository.findById(equipmentId).orElseThrow(EquipmentNotFoundException::new);
-
-        return this.editorToMapper.toEquipmentTO(equipmentDBO);
-    }
-
     @Transactional
     @Override
     public void deleteEquipment(Long equipmentId) {
@@ -125,26 +145,15 @@ public class EditorServiceImpl implements EditorService {
     }
 
     @Override
+    public List<EditorProductTO> getAllProducts() {
+        return this.editorToMapper.toProductTOs(this.productRepository.findAll());
+    }
+
+    @Override
     public EditorProductTO getProduct(Long productId) {
         ProductDBO productDBO = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 
         return this.editorToMapper.toProductTO(productDBO);
-    }
-
-    @Transactional
-    @Override
-    public void deleteProduct(Long productId) {
-        ProductDBO toDeleteProduct = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
-
-        // Clear order references to the product
-        toDeleteProduct.clearOrderReferences();
-
-        this.productRepository.delete(toDeleteProduct);
-    }
-
-    @Override
-    public List<EditorProductTO> getAllProducts() {
-        return this.editorToMapper.toProductTOs(this.productRepository.findAll());
     }
 
     @Transactional
@@ -178,9 +187,28 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toProductTO(this.productRepository.save(existingProductDBO));
     }
 
+    @Transactional
+    @Override
+    public void deleteProduct(Long productId) {
+        ProductDBO toDeleteProduct = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+
+        // Clear order references to the product
+        toDeleteProduct.clearOrderReferences();
+
+        this.productRepository.delete(toDeleteProduct);
+    }
+
     @Override
     public List<EditorOrderTO> getAllOrders() {
         return this.editorToMapper.toOrderTOs(this.orderRepository.findAll());
+    }
+
+    @Override
+    public EditorOrderTO getOrder(Long orderId) {
+
+        OrderDBO orderDBO = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
+
+        return this.editorToMapper.toOrderTO(orderDBO);
     }
 
     @Transactional
@@ -278,14 +306,6 @@ public class EditorServiceImpl implements EditorService {
 
         // Convert the updated OrderDBO back to EditorOrderTO to return to the frontend
         return this.editorToMapper.toOrderTO(existingOrderDBO);
-    }
-
-    @Override
-    public EditorOrderTO getOrder(Long orderId) {
-
-        OrderDBO orderDBO = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
-
-        return this.editorToMapper.toOrderTO(orderDBO);
     }
 
     @Transactional

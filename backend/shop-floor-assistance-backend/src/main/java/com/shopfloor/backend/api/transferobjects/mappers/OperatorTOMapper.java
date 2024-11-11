@@ -26,9 +26,6 @@ public class OperatorTOMapper {
         //The basic properties
         OperatorOrderTO operatorOrderTO = mapBasicOrderProperties(orderDBO);
 
-        //Workflows, tasks and items
-        operatorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
-
         //Product Before
         if (orderDBO.getBeforeProduct() != null) {
             OperatorProductTO operatorProductBeforeTO = toProductTO(orderDBO.getBeforeProduct());
@@ -43,6 +40,9 @@ public class OperatorTOMapper {
 
         // Equipment
         operatorOrderTO.setEquipment(toEquipmentTOs(orderDBO.getEquipment()));
+
+        //Workflows, tasks and items
+        operatorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
 
         return operatorOrderTO;
     }

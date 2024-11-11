@@ -3,6 +3,7 @@ package com.shopfloor.backend.api.controllers;
 import com.shopfloor.backend.api.transferobjects.editors.EditorEquipmentTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
 import com.shopfloor.backend.services.EditorService;
 import com.shopfloor.backend.services.EditorServiceImpl;
 import jakarta.validation.Valid;
@@ -149,5 +150,11 @@ public class EditorController {
     public List<EditorProductTO> getProductsSuggestions() {
         int limit = 5;
         return this.editorService.getProductsSuggestions(limit);
+    }
+
+    @GetMapping("workflows/suggestions")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EditorWorkflowTO> getWorkflowSuggestions(@Valid @RequestBody EditorProductTO productAfter) {
+        return this.editorService.getWorkflowSuggestions(productAfter);
     }
 }
