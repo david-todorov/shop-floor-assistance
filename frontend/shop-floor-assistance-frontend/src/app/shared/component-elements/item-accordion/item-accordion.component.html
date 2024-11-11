@@ -8,8 +8,8 @@
                     @if(!itemUIStates[$index].editMode){
                     {{ item.name }}
                     <p class="">Time required (minutes): {{ item.timeRequired }} </p>
-                    <p>w:{{workflowIndex}}, t:{{taskIndex}}, i:{{itemIndices[workflowIndex??-1][taskIndex??-1]}}, ind:{{$index}}</p>
-                    <p>current itemindex{{itemIndices[workflowIndex??-1][taskIndex??-1]}}</p>
+                    <!-- <p>w:{{workflowIndex}}, t:{{taskIndex}}, i:{{itemIndices[workflowIndex??-1][taskIndex??-1]}}, ind:{{$index}}</p> -->
+                    <!-- <p>current itemindex{{itemIndices[workflowIndex??-1][taskIndex??-1]}}</p> -->
                     }@else{
                         <div class="flex flex-row gap-x-5">                  
                             <input class="edit-field" [(ngModel)]="itemUIStates[$index].updatedTitle" [value]="item.name">
@@ -28,11 +28,12 @@
                         </button>
 
                         <!-- @if(itemUIStates[$index].checkStatus){ -->
-                        <button class="done-all" mat-icon-button>
+                        <button class="done-all"  [hidden]="!checkStatuses[workflowIndex??-1][taskIndex??-1][$index]" mat-icon-button>
                             <mat-icon>done_all</mat-icon>
                         </button>
                         <!-- } -->
-                        <mat-checkbox />
+                        <mat-checkbox [(ngModel)]="checkStatuses[workflowIndex??-1][taskIndex??-1][$index]" 
+                                        (change)="updateCheckStatus(workflowIndex??-1, taskIndex??-1, $index, $event.checked)"/>
                     </div>
                 </mat-panel-description>
             </mat-expansion-panel-header>

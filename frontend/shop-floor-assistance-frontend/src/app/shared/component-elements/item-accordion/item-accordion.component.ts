@@ -40,6 +40,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   itemUIStates: itemUIStates= {};
 
   itemIndices: {[workflowIndex: number]:{ [taskIndex: number]: number } } = {};
+  checkStatuses: {[workflow: number]: { [task: number]: {[item: number]: boolean}}} = {};
 
   @ViewChild(MatAccordion) accordion!: MatAccordion;
 
@@ -49,8 +50,15 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     this.itemIndices = this.uiService.getItemIndices();
     if (Object.keys(this.itemIndices).length === 0) {
       this.initializeItemIndices();
+      
+    }
+    this.checkStatuses = this.uiService.getItemStatuses();
+    if (Object.keys(this.checkStatuses).length === 0) {
+      this.initializeCheckStatuses();
+      
     }
     // console.log('item indices after initialization',this.itemIndices);
+    console.log('check statuses after initialization',this.checkStatuses);
   }
 
   ngOnDestroy(): void {
@@ -63,12 +71,28 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
         workflow.tasks.forEach((task, taskIndex) => {
           this.uiService.setSelectedItemIndex(workflowIndex, taskIndex, 0);
           // ???
-          this.itemIndices[workflowIndex] = this.itemIndices[workflowIndex] || {};
-          this.itemIndices[workflowIndex][taskIndex] = 0;
+          // this.itemIndices[workflowIndex] = this.itemIndices[workflowIndex] || {};
+          // this.itemIndices[workflowIndex][taskIndex] = 0;
         });
       });
     }
   }
+
+    initializeCheckStatuses(): void {
+    if (this.order && this.order.workflows) {
+      this.order.workflows.forEach((workflow, workflowIndex) => {
+        workflow.tasks.forEach((task, taskIndex) => {
+          task.items.forEach((item, itemIndex) => {
+            this.checkStatuses[workflowIndex] = this.checkStatuses[workflowIndex] || {};
+            this.checkStatuses[workflowIndex][taskIndex] = this.checkStatuses[workflowIndex][taskIndex] || {};
+            this.checkStatuses[workflowIndex][taskIndex][itemIndex] = false;
+            this.uiService.setItemStatuses(this.checkStatuses);
+          });
+        });
+      });
+    }
+  }
+
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['workflowIndex'] ){
@@ -79,6 +103,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       if(this.taskIndex != null && this.taskIndex >=0){
         this.getItemsForSelectedTask();
         this.initializeItemUIStates(); 
+        this.cleanUpCheckStatuses();
       }
     }
   }
@@ -103,6 +128,27 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     }
   }
 
+  cleanUpCheckStatuses(): void {
+    const newCheckStatuses: { [workflowIndex: number]: { [taskIndex: number]: { [itemIndex: number]: boolean } } } = {};
+    if (this.order && this.order.workflows) {
+      this.order.workflows.forEach((workflow, workflowIndex) => {
+        newCheckStatuses[workflowIndex] = {};
+        workflow.tasks.forEach((task, taskIndex) => {
+          newCheckStatuses[workflowIndex][taskIndex] = {};
+          task.items.forEach((item, itemIndex) => {
+            if (this.checkStatuses[workflowIndex] && this.checkStatuses[workflowIndex][taskIndex] && this.checkStatuses[workflowIndex][taskIndex][itemIndex] !== undefined) {
+              newCheckStatuses[workflowIndex][taskIndex][itemIndex] = this.checkStatuses[workflowIndex][taskIndex][itemIndex];
+            } else {
+              newCheckStatuses[workflowIndex][taskIndex][itemIndex] = false;
+            }
+          });
+        });
+      });
+    }
+    this.checkStatuses = newCheckStatuses;
+    this.uiService.setItemStatuses(this.checkStatuses);
+  }
+
   closeAllPanels(): void {
     if (this.accordion) {
       this.accordion.closeAll();
@@ -115,6 +161,10 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       event.stopPropagation();
       const task= this.order.workflows[this.workflowIndex].tasks[this.taskIndex];
       task.items.splice(index, 1);
+            
+      // Update checkStatuses
+      delete this.checkStatuses[this.workflowIndex][this.taskIndex][index];
+
       // this.itemIndex= task.items.length>0?0:null;
       this.items = [...task.items]; // Create a new array reference
       this.initializeItemUIStates(); 
@@ -157,11 +207,17 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       this.uiService.setSelectedItemIndex(this.workflowIndex, this.taskIndex, index);
       this.itemIndices= this.uiService.getItemIndices();
     }
-    //  console.log('item indices after select',this.itemIndices)
+     console.log('check statuses after select',this.checkStatuses)
+      console.log('check indices after select',this.itemIndices)
   }
 
   isAnyWorkflowInEditMode(): boolean {
     return Object.values(this.itemUIStates).some(state => state.editMode);
+  }
+
+  updateCheckStatus(workflowIndex: number, taskIndex: number, itemIndex: number, checked: boolean): void {
+    this.checkStatuses[workflowIndex][taskIndex][itemIndex] = checked;
+    this.uiService.setSelectedItemStatus(workflowIndex, taskIndex, itemIndex, checked);
   }
 
 }
