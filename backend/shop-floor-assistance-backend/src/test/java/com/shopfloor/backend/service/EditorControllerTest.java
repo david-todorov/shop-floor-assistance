@@ -2157,7 +2157,40 @@ public class EditorControllerTest {
 
     @Test
     public void when_DeleteProductTheReferencesWithOrdersAsBeforeDeleted_Then_NoContent() throws Exception {
+        EditorProductTO toBeDeleted = this.productHelper.buildCompleteEditorProductTO("ToBeDeleted");
+        toBeDeleted = this.saveProductInDatabase(toBeDeleted);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
 
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO firstEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("First");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+        Long toBeDeletedId = toBeDeleted.getId();
+
+        equipments.add(firstEquipment);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrder.setProductAfter(toBeDeleted);
+        newOrder.setProductBefore(productBefore);
+        newOrder.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 201);
+        Long orderId = newOrder.getId();
+
+        toBeDeleted = this.apiHelper.getEditorProductGET(toBeDeletedId, authorizationHeader, 200);
+
+        apiHelper.deleteEditorProductDELETE(toBeDeletedId, authorizationHeader, 204);
+        assertFalse(this.productRepository.existsById(toBeDeletedId));
+        newOrder = this.apiHelper.getEditorOrderGET(orderId, authorizationHeader, 200);
+
+        assertNull(newOrder.getProductAfter());
     }
 
     @Test
@@ -2364,6 +2397,45 @@ public class EditorControllerTest {
 
     @Test
     public void when_DeleteEquipmentTheReferencesWithOrders_Then_NoContent() throws Exception {
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
+        productAfter = this.saveProductInDatabase(productAfter);
+        EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
+        productBefore = this.saveProductInDatabase(productBefore);
+
+        List<EditorEquipmentTO> equipments = new ArrayList<EditorEquipmentTO>();
+        EditorEquipmentTO toBeDeleted = this.equipmentHelper.buildCompleteEditorEquipmentTO("toBeDeleted");
+        EditorEquipmentTO secondEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Second");
+        EditorEquipmentTO thirdEquipment = this.equipmentHelper.buildCompleteEditorEquipmentTO("Third");
+        toBeDeleted = this.saveEquipmentInDatabase(toBeDeleted);
+        secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
+        thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
+        Long toBeDeletedId = toBeDeleted.getId();
+
+        equipments.add(toBeDeleted);
+        equipments.add(secondEquipment);
+        equipments.add(thirdEquipment);
+
+        EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        newOrder.setProductAfter(productAfter);
+        newOrder.setProductBefore(productBefore);
+        newOrder.setEquipment(equipments);
+
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 201);
+        Long orderId = newOrder.getId();
+
+        equipments = this.apiHelper.getEditorAllEquipmentGET(authorizationHeader, 200);
+        equipments.forEach(
+                (equipment) -> assertTrue(equipment.getOrders().stream().anyMatch((order) -> order.getId().equals(orderId)))
+        );
+
+        apiHelper.deleteEditorEquipmentDELETE(toBeDeletedId, authorizationHeader, 204);
+        assertFalse(this.equipmentRepository.existsById(toBeDeletedId));
+        newOrder = this.apiHelper.getEditorOrderGET(orderId, authorizationHeader, 200);
+
+        newOrder.getEquipment().forEach(
+                (equipment) -> assertNotEquals(equipment.getId(), toBeDeletedId)
+        );
 
     }
 

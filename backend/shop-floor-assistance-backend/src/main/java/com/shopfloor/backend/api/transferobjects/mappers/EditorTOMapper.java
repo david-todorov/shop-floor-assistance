@@ -68,8 +68,12 @@ public class EditorTOMapper {
         if (orderDBO.getBeforeProduct() != null) {
             editorOrderTO.setProductBefore(mapBasicProductProperties(orderDBO.getBeforeProduct()));
         }
-        editorOrderTO.setProductAfter(mapBasicProductProperties(orderDBO.getAfterProduct()));
-        editorOrderTO.setEquipment(toEquipmentTOs(orderDBO.getEquipment()));
+        if (orderDBO.getAfterProduct() != null) {
+            editorOrderTO.setProductAfter(mapBasicProductProperties(orderDBO.getAfterProduct()));
+        }
+        if (editorOrderTO.getEquipment() != null) {
+            editorOrderTO.setEquipment(toEquipmentTOs(orderDBO.getEquipment()));
+        }
 
         editorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
 
