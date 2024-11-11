@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { itemUIStates, workflowCheckedStatus } from '../workflowUI-state';
+import { itemUIStates } from '../workflowUI-state';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { orderTO } from '../../../types/orderTO';
 import { UIService } from '../../../services/ui.service';
@@ -37,40 +37,54 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
 
   expandedPanels: boolean[] = [];
   items!:itemTO[];
+  //-Helper variables to maintain UI state
   itemUIStates: itemUIStates= {};
-
   itemIndices: {[workflowIndex: number]:{ [taskIndex: number]: number } } = {};
   checkStatuses: {[workflow: number]: { [task: number]: {[item: number]: boolean}}} = {};
-
   @ViewChild(MatAccordion) accordion!: MatAccordion;
+  //-----------------------------------------
 
   constructor(private cdr:ChangeDetectorRef, private uiService: UIService){}
 
+  //--life cycle hooks
   ngOnInit(): void {
     this.itemIndices = this.uiService.getItemIndices();
     if (Object.keys(this.itemIndices).length === 0) {
       this.initializeItemIndices();
-      
     }
+
     this.checkStatuses = this.uiService.getItemStatuses();
     if (Object.keys(this.checkStatuses).length === 0) {
       this.initializeCheckStatuses();
-      
     }
-    // console.log('item indices after initialization',this.itemIndices);
-    console.log('check statuses after initialization',this.checkStatuses);
   }
 
   ngOnDestroy(): void {
     this.uiService.setItemIndices(this.itemIndices);
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['workflowIndex'] ){
+      this.closeAllPanels();
+    }
+    if(changes['order'] || changes['workflowIndex'] || changes['taskIndex'] || changes['itemIndex']){
+      if(this.taskIndex != null && this.taskIndex >=0){
+        this.getItemsForSelectedTask();
+        this.initializeItemUIStates(); 
+
+        this.cleanUpCheckStatuses();
+        this.cleanUpItemIndices();
+      }
+    }
+  }
+  //---------------------------------------------------------------
+  //--Ui helper functions for maintaing itemindices and checkstatuses
   initializeItemIndices(): void {
     if (this.order && this.order.workflows) {
       this.order.workflows.forEach((workflow, workflowIndex) => {
         workflow.tasks.forEach((task, taskIndex) => {
           this.uiService.setSelectedItemIndex(workflowIndex, taskIndex, 0);
-          // ???
+          // 
           // this.itemIndices[workflowIndex] = this.itemIndices[workflowIndex] || {};
           // this.itemIndices[workflowIndex][taskIndex] = 0;
         });
@@ -78,7 +92,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     }
   }
 
-    initializeCheckStatuses(): void {
+  initializeCheckStatuses(): void {
     if (this.order && this.order.workflows) {
       this.order.workflows.forEach((workflow, workflowIndex) => {
         workflow.tasks.forEach((task, taskIndex) => {
@@ -93,42 +107,8 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     }
   }
 
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if(changes['workflowIndex'] ){
-      this.closeAllPanels();
-      console.log('on wflow index change, itemindices is:', this.itemIndices)
-    }
-    if(changes['order'] || changes['workflowIndex'] || changes['taskIndex'] || changes['itemIndex']){
-      if(this.taskIndex != null && this.taskIndex >=0){
-        this.getItemsForSelectedTask();
-        this.initializeItemUIStates(); 
-        this.cleanUpCheckStatuses();
-      }
-    }
-  }
-
-  initializeItemUIStates() {//keep the itemUIStates in tandem with item update/delete/ etc.
-    this.items.forEach((item: itemTO, index: number) => {
-      this.itemUIStates[index] = { editMode: false, 
-        showDescription: false, 
-        updatedTitle: item.name,
-        updatedDescription: item.longDescription,
-        upDatedTimeReq: item.timeRequired};
-    });
-  }
-
-  getItemsForSelectedTask() {
-    if(this.taskIndex != null && this.workflowIndex !=null){
-      const task= this.order.workflows[this.workflowIndex].tasks[this.taskIndex]
-      // this.itemIndices= this.selectedItemService.getItemIndices();
-      this.items = [...task.items]; // Create a new array reference
-    }else{
-      this.items=[];
-    }
-  }
-
   cleanUpCheckStatuses(): void {
+     this.checkStatuses = this.uiService.getItemStatuses();
     const newCheckStatuses: { [workflowIndex: number]: { [taskIndex: number]: { [itemIndex: number]: boolean } } } = {};
     if (this.order && this.order.workflows) {
       this.order.workflows.forEach((workflow, workflowIndex) => {
@@ -149,11 +129,48 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     this.uiService.setItemStatuses(this.checkStatuses);
   }
 
-  closeAllPanels(): void {
-    if (this.accordion) {
-      this.accordion.closeAll();
+  cleanUpItemIndices(): void {
+    this.itemIndices = this.uiService.getItemIndices();
+    const newItemIndices: { [workflowIndex: number]: { [taskIndex: number]: number } } = {};
+    if (this.order && this.order.workflows) {
+      this.order.workflows.forEach((workflow, workflowIndex) => {
+        newItemIndices[workflowIndex] = {};
+        workflow.tasks.forEach((task, taskIndex) => {
+          if (this.itemIndices[workflowIndex] && this.itemIndices[workflowIndex][taskIndex] !== undefined) {
+            newItemIndices[workflowIndex][taskIndex] = this.itemIndices[workflowIndex][taskIndex];
+          } else {
+            newItemIndices[workflowIndex][taskIndex] = 0;
+          }
+        });
+      });
+    }
+    this.itemIndices = newItemIndices;
+    this.uiService.setItemIndices(this.itemIndices);
+  }
+
+  //----------------------------------------
+
+  getItemsForSelectedTask() {
+    if(this.taskIndex != null && this.workflowIndex !=null){
+      const task= this.order.workflows[this.workflowIndex].tasks[this.taskIndex]
+      this.itemIndices= this.uiService.getItemIndices();
+      this.items = [...task.items]; // Create a new array reference
+    }else{
+      this.items=[];
     }
   }
+
+  initializeItemUIStates() {//keep the itemUIStates in tandem with item update/delete/ etc.
+    this.items.forEach((item: itemTO, index: number) => {
+      this.itemUIStates[index] = { editMode: false, 
+        showDescription: false, 
+        updatedTitle: item.name,
+        updatedDescription: item.longDescription,
+        upDatedTimeReq: item.timeRequired};
+    });
+  }
+
+
 
 
   deleteItems(index: number,event: MouseEvent) {
@@ -161,14 +178,15 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       event.stopPropagation();
       const task= this.order.workflows[this.workflowIndex].tasks[this.taskIndex];
       task.items.splice(index, 1);
-            
       // Update checkStatuses
       delete this.checkStatuses[this.workflowIndex][this.taskIndex][index];
-
-      // this.itemIndex= task.items.length>0?0:null;
+      // Update itemIndices array
+      this.itemIndices[this.workflowIndex][this.taskIndex] = task.items.length > 0 ? 0 : -1;
+      this.uiService.setItemIndices(this.itemIndices);
       this.items = [...task.items]; // Create a new array reference
       this.initializeItemUIStates(); 
-      this.expandedPanels= new Array(this.items.length).fill(false);
+      // this.expandedPanels= new Array(this.items.length).fill(false);
+      this.closeAllPanels();
       this.onOrderUpdate.emit(this.order);
     }
   }
@@ -186,7 +204,6 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   toggleEditMode(index: number, event: MouseEvent) {
     event.stopPropagation();
     this.expandedPanels[index] = !this.expandedPanels[index]; // Expand the panel
-    // this.itemIndex = index;
     this.cdr.detectChanges();
     this.itemUIStates[index].editMode = !this.itemUIStates[index].editMode;
     const saveMode= !this.itemUIStates[index].editMode; //save mode is opposite of edit mode
@@ -207,8 +224,6 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       this.uiService.setSelectedItemIndex(this.workflowIndex, this.taskIndex, index);
       this.itemIndices= this.uiService.getItemIndices();
     }
-     console.log('check statuses after select',this.checkStatuses)
-      console.log('check indices after select',this.itemIndices)
   }
 
   isAnyWorkflowInEditMode(): boolean {
@@ -218,6 +233,12 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   updateCheckStatus(workflowIndex: number, taskIndex: number, itemIndex: number, checked: boolean): void {
     this.checkStatuses[workflowIndex][taskIndex][itemIndex] = checked;
     this.uiService.setSelectedItemStatus(workflowIndex, taskIndex, itemIndex, checked);
+  }
+  
+  closeAllPanels(): void {
+    if (this.accordion) {
+      this.accordion.closeAll();
+    }
   }
 
 }

@@ -19,14 +19,14 @@ export type itemUIStates= {
 
 
 
-export type itemCheckedStatus= {
-  checked: boolean;
-}
+// export type itemCheckedStatus= {
+//   checked: boolean;
+// }
 
-export type taskCheckedStatus= {
-  items: itemCheckedStatus[];
-}
+// export type taskCheckedStatus= {
+//   items: itemCheckedStatus[];
+// }
 
-export type workflowCheckedStatus= {
-  tasks: taskCheckedStatus[];
-}
+// export type workflowCheckedStatus= {
+//   tasks: taskCheckedStatus[];
+// }
