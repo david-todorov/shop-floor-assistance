@@ -1,13 +1,15 @@
 @if(items && items.length>0){
     <mat-accordion>
         @for(item of items; track $index){
-        <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode()" >
-            <mat-expansion-panel-header [ngClass]="{'selected-element': itemIndex === $index}" 
-            (click)="!isAnyWorkflowInEditMode() && selectItemflow($index)">
+        <mat-expansion-panel  [disabled]="isAnyWorkflowInEditMode()" >
+            <mat-expansion-panel-header [ngClass]="{'selected-element': itemIndices[workflowIndex??-1][taskIndex??-1] === $index}" 
+            (click)="!isAnyWorkflowInEditMode() && selectItem($index)">
                 <mat-panel-title class="flex flex-row justify-between w-1/2">
                     @if(!itemUIStates[$index].editMode){
                     {{ item.name }}
                     <p class="">Time required (minutes): {{ item.timeRequired }} </p>
+                    <p>w:{{workflowIndex}}, t:{{taskIndex}}, i:{{itemIndices[workflowIndex??-1][taskIndex??-1]}}, ind:{{$index}}</p>
+                    <p>current itemindex{{itemIndices[workflowIndex??-1][taskIndex??-1]}}</p>
                     }@else{
                         <div class="flex flex-row gap-x-5">                  
                             <input class="edit-field" [(ngModel)]="itemUIStates[$index].updatedTitle" [value]="item.name">
@@ -18,10 +20,10 @@
                 </mat-panel-title>
                 <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
                     <div class="whitespace-nowrap flex flex-row items-center justify-center">
-                        <button mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="itemIndex !== $index">
+                        <button mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
                             <mat-icon>{{ itemUIStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
                         </button>
-                        <button mat-icon-button (click)="deleteItems($index,$event)" [hidden]="itemIndex !== $index">
+                        <button mat-icon-button (click)="deleteItems($index,$event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
                             <mat-icon>delete</mat-icon>
                         </button>
 
