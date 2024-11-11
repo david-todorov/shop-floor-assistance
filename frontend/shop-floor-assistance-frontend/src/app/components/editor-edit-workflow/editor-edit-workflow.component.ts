@@ -9,6 +9,7 @@ import { TaskTabComponent } from '../../shared/component-elements/task-tab/task-
 import { ButtonComponent } from "../../shared/component-elements/button/button.component";
 import { workflowTO } from '../../types/workflowTO';
 import { itemUIStates } from '../../shared/component-elements/workflowUI-state';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-editor-edit-workflow',
@@ -31,7 +32,8 @@ export class EditorEditWorkflowComponent implements OnInit {
   itemUIStates: { [workflowIndex: number]: itemUIStates } = {};
 
   constructor(private backendCommunicationService:BackendCommunicationService,
-    private route: ActivatedRoute,){
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar){
     this.route.params.subscribe(params => {
       const orderId= params['id'];
       this.backendCommunicationService.getEditorOrder(orderId).pipe(
@@ -109,7 +111,13 @@ export class EditorEditWorkflowComponent implements OnInit {
     this.order.workflows.push(newWorkflow);
     this.order= {...this.order};
     console.log('updated order', this.order)
+    this.showSnackbar('New workflow appended to the end of the workflows!');
+  }
 
+   showSnackbar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 1500
+    });
   }
 
 }

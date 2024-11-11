@@ -14,9 +14,9 @@
                             <mat-icon>delete</mat-icon>
                         </button>
                         <!-- @if(doneAll[$index]){ -->
-                        <button class="done-all" mat-icon-button>
+                        <!-- <button class="done-all" mat-icon-button>
                             <mat-icon>done_all</mat-icon>
-                        </button>
+                        </button> -->
                         <!-- } -->
                     </div>
                 </ng-template>
@@ -37,5 +37,13 @@
                 </div>
             </mat-tab>
         }
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <button mat-icon-button (click)="resolveAddTAsk($event)" class="border border-white bg-accent p-2 rounded-lg">
+                                <mat-icon>add</mat-icon>
+                                Add Task
+                            </button>
+                        </ng-template>
+                    </mat-tab>
     </mat-tab-group>
 </div>

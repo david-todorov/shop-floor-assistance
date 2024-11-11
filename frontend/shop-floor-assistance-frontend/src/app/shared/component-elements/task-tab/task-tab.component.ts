@@ -1,12 +1,14 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { orderTO } from '../../../types/orderTO';
 import { CommonModule } from '@angular/common';
 import { taskTO } from '../../../types/taskTO';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { ItemAccordionComponent } from '../item-accordion/item-accordion.component';
+import { ButtonComponent } from '../button/button.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-task-tab',
@@ -16,12 +18,46 @@ import { ItemAccordionComponent } from '../item-accordion/item-accordion.compone
     MatTabsModule,
     CommonModule,
     MatDialogModule,
-    ItemAccordionComponent
+    ItemAccordionComponent,
+    ButtonComponent
   ],
   templateUrl: './task-tab.component.html',
   styleUrl: './task-tab.component.css'
 })
 export class TaskTabComponent implements OnInit, OnChanges{
+
+  resolveAddTAsk(event: any) {
+    console.log('in add task', this.workflowIndex)
+    if(this.workflowIndex!=null){
+      console.log('in add atsk')
+      event.stopPropagation();
+      const newTask: taskTO= {
+        name: 'New Task', 
+        description: 'Task Description', 
+        items: [
+          { name: 'New Item', 
+            longDescription: 'Item Description', 
+            timeRequired: null }
+          ] 
+        };
+      this.order.workflows[this.workflowIndex].tasks.push(newTask);
+      console.log(this.order)
+      this.order= {...this.order};
+      this.onOrderUpdate.emit(this.order);
+      this.tabGroup.selectedIndex = 0;
+      this.showSnackbar('New task appended to the end of the workflow!');
+
+    }
+  }
+
+  showSnackbar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 1500
+    });
+  }
+       
+
+
 
   @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
@@ -29,18 +65,22 @@ export class TaskTabComponent implements OnInit, OnChanges{
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onWorkflowChange = new EventEmitter<number | null>();
   @Output() ontaskChange = new EventEmitter<number | null>();
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
 
   taskIndex: number | null = 0;
   orderExists: boolean= false;
   tasks!: taskTO[];
+  btnLabelAddTask: string= 'Add task';
 
   constructor(public dialog: MatDialog,
-              private cdr:ChangeDetectorRef
+              private cdr:ChangeDetectorRef,
+              private snackBar: MatSnackBar
   ){}
   
   ngOnInit(): void {
     if (this.workflowIndex == null) {
       this.workflowIndex = 0;
+      this.tabGroup.selectedIndex = 0;
     }
   }
 
