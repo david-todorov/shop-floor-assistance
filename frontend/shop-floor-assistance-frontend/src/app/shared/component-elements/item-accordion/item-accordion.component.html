@@ -1,7 +1,7 @@
 @if(items && items.length>0){
     <mat-accordion>
         @for(item of items; track $index){
-        <mat-expansion-panel  [disabled]="isAnyWorkflowInEditMode()" >
+        <mat-expansion-panel   [disabled]="isAnyWorkflowInEditMode()" >
             <mat-expansion-panel-header [ngClass]="{'selected-element': itemIndices[workflowIndex??-1][taskIndex??-1] === $index}" 
             (click)="!isAnyWorkflowInEditMode() && selectItem($index)">
                 <mat-panel-title class="flex flex-row justify-between w-1/2">
