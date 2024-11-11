@@ -71,7 +71,7 @@ public class EditorTOMapper {
         if (orderDBO.getAfterProduct() != null) {
             editorOrderTO.setProductAfter(mapBasicProductProperties(orderDBO.getAfterProduct()));
         }
-        if(editorOrderTO.getEquipment() != null){
+        if (editorOrderTO.getEquipment() != null) {
             editorOrderTO.setEquipment(toEquipmentTOs(orderDBO.getEquipment()));
         }
 

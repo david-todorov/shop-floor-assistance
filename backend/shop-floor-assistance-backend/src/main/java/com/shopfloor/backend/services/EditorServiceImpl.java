@@ -79,7 +79,7 @@ public class EditorServiceImpl implements EditorService {
         Long productId = productAfter.getId();
 
         ProductDBO productAfterDBO = this.productRepository.findById(productId).orElse(null);
-        if(productAfterDBO == null) {
+        if (productAfterDBO == null) {
             throw new ProductNotFoundException();
         }
 
