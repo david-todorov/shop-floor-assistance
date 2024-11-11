@@ -1,4 +1,4 @@
-<div class="border border-red-500 p-2">
+<div class=" p-2">
     @if(items && items.length>0){
         <mat-accordion>
             @for(item of items; track $index){
@@ -50,5 +50,5 @@
             }
         </mat-accordion>
     }
-    <app-button (onClick)="resolveAddItem($event)" [label]="btnLabelAddItem"></app-button>
+    <app-button (onClick)="resolveAddItem($event)" [label]="btnLabelAddItem" class="w-fit"></app-button>
 </div>
