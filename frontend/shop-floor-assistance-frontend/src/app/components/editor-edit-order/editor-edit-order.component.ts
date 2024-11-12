@@ -10,9 +10,8 @@ import { WorkflowAccordionComponent } from '../../shared/component-elements/work
 @Component({
   selector: 'app-editor-edit-order',
   standalone: true,
-  imports: [],
-    // WorkflowAccordionComponent,
-    // TaskTabComponent],
+  imports: [ WorkflowAccordionComponent],
+  // TaskTabComponent],
   templateUrl: './editor-edit-order.component.html',
   styleUrl: './editor-edit-order.component.css'
 })
