@@ -79,7 +79,7 @@ export class EditorCreateProductComponent {
 
               // Delay navigation to allow the user to see the message
               setTimeout(() => {
-                this.router.navigateByUrl('/editor/product');
+                this.router.navigateByUrl('/editor/products');
               }, 1000); // 1-second delay
             }
           },

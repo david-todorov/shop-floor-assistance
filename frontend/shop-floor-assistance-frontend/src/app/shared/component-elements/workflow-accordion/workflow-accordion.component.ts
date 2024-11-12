@@ -3,11 +3,11 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnCha
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { orderTO } from '../../../types/orderTO';
-import { workflowTO } from '../../../types/workflowTO';
 import { MatIconModule } from '@angular/material/icon';
 import { workflowStates } from '../workflowUI-state';
+import { workflowTO } from '../../../types/workflowTO';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { taskTO } from '../../../types/taskTO';
+// import { taskTO } from '../../../types/taskTO';
 
 @Component({
   selector: 'app-workflow-accordion',
