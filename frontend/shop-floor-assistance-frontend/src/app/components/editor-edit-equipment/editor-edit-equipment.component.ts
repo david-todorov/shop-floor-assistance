@@ -112,7 +112,9 @@ export class EditorEditEquipmentComponent {
         this.backendCommunicationService.deleteEditorEquipment(this.numericId).subscribe({
           next: () => {
             alert('Equipment deleted successfully!');
-            this.router.navigateByUrl('/editor/equipment');
+            setTimeout(() => {
+                this.router.navigateByUrl('/editor/equipment');
+              }, 1000); 
           },
           error: (error) => {
             console.error('Error deleting equipment:', error);

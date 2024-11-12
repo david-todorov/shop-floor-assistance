@@ -51,7 +51,7 @@
 
 <div class="w-7/12 mx-auto mt-6 flex justify-around">
   <div class="w-7/12 mx-4">
-    <app-button (onClick)="resolveButtonClick($event, 'edit')" [disabled]="updateDisabled" [label]="updateBtnLabel"></app-button>
+    <app-button (onClick)="updateProduct($event)" [disabled]="updateDisabled" [label]="updateBtnLabel"></app-button>
   </div>
   <div class="w-7/12 mx-4">
     <app-button (onClick)="resolveButtonClick($event, 'delete')" [label]="deleteBtnLabel"></app-button>

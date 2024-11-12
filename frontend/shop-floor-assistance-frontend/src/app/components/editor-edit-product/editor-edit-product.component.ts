@@ -68,7 +68,7 @@ export class EditorEditProductComponent {
     }
   }
 
-  updateEquipment(event: MouseEvent) {
+  updateProduct(event: MouseEvent) {
     if (
       event.type === 'click' &&
       this.product.productNumber &&
@@ -93,7 +93,7 @@ export class EditorEditProductComponent {
           next: (response) => {
             if (response) {
               alert('Product updated successfully!');
-              this.router.navigateByUrl('/editor/product');
+              this.router.navigateByUrl('/editor/products');
             }
           }
         });
@@ -121,7 +121,7 @@ export class EditorEditProductComponent {
         this.backendCommunicationService.deleteEditorProduct(this.numericId).subscribe({
           next: () => {
             alert('Product deleted successfully!');
-            this.router.navigateByUrl('/editor/product');
+            this.router.navigateByUrl('/editor/products');
           },
           error: (error) => {
             console.error('Error deleting product:', error);
@@ -142,7 +142,7 @@ export class EditorEditProductComponent {
         if (!this.product || this.numericId === null) {
           alert('You must specify a product with a valid ID!');
         } else {
-          this.router.navigate(['/editor/product', this.numericId]);
+          this.router.navigate(['/editor/products', this.numericId]);
         }
       } else if (action === 'delete') {
         this.deleteProduct();
