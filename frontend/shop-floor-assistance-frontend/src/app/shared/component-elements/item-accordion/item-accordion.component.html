@@ -27,7 +27,7 @@
       </mat-expansion-panel-header>
       <div class="expansion-panel-content">
         <ng-container *ngIf="!itemFlowStates[i]?.editMode">
-          <p>{{ item.longDescription }}</p>
+          <p>{{ item.description}}</p>
         </ng-container>
         <ng-container *ngIf="itemFlowStates[i]?.editMode">
           <textarea class="edit-textarea" [(ngModel)]="itemFlowStates[i].updatedDescription" placeholder="Enter description"></textarea>
