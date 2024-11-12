@@ -38,10 +38,10 @@
             </mat-expansion-panel-header>
             <div class="expansion-panel-content">
                 @if(!itemFlowStates[$index].editMode){
-                <p>{{ item.longDescription }}</p>
+                <p>{{ item.description }}</p>
                 }@else {
                 <textarea class="edit-textarea" [(ngModel)]="itemFlowStates[$index].updatedDescription"
-                    [value]="item.longDescription"></textarea>
+                    [value]="item.description"></textarea>
                 }
             </div>
         </mat-expansion-panel>
