@@ -14,16 +14,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * This class serve as copier and mapper for existing orders
- * It maps the "basic" properties on an OrderDBO from EditorOrderTO
- * Sets the updater id and timestamp for update
- *                    IMPORTANT
- * It returns new OrderDBO only if
- * - The new entity is supposed to be created with the help of "DBOInitializerMapper"
- * - Creator id is actually the updater id in that case
- * Otherwise
- * - Updates existing order, but only the "basic" properties
- * - This ensures the integrity of the database
+ * This class serves as copier and mapper for existing orders.
+ * It maps the "basic" properties on an OrderDBO from EditorOrderTO.
+ * Sets the updater id and timestamp for update.
+ * IMPORTANT:
+ * - It returns new OrderDBO only if:
+ *   - The new entity is supposed to be created with the help of "DBOInitializerMapper".
+ *   - Creator id is actually the updater id in that case.
+ * - Otherwise, it updates existing orders, but only the "basic" properties.
+ *   - This ensures the integrity of the database.
  */
 @Component
 public class DBOUpdaterMapper {
@@ -39,15 +38,12 @@ public class DBOUpdaterMapper {
         target.setName(source.getName());
         target.setType(source.getType());
         target.setDescription(source.getDescription());
-
         target.setUpdatedBy(updaterId);
         target.setUpdatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
-
         return target;
     }
 
     public ProductDBO copyProductDboFrom(ProductDBO target, EditorProductTO source, Long updaterId) {
-
         target.setProductNumber(source.getProductNumber());
         target.setName(source.getName());
         target.setType(source.getType());
@@ -56,10 +52,8 @@ public class DBOUpdaterMapper {
         target.setPackageType(source.getPackageType());
         target.setLanguage(source.getLanguage());
         target.setDescription(source.getDescription());
-
         target.setUpdatedBy(updaterId);
         target.setUpdatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
-
         return target;
     }
 
@@ -169,4 +163,14 @@ public class DBOUpdaterMapper {
         return target;
     }
 
+    public ExecutionDBO finishExecution(ExecutionDBO executionDBO, Long finisherId) {
+        executionDBO.setFinishedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        executionDBO.setFinishedBy(finisherId);
+        return executionDBO;
+    }
+
+    public ExecutionDBO abortExecution(ExecutionDBO executionDBO) {
+        executionDBO.setAborted(true);
+        return executionDBO;
+    }
 }

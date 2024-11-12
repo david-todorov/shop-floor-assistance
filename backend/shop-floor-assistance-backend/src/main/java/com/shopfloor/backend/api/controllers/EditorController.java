@@ -3,6 +3,7 @@ package com.shopfloor.backend.api.controllers;
 import com.shopfloor.backend.api.transferobjects.editors.EditorEquipmentTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
+import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
 import com.shopfloor.backend.services.EditorService;
 import com.shopfloor.backend.services.EditorServiceImpl;
 import jakarta.validation.Valid;
@@ -50,22 +51,22 @@ public class EditorController {
         return this.editorService.addOrder(newOrder);
     }
 
-    @PutMapping("orders/{id}")
+    @PutMapping("orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
-    public EditorOrderTO updateOrder(@PathVariable Long id, @Valid @RequestBody EditorOrderTO updatedOrder) {
-        return this.editorService.updateOrder(id, updatedOrder);
+    public EditorOrderTO updateOrder(@PathVariable Long orderId, @Valid @RequestBody EditorOrderTO updatedOrder) {
+        return this.editorService.updateOrder(orderId, updatedOrder);
     }
 
-    @DeleteMapping("orders/{id}")
+    @DeleteMapping("orders/{orderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrder(@PathVariable Long id) {
-        this.editorService.deleteOrder(id);
+    public void deleteOrder(@PathVariable Long orderId) {
+        this.editorService.deleteOrder(orderId);
     }
 
-    @GetMapping("orders/{id}")
+    @GetMapping("orders/{orderId}")
     @ResponseStatus(HttpStatus.OK)
-    public EditorOrderTO getOrder(@PathVariable Long id) {
-        return this.editorService.getOrder(id);
+    public EditorOrderTO getOrder(@PathVariable Long orderId) {
+        return this.editorService.getOrder(orderId);
     }
 
     /**
@@ -83,22 +84,22 @@ public class EditorController {
         return this.editorService.addProduct(newProduct);
     }
 
-    @PutMapping("products/{id}")
+    @PutMapping("products/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public EditorProductTO updateProduct(@PathVariable Long id, @Valid @RequestBody EditorProductTO updatedProduct) {
-        return this.editorService.updateProduct(id, updatedProduct);
+    public EditorProductTO updateProduct(@PathVariable Long productId, @Valid @RequestBody EditorProductTO updatedProduct) {
+        return this.editorService.updateProduct(productId, updatedProduct);
     }
 
-    @DeleteMapping("products/{id}")
+    @DeleteMapping("products/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduct(@PathVariable Long id) {
-        this.editorService.deleteProduct(id);
+    public void deleteProduct(@PathVariable Long productId) {
+        this.editorService.deleteProduct(productId);
     }
 
-    @GetMapping("products/{id}")
+    @GetMapping("products/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public EditorProductTO getProduct(@PathVariable Long id) {
-        return this.editorService.getProduct(id);
+    public EditorProductTO getProduct(@PathVariable Long productId) {
+        return this.editorService.getProduct(productId);
     }
 
     /**
@@ -116,22 +117,22 @@ public class EditorController {
         return this.editorService.addEquipment(newEquipment);
     }
 
-    @PutMapping("equipment/{id}")
+    @PutMapping("equipment/{equipmentId}")
     @ResponseStatus(HttpStatus.OK)
-    public EditorEquipmentTO updateEquipment(@PathVariable Long id, @Valid @RequestBody EditorEquipmentTO updatedEquipment) {
-        return this.editorService.updateEquipment(id, updatedEquipment);
+    public EditorEquipmentTO updateEquipment(@PathVariable Long equipmentId, @Valid @RequestBody EditorEquipmentTO updatedEquipment) {
+        return this.editorService.updateEquipment(equipmentId, updatedEquipment);
     }
 
-    @DeleteMapping("equipment/{id}")
+    @DeleteMapping("equipment/{equipmentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEquipment(@PathVariable Long id) {
-        this.editorService.deleteEquipment(id);
+    public void deleteEquipment(@PathVariable Long equipmentId) {
+        this.editorService.deleteEquipment(equipmentId);
     }
 
-    @GetMapping("equipment/{id}")
+    @GetMapping("equipment/{equipmentId}")
     @ResponseStatus(HttpStatus.OK)
-    public EditorEquipmentTO getEquipment(@PathVariable Long id) {
-        return this.editorService.getEquipment(id);
+    public EditorEquipmentTO getEquipment(@PathVariable Long equipmentId) {
+        return this.editorService.getEquipment(equipmentId);
     }
 
     /**
@@ -149,5 +150,11 @@ public class EditorController {
     public List<EditorProductTO> getProductsSuggestions() {
         int limit = 5;
         return this.editorService.getProductsSuggestions(limit);
+    }
+
+    @GetMapping("workflows/suggestions")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EditorWorkflowTO> getWorkflowSuggestions(@Valid @RequestBody EditorProductTO productAfter) {
+        return this.editorService.getWorkflowSuggestions(productAfter);
     }
 }
