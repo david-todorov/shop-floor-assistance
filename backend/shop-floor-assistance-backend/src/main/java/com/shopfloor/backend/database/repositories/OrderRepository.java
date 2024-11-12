@@ -19,4 +19,6 @@ public interface OrderRepository extends JpaRepository<OrderDBO, Long> {
     boolean existsByOrderNumberAndIdNot(String orderNumber, Long id);
 
     boolean existsByOrderNumber(String orderNumber);
+
+    Optional<OrderDBO> findByAfterProduct_IdAndBeforeProductIsNull(Long afterProductId);
 }
