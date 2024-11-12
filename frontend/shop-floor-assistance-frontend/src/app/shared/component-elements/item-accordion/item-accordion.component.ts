@@ -73,7 +73,7 @@ isAnyWorkflowInEditMode(): boolean {
         this.itemFlowStates[index] = { editMode: false, 
           showDescription: false, 
           updatedTitle: item.name,
-          updatedDescription: item.longDescription,
+          updatedDescription: item.description,
           upDatedTimeReq: item.timeRequired,
           checkStatus: false};
       });
@@ -128,7 +128,7 @@ isAnyWorkflowInEditMode(): boolean {
       return;
     }
     this.items[index].name= this.itemFlowStates[index].updatedTitle;
-    this.items[index].longDescription= this.itemFlowStates[index].updatedDescription;
+    this.items[index].description= this.itemFlowStates[index].updatedDescription;
     this.items[index].timeRequired= this.itemFlowStates[index].upDatedTimeReq;
   };
 

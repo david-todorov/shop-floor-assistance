@@ -1,5 +1,6 @@
 export type itemTO= {
+
     name: string;
-    longDescription: string;
+    description: string;
     timeRequired: number | null;
 }
