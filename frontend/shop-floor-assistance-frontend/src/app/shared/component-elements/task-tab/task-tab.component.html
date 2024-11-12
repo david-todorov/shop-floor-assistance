@@ -1,6 +1,6 @@
 <div class="w-full">
     <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" 
-         [(selectedIndex)]="taskIndex" (selectedIndexChange)="onTaskSelected($event)">
+         [(selectedIndex)]="taskIndex" (selectedIndexChange)="onTaskSelected($event)" >
          <!-- (selectedIndexChange)="onTabChange($event)"> -->
         @for(task of tasks;track $index){
             <mat-tab ><!-- *ngFor="let task of tasks; let i = index" -->
@@ -24,7 +24,7 @@
                     <p class="text-primary m-2 text-lg underline">Description:</p>
                     <p class=" m-2">{{ task.description }}</p>
                 </div>
-                <div class="m-4 p-2  overflow-hidden">
+                <div class="m-4 p-2  overflow-hidden border border-red-600">
                         <app-item-accordion 
                         [order]="order"
                         [workflowIndex]="workflowIndex"
@@ -32,7 +32,6 @@
                         
                         (onOrderUpdate)="updateItemsInOrder($event)" 
                         >
-        
                         </app-item-accordion>
                 </div>
             </mat-tab>

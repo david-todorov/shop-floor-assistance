@@ -11,6 +11,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { orderTO } from '../../../types/orderTO';
 import { UIService } from '../../../services/ui.service';
 import { ButtonComponent } from '../button/button.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -25,6 +26,7 @@ import { ButtonComponent } from '../button/button.component';
     ReactiveFormsModule,
     MatCheckboxModule,
     ButtonComponent,
+    DragDropModule
   ],
   templateUrl: './item-accordion.component.html',
   styleUrl: './item-accordion.component.css'

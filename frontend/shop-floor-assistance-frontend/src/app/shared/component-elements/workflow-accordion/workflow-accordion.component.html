@@ -1,9 +1,9 @@
 <div class="min-w-[300px] min-h-[200px]">
     @if(orderExists){
         @if(order.workflows.length>0){
-            <mat-accordion>
+            <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)">
                 @for(workflow of order.workflows; track $index){
-                    <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode() "> <!-- && !workFlowStates[$index].editMode "> -->
+                    <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode()" cdkDrag> <!-- && !workFlowStates[$index].editMode "> -->
                         <mat-expansion-panel-header (click)="!isAnyWorkflowInEditMode() && selectWorkflow($index)" [ngClass]="{'selected-element': selectedWorkflowIndex === $index}">
                             <mat-panel-title>
                                 @if(!workFlowStates[$index].editMode){

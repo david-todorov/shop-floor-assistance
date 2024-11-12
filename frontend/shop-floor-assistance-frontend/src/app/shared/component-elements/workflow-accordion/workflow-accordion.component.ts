@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { workflowStates } from '../workflowUI-state';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { taskTO } from '../../../types/taskTO';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-workflow-accordion',
@@ -18,18 +19,22 @@ import { taskTO } from '../../../types/taskTO';
     MatIconModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DragDropModule
   ],
   templateUrl: './workflow-accordion.component.html',
   styleUrl: './workflow-accordion.component.css'
 })
 export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewInit{
+  drop(event: CdkDragDrop<workflowTO[]>): void {
+    moveItemInArray(this.order.workflows, event.previousIndex, event.currentIndex);
+    this.onOrderUpdate.emit(this.order);
+  }
 
   @Input() order!: orderTO;
 
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onSelect = new EventEmitter<number | null>();
-  // @Output() onAllWorkflowsChecked = new EventEmitter<boolean>();
 
   orderExists: boolean= false;
   selectedWorkflowIndex: number | null = 0;
@@ -64,8 +69,6 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
           updatedTitle: workflow.name,
           updatedDescription: workflow.description};
       });
-      // this.expandedPanels= new Array(this.order.workflows.length).fill(false);
-      // this.selectedWorkflowIndex= 0;
     }
   }
 
@@ -108,7 +111,6 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     }
     this.order.workflows[index].name= this.workFlowStates[index].updatedTitle;
     this.order.workflows[index].description= this.workFlowStates[index].updatedDescription;
-    
   };
   
 
@@ -125,7 +127,6 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
       this.expandedPanels = new Array(this.order.workflows.length).fill(false); // Ensure all panels are closed
       this.onOrderUpdate.emit(this.order);
       this.onSelect.emit(this.selectedWorkflowIndex);
-
     }
   }
 

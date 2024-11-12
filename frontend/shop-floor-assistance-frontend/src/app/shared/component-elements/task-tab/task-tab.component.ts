@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { orderTO } from '../../../types/orderTO';
@@ -7,8 +7,8 @@ import { taskTO } from '../../../types/taskTO';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { ItemAccordionComponent } from '../item-accordion/item-accordion.component';
-import { ButtonComponent } from '../button/button.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-task-tab',
@@ -19,43 +19,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     CommonModule,
     MatDialogModule,
     ItemAccordionComponent,
-    ButtonComponent
+    DragDropModule,
   ],
   templateUrl: './task-tab.component.html',
   styleUrl: './task-tab.component.css'
 })
-export class TaskTabComponent implements OnInit, OnChanges{
-
-  resolveAddTAsk(event: any) {
-    if(this.workflowIndex!=null){
-      event.stopPropagation();
-      const newTask: taskTO= {
-        name: 'New Task', 
-        description: 'Task Description', 
-        items: [
-          { name: 'New Item', 
-            longDescription: 'Item Description', 
-            timeRequired: null }
-          ] 
-        };
-      this.order.workflows[this.workflowIndex].tasks.push(newTask);
-      console.log(this.order)
-      this.order= {...this.order};
-      this.onOrderUpdate.emit(this.order);
-      this.tabGroup.selectedIndex = 0;
-      this.showSnackbar('New task appended to the end of the workflow!');
-
-    }
-  }
-
-  showSnackbar(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 1500
-    });
-  }
-       
-
-
+export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
 
   @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
@@ -74,12 +43,24 @@ export class TaskTabComponent implements OnInit, OnChanges{
               private cdr:ChangeDetectorRef,
               private snackBar: MatSnackBar
   ){}
-  
+
   ngOnInit(): void {
     if (this.workflowIndex == null) {
       this.workflowIndex = 0;
-      this.tabGroup.selectedIndex = 0;
     }
+  }
+
+  ngAfterViewInit(): void {
+     setTimeout(() => {
+      this.setTabGroupIndex(0);
+    })
+  }
+
+  setTabGroupIndex(index: number): void {
+    setTimeout(() => {
+      this.tabGroup.selectedIndex = index;
+      this.cdr.detectChanges(); // Ensure change detection is run after setting the selected index
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -139,6 +120,34 @@ export class TaskTabComponent implements OnInit, OnChanges{
 
   onTaskSelected(taskIndex: number) {
     this.ontaskChange.emit(taskIndex);
+  }
+
+    resolveAddTAsk(event: any) {
+    if(this.workflowIndex!=null){
+      event.stopPropagation();
+      const newTask: taskTO= {
+        name: 'New Task', 
+        description: 'Task Description', 
+        items: [
+          { name: 'New Item', 
+            longDescription: 'Item Description', 
+            timeRequired: null }
+          ] 
+        };
+      this.order.workflows[this.workflowIndex].tasks.push(newTask);
+      console.log(this.order)
+      this.order= {...this.order};
+      this.onOrderUpdate.emit(this.order);
+      this.tabGroup.selectedIndex = 0;
+      this.showSnackbar('New task appended to the end of the workflow!');
+
+    }
+  }
+
+  showSnackbar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 1500
+    });
   }
 
 }

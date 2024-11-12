@@ -10,6 +10,7 @@ import { ButtonComponent } from "../../shared/component-elements/button/button.c
 import { workflowTO } from '../../types/workflowTO';
 import { itemUIStates } from '../../shared/component-elements/workflowUI-state';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SuggestionsComponent } from '../../shared/component-elements/suggestions/suggestions.component';
 
 @Component({
   selector: 'app-editor-edit-workflow',
@@ -17,7 +18,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   imports: [
     WorkflowAccordionComponent,
     TaskTabComponent,
-    ButtonComponent
+    ButtonComponent,
+    SuggestionsComponent
 ],
   templateUrl: './editor-edit-workflow.component.html',
   styleUrl: './editor-edit-workflow.component.css'
