@@ -14,11 +14,12 @@ import java.util.Optional;
  */
 public interface OrderRepository extends JpaRepository<OrderDBO, Long> {
 
+    Optional<OrderDBO> findById(Long id);
+
     Optional<OrderDBO> findByOrderNumber(String orderNumber);
 
     boolean existsByOrderNumberAndIdNot(String orderNumber, Long id);
 
     boolean existsByOrderNumber(String orderNumber);
 
-    Optional<OrderDBO> findByAfterProduct_IdAndBeforeProductIsNull(Long afterProductId);
 }

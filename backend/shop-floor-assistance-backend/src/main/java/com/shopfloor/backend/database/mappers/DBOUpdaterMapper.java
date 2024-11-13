@@ -72,6 +72,8 @@ public class DBOUpdaterMapper {
         Map<Long, WorkflowDBO> targetMap = targetWorkflows.stream()
                 .collect(Collectors.toMap(WorkflowDBO::getId, Function.identity()));
 
+        // The 'orderingWorkflowIndex' is used to define the order of the workflows within order
+        Integer orderingWorkflowIndex = 0;
         for (EditorWorkflowTO editorWorkflowTO : sourceWorkflows) {
             WorkflowDBO workflowDBO = targetMap.get(editorWorkflowTO.getId());
 
@@ -79,10 +81,16 @@ public class DBOUpdaterMapper {
                 // Update existing workflow
                 copyWorkflowDboFrom(workflowDBO, editorWorkflowTO, updaterId);
                 targetMap.remove(editorWorkflowTO.getId());
+
+                // Set the ordering index for the existing workflow
+                workflowDBO.setOrderingIndex(orderingWorkflowIndex++);
             } else {
                 // Add new workflow
                 WorkflowDBO newWorkflowDBO = dboInitializerMapper.toWorkflowDBO(editorWorkflowTO, updaterId);
                 targetWorkflows.add(newWorkflowDBO);
+
+                // Set the ordering index for the new workflow
+                newWorkflowDBO.setOrderingIndex(orderingWorkflowIndex++);
             }
         }
 
@@ -104,6 +112,8 @@ public class DBOUpdaterMapper {
         Map<Long, TaskDBO> targetMap = targetTasks.stream()
                 .collect(Collectors.toMap(TaskDBO::getId, Function.identity()));
 
+        // The 'orderingTaskIndex' is used to define the order of the tasks within workflow
+        Integer orderingTaskIndex = 0;
         for (EditorTaskTO editorTaskTO : sourceTasks) {
             TaskDBO taskDBO = targetMap.get(editorTaskTO.getId());
 
@@ -111,10 +121,16 @@ public class DBOUpdaterMapper {
                 // Update existing task
                 copyTaskDboFrom(taskDBO, editorTaskTO, updaterId);
                 targetMap.remove(editorTaskTO.getId());
+
+                // Set the ordering index for the existing task
+                taskDBO.setOrderingIndex(orderingTaskIndex++);
             } else {
                 // Add new task
                 TaskDBO newTaskDBO = dboInitializerMapper.toTaskDBO(editorTaskTO, updaterId);
                 targetTasks.add(newTaskDBO);
+
+                // Set the ordering index for the new task
+                newTaskDBO.setOrderingIndex(orderingTaskIndex++);
             }
         }
 
@@ -136,6 +152,8 @@ public class DBOUpdaterMapper {
         Map<Long, ItemDBO> targetMap = targetItems.stream()
                 .collect(Collectors.toMap(ItemDBO::getId, Function.identity()));
 
+        // The 'orderingItemIndex' is used to define the order of the items within task
+        Integer orderingItemIndex = 0;
         for (EditorItemTO editorItemTO : sourceItems) {
             ItemDBO itemDBO = targetMap.get(editorItemTO.getId());
 
@@ -143,10 +161,16 @@ public class DBOUpdaterMapper {
                 // Update existing item
                 copyItemDboFrom(itemDBO, editorItemTO, updaterId);
                 targetMap.remove(editorItemTO.getId());
+
+                // Set the ordering index for the existing item
+                itemDBO.setOrderingIndex(orderingItemIndex++);
             } else {
                 // Add new item
                 ItemDBO newItemDBO = dboInitializerMapper.toItemDBO(editorItemTO, updaterId);
                 targetItems.add(newItemDBO);
+
+                // Set the ordering index for the new item
+                newItemDBO.setOrderingIndex(orderingItemIndex++);
             }
         }
 

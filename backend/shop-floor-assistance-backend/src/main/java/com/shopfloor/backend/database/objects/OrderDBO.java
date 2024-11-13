@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class OrderDBO {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "order_id")
+    @OrderBy("orderingIndex ASC")
     private List<WorkflowDBO> workflows;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
@@ -153,4 +155,24 @@ public class OrderDBO {
         }
     }
 
+    public void sortEntities() {
+        // Sort workflows if they are not empty
+        if (!workflows.isEmpty()) {
+            workflows.sort(Comparator.comparingInt(WorkflowDBO::getOrderingIndex));
+
+            for (WorkflowDBO workflow : workflows) {
+                // Sort tasks within the workflow if they are not empty
+                if (!workflow.getTasks().isEmpty()) {
+                    workflow.getTasks().sort(Comparator.comparingInt(TaskDBO::getOrderingIndex));
+
+                    for (TaskDBO task : workflow.getTasks()) {
+                        // Sort items within the task if they are not empty
+                        if (!task.getItems().isEmpty()) {
+                            task.getItems().sort(Comparator.comparingInt(ItemDBO::getOrderingIndex));
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

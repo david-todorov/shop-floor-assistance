@@ -101,10 +101,10 @@ curl -X POST http:/localhost/auth/login \
   - Exception if the provided order number is `null`.
   - Exception if an order with the same `order number` already exists.
   - Exception if any name property from Order level to Item level is `null` or `empty`
-  - Exception if the provided `product after` is `null` or does `not exists`
-  - Exception if the provided `product before`  does `not exists` but can be null
+  - Exception if the provided `product after`  does `not exist` but can be null
+  - Exception if the provided `product before`  does `not exist` but can be null
   - Exception if the provided `equipment` list is `null` but can be empty
-  - Exception if any of the `equipment` list elements are `null` or does `not exists`
+  - Exception if any of the `equipment` list elements are `null` or does `not exist`
 - **Response**: The saved order as TO
 ---
 
@@ -118,10 +118,10 @@ curl -X POST http:/localhost/auth/login \
   - Exception if the provided ID does not exist in the database.
   - Exception if another order has the same `order number`, as it cannot be renamed.
   - Exception if any name property from Order level to Item level is `null` or `empty`
-  - Exception if the provided `product after` is `null` or does `not exists`
-  - Exception if the provided `product before`  does `not exists` but can be null
+  - Exception if the provided `product after`  does `not exist` but can be null
+  - Exception if the provided `product before`  does `not exist` but can be null
   - Exception if the provided `equipment` list is `null` but can be empty
-  - Exception if any of the `equipment` list elements are `null` or does `not exists`
+  - Exception if any of the `equipment` list elements are `null` or does `not exist`
 - **Response**: The updated order as TO
 ---
 
@@ -204,7 +204,7 @@ curl -X POST http:/localhost/auth/login \
 
 #STABLE
 #### `POST /editor/equipment`
-- **Description**: Creates and saves a new equipment, returning the saved equipment as a Transfer Object (TO).
+- **Description**: Creates and saves new equipment, returning the saved equipment as a Transfer Object (TO).
 - **Throws**:
   - Exception if the provided equipment number is `null`.
   - Exception if equipment with the same `equipment number` already exists.
@@ -261,13 +261,22 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: List of `products` TO
 ---
 
+#STABLE, BUT WITHOUT ORDERS IS USELESS
+#### `GET /editor/workflows/suggestions`
+- **Description**: Retrives list of workflows from orders, which consider the provided product
+  as `after` and does `not` have  `before` product
+- **Response**: List of `products` TO
+---
+
 
 ## Operator Endpoints
+#STABLE
 #### `GET /operator/orders`
 - **Description**: Returns a list of all available orders in the system
 - **Response**: List of orders as TOs from the database.
 ---
 
+#STABLE
 #### `GET /operator/orders/{orderId}`
 - **Description**: Retrieves an existing order identified by the specified `orderId`.
 - **Parameters**:
@@ -278,6 +287,7 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: The requested  order as TO, examine please the OperatorOrderTO, if some questions ask me
 ---
 
+#STABLE
 #### `POST /operator/start/{orderId}`
 - **Description**:  Starts an execution of an order and returns `started` execution TO.
 - **Parameters**:
@@ -288,8 +298,9 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: Started execution as `execution TO`
 ---
 
+#STABLE
 #### `PUT /operator/finish/{executionId}`
-- **Description**:  Finish an execution of an order and returns `finished` execution TO.
+- **Description**:  Finish an execution of an order and return the `finished` execution TO.
 - **Parameters**:
   - `{executionId}`: The unique identifier of the started execution.
 - **Throws**:
@@ -298,8 +309,9 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: Finished execution as `execution TO`
 ---
 
+#STABLE
 #### `PUT /operator/abort/{executionId}`
-- **Description**:  Abort an execution of an order and returns `aborted` execution TO.
+- **Description**:  Abort an execution of an order and return `aborted` execution TO.
 - **Parameters**:
   - `{executionId}`: The unique identifier of the started execution.
 - **Throws**:
@@ -308,6 +320,7 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: Aborted execution as `execution TO`
 ---
 
+#STABLE
 #### `GET /operator/forecast/{orderId}`
 - **Description**: Retrieves a forecast for an order by the specified `orderId`.
 - **Parameters**:

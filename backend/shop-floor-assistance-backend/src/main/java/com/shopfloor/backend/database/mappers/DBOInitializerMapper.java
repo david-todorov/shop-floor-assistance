@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class serve as initializer and mapper for new orders
@@ -61,12 +61,19 @@ public class DBOInitializerMapper {
         orderDBO.setCreatedBy(creatorId);
         orderDBO.setCreatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
 
-        List<WorkflowDBO> workflowDBOs = editorOrderTO.getWorkflows().stream()
-                .map(workflowTO -> toWorkflowDBO(workflowTO, creatorId)) // Updated to pass orderDBO
-                .collect(Collectors.toList());
+        List<WorkflowDBO> workflowDBOs = new ArrayList<>();
+
+        // The 'orderingWorkflowIndex' is used to define the order of the workflows within order
+        Integer orderingWorkflowIndex = 0;
+        for (EditorWorkflowTO workflowTO : editorOrderTO.getWorkflows()) {
+            WorkflowDBO workflowDBO = toWorkflowDBO(workflowTO, creatorId);
+
+            // Set the ordering index for each workflow
+            workflowDBO.setOrderingIndex(orderingWorkflowIndex++);
+            workflowDBOs.add(workflowDBO);
+        }
 
         orderDBO.setWorkflows(workflowDBOs);
-
 
         return orderDBO;
     }
@@ -78,9 +85,17 @@ public class DBOInitializerMapper {
         workflowDBO.setCreatedBy(creatorId);
         workflowDBO.setCreatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
 
-        List<TaskDBO> taskDBOs = editorWorkflowTO.getTasks().stream()
-                .map(taskTO -> toTaskDBO(taskTO, creatorId))
-                .collect(Collectors.toList());
+        List<TaskDBO> taskDBOs = new ArrayList<>();
+
+        // The 'orderingTaskIndex' is used to define the order of the tasks within workflow
+        Integer orderingTaskIndex = 0;
+        for (EditorTaskTO taskTO : editorWorkflowTO.getTasks()) {
+            TaskDBO taskDBO = toTaskDBO(taskTO, creatorId);
+
+            // Set the ordering index for each task
+            taskDBO.setOrderingIndex(orderingTaskIndex++);
+            taskDBOs.add(taskDBO);
+        }
 
         workflowDBO.setTasks(taskDBOs);
 
@@ -94,10 +109,17 @@ public class DBOInitializerMapper {
         taskDBO.setCreatedBy(creatorId);
         taskDBO.setCreatedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
 
+        List<ItemDBO> itemDBOs = new ArrayList<>();
 
-        List<ItemDBO> itemDBOs = editorTaskTO.getItems().stream()
-                .map(itemTO -> toItemDBO(itemTO, creatorId))
-                .collect(Collectors.toList());
+        // The 'orderingItemIndex' is used to define the order of the items within task
+        Integer orderingItemIndex = 0;
+        for (EditorItemTO itemTO : editorTaskTO.getItems()) {
+            ItemDBO itemDBO = toItemDBO(itemTO, creatorId);
+
+            // Set the ordering index for each item
+            itemDBO.setOrderingIndex(orderingItemIndex++);
+            itemDBOs.add(itemDBO);
+        }
 
         taskDBO.setItems(itemDBOs);
 
