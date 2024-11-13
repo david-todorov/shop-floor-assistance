@@ -25,6 +25,8 @@ import { EditWorkflowDialogComponent } from '../edit-workflow-dialog/edit-workfl
   templateUrl: './workflow-accordion.component.html',
   styleUrl: './workflow-accordion.component.css'
 })
+
+
 export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewInit{
 
   @Input() order!: orderTO;

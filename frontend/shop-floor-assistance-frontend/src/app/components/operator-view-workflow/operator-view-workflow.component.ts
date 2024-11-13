@@ -3,14 +3,14 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { orderTO } from '../../types/orderTO';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
-import { WorkflowAccordionComponent } from '../../shared/component-elements/workflow-accordion/workflow-accordion.component';
 import { TaskTabComponent } from '../../shared/component-elements/task-tab/task-tab.component';
+import { OperatorWorkflowAccordionComponent } from '../../shared/component-elements/operator-workflow-accordion/operator-workflow-accordion.component';
 
 @Component({
   selector: 'app-operator-view-workflow',
   standalone: true,
   imports: [RouterModule,  
-    WorkflowAccordionComponent,TaskTabComponent 
+    OperatorWorkflowAccordionComponent,TaskTabComponent 
   ],
   templateUrl: './operator-view-workflow.component.html',
   styleUrl: './operator-view-workflow.component.css'

@@ -1,0 +1,26 @@
+/* Update the mat-expansion-panel style */
+.mat-expansion-panel {
+   @apply bg-white border border-accent !important;
+}
+
+/* Style for the expansion-panel-header when it is expanded */
+.mat-expansion-panel-header {
+   @apply rounded-lg transition-all ease-in-out flex items-center justify-between;
+}
+
+/* Expanded header styling for the workflow */
+.mat-expansion-panel-header.mat-expanded {
+   @apply bg-accent !important; /* Background color for expanded panel */
+   color: white !important; /* Text color when expanded */
+}
+
+/* Remove border and background for collapsed header */
+.mat-expansion-panel-header:not(.mat-expanded) {
+   @apply bg-transparent border-none !important;
+   color: initial; /* Reset color for collapsed state */
+}
+
+/* Content styling inside the expansion panel */
+.expansion-panel-content {
+   @apply mt-4 text-gray-600 !important;
+}

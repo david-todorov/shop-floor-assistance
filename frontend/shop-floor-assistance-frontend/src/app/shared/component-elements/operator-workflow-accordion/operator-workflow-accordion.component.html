@@ -1,0 +1,32 @@
+<div class="min-w-[300px] min-h-[200px]">
+    <ng-container *ngIf="order; else noOrder">
+        <ng-container *ngIf="order.workflows.length > 0; else noWorkflows">
+            <mat-accordion>
+                <!-- Display Workflows for Operator View -->
+                <mat-expansion-panel *ngFor="let workflow of order.workflows; let i = index; trackBy: trackByIndex"
+                    [expanded]="expandedPanels[i]">
+
+                    <mat-expansion-panel-header
+                        (click)="selectWorkflow(i)"
+                        [ngClass]="{'expanded-header': expandedPanels[i], 'collapsed-header': !expandedPanels[i]}">
+                        <mat-panel-title>
+                            {{ workflow?.name }}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <!-- Add workflow description here without icons -->
+                    <div class="expansion-panel-content">
+                        <p>{{ workflow?.description }}</p>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </ng-container>
+    </ng-container>
+
+    <ng-template #noWorkflows>
+        <h1 class="font-bold text-red-600 text-lg">There are no workflows in the specified order!</h1>
+    </ng-template>
+    <ng-template #noOrder>
+        <h1>The specified order could not be found!</h1>
+    </ng-template>
+</div>
