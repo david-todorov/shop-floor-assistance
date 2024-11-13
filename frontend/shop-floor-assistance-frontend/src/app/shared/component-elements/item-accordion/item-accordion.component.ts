@@ -27,8 +27,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class ItemAccordionComponent implements OnChanges{
 
 
-
-
 selectItemflow(index: number) {
   if (this.itemFlowStates[index].editMode) {
     return; // Do not trigger selectWorkflow if in edit mode
@@ -68,19 +66,18 @@ isAnyWorkflowInEditMode(): boolean {
   }
 
 
-   initializeItemflowStates() {
-      this.items.forEach((item: itemTO, index: number) => {
-        this.itemFlowStates[index] = { editMode: false, 
-          showDescription: false, 
-          updatedTitle: item.name,
-          updatedDescription: item.description,
-          upDatedTimeReq: item.timeRequired,
-          checkStatus: false};
-      });
-      // this.expandedPanels= new Array(this.items.length).fill(false);
-    }
-
-
+  initializeItemflowStates() {
+  this.items.forEach((item: itemTO, index: number) => {
+    this.itemFlowStates[index] = { 
+      editMode: false, 
+      showDescription: false, 
+      updatedTitle: item.name || '', // Fallback if name is undefined
+      updatedDescription: item.description || '', // Fallback for undefined description
+      upDatedTimeReq: item.timeRequired ?? null, // Fallback for undefined timeRequired
+      checkStatus: false 
+    };
+  });
+}
 
 
   onAccordionClick(index: number): void {
@@ -88,39 +85,37 @@ isAnyWorkflowInEditMode(): boolean {
     this.selectedItemIndex= index;
   }
 
-   getItemsForSelectedTask() {
-    if(this.selectedTab !== null && 
-      this.selectedTab !== undefined) {
-      this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
-    }else{
-      this.items=[];
-    }
+ getItemsForSelectedTask() {
+  if (this.selectedTab !== null && this.selectedTab !== undefined) {
+    this.items = [...(this.selectedTasks[this.selectedTab]?.items || [])]; // Use optional chaining and fallback
+  } else {
+    this.items = [];
   }
+}
+
+deleteItems(index: number, event: MouseEvent) {
+  if (this.selectedTab != null && this.selectedTasks[this.selectedTab]?.items) {
+    event.stopPropagation();
+    this.selectedTasks[this.selectedTab].items?.splice(index, 1); // Use optional chaining here
+
+ const selectedTabItems = this.selectedTasks[this.selectedTab]?.items;
+if (selectedTabItems && selectedTabItems.length > 0) {
+  this.selectedItemIndex = 0;
+} else {
+  this.selectedItemIndex = null;
+}
 
 
-  deleteItems(index: number,event: MouseEvent) {
-    if(this.selectedTab!=null){
-      event.stopPropagation();
-      this.selectedTasks[this.selectedTab].items.splice(index, 1);
-      console.log('index before', this.selectedItemIndex)
+    this.items = [...(this.selectedTasks[this.selectedTab]?.items || [])]; // Optional chaining and fallback
+    this.initializeItemflowStates();
+    this.expandedPanels = new Array(this.items.length).fill(false);
 
-      // if(index<0) this.selectedItemIndex= -1;
-      // else if(index>0 && index< this.selectedTasks[this.selectedTab].items.length) this.selectedItemIndex= index-1;
-      
-      if(this.selectedTasks[this.selectedTab].items.length>0){
-        this.selectedItemIndex=0;
-      }else{
-        this.selectedItemIndex=null;
-      }
-
-      this.items = [...this.selectedTasks[this.selectedTab].items]; // Create a new array reference
-      this.initializeItemflowStates(); 
-      this.expandedPanels= new Array(this.items.length).fill(false);
-
-      this.updatedItemsFromTasks.emit(this.items);
-      console.log('in delete items', this.selectedTasks[this.selectedTab].items)
-    }
+    this.updatedItemsFromTasks.emit(this.items);
+    console.log('in delete items', this.selectedTasks[this.selectedTab]?.items);
   }
+}
+
+
 
   saveItems(index: number){
     if(this.itemFlowStates[index].updatedTitle=='' || this.itemFlowStates[index].updatedTitle==null){
