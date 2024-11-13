@@ -793,7 +793,7 @@ public class EditorControllerTest {
     }
 
     @Test
-    public void when_UpdateOrder_WithNullProductAfterAndValidProductBeforeAndValidEquipment_Then_BadRequest() throws Exception {
+    public void when_UpdateOrder_WithNullProductAfterAndValidProductBeforeAndValidEquipment_Then_OK() throws Exception {
 
         EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
         productAfter = this.saveProductInDatabase(productAfter);
@@ -823,7 +823,7 @@ public class EditorControllerTest {
 
         toBeUpdated.setProductAfter(null);
 
-        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 400);
+        toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 200);
     }
 
     @Test
@@ -1401,7 +1401,7 @@ public class EditorControllerTest {
     }
 
     @Test
-    public void when_AddOrder_WithNullProductAfterAndValidProductBeforeAndValidEquipment_Then_BadRequest() throws Exception {
+    public void when_AddOrder_WithNullProductAfterAndValidProductBeforeAndValidEquipment_Then_Created() throws Exception {
 
         EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
         productAfter = this.saveProductInDatabase(productAfter);
@@ -1426,7 +1426,7 @@ public class EditorControllerTest {
         newOrder.setEquipment(equipments);
 
         String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor", "editor");
-        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 400);
+        newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 201);
     }
 
     @Test

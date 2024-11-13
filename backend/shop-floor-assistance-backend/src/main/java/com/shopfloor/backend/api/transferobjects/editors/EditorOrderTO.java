@@ -39,7 +39,6 @@ public class EditorOrderTO {
 
     private EditorProductTO productBefore;
 
-    @NotNull(message = "Product cannot be null")
     private EditorProductTO productAfter;
 
     @NotNull(message = "Equipment list cannot be null")

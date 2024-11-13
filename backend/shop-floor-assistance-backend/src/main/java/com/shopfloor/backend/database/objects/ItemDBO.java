@@ -43,4 +43,7 @@ public class ItemDBO {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
+    @Column(name = "ordering_index")
+    private Integer orderingIndex;
+
 }

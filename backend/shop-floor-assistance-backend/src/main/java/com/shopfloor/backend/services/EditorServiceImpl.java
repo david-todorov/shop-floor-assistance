@@ -229,9 +229,13 @@ public class EditorServiceImpl implements EditorService {
                     .orElseThrow(ProductNotFoundException::new);
         }
 
-        // Retrieve the "after" product, which is required
-        ProductDBO productAfter = this.productRepository.findById(newEditorOrderTO.getProductAfter().getId())
-                .orElseThrow(ProductNotFoundException::new);
+        // Retrieve the "after" product if provided
+        ProductDBO productAfter = null;
+        if (newEditorOrderTO.getProductAfter() != null) {
+            productAfter = this.productRepository.findById(newEditorOrderTO.getProductAfter().getId())
+                    .orElseThrow(ProductNotFoundException::new);
+        }
+
 
         // Map the EditorOrderTO to OrderDBO and set the creator ID
         OrderDBO newOrderDBO = this.dboInitializerMapper.toOrderDBO(newEditorOrderTO, creatorId);
@@ -249,6 +253,9 @@ public class EditorServiceImpl implements EditorService {
 
         // Save the new order to the database
         newOrderDBO = this.orderRepository.save(newOrderDBO);
+
+        //Sorting entities according to the ordering index, which comes directly from the order of the JSON request
+        newOrderDBO.sortEntities();
 
         // Convert the saved OrderDBO back to EditorOrderTO to return to the frontend
         return this.editorToMapper.toOrderTO(newOrderDBO);
@@ -277,8 +284,12 @@ public class EditorServiceImpl implements EditorService {
         }
 
         // Retrieve and validate the required productAfter
-        ProductDBO productAfter = this.productRepository.findById(updatedEditorOrderTO.getProductAfter().getId())
-                .orElseThrow(ProductNotFoundException::new);
+        ProductDBO productAfter = null;
+        if (updatedEditorOrderTO.getProductAfter() != null) {
+            productAfter = this.productRepository.findById(updatedEditorOrderTO.getProductAfter().getId())
+                    .orElseThrow(ProductNotFoundException::new);
+        }
+
 
 
         // Update beforeProduct association using the helper method
@@ -303,6 +314,9 @@ public class EditorServiceImpl implements EditorService {
         // Save the updated order
         existingOrderDBO = this.dboUpdaterMapper.copyOrderDboFrom(existingOrderDBO, updatedEditorOrderTO, updaterId);
         existingOrderDBO = this.orderRepository.save(existingOrderDBO);
+
+        //Sorting entities according to the ordering index, which comes directly from the order of the JSON request
+        existingOrderDBO.sortEntities();
 
         // Convert the updated OrderDBO back to EditorOrderTO to return to the frontend
         return this.editorToMapper.toOrderTO(existingOrderDBO);

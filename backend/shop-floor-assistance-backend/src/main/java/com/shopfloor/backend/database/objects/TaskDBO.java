@@ -43,7 +43,11 @@ public class TaskDBO {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "task_id")
+    @OrderBy("orderingIndex ASC")
     private List<ItemDBO> items;
+
+    @Column(name = "ordering_index")
+    private Integer orderingIndex;
 
     public TaskDBO() {
         this.items = new ArrayList<ItemDBO>();

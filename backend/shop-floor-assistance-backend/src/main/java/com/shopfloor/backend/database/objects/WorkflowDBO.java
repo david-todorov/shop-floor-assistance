@@ -43,7 +43,11 @@ public class WorkflowDBO {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "workflow_id")
+    @OrderBy("orderingIndex ASC")
     private List<TaskDBO> tasks;
+
+    @Column(name = "ordering_index")
+    private Integer orderingIndex;
 
     public WorkflowDBO() {
         this.tasks = new ArrayList<TaskDBO>();
