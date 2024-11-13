@@ -1,6 +1,10 @@
 <div class=" p-2">
     @if(items && items.length>0){
-        <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)">
+        <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)"
+    cdkDropList id="externalItems" 
+   
+        
+        >
             @for(item of items; track $index){
             <mat-expansion-panel   [disabled]="isAnyWorkflowInEditMode()" cdkDrag>
                 <mat-expansion-panel-header [ngClass]="{'selected-element': itemIndices[workflowIndex??-1][taskIndex??-1] === $index}" 
