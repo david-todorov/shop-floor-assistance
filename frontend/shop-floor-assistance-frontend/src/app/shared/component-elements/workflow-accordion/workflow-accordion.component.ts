@@ -31,7 +31,18 @@ import { EditWorkflowDialogComponent } from '../edit-workflow-dialog/edit-workfl
 
 export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewInit{
   drop(event: CdkDragDrop<workflowTO[]>): void {
-    moveItemInArray(this.order.workflows, event.previousIndex, event.currentIndex);
+    // moveItemInArray(this.order.workflows, event.previousIndex, event.currentIndex);
+    if (event.previousContainer === event.container) {
+      moveItemInArray(this.order.workflows, event.previousIndex, event.currentIndex);
+    }else{
+        transferArrayItem(
+          event.previousContainer.data,
+          // event.container.data,
+          this.order.workflows,
+          event.previousIndex,
+          event.currentIndex
+        );
+    }
     this.onOrderUpdate.emit(this.order);
   }
 

@@ -8,7 +8,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { ItemAccordionComponent } from '../item-accordion/item-accordion.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-task-tab',
@@ -160,12 +160,27 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
   drop(event: CdkDragDrop<taskTO[]>){
     let previousIndex = parseInt(event.previousContainer.id.replace("task-",""));
     let currentIndex = parseInt(event.container.id.replace("task-",""));
-    moveItemInArray(this.tasks, previousIndex, currentIndex);
+    // moveItemInArray(this.tasks, previousIndex, currentIndex);
+    // debugger
+    // if (event.previousContainer === event.container) {
+      moveItemInArray(this.tasks, previousIndex, currentIndex);
+      console.log('prev cont, curr cont',event.previousContainer, event.container)
+      // } 
+      // else{
+      //       transferArrayItem(
+      //         event.previousContainer.data,
+      //         // event.container.data,
+      //         this.tasks,
+      //         previousIndex,//?
+      //         currentIndex //?
+      //       );
+      //   }
     if(this.workflowIndex!=null){
       this.order.workflows[this.workflowIndex].tasks= [...this.tasks];
     }
     this.onOrderUpdate.emit(this.order);
   }
+
 
  getAllDragTabs(index:number){
     let taskList = []
