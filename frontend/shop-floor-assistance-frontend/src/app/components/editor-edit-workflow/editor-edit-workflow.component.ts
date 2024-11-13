@@ -46,6 +46,7 @@ export class EditorEditWorkflowComponent implements OnInit {
       ).subscribe({
         next:(response) => {
           console.log(response);
+          // this.order=response;
         },
         error: (err)=>{
           //for fallback method in complete

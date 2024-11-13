@@ -1,8 +1,8 @@
 <div class=" p-2">
     @if(items && items.length>0){
-        <mat-accordion>
+        <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)">
             @for(item of items; track $index){
-            <mat-expansion-panel   [disabled]="isAnyWorkflowInEditMode()" >
+            <mat-expansion-panel   [disabled]="isAnyWorkflowInEditMode()" cdkDrag>
                 <mat-expansion-panel-header [ngClass]="{'selected-element': itemIndices[workflowIndex??-1][taskIndex??-1] === $index}" 
                 (click)="!isAnyWorkflowInEditMode() && selectItem($index)">
                     <mat-panel-title class="flex flex-row justify-between w-1/2">

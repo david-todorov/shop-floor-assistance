@@ -11,7 +11,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { orderTO } from '../../../types/orderTO';
 import { UIService } from '../../../services/ui.service';
 import { ButtonComponent } from '../button/button.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -32,6 +32,13 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   styleUrl: './item-accordion.component.css'
 })
 export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
+    drop(event: CdkDragDrop<itemTO[]>): void {
+      if(this.workflowIndex!=null && this.taskIndex!=null){
+        const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
+        moveItemInArray(items, event.previousIndex, event.currentIndex);
+      }
+    this.onOrderUpdate.emit(this.order);
+  }
 
 
   @Input() order!:orderTO;
