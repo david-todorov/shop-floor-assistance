@@ -59,6 +59,8 @@ export class BackendCommunicationService {
   }
 //--------------------------------------
 //api calls
+
+//Operator
   getOperatorOrders(): Observable<any>{
     return this.http.get(`${this.apiServerURL}operator/orders`);
   }
@@ -67,6 +69,7 @@ export class BackendCommunicationService {
     return this.http.get(`${this.apiServerURL}operator/orders/${id}`);
   }
 
+  //Orders
   getEditorOrders(): Observable<any> {
     return this.http.get(`${this.apiServerURL}editor/orders`);
   }
@@ -109,6 +112,8 @@ export class BackendCommunicationService {
     return this.http.delete(`${this.apiServerURL}editor/equipment/${id}`);
   }
 
+
+//Product
  getAllEditorProduct(): Observable<any> {
     return this.http.get(`${this.apiServerURL}editor/products`);
   }
