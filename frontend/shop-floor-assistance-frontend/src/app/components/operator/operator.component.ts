@@ -18,7 +18,7 @@ import { of } from 'rxjs';
 })
 export class OperatorComponent implements OnInit{
 
-  btnLabel: string= 'Start Wizard';
+  btnLabel: string= 'Start Order';
   disabledd: boolean= false;
   order!: orderTO;
   loadedOrders!: orderTO[];
@@ -27,26 +27,24 @@ export class OperatorComponent implements OnInit{
     private backendCommunicationService: BackendCommunicationService
   ){}
 
-  ngOnInit(): void {
-    this.backendCommunicationService.getOperatorOrders().pipe(
-      catchError((err)=>{
-        console.log(err);
-        return of(null);
+ ngOnInit(): void {
+    this.backendCommunicationService.getAllOrders().pipe(
+      catchError((err) => {
+        console.error('Error fetching orders:', err);
+        return of([]); // Return an empty array if there's an error
       })
     ).subscribe({
-      next:(response) => {
-        console.log(response);
+      next: (response: orderTO[]) => {
+        this.loadedOrders = response; // Assign the API response to loadedOrders
+        console.log('Orders loaded:', this.loadedOrders);
       },
-      error: (err)=>{
-        //for fallback method in complete
+      error: (err) => {
+        console.error('An error occurred while loading orders:', err);
       },
-      complete: ()=>{
-
-        //this.loadedOrders= sampleOrders;// This is fallback, since apis do not function now. TAKE OUT IN PROD VERSION
-        console.log('done', this.loadedOrders)
+      complete: () => {
+        console.log('Order loading complete');
       }
-  });
-
+    });
   }
   
   orderSelected($event: any) {
@@ -59,7 +57,7 @@ export class OperatorComponent implements OnInit{
         alert('You must specify an order!');
       }else{
       console.log(this.order);
-      this.router.navigate(['/operator/', this.order.orderNumber ]);
+      this.router.navigate(['operator/orders', this.order.id ]);
      
       }
     }

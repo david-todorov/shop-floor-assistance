@@ -1,9 +1,9 @@
-.field {
+.field{
     @apply px-2 py-1 whitespace-nowrap text-lg font-medium text-shade !important;
 }
 
-.value {
-    @apply px-2 py-1 whitespace-nowrap text-lg text-primary font-bold text-start !important;
+.value{
+    @apply px-2 py-1 whitespace-nowrap text-lg text-primary font-bold text-start  !important;
 }
 
 
@@ -19,3 +19,5 @@
     @apply bg-gray-200 rounded-tr-lg rounded-br-lg;
     position: relative !important;
 }
+
+

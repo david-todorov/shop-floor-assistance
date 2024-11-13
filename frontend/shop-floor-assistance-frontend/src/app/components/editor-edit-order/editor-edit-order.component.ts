@@ -5,13 +5,12 @@ import { BackendCommunicationService } from '../../services/backend-communicatio
 import { catchError, of } from 'rxjs';
 import { WorkflowAccordionComponent } from '../../shared/component-elements/workflow-accordion/workflow-accordion.component';
 import { TaskTabComponent } from "../../shared/component-elements/task-tab/task-tab.component";
-// import { TaskTabComponent } from '../../shared/component-elements/task-tab/task-tab.component';
+
 
 @Component({
   selector: 'app-editor-edit-order',
   standalone: true,
   imports: [WorkflowAccordionComponent, TaskTabComponent],
-  // TaskTabComponent],
   templateUrl: './editor-edit-order.component.html',
   styleUrl: './editor-edit-order.component.css'
 })

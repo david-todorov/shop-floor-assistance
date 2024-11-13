@@ -18,8 +18,8 @@ import { EditorCreateOrderComponent } from './components/editor-create-order/edi
 export const routes: Routes = [
     { path: '', component: WelcomeComponent },
     { path: 'login', component: LoginRegisterComponent },
-    { path: 'operator', component: OperatorComponent, },
-    { path: 'operator/:id', component: OperatorViewWorkflowComponent, },
+    { path: 'operator/orders', component: OperatorComponent, },
+    { path: 'operator/orders/:id', component: OperatorViewWorkflowComponent, },
     { path: 'editor/orders', component: EditorOrderComponent, },
     { path: 'editor/orders/:id', component:EditorEditOrderComponent,},
     { path: 'editor-orders/order-form', component: OrderFormComponent, },

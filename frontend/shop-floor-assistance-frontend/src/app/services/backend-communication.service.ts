@@ -61,7 +61,7 @@ export class BackendCommunicationService {
 //api calls
 
 //Operator
-  getOperatorOrders(): Observable<any>{
+  getAllOrders(): Observable<any>{
     return this.http.get(`${this.apiServerURL}operator/orders`);
   }
 
