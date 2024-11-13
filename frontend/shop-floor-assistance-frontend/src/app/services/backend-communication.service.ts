@@ -75,6 +75,19 @@ export class BackendCommunicationService {
     return this.http.get(`${this.apiServerURL}editor/orders/${id}`);
   }
 
+  createOrder(orderData: any): Observable<any>{
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(`${this.apiServerURL}editor/orders`, JSON.stringify(orderData), {headers});
+  }
+
+  updateEditorOrder(id: number, orderData: any): Observable<any> {
+  return this.http.put(`${this.apiServerURL}editor/orders/${id}`, orderData);
+  }
+
+  deleteEditorOrder(id: number): Observable<any>{
+    return this.http.delete(`${this.apiServerURL}editor/orders/${id}`);
+  }
+
   getAllEditorEquipment(): Observable<any> {
     return this.http.get(`${this.apiServerURL}editor/equipment`);
   }
@@ -90,9 +103,9 @@ export class BackendCommunicationService {
 
   updateEditorEquipment(id: number, equipmentData: any): Observable<any> {
   return this.http.put(`${this.apiServerURL}editor/equipment/${id}`, equipmentData);
-}
+  }
 
-deleteEditorEquipment(id: number): Observable<any>{
+  deleteEditorEquipment(id: number): Observable<any>{
     return this.http.delete(`${this.apiServerURL}editor/equipment/${id}`);
   }
 
@@ -100,7 +113,7 @@ deleteEditorEquipment(id: number): Observable<any>{
     return this.http.get(`${this.apiServerURL}editor/products`);
   }
 
-   getEditorProduct(id: number): Observable<any>{
+  getEditorProduct(id: number): Observable<any>{
     return this.http.get(`${this.apiServerURL}editor/products/${id}`);
   }
 

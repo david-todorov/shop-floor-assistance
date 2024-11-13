@@ -9,24 +9,24 @@ import { catchError, of } from 'rxjs';
 @Component({
   selector: 'app-editor-order',
   standalone: true,
-    imports: [OrderTableComponent,
+  imports: [OrderTableComponent,
     ButtonComponent,
   ],
   templateUrl: './editor-order.component.html',
   styleUrl: './editor-order.component.css'
 })
-export class EditorOrderComponent implements OnInit{
-  btnLabel: string= 'Start Wizard';
+export class EditorOrderComponent implements OnInit {
+  btnLabel: string = 'Start Wizard';
   order!: orderTO;
   loadedOrders!: orderTO[];
-  editDisabled: boolean= false;
-  createDisabled: boolean= false;
-  editBtnLabel: string= 'Edit Order';
-  createBtnLabel: string= 'Create Order';
+  editDisabled: boolean = false;
+  createDisabled: boolean = false;
+  editBtnLabel: string = 'Edit Order';
+  createBtnLabel: string = 'Create Order';
 
-  constructor(private router:Router,
+  constructor(private router: Router,
     private backendCommunicationService: BackendCommunicationService
-  ){}
+  ) { }
 
   ngOnInit(): void {
     this.backendCommunicationService.getEditorOrders().pipe(
@@ -47,19 +47,27 @@ export class EditorOrderComponent implements OnInit{
       }
     });
   }
-  
+
   orderSelected($event: any) {
-    this.order= $event
+    this.order = $event
   }
-  resolveButtonClick($event: any) {
-    if($event.type==='click'){
-      if(this.order === null || this.order === undefined){
-        alert('You must specify an order!');
-      }else{
-      console.log(this.order);
-      this.router.navigate(['/editor/orders', this.order.id ]);
+
+  resolveButtonClick($event: any, action: string): void {
+    if ($event.type === 'click') {
+      if (action === 'create') {
+        // Directly navigate to the create equipment route without checking for equipment
+        this.router.navigateByUrl('/editor-orders/order-form');
+      } else if (action === 'edit') {
+        if (!this.order || this.order.id === undefined) {
+          alert('You must specify an order with a valid ID!');
+        } else {
+          console.log('Selected order:', this.order);
+          this.router.navigate(['/editor/orders', this.order.id]); // Use the numeric ID for navigation
+        }
       }
+
     }
-     return;
+    return;
   }
+
 }

@@ -1,0 +1,47 @@
+<div class="order-form p-4 border rounded-lg shadow max-w-lg mx-auto">
+  <span class="text-2xl font-semibold mb-5 block text-center">Editor Workspace</span>
+  
+  <div class="text-center mb-5">
+    <span class="text-xl font-semibold">New Order:</span>
+  </div>
+  
+  <div class="grid grid-cols-2 gap-4 mb-5">
+    <div class="font-semibold">Name</div>
+    <div><input type="text" placeholder="Enter Order Name" class="input-field" [(ngModel)]="order.name">
+    </div>
+
+    <div class="font-semibold">Order Number</div>
+    <div><input type="text" placeholder="Enter Order Number" class="input-field" [(ngModel)]="order.orderNumber">
+    </div>
+
+    <div class="font-semibold">Description</div>
+    <div><input type="text" placeholder="Enter Order Description" class="input-field" [(ngModel)]="order.description">
+    </div>
+
+    <div class="font-semibold">Equipment</div>
+    <div>
+      <select class="input-field" [(ngModel)]="order.equipment" title="Select Equipment">
+        <option *ngFor="let equipment of equipmentList" [ngValue]="equipment">{{ equipment.equipmentNumber }}</option>
+      </select>
+    </div>
+
+    <div class="font-semibold">Product (old)</div>
+    <div>
+      <select class="input-field" [(ngModel)]="order.productBefore" title="Product Before">
+        <option *ngFor="let product of productList" [ngValue]="product">{{ product.productNumber }}</option>
+      </select>
+    </div>
+
+    <div class="font-semibold">Product (new)</div>
+    <div>
+      <select class="input-field" [(ngModel)]="order.productAfter" title="Product After">
+        <option *ngFor="let product of productList" [ngValue]="product">{{ product.productNumber }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <app-button (click)="submitOrderData()" [disabled]="nextDisabled"
+            [label]="nextBtnLabel"></app-button>
+  </div>
+

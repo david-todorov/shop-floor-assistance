@@ -3,9 +3,9 @@
 </div>
 <div class="w-7/12 mx-auto  mt-6  flex justify-around">
     <div class="w-7/12  mx-4">
-        <app-button (onClick)="resolveButtonClick($event)" [disabled]="editDisabled" [label]="editBtnLabel"></app-button>
+        <app-button (onClick)="resolveButtonClick($event, 'edit')" [disabled]="editDisabled" [label]="editBtnLabel"></app-button>
     </div>
     <div class="w-7/12 mx-4">
-        <app-button (onClick)="resolveButtonClick($event)" [disabled]="createDisabled" [label]="createBtnLabel"></app-button>
+        <app-button (onClick)="resolveButtonClick($event, 'create')" [disabled]="createDisabled" [label]="createBtnLabel"></app-button>
     </div>
 </div>

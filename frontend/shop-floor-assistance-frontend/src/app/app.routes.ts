@@ -12,6 +12,8 @@ import { EditorCreateEquipmentComponent } from './components/editor-create-equip
 import { EditorCreateProductComponent } from './components/editor-create-product/editor-create-product.component';
 import { EditorEditEquipmentComponent } from './components/editor-edit-equipment/editor-edit-equipment.component';
 import { EditorEditProductComponent } from './components/editor-edit-product/editor-edit-product.component';
+import { OrderFormComponent } from './components/order-form/order-form.component';
+import { EditorCreateOrderComponent } from './components/editor-create-order/editor-create-order.component';
 
 export const routes: Routes = [
     { path: '', component: WelcomeComponent },
@@ -19,7 +21,9 @@ export const routes: Routes = [
     { path: 'operator', component: OperatorComponent, },
     { path: 'operator/:id', component: OperatorViewWorkflowComponent, },
     { path: 'editor/orders', component: EditorOrderComponent, },
-    {path: 'editor/orders/:id', component:EditorEditOrderComponent,},
+    { path: 'editor/orders/:id', component:EditorEditOrderComponent,},
+    { path: 'editor-orders/order-form', component: OrderFormComponent, },
+    { path: 'editor-orders/create', component: EditorCreateOrderComponent, },
     { path: 'editor-homepage', component: EditorHomepageComponent, },
     { path: 'editor/equipment', component: EditorEquipmentComponent, },
     { path: 'editor/equipment/:id', component: EditorEditEquipmentComponent, },

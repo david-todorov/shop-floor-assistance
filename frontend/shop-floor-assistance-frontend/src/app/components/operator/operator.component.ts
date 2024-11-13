@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderTableComponent } from '../../shared/component-elements/order-table/order-table.component';
 import { orderTO } from '../../types/orderTO';
-import { sampleOrders } from '../../types/dummyData';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
 import { Router, RouterLink } from '@angular/router';
 import { BackendCommunicationService } from '../../services/backend-communication.service';

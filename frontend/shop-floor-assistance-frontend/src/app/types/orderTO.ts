@@ -12,7 +12,7 @@ export type orderTO = {
     updatedBy?: number;
     createdAt?: Date;
     updatedAt?: Date;
-    productBefore?: productTO[]; 
+    productBefore: productTO[]; 
     productAfter: productTO[];
     equipment: equipmentTO[];
 };

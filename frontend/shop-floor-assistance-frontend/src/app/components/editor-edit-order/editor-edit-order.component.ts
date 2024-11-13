@@ -3,15 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { orderTO } from '../../types/orderTO';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
-import { dummyOrder } from '../../types/dummyData';
 import { WorkflowAccordionComponent } from '../../shared/component-elements/workflow-accordion/workflow-accordion.component';
-// import { TaskTabComponent } from '../../shared/component-elements/task-tab/task-tab.component';
+//import { TaskTabComponent } from '../../shared/component-elements/task-tab/task-tab.component';
 
 @Component({
   selector: 'app-editor-edit-order',
   standalone: true,
   imports: [ WorkflowAccordionComponent],
-  // TaskTabComponent],
   templateUrl: './editor-edit-order.component.html',
   styleUrl: './editor-edit-order.component.css'
 })

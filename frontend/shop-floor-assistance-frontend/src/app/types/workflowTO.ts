@@ -1,3 +1,4 @@
+import { taskTO } from "./taskTO";
 export interface workflowTO {
     id?: number;
     name: string;
@@ -5,6 +6,7 @@ export interface workflowTO {
     order_id: number; // Single order ID associated with the workflow
     created_by?: number;
     updated_by?: number;
-    created_at?: string; // ISO date string, adjust to Date if using Date objects
-    updated_at?: string; // ISO date string, adjust to Date if using Date objects
+    created_at?: string; 
+    updated_at?: string; 
+    tasks?: taskTO[];
 }
