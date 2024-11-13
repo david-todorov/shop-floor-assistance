@@ -5,13 +5,10 @@
         @for(task of tasks;track $index){
             <mat-tab >
                 <ng-template mat-tab-label>
-
-            <div [id]="'task-'+$index" class="drag-list" cdkDropList cdkDropListOrientation="horizontal"
-                (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="getAllListConnections($index)">
-                <div class="drag-box" cdkDrag>
-
-
-                            <span class="mx-4 px-6 pt-1 text-lg ">{{ task.name }}</span>
+                    <div [id]="'task-'+$index" class="drag-list" cdkDropList cdkDropListOrientation="horizontal" 
+                    (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="getAllDragTabs($index)">
+                        <div class="drag-box flex flex-row items-center " cdkDrag>
+                            <span class="mx-4 px- pt-1 text-lg ">{{ task.name }}</span>
                             <div class="pt-3 justify-center">
                                 <div class=" whitespace-nowrap flex flex-row gap-x-3 gap-y-3 justify-between">
                                     <button mat-icon-button (click)="editTask(task)" [hidden]="taskIndex !== $index">
@@ -21,14 +18,14 @@
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                     <!-- @if(doneAll[$index]){ -->
-                                    <!-- <button class="done-all" mat-icon-button>
-                                                                                <mat-icon>done_all</mat-icon>
-                                                                            </button> -->
+                                    <!--<button class="done-all" mat-icon-button>
+                                            <mat-icon>done_all</mat-icon>
+                                        </button> -->
                                     <!-- } -->
                                 </div>
                             </div>
-        </div>
-    </div>
+                        </div>
+                    </div>
                 </ng-template>
                 <div class="p-4">
                     <p class="text-primary m-2 text-lg underline">Description:</p>
@@ -46,13 +43,13 @@
                 </div>
             </mat-tab>
         }
-                    <mat-tab>
-                        <ng-template mat-tab-label>
-                            <button mat-icon-button (click)="resolveAddTAsk($event)" class="add-task-btn border border-white bg-accent p-2 rounded-tr-md text-xl">
-                                <mat-icon>add</mat-icon>
-                                Add Task
-                            </button>
-                        </ng-template>
-                    </mat-tab>
+        <mat-tab >
+            <ng-template mat-tab-label>
+                <button mat-icon-button (click)="resolveAddTAsk($event)" class="add-task-btn border border-white bg-accent p-2 rounded-tr-md text-xl">
+                    <mat-icon>add</mat-icon>
+                    Add Task
+                </button>
+            </ng-template>
+        </mat-tab>
     </mat-tab-group>
 </div>

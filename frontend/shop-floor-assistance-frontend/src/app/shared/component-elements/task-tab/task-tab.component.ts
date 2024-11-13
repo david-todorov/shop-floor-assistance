@@ -26,49 +26,6 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 })
 export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
 
-
-  drop(event: CdkDragDrop<taskTO[]>) {
-    var previousIndex = parseInt(event.previousContainer.id.replace("task-",""));
-    var currentIndex = parseInt(event.container.id.replace("task-",""));
-    // if(!Number.isNaN(previousIndex) && !Number.isNaN(currentIndex) && previousIndex!=undefined && currentIndex!=undefined && previousIndex!=currentIndex){
-        console.log('prev','current',event.previousIndex, currentIndex)
-        moveItemInArray(this.tasks, previousIndex, currentIndex);
-        console.log('tasks',this.tasks)
-        
-        if(this.workflowIndex!=null){
-          this.order.workflows[this.workflowIndex].tasks= [...this.tasks];
-          console.log('order after tab rearrangement', this.order)
-        }
-         this.onOrderUpdate.emit(this.order);
-    // }
-}
-
- getAllListConnections(index:number){
-    var connections = []
-    for(var i=0;i<this.tasks.length;i++){
-      if(i!=index){
-        connections.push("task-"+i);
-      }
-    }
-    return connections;
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
   
@@ -105,7 +62,7 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
   setTabGroupIndex(index: number): void {
     setTimeout(() => {
       this.tabGroup.selectedIndex = index;
-      this.cdr.detectChanges(); // Ensure change detection is run after setting the selected index
+      this.cdr.detectChanges(); 
     });
   }
 
@@ -129,20 +86,19 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
   }
 
   deleteTasks(index: any,event: MouseEvent) {
-      if (this.workflowIndex !== null) {
+    if (this.workflowIndex !== null) {
       event.stopPropagation();
       this.order.workflows[this.workflowIndex].tasks.splice(index, 1);
       if(index>=this.order.workflows[this.workflowIndex].tasks.length && this.taskIndex !=null){
         this.taskIndex-=1;
       }
-
       this.tasks = [...this.order.workflows[this.workflowIndex].tasks];
       this.onOrderUpdate.emit(this.order);
     }
   }
 
   editTask(task: taskTO) {
-      const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
       width: '750px',
       data: { ...task },
       panelClass: 'custom-dialog-container' 
@@ -186,7 +142,6 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
       this.onOrderUpdate.emit(this.order);
       this.tabGroup.selectedIndex = 0;
       this.showSnackbar('New task appended to the end of the workflow!');
-
     }
   }
 
@@ -195,5 +150,28 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
       duration: 1500
     });
   }
+
+  // ---Drag functions--------------------
+  drop(event: CdkDragDrop<taskTO[]>){
+    let previousIndex = parseInt(event.previousContainer.id.replace("task-",""));
+    let currentIndex = parseInt(event.container.id.replace("task-",""));
+    moveItemInArray(this.tasks, previousIndex, currentIndex);
+    if(this.workflowIndex!=null){
+      this.order.workflows[this.workflowIndex].tasks= [...this.tasks];
+    }
+    this.onOrderUpdate.emit(this.order);
+  }
+
+ getAllDragTabs(index:number){
+    let taskList = []
+    for(let i=0;i<this.tasks.length;i++){
+      if(i!=index){
+        taskList.push("task-"+i);
+      }
+    }
+    return taskList;
+  }
+// ----------------------------------------------
+
 
 }

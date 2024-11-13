@@ -4,7 +4,6 @@
     bg-blue-50 
     min-h-96
     !important;
-
 }
 
 .selected-tab {
@@ -24,7 +23,6 @@
 ::ng-deep .mdc-tab {
     padding: 0px !important;
     justify-content: flex-start !important;
-
 }
 
 ::ng-deep .mat-mdc-tab .mdc-tab__content {
@@ -48,7 +46,6 @@
     justify-content: center !important;
     flex: 1 1 0%;
 }
-
 /* ---------- */
 .selected-element {
     @apply bg-accent !important;
@@ -77,7 +74,7 @@
 
 /* -------------- */
 
-.cdk-drag-preview {
+/* .cdk-drag-preview {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
 }
@@ -88,7 +85,7 @@
 
 .cdk-drag-animating {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
+} */
 
 
 
