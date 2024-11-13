@@ -40,6 +40,12 @@
                 [order]="order">
         </app-workflow-accordion>
         </div>
+          <!-- Add New Workflow Icon at the bottom of the workflow list -->
+    <div class="add-workflow-container flex items-center space-x-2 p-4">
+        <button (click)="addNewWorkflow()" class="add-workflow-btn flex items-center text-primary font-bold text-sm">
+            <span>➕</span> <!-- Simple icon to add a new workflow -->
+            <span class="ml-2">Add New Workflow</span>
+        </button>
         <div class="col-span-2 h-fulloverflow-auto w-2/3 p-4 min-w-[650px] min-h-[200px]  absolute top-0 left-1/3">
                 <app-task-tab 
                     [orderUpdated]="order" 

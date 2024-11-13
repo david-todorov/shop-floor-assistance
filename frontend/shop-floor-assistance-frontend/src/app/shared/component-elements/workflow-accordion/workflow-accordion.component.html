@@ -2,48 +2,49 @@
     <ng-container *ngIf="orderExists; else noOrder">
         <ng-container *ngIf="order.workflows.length > 0; else noWorkflows">
             <mat-accordion>
+                <!-- Existing Workflows -->
                 <mat-expansion-panel *ngFor="let workflow of order.workflows; let i = index; trackBy: trackByIndex"
                     [expanded]="expandedPanels[i]" [disabled]="isAnyWorkflowInEditMode()">
+
                     <mat-expansion-panel-header (click)="!isAnyWorkflowInEditMode() && selectWorkflow(i)"
-                        [ngClass]="{'selected-element': selectedWorkflowIndex === i}">
+                        [ngClass]="{'expanded-header': expandedPanels[i], 'collapsed-header': !expandedPanels[i]}">
                         <mat-panel-title>
-                            <ng-container *ngIf="!workFlowStates[i].editMode; else editModeTitle">
-                                {{ workflow.name }}
-                            </ng-container>
-                            <ng-template #editModeTitle>
-                                <input class="edit-field" [(ngModel)]="workFlowStates[i].updatedTitle"
-                                    [value]="workflow.name" aria-label="Workflow Title">
-                            </ng-template>
+                            {{ workflow.name }}
                         </mat-panel-title>
 
-                        <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
-                            <div class="whitespace-nowrap">
-                                <button mat-icon-button (click)="toggleEditMode(i, $event)"
-                                    [hidden]="selectedWorkflowIndex !== i">
-                                    <mat-icon>{{ workFlowStates[i].editMode ? 'warning' : 'edit' }}</mat-icon>
-                                </button>
-                                <button mat-icon-button (click)="deleteWorkflow(i, $event)"
-                                    [hidden]="selectedWorkflowIndex !== i">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
-                                <ng-container *ngIf="doneAll">
-                                    <button class="done-all" mat-icon-button>
-                                        <mat-icon>done_all</mat-icon>
-                                    </button>
-                                </ng-container>
-                            </div>
-                        </mat-panel-description>
+                        <!-- Icons for Edit, Delete, Done -->
+                        <div class="header-icons">
+                            <button mat-icon-button (click)="toggleEditMode(i, $event)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button (click)="deleteWorkflow(i, $event)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+
+                            <button mat-icon-button class="done-all" (click)="$event.stopPropagation()">
+                                <mat-icon>done_all</mat-icon>
+                            </button>
+                        </div>
                     </mat-expansion-panel-header>
 
                     <div class="expansion-panel-content">
-                        <ng-container *ngIf="!workFlowStates[i].editMode; else editModeDescription">
-                            <p>{{ workflow.description }}</p>
-                        </ng-container>
-                        <ng-template #editModeDescription>
-                            <textarea class="edit-textarea" [(ngModel)]="workFlowStates[i].updatedDescription"
-                                [value]="workflow.description" aria-label="Workflow Description">
-</textarea>
-                        </ng-template>
+                        <p>{{ workflow.description }}</p>
+                    </div>
+                </mat-expansion-panel>
+
+                <!-- New Workflow Expansion Panel -->
+                <mat-expansion-panel [expanded]="expandedPanels[order.workflows.length]" class="new-workflow-panel">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <input class="edit-field" placeholder="Enter Workflow Name" [(ngModel)]="newWorkflow.name"
+                                (blur)="addNewWorkflow()">
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="expansion-panel-content">
+                        <textarea class="edit-textarea" placeholder="Enter Workflow Description"
+                            [(ngModel)]="newWorkflow.description" aria-label="New Workflow Description"
+                            (blur)="addNewWorkflow()"></textarea>
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>

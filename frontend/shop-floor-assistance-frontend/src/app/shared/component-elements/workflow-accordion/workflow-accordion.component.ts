@@ -7,7 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { workflowStates } from '../workflowUI-state';
 import { workflowTO } from '../../../types/workflowTO';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-// import { taskTO } from '../../../types/taskTO';
+import { MatDialog } from '@angular/material/dialog';
+import { EditWorkflowDialogComponent } from '../edit-workflow-dialog/edit-workflow-dialog.component';
+
 
 @Component({
   selector: 'app-workflow-accordion',
@@ -36,8 +38,16 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
   selectedWorkflowIndex: number | null = 0;
   workFlowStates: workflowStates= {};
   expandedPanels: boolean[] = [];
+  newWorkflowInProgress: boolean = false;
 
-  constructor(private cdr:ChangeDetectorRef){}
+   // Define newWorkflow property here
+  newWorkflow = {
+    name: '',
+    description: ''
+  };
+
+  constructor(private cdr: ChangeDetectorRef, private dialog: MatDialog) {}
+
   
   ngOnInit(): void {
     this.selectedWorkflowIndex= 0;
@@ -68,35 +78,49 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     }
   }
 
-  selectWorkflow(index: number) {
-    if (this.workFlowStates[index].editMode) {
-      return; // Do not trigger selectWorkflow if in edit mode
+addNewWorkflow() {
+    if (this.newWorkflowInProgress) {
+      return; // Prevent adding another workflow while one is in progress
     }
-    
+    const newWorkflow = {
+      workflowNumber: (this.order.workflows.length + 1).toString(),
+      name: '',
+      description: '',
+      tasks: []
+    };
+    this.order.workflows.push(newWorkflow);
+    this.newWorkflowInProgress = true;
+    this.onOrderUpdate.emit(this.order);
+  }
+
+
+ selectWorkflow(index: number) {
+    if (this.workFlowStates[index].editMode || this.newWorkflowInProgress) {
+      return; // Do not trigger selectWorkflow if in edit mode or new workflow is in progress
+    }
     this.selectedWorkflowIndex = index;
-    // Emit order and selected workflow index
-    this.onSelect.emit(this.selectedWorkflowIndex !== null ? this.selectedWorkflowIndex : undefined);
+    this.onSelect.emit(this.selectedWorkflowIndex);
   }
 
   deleteWorkflow(index: number, event: MouseEvent) {
-    console.log('workflow index is', this.selectedWorkflowIndex, 'index is', index)
     if (this.selectedWorkflowIndex !== null) {
       event.stopPropagation();
       this.order.workflows.splice(index, 1);
-      
       delete this.workFlowStates[index];
-
-      if(this.order.workflows.length>0){
-        this.selectedWorkflowIndex=0;
-      }else{
-        this.selectedWorkflowIndex=null;
-      }
-
+      this.selectedWorkflowIndex = this.order.workflows.length > 0 ? 0 : null;
       this.initializeWorkflowStates();
       this.expandedPanels = new Array(this.order.workflows.length).fill(false); // Ensure all panels are closed
-
+      this.onSelect.emit(this.selectedWorkflowIndex);
+      this.onOrderUpdate.emit(this.order);
     }
-    this.onSelect.emit(this.selectedWorkflowIndex);
+  }
+
+    doneAddingWorkflow(index: number) {
+    if (!this.workFlowStates[index].updatedTitle || this.workFlowStates[index].updatedTitle.trim() === '') {
+      alert('Workflow name cannot be empty!');
+      return;
+    }
+    this.newWorkflowInProgress = false;
     this.onOrderUpdate.emit(this.order);
   }
 
@@ -135,6 +159,28 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
   trackByIndex(index: number, item: any): any {
   return index;
 }
+
+  editWorkflow(workflowIndex: number): void {
+    const workflow = this.order.workflows[workflowIndex];
+
+    const dialogRef = this.dialog.open(EditWorkflowDialogComponent, {
+      width: '400px',
+      data: {
+        name: workflow.name,
+        description: workflow.description
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Update the workflow with the new values
+        this.order.workflows[workflowIndex].name = result.taskname;
+        this.order.workflows[workflowIndex].description = result.description;
+        this.onOrderUpdate.emit(this.order); // Notify parent of changes
+      }
+    });
+  }
+
 
 }
 
