@@ -26,6 +26,49 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 })
 export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
 
+
+  drop(event: CdkDragDrop<taskTO[]>) {
+    var previousIndex = parseInt(event.previousContainer.id.replace("task-",""));
+    var currentIndex = parseInt(event.container.id.replace("task-",""));
+    // if(!Number.isNaN(previousIndex) && !Number.isNaN(currentIndex) && previousIndex!=undefined && currentIndex!=undefined && previousIndex!=currentIndex){
+        console.log('prev','current',event.previousIndex, currentIndex)
+        moveItemInArray(this.tasks, previousIndex, currentIndex);
+        console.log('tasks',this.tasks)
+        
+        if(this.workflowIndex!=null){
+          this.order.workflows[this.workflowIndex].tasks= [...this.tasks];
+          console.log('order after tab rearrangement', this.order)
+        }
+         this.onOrderUpdate.emit(this.order);
+    // }
+}
+
+ getAllListConnections(index:number){
+    var connections = []
+    for(var i=0;i<this.tasks.length;i++){
+      if(i!=index){
+        connections.push("task-"+i);
+      }
+    }
+    return connections;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
   
@@ -47,6 +90,9 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
   ngOnInit(): void {
     if (this.workflowIndex == null) {
       this.workflowIndex = 0;
+      setTimeout(() => {
+      this.setTabGroupIndex(0);
+    })
     }
   }
 
