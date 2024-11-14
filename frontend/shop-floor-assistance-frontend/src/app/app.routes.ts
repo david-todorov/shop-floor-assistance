@@ -14,6 +14,10 @@ import { EditorEditEquipmentComponent } from './components/editor-edit-equipment
 import { EditorEditProductComponent } from './components/editor-edit-product/editor-edit-product.component';
 import { OrderFormComponent } from './components/order-form/order-form.component';
 import { EditorCreateOrderComponent } from './components/editor-create-order/editor-create-order.component';
+import { CreateEquipmentFromExistingComponent } from './components/create-equipment-from-existing/create-equipment-from-existing.component';
+import { EquipmentCreationOptionComponent } from './components/equipment-creation-option/equipment-creation-option.component';
+import { ProductCreationOptionComponent } from './components/product-creation-option/product-creation-option.component';
+import { CreateProductFromExistingComponent } from './components/create-product-from-existing/create-product-from-existing.component';
 
 export const routes: Routes = [
     { path: '', component: WelcomeComponent },
@@ -27,8 +31,12 @@ export const routes: Routes = [
     { path: 'editor-homepage', component: EditorHomepageComponent, },
     { path: 'editor/equipment', component: EditorEquipmentComponent, },
     { path: 'editor/equipment/:id', component: EditorEditEquipmentComponent, },
-    { path: 'editor-equipment/create', component: EditorCreateEquipmentComponent, },
+    { path: 'editor-equipment/creation-option', component: EquipmentCreationOptionComponent, },
+    { path: 'editor-equipment/create', component: EditorCreateEquipmentComponent, }, 
+    { path: 'editor-equipment/create-from-existing', component: CreateEquipmentFromExistingComponent, },
     { path: 'editor/products', component: EditorProductComponent, },
-    { path: 'editor-product/create', component: EditorCreateProductComponent },
     { path: 'editor/product/:id', component: EditorEditProductComponent, },
+    { path: 'editor-product/creation-option', component: ProductCreationOptionComponent, },
+    { path: 'editor-product/create', component: EditorCreateProductComponent },
+    { path: 'editor-product/create-from-existing', component: CreateProductFromExistingComponent, },   
 ];

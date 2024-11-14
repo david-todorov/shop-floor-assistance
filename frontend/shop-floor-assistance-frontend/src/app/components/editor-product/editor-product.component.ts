@@ -20,7 +20,7 @@ export class EditorProductComponent implements OnInit {
   loadedProduct!: productTO[];
   editDisabled: boolean = false;
   createDisabled: boolean = false;
-  editBtnLabel: string = 'Edit Product';
+  editBtnLabel: string = 'Edit / Delete';
   createBtnLabel: string = 'Create Product';
 
   constructor(
@@ -61,7 +61,7 @@ export class EditorProductComponent implements OnInit {
    if ($event.type === 'click') {
       if (action === 'create') {
         // Directly navigate to the create equipment route without checking for equipment
-        this.router.navigateByUrl('/editor-product/create');
+        this.router.navigateByUrl('/editor-product/creation-option');
       } else if (action === 'edit') {
         if (this.product == null || this.product === undefined) {
           alert('You must specify a product!');

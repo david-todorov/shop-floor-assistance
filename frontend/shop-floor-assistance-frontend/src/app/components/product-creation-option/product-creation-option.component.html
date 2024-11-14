@@ -1,0 +1,14 @@
+<div class="w-full text-center flex flex-col space-y-2">
+    <span class="text-xl font-semibold mb-3">Select Equipment Creation Option</span>
+    <div class="w-7/12 mx-auto  mt-6  flex justify-around">
+
+        <div class="w-7/12 mx-4">
+            <app-button (onClick)="createFromExisting()" [label]="createBtnLabel"></app-button>
+        </div>
+
+        <div class="w-7/12 mx-4">
+            <app-button (onClick)="createFromScratch()" [label]="createNewBtnLabel"></app-button>
+        </div>
+
+    </div>
+</div>
