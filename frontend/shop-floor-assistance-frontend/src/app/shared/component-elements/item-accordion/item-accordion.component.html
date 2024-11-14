@@ -1,0 +1,38 @@
+<div *ngIf="items && items.length > 0">
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let item of items; index as i" [expanded]="expandedPanels[i]" [disabled]="isAnyWorkflowInEditMode()">
+      <mat-expansion-panel-header [ngClass]="{'selected-element': selectedItemIndex === i}" (click)="!isAnyWorkflowInEditMode() && selectItemflow(i)">
+        <mat-panel-title class="flex flex-row justify-between w-1/2">
+          <ng-container *ngIf="!itemFlowStates[i]?.editMode">
+            {{ item.name }}
+            <p>Time required (minutes): {{ item.timeRequired }} </p>
+          </ng-container>
+          <ng-container *ngIf="itemFlowStates[i]?.editMode">
+            <div class="flex flex-row gap-x-5">
+              <input class="edit-field" [(ngModel)]="itemFlowStates[i].updatedTitle" placeholder="Enter title">
+              <label class="text-sm w-fit">Time required (minutes):</label>
+              <input class="edit-field w-1/2" [(ngModel)]="itemFlowStates[i].upDatedTimeReq" placeholder="Time required">
+            </div>
+          </ng-container>
+        </mat-panel-title>
+        <mat-panel-description class="flex flex-row justify-end">
+          <button mat-icon-button (click)="toggleEditMode(i, $event)" [hidden]="selectedItemIndex !== i">
+            <mat-icon>{{ itemFlowStates[i]?.editMode ? 'save' : 'edit' }}</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteItems(i, $event)" [hidden]="selectedItemIndex !== i">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <mat-checkbox [(ngModel)]="itemFlowStates[i].checkStatus" (click)="resolveItemsChecked($event)"></mat-checkbox>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="expansion-panel-content">
+        <ng-container *ngIf="!itemFlowStates[i]?.editMode">
+          <p>{{ item.description}}</p>
+        </ng-container>
+        <ng-container *ngIf="itemFlowStates[i]?.editMode">
+          <textarea class="edit-textarea" [(ngModel)]="itemFlowStates[i].updatedDescription" placeholder="Enter description"></textarea>
+        </ng-container>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

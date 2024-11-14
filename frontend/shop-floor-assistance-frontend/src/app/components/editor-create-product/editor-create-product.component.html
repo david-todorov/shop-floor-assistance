@@ -1,0 +1,38 @@
+<div class="p-4 border rounded-lg shadow max-w-lg mx-auto">
+  <span class="text-2xl font-semibold mb-5 block text-center">Editor Workspace</span>
+  
+  <div class="text-center mb-5">
+    <span class="text-xl font-semibold">Please Provide information:</span>
+  </div>
+  
+  <div class="grid grid-cols-2 gap-4 mb-5">
+    <div class="font-semibold">Product Number</div>
+    <div><input type="text" placeholder="Enter Product Number" class="input-field" [(ngModel)]="product.productNumber" (input)="checkFormCompletion()"></div>
+
+    <div class="font-semibold">Product Name</div>
+    <div><input type="text" placeholder="Enter Product Name" class="input-field" [(ngModel)]="product.name" (input)="checkFormCompletion()"></div>
+
+    <div class="font-semibold">Product Type</div>
+    <div><input type="text" placeholder="Enter Product Type" class="input-field" [(ngModel)]="product.type" (input)="checkFormCompletion()"></div>
+
+    <div class="font-semibold">Product Description</div>
+    <div><input type="text" placeholder="Enter Description" class="input-field" [(ngModel)]="product.description" (input)="checkFormCompletion()"></div>
+    
+    <div class="font-semibold">Product Language</div>
+    <div><input type="text" placeholder="Enter Product Language" class="input-field" [(ngModel)]="product.language" (input)="checkFormCompletion()"></div>
+
+    <div class="font-semibold">Product Country</div>
+    <div><input type="text" placeholder="Enter Product Country" class="input-field" [(ngModel)]="product.country" (input)="checkFormCompletion()"></div>
+  
+    <div class="font-semibold">Package Size</div>
+    <div><input type="text" placeholder="Enter Package Size" class="input-field" [(ngModel)]="product.packageSize" (input)="checkFormCompletion()"></div>
+
+    <div class="font-semibold">Package Type</div>
+    <div><input type="text" placeholder="Enter Package Type" class="input-field" [(ngModel)]="product.packageType" (input)="checkFormCompletion()"></div>
+
+  </div>
+</div>
+
+<div class="text-center mt-4">
+  <app-button (onClick)="saveProduct($event)" [disabled]="createDisabled" [label]="createBtnLabel"></app-button>
+</div>

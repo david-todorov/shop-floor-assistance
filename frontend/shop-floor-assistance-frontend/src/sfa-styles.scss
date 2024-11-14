@@ -1,0 +1,11 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+$sfa-theme: mat.define-theme((color: (theme-type: light,
+                primary: mat.$azure-palette,
+            ),
+        ));
+
+html {
+    @include mat.all-component-themes($sfa-theme);
+}

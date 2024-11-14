@@ -1,0 +1,23 @@
+<div class="w-full">
+    <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" (selectedIndexChange)="onTabChange($event)">
+        <mat-tab *ngFor="let task of tasks; let i = index">
+            <ng-template mat-tab-label>
+                <span class="mr-10">{{ task.name }}</span>
+                <div class="whitespace-nowrap flex flex-row gap-x-3 justify-between">
+                </div>
+            </ng-template>
+            <div class="p-4">
+                <p class="text-primary m-2 text-lg underline">Description:</p>
+                <p class="m-2">{{ task.description }}</p>
+            </div>
+            <div class="m-4 p-2 overflow-hidden">
+                <app-item-accordion 
+                    (updatedItemsFromTasks)="updateItemsInOrder($event)" 
+                    [selectedTab]="selectedTaskIndex"
+                    [selectedTasks]="tasks"
+                    (itemsCheckStatus)="resolveCheck($event, i)">
+                </app-item-accordion>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

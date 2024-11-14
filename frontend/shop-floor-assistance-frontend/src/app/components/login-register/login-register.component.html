@@ -1,0 +1,18 @@
+<div class=" flex-col-justify-center pt-36 ">
+    <div class="flex-col-justify-center text-3xl">
+        <p>Log In</p>
+    </div>
+    <div class="mt-16 w-1/4 min-w-max">
+        <form class="flex-col-justify-center " [formGroup]="form">
+            <input #uname class="input-field" type="text"  placeholder="Username" formControlName="username">
+            <input class="input-field" type="password"  placeholder="Password" formControlName="password">
+
+            <div class="w-full">
+                <app-button (onClick)="resolveButtonClick($event)" [disabled]="disabledd" [label]="btnLabel"></app-button>
+            </div>  
+        </form>
+    </div>
+</div>
+
+
+

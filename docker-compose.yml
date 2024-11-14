@@ -10,7 +10,8 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - ./database/data:/var/lib/postgresql/data
+    # - postgres_data:/var/lib/postgresql/data
+    - ./database/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     restart: no

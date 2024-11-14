@@ -155,24 +155,4 @@ public class OrderDBO {
         }
     }
 
-    public void sortEntities() {
-        // Sort workflows if they are not empty
-        if (!workflows.isEmpty()) {
-            workflows.sort(Comparator.comparingInt(WorkflowDBO::getOrderingIndex));
-
-            for (WorkflowDBO workflow : workflows) {
-                // Sort tasks within the workflow if they are not empty
-                if (!workflow.getTasks().isEmpty()) {
-                    workflow.getTasks().sort(Comparator.comparingInt(TaskDBO::getOrderingIndex));
-
-                    for (TaskDBO task : workflow.getTasks()) {
-                        // Sort items within the task if they are not empty
-                        if (!task.getItems().isEmpty()) {
-                            task.getItems().sort(Comparator.comparingInt(ItemDBO::getOrderingIndex));
-                        }
-                    }
-                }
-            }
-        }
-    }
 }

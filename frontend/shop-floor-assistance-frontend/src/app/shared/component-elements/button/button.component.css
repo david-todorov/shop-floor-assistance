@@ -1,0 +1,16 @@
+.btn {
+    @apply w-44 mt-4 
+    bg-primary text-white 
+    hover:bg-opacity-70 
+    transition ease-in-out duration-300 !important;
+  
+}
+
+.btn:disabled {
+    @apply bg-gray-300 text-gray-500 cursor-not-allowed !important;
+}
+
+.button-div{
+    @apply flex justify-center !important;
+}
+ 
