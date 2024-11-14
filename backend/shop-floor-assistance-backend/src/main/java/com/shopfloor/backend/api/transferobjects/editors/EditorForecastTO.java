@@ -1,10 +1,10 @@
-package com.shopfloor.backend.api.transferobjects.operators;
+package com.shopfloor.backend.api.transferobjects.editors;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class OperatorForecastTO {
+public class EditorForecastTO {
     private Integer totalTimeRequired;
 }

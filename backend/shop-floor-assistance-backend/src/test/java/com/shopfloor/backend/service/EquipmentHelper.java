@@ -34,6 +34,14 @@ public class EquipmentHelper {
         return equipments;
     }
 
+    public void assertEditorEquipmentsListEqual(List<EditorEquipmentTO> expected, List<EditorEquipmentTO> actual){
+        assertEquals(expected.size(), actual.size());
+
+        for (int i = 0; i < expected.size(); i++) {
+            assertEditorEquipmentEqual(expected.get(i), actual.get(i));
+        }
+    }
+
     public void assertEditorEquipmentEqual(EditorEquipmentTO expected, EditorEquipmentTO actual){
         if(expected.getId() != null && actual.getId() != null) {
             assertEquals(expected.getId(), actual.getId());
