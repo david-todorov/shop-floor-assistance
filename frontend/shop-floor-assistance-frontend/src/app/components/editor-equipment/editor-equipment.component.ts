@@ -20,7 +20,7 @@ export class EditorEquipmentComponent implements OnInit {
   loadedEquipment!: equipmentTO[];
   editDisabled: boolean = false;
   createDisabled: boolean = false;
-  editBtnLabel: string = 'Edit Equipment';
+  editBtnLabel: string = 'Edit / Delete';
   createBtnLabel: string = 'Create Equipment';
 
 
@@ -61,7 +61,7 @@ export class EditorEquipmentComponent implements OnInit {
     if ($event.type === 'click') {
       if (action === 'create') {
         // Directly navigate to the create equipment route without checking for equipment
-        this.router.navigateByUrl('/editor-equipment/create');
+        this.router.navigateByUrl('/editor-equipment/creation-option');
       } else if (action === 'edit') {
         if (!this.equipment || this.equipment.id === undefined) {
           alert('You must specify an equipment with a valid ID!');

@@ -1,15 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
+import { CommonModule } from '@angular/common';
 import { orderTO } from '../../types/orderTO'; // Adjust the import path as needed
 
 @Component({
   selector: 'app-editor-create-order',
   standalone: true,
-  imports: [FormsModule, ButtonComponent],
+  imports: [FormsModule, ButtonComponent, CommonModule],
   templateUrl: './editor-create-order.component.html',
   styleUrl: './editor-create-order.component.css'
 })
@@ -21,7 +22,44 @@ export class EditorCreateOrderComponent implements OnInit{
     private backendCommunicationService: BackendCommunicationService
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.order) {
+      console.log("ngOnInit - Received order data from parent:", this.order);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['order'] && changes['order'].currentValue) {
+      console.log("ngOnChanges - Received order data from parent:", this.order);
+    }
+  }
+
+  // Method to add a new workflow
+  addNewWorkflow() {
+    const newWorkflow = {
+      workflowNumber: (this.order.workflows.length + 1).toString(),
+      name: 'New Workflow', // Default name for the new workflow
+      tasks: [] // Initialize with an empty array for tasks
+    };
+
+    this.order.workflows.push(newWorkflow);
+    console.log('New workflow added:', newWorkflow);
+  }
+
+ /*  addNewTask() {
+    if (this.selectedWorkflowIndex !== null && this.order.workflows[this.selectedWorkflowIndex]) {
+      const newTask = {
+        taskNumber: (this.order.workflows[this.selectedWorkflowIndex].tasks.length + 1).toString(), // Unique identifier for the task
+        name: 'New Task', // Assign default name for the new task
+        workflows: [], // Initialize as an empty array for workflows if it's required
+        items: [] // Initialize with an empty array of items
+      };
+      this.order.workflows[this.selectedWorkflowIndex].tasks.push(newTask);
+      console.log('New task added:', newTask);
+    } else {
+      console.warn('No workflow selected to add a task');
+    }
+  } */
 
   submitToBackend() {
     this.backendCommunicationService.createOrder(this.order).subscribe({

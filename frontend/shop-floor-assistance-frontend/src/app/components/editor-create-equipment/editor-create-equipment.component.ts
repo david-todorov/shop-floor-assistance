@@ -1,5 +1,5 @@
 import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
 import { EquipmentTableComponent } from '../../shared/component-elements/equipment-table/equipment-table.component';
@@ -36,7 +36,7 @@ export class EditorCreateEquipmentComponent {
 
   constructor(
     private router: Router,
-    private backendCommunicationService: BackendCommunicationService
+    private backendCommunicationService: BackendCommunicationService,
   ) { }
 
   // Method to handle Save Equipment button click with error handling

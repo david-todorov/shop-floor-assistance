@@ -40,8 +40,10 @@
     </div>
   </div>
 
-  <div class="text-center mt-4">
+  <div class="order-form text-center mt-4">
     <app-button (click)="submitOrderData()" [disabled]="nextDisabled"
             [label]="nextBtnLabel"></app-button>
   </div>
 
+<!-- EditorCreateOrderComponent as a child component -->
+<!-- <app-editor-create-order [order]="order"></app-editor-create-order> -->
