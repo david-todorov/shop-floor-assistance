@@ -134,6 +134,10 @@ export class BackendCommunicationService {
   
   }
 
+  getProductSuggestions(): Observable<any> {
+    return this.http.get(`${this.apiServerURL}editor/products/suggestions`);
+  }
+
   updateEditorProduct(id: number, productData: any): Observable<any>  {
     return this.http.put(`${this.apiServerURL}editor/products/${id}`, productData);
   }
