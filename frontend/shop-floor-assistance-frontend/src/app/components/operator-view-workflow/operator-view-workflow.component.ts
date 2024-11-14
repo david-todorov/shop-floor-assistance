@@ -1,17 +1,24 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { orderTO } from '../../types/orderTO';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
+import { ButtonComponent } from "../../shared/component-elements/button/button.component";
+import { workflowTO } from '../../types/workflowTO';
+import { itemUIStates } from '../../shared/component-elements/workflowUI-state';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router, RouterLink } from '@angular/router';
+import { SuggestionsComponent } from '../../shared/component-elements/suggestions/suggestions.component';
+import { CommonModule } from '@angular/common';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { OperatorWorkflowAccordionComponent } from '../../shared/component-elements/operator-workflow-accordion/operator-workflow-accordion.component';
 import { OperatorTaskTabComponent } from '../../shared/component-elements/operator-task-tab/operator-task-tab.component';
-import { workflowTO } from '../../types/workflowTO';
 
 @Component({
   selector: 'app-operator-view-workflow',
   standalone: true,
-  imports: [RouterModule,  
-    OperatorWorkflowAccordionComponent,OperatorTaskTabComponent
+  imports: [RouterModule, RouterLink,
+    OperatorWorkflowAccordionComponent, OperatorTaskTabComponent
   ],
   templateUrl: './operator-view-workflow.component.html',
   styleUrl: './operator-view-workflow.component.css'
@@ -19,59 +26,31 @@ import { workflowTO } from '../../types/workflowTO';
 
 export class OperatorViewWorkflowComponent implements OnInit {
 
-  @Input() order!: orderTO;
-  @Output() onOrderUpdate = new EventEmitter<orderTO>();
-  
-  expandedPanels: boolean[] = [];
-  selectedWorkflowIndex: number | null = null;
+  order!: orderTO;
+  selectedWorkflowIndex!: number | null;
 
+  constructor(
+    private backendCommunicationService: BackendCommunicationService,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
+  ) {}
 
-
-  
- constructor(private backendCommunicationService: BackendCommunicationService,
-    private route: ActivatedRoute,) {
+  ngOnInit(): void {
     this.route.params.subscribe(params => {
       const orderId = params['id'];
       this.backendCommunicationService.getOperatorOrder(orderId).pipe(
         catchError((err) => {
           console.error(err);
-          return of(null);
+          this.snackBar.open("Failed to load order data.", "Close", { duration: 3000 });
+          return of(null); // Continue the stream with a null value
         })
-      ).subscribe({
-        next: (response) => {
-          if (response) {
-            this.order = response; // Assign the retrieved order data
-          } else {
-            console.warn('No order found');
-          }
-        },
-        complete: () => {
-          console.log('Order retrieval complete:', this.order);
+      ).subscribe((orderData) => {
+        if (orderData) {
+          this.order = orderData; // Assign data directly to `this.order`
+        } else {
+          console.warn("No order data available.");
         }
       });
     });
   }
-
- ngOnInit(): void {
-    this.initializeExpandedPanels();
-  }
-
-  // Initialize expanded panels based on the number of workflows
-  private initializeExpandedPanels(): void {
-    this.expandedPanels = new Array(this.order?.workflows?.length || 0).fill(false);
-  }
-
-
-  updateOrder(order: orderTO) : void{
-    this.order = { ...order };
-    console.log('updates order received at parent', this.order)
-  }
-
-  onSelect(selectedWorkflow: number | null): void {
-    this.selectedWorkflowIndex = selectedWorkflow;
-  }
-
-
 }
-
-

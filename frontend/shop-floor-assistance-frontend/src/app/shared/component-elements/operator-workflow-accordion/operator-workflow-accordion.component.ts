@@ -4,73 +4,80 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { orderTO } from '../../../types/orderTO';
 import { MatIconModule } from '@angular/material/icon';
-import { workflowStates } from '../workflowUI-state';
 import { workflowTO } from '../../../types/workflowTO';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { taskTO } from '../../../types/taskTO';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
-import { OperatorTaskTabComponent } from '../operator-task-tab/operator-task-tab.component';
-import { itemTO } from '../../../types/itemTO';
-
 
 
 @Component({
   selector: 'app-operator-workflow-accordion',
   standalone: true,
-  imports: [ 
-    OperatorTaskTabComponent,
+  imports: [
     MatExpansionModule,
     MatButtonModule,
     MatIconModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DragDropModule
   ],
-
   templateUrl: './operator-workflow-accordion.component.html',
-  styleUrls: ['./operator-workflow-accordion.component.css']
+  styleUrl: './operator-workflow-accordion.component.css'
 })
 
 
-
 export class OperatorWorkflowAccordionComponent implements OnInit, OnChanges, AfterViewInit{
-@Input() order!: orderTO;
-  expandedPanels: boolean[] = [];
-  selectedWorkflow: workflowTO | null = null;
+
+
+  drop(event: CdkDragDrop<workflowTO[]>): void {
+    moveItemInArray(this.order.workflows, event.previousIndex, event.currentIndex);
+    this.onOrderUpdate.emit(this.order);
+  }
+
+  @Input() order!: orderTO;
+
+  @Output() onOrderUpdate = new EventEmitter<orderTO>();
+  @Output() onSelect = new EventEmitter<number | null>();
+
   orderExists: boolean= false;
+  selectedWorkflowIndex: number | null = 0;
+  expandedPanels: boolean[] = [];
+ 
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
-
-  ngOnInit(): void {
-    this.initializeExpandedPanels();
-  }
-
+  constructor(private cdr: ChangeDetectorRef, private dialog: MatDialog) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['order'] && changes['order'].currentValue) {
-      this.initializeExpandedPanels();
-    }
+    throw new Error('Method not implemented.');
   }
 
+  
+  ngOnInit(): void {
+    this.selectedWorkflowIndex= 0;
+    
+  }
+  
   ngAfterViewInit(): void {
-    this.changeDetectorRef.detectChanges();
+    // this.cdr.detectChanges();
+  }
+  
+
+
+  selectWorkflow(index: number) {
+    this.selectedWorkflowIndex = index;
+    this.onSelect.emit(this.selectedWorkflowIndex);
   }
 
-  // Initialize expanded panels based on the number of workflows
-  private initializeExpandedPanels(): void {
-    this.expandedPanels = new Array(this.order?.workflows?.length || 0).fill(false);
-  }
+  
 
-  // Method to select a workflow and show its tasks
-  selectWorkflow(index: number): void {
-    this.expandedPanels = this.expandedPanels.map((_, i) => i === index);
-    this.selectedWorkflow = this.order.workflows[index];
-    console.log(`Selected workflow: ${this.selectedWorkflow.name}`);
-  }
 
-  isAnyWorkflowInEditMode(): boolean {
-    return false; // Placeholder logic if edit mode management is not implemented
-  }
-
-    trackByIndex(index: number, item: any): any {
+  trackByIndex(index: number, item: any): any {
   return index;
 }
+
+
 }
+
+
+
+
