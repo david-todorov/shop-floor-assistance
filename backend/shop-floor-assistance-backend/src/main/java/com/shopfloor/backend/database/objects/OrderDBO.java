@@ -5,10 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "orders")
@@ -62,6 +60,9 @@ public class OrderDBO {
     @JoinColumn(name = "after_product_id")
     private ProductDBO afterProduct;
 
+    @Column(name = "total_time_required")
+    private Integer totalTimeRequired;
+
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "order")
     private List<ExecutionDBO> executions;
 
@@ -73,9 +74,7 @@ public class OrderDBO {
 
     public void setBeforeProduct(ProductDBO newBeforeProduct) {
         // If there is an existing beforeProduct, remove the association
-        if (this.beforeProduct != null) {
-            this.beforeProduct.getOrdersAsBeforeProduct().remove(this);
-        }
+        this.clearBeforeProduct();
 
         // Set the new beforeProduct and add this order to its association list
         this.beforeProduct = newBeforeProduct;
@@ -86,9 +85,7 @@ public class OrderDBO {
 
     public void setAfterProduct(ProductDBO newAfterProduct) {
         // If there is an existing afterProduct, remove the association
-        if (this.afterProduct != null) {
-            this.afterProduct.getOrdersAsAfterProduct().remove(this);
-        }
+        this.clearAfterProduct();
 
         // Set the new afterProduct and add this order to its association list
         this.afterProduct = newAfterProduct;
@@ -125,9 +122,40 @@ public class OrderDBO {
         }
     }
 
-    public void clearEquipment() {
+    public void clearEquipmentList() {
         for (EquipmentDBO equipment : new ArrayList<>(this.equipment)) {
             removeEquipment(equipment);
+        }
+    }
+
+    public void synchronizeEquipmentList(List<EquipmentDBO> equipments) {
+        // Create a set of equipment IDs in the new list for fast lookup
+        Set<Long> newEquipmentIds = equipments.stream()
+                .map(EquipmentDBO::getId)
+                .collect(Collectors.toSet());
+
+        // Remove equipment that are not in the new list
+        for (EquipmentDBO existingEquipment : new ArrayList<>(this.equipment)) {
+            if (!newEquipmentIds.contains(existingEquipment.getId())) {
+                removeEquipment(existingEquipment);
+            }
+        }
+
+        // Add equipment from the new list that are not already in the current list
+        for (EquipmentDBO newEquipment : equipments) {
+            if (!this.equipment.contains(newEquipment)) {
+                addEquipment(newEquipment);
+            }
+        }
+    }
+
+    public void setEquipmentList(List<EquipmentDBO> equipments) {
+        // Clear all existing equipment using the helper method
+        clearEquipmentList();
+
+        // Add each equipment from the new list using the addEquipment helper
+        for (EquipmentDBO equipment : equipments) {
+            addEquipment(equipment);
         }
     }
 

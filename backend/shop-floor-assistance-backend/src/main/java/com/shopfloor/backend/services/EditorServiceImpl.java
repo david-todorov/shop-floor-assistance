@@ -1,13 +1,11 @@
 package com.shopfloor.backend.services;
 
-import com.shopfloor.backend.api.transferobjects.editors.EditorEquipmentTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
+import com.shopfloor.backend.api.transferobjects.editors.*;
 import com.shopfloor.backend.api.transferobjects.mappers.EditorTOMapper;
 import com.shopfloor.backend.database.exceptions.*;
-import com.shopfloor.backend.database.mappers.DBOInitializerMapper;
-import com.shopfloor.backend.database.mappers.DBOUpdaterMapper;
+import com.shopfloor.backend.database.mappers.EquipmentDBOMapper;
+import com.shopfloor.backend.database.mappers.OrderDBOMapper;
+import com.shopfloor.backend.database.mappers.ProductDBOMapper;
 import com.shopfloor.backend.database.objects.EquipmentDBO;
 import com.shopfloor.backend.database.objects.OrderDBO;
 import com.shopfloor.backend.database.objects.ProductDBO;
@@ -36,22 +34,27 @@ import java.util.List;
 @Component
 public class EditorServiceImpl implements EditorService {
 
-    private final DBOInitializerMapper dboInitializerMapper;
-    private final DBOUpdaterMapper dboUpdaterMapper;
+    private final OrderDBOMapper orderDBOMapper;
+    private final ProductDBOMapper productDBOMapper;
+    private final EquipmentDBOMapper equipmentDBOMapper;
+
     private final EditorTOMapper editorToMapper;
+
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final EquipmentRepository equipmentRepository;
 
     @Autowired
-    public EditorServiceImpl(DBOInitializerMapper dboInitializerMapper,
+    public EditorServiceImpl(OrderDBOMapper orderDBOMapper,
+                             ProductDBOMapper productDBOMapper,
+                             EquipmentDBOMapper equipmentDBOMapper,
                              EditorTOMapper editorToMapper,
                              OrderRepository orderRepository,
-                             DBOUpdaterMapper dboUpdaterMapper,
                              ProductRepository productRepository,
                              EquipmentRepository equipmentRepository) {
-        this.dboInitializerMapper = dboInitializerMapper;
-        this.dboUpdaterMapper = dboUpdaterMapper;
+        this.orderDBOMapper = orderDBOMapper;
+        this.productDBOMapper = productDBOMapper;
+        this.equipmentDBOMapper = equipmentDBOMapper;
         this.editorToMapper = editorToMapper;
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
@@ -73,9 +76,9 @@ public class EditorServiceImpl implements EditorService {
     }
 
     @Override
-    public List<EditorWorkflowTO> getWorkflowSuggestions(EditorProductTO productAfter) {
+    public List<EditorWorkflowTO> getWorkflowsSuggestions(EditorProductTO productAfter) {
 
-        List<EditorWorkflowTO> suggested = new ArrayList<EditorWorkflowTO>();
+        List<EditorWorkflowTO> suggested = new ArrayList<>();
         Long productId = productAfter.getId();
 
         ProductDBO productAfterDBO = this.productRepository.findById(productId).orElse(null);
@@ -83,9 +86,54 @@ public class EditorServiceImpl implements EditorService {
             throw new ProductNotFoundException();
         }
 
-        productAfterDBO.getOrdersAsBeforeProduct().forEach(
-                (ordersAsBefore) -> suggested.addAll(this.editorToMapper.toWorkflowTOs(ordersAsBefore.getWorkflows()))
-        );
+        // Use streams to filter orders where 'productBefore' is null
+        productAfterDBO.getOrdersAsAfterProduct().stream()
+                .filter(ordersAsAfter -> ordersAsAfter.getBeforeProduct() == null) // filter orders with null 'productBefore'
+                .forEach(ordersAsAfter -> suggested.addAll(this.editorToMapper.toWorkflowTOs(ordersAsAfter.getWorkflows())));
+
+        return suggested;
+    }
+
+    @Override
+    public List<EditorTaskTO> getTasksSuggestions(EditorProductTO productAfter) {
+
+        List<EditorTaskTO> suggested = new ArrayList<>();
+        Long productId = productAfter.getId();
+
+        ProductDBO productAfterDBO = this.productRepository.findById(productId).orElse(null);
+        if (productAfterDBO == null) {
+            throw new ProductNotFoundException();
+        }
+
+        // Use streams to filter orders where 'productBefore' is null
+        productAfterDBO.getOrdersAsAfterProduct().stream()
+                .filter(ordersAsAfter -> ordersAsAfter.getBeforeProduct() == null) // filter orders with null 'productBefore'
+                .forEach(ordersAsAfter -> ordersAsAfter.getWorkflows().forEach(
+                        workflow -> suggested.addAll(this.editorToMapper.toTaskTOs(workflow.getTasks()))
+                ));
+
+        return suggested;
+    }
+
+    @Override
+    public List<EditorItemTO> getItemsSuggestions(EditorProductTO productAfter) {
+
+        List<EditorItemTO> suggested = new ArrayList<>();
+        Long productId = productAfter.getId();
+
+        ProductDBO productAfterDBO = this.productRepository.findById(productId).orElse(null);
+        if (productAfterDBO == null) {
+            throw new ProductNotFoundException();
+        }
+
+        // Use streams to filter out orders where 'productBefore' is null
+        productAfterDBO.getOrdersAsAfterProduct().stream()
+                .filter(ordersAsAfter -> ordersAsAfter.getBeforeProduct() == null)
+                .forEach(ordersAsAfter -> ordersAsAfter.getWorkflows().forEach(
+                        workflow -> workflow.getTasks().forEach(
+                                task -> suggested.addAll(this.editorToMapper.toItemTOs(task.getItems()))
+                        )
+                ));
 
         return suggested;
     }
@@ -111,7 +159,7 @@ public class EditorServiceImpl implements EditorService {
             throw new DuplicateEquipmentException();
         }
 
-        EquipmentDBO equipmentDBO = this.dboInitializerMapper.toEquipmentDBO(newEditorEquipmentTO, creatorId);
+        EquipmentDBO equipmentDBO = this.equipmentDBOMapper.initializeEquipmentDBOFrom(newEditorEquipmentTO, creatorId);
 
         return this.editorToMapper.toEquipmentTO(this.equipmentRepository.save(equipmentDBO));
     }
@@ -128,7 +176,7 @@ public class EditorServiceImpl implements EditorService {
             throw new DuplicateEquipmentException();
         }
 
-        this.dboUpdaterMapper.copyEquipmentDboFrom(existingEquipmentDBO, updatedEditorEquipmentTO, updaterId);
+        this.equipmentDBOMapper.updateEquipmentDBOFrom(existingEquipmentDBO, updatedEditorEquipmentTO, updaterId);
 
         return this.editorToMapper.toEquipmentTO(this.equipmentRepository.save(existingEquipmentDBO));
     }
@@ -165,7 +213,7 @@ public class EditorServiceImpl implements EditorService {
             throw new DuplicateProductException();
         }
 
-        ProductDBO newProductDBO = this.dboInitializerMapper.toProductDBO(newEditorProductTO, creatorId);
+        ProductDBO newProductDBO = this.productDBOMapper.initializeProductDBO(newEditorProductTO, creatorId);
 
         return this.editorToMapper.toProductTO(this.productRepository.save(newProductDBO));
     }
@@ -182,7 +230,7 @@ public class EditorServiceImpl implements EditorService {
             throw new DuplicateProductException();
         }
 
-        this.dboUpdaterMapper.copyProductDboFrom(existingProductDBO, editorProductTO, updaterId);
+        this.productDBOMapper.updateProductDboFrom(existingProductDBO, editorProductTO, updaterId);
 
         return this.editorToMapper.toProductTO(this.productRepository.save(existingProductDBO));
     }
@@ -238,18 +286,18 @@ public class EditorServiceImpl implements EditorService {
 
 
         // Map the EditorOrderTO to OrderDBO and set the creator ID
-        OrderDBO newOrderDBO = this.dboInitializerMapper.toOrderDBO(newEditorOrderTO, creatorId);
+        OrderDBO newOrderDBO = this.orderDBOMapper.initializeOrderDBOFrom(newEditorOrderTO, creatorId);
 
         // Use helper methods to set products in OrderDBO and maintain bidirectional relationships
         newOrderDBO.setBeforeProduct(productBefore);
         newOrderDBO.setAfterProduct(productAfter);
 
-        // Ensure each equipment exists and add it to the order using the helper method
-        for (EditorEquipmentTO equipmentTO : newEditorOrderTO.getEquipment()) {
-            EquipmentDBO equipment = this.equipmentRepository.findById(equipmentTO.getId())
-                    .orElseThrow(EquipmentNotFoundException::new);
-            newOrderDBO.addEquipment(equipment);
-        }
+        //Sets the equipment list
+        List<EquipmentDBO> equipmentList = newEditorOrderTO.getEquipment().stream()
+                .map(equipmentTO -> this.equipmentRepository.findById(equipmentTO.getId())
+                        .orElseThrow(EquipmentNotFoundException::new))
+                .toList();
+        newOrderDBO.setEquipmentList(equipmentList);
 
         // Save the new order to the database
         newOrderDBO = this.orderRepository.save(newOrderDBO);
@@ -290,29 +338,20 @@ public class EditorServiceImpl implements EditorService {
                     .orElseThrow(ProductNotFoundException::new);
         }
 
-
-
         // Update beforeProduct association using the helper method
         // Update afterProduct association using the helper method
         existingOrderDBO.setBeforeProduct(productBefore);
         existingOrderDBO.setAfterProduct(productAfter);
 
-        // Get the new equipment list
-        List<EquipmentDBO> newEquipmentList = updatedEditorOrderTO.getEquipment().stream()
+        // Get the new equipment list and updates it
+        List<EquipmentDBO> equipmentList = updatedEditorOrderTO.getEquipment().stream()
                 .map(equipmentTO -> this.equipmentRepository.findById(equipmentTO.getId())
                         .orElseThrow(EquipmentNotFoundException::new))
                 .toList();
-
-        // Remove all current equipment and maintain bidirectional consistency
-        existingOrderDBO.clearEquipment();
-
-        // Add the new equipment list to the order
-        for (EquipmentDBO newEquipment : newEquipmentList) {
-            existingOrderDBO.addEquipment(newEquipment); // Use the helper method to maintain bidirectional consistency
-        }
+        existingOrderDBO.synchronizeEquipmentList(equipmentList);
 
         // Save the updated order
-        existingOrderDBO = this.dboUpdaterMapper.copyOrderDboFrom(existingOrderDBO, updatedEditorOrderTO, updaterId);
+        existingOrderDBO = this.orderDBOMapper.updateOrderDBOFrom(existingOrderDBO, updatedEditorOrderTO, updaterId);
         existingOrderDBO = this.orderRepository.save(existingOrderDBO);
 
         //Sorting entities according to the ordering index, which comes directly from the order of the JSON request
@@ -333,7 +372,7 @@ public class EditorServiceImpl implements EditorService {
         existingOrderDBO.clearAfterProduct();
 
         // Clear equipment references using the helper method
-        existingOrderDBO.clearEquipment();
+        existingOrderDBO.clearEquipmentList();
 
         // Clear Execution references using helper method
         existingOrderDBO.clearExecutions();

@@ -1,9 +1,6 @@
 package com.shopfloor.backend.services;
 
-import com.shopfloor.backend.api.transferobjects.editors.EditorEquipmentTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
+import com.shopfloor.backend.api.transferobjects.editors.*;
 
 import java.util.List;
 
@@ -66,5 +63,9 @@ public interface EditorService {
 
     List<EditorProductTO> getProductsSuggestions(int numberOfProducts);
 
-    List<EditorWorkflowTO> getWorkflowSuggestions(EditorProductTO productAfter);
+    List<EditorWorkflowTO> getWorkflowsSuggestions(EditorProductTO productAfter);
+
+    List<EditorTaskTO> getTasksSuggestions(EditorProductTO productAfter);
+
+    List<EditorItemTO> getItemsSuggestions(EditorProductTO productAfter);
 }

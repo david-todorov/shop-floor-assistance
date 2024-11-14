@@ -157,6 +157,7 @@ public class EditorTOMapper {
         editorOrderTO.setUpdatedBy(orderDBO.getUpdatedBy());
         editorOrderTO.setCreatedAt(orderDBO.getCreatedAt());
         editorOrderTO.setUpdatedAt(orderDBO.getUpdatedAt());
+        editorOrderTO.getForecast().setTotalTimeRequired(orderDBO.getTotalTimeRequired());
 
         return editorOrderTO;
     }

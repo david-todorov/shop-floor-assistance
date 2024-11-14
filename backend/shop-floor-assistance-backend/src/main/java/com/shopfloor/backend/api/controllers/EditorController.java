@@ -1,9 +1,6 @@
 package com.shopfloor.backend.api.controllers;
 
-import com.shopfloor.backend.api.transferobjects.editors.EditorEquipmentTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorWorkflowTO;
+import com.shopfloor.backend.api.transferobjects.editors.*;
 import com.shopfloor.backend.services.EditorService;
 import com.shopfloor.backend.services.EditorServiceImpl;
 import jakarta.validation.Valid;
@@ -154,7 +151,19 @@ public class EditorController {
 
     @GetMapping("workflows/suggestions")
     @ResponseStatus(HttpStatus.OK)
-    public List<EditorWorkflowTO> getWorkflowSuggestions(@Valid @RequestBody EditorProductTO productAfter) {
-        return this.editorService.getWorkflowSuggestions(productAfter);
+    public List<EditorWorkflowTO> getWorkflowsSuggestions(@Valid @RequestBody EditorProductTO productAfter) {
+        return this.editorService.getWorkflowsSuggestions(productAfter);
+    }
+
+    @GetMapping("tasks/suggestions")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EditorTaskTO> getTasksSuggestions(@Valid @RequestBody EditorProductTO productAfter) {
+        return this.editorService.getTasksSuggestions(productAfter);
+    }
+
+    @GetMapping("items/suggestions")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EditorItemTO> getItemsSuggestions(@Valid @RequestBody EditorProductTO productAfter) {
+        return this.editorService.getItemsSuggestions(productAfter);
     }
 }

@@ -44,9 +44,12 @@ public class EditorOrderTO {
     @NotNull(message = "Equipment list cannot be null")
     private List<@NotNull(message = "Equipment cannot be null")EditorEquipmentTO> equipment;
 
+    private EditorForecastTO forecast;
+
     public EditorOrderTO() {
         this.workflows = new ArrayList<EditorWorkflowTO>();
         this.equipment = new ArrayList<EditorEquipmentTO>();
+        this.forecast = new EditorForecastTO();
     }
 
 }

@@ -6,10 +6,8 @@ import com.shopfloor.backend.api.transferobjects.operators.OperatorForecastTO;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorOrderTO;
 import com.shopfloor.backend.database.exceptions.ExecutionNotFoundException;
 import com.shopfloor.backend.database.exceptions.OrderNotFoundException;
-import com.shopfloor.backend.database.mappers.DBOInitializerMapper;
-import com.shopfloor.backend.database.mappers.DBOUpdaterMapper;
+import com.shopfloor.backend.database.mappers.ExecutionDBOMapper;
 import com.shopfloor.backend.database.objects.ExecutionDBO;
-import com.shopfloor.backend.database.objects.ItemDBO;
 import com.shopfloor.backend.database.objects.OrderDBO;
 import com.shopfloor.backend.database.repositories.ExecutionRepository;
 import com.shopfloor.backend.database.repositories.OrderRepository;
@@ -18,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * This is where the concrete implementations of OperatorService is
@@ -35,20 +32,18 @@ public class OperatorServiceImpl implements OperatorService {
     private final OperatorTOMapper operatorTOMapper;
     private final OrderRepository orderRepository;
     private final ExecutionRepository executionRepository;
-    private final DBOInitializerMapper dboInitializerMapper;
-    private final DBOUpdaterMapper dboUpdaterMapper;
+
+    private final ExecutionDBOMapper executionDBOMapper;
 
     @Autowired
     public OperatorServiceImpl(OperatorTOMapper operatorTOMapper,
                                OrderRepository orderRepository,
                                ExecutionRepository executionRepository,
-                               DBOInitializerMapper dboInitializerMapper,
-                               DBOUpdaterMapper dboUpdaterMapper) {
+                               ExecutionDBOMapper executionDBOMapper) {
         this.operatorTOMapper = operatorTOMapper;
         this.orderRepository = orderRepository;
         this.executionRepository = executionRepository;
-        this.dboInitializerMapper = dboInitializerMapper;
-        this.dboUpdaterMapper = dboUpdaterMapper;
+        this.executionDBOMapper = executionDBOMapper;
     }
 
     @Override
@@ -71,7 +66,7 @@ public class OperatorServiceImpl implements OperatorService {
         OrderDBO order = orderRepository.findById(orderId)
                 .orElseThrow(OrderNotFoundException::new);
 
-        ExecutionDBO execution = this.dboInitializerMapper.toExecutionDBO(executorId);
+        ExecutionDBO execution = this.executionDBOMapper.initializeExecutionDBO(executorId);
         execution = this.executionRepository.save(execution);
 
         order.addExecution(execution);
@@ -88,7 +83,7 @@ public class OperatorServiceImpl implements OperatorService {
         ExecutionDBO executionDBO = this.executionRepository.findById(executionId)
                 .orElseThrow(ExecutionNotFoundException :: new);
 
-        this.dboUpdaterMapper.finishExecution(executionDBO, finisherId);
+        this.executionDBOMapper.finishExecutionDBO(executionDBO, finisherId);
         executionDBO = this.executionRepository.save(executionDBO);
 
         return this.operatorTOMapper.toExecutionTO(executionDBO);
@@ -100,7 +95,7 @@ public class OperatorServiceImpl implements OperatorService {
         ExecutionDBO executionDBO = this.executionRepository.findById(executionId)
                 .orElseThrow(ExecutionNotFoundException :: new);
 
-        this.dboUpdaterMapper.abortExecution(executionDBO);
+        this.executionDBOMapper.abortExecutionDBO(executionDBO);
         executionDBO = this.executionRepository.save(executionDBO);
 
         return this.operatorTOMapper.toExecutionTO(executionDBO);
@@ -110,20 +105,10 @@ public class OperatorServiceImpl implements OperatorService {
     public OperatorForecastTO getForecast(Long orderId) {
         OrderDBO orderDBO = orderRepository.findById(orderId)
                 .orElseThrow(OrderNotFoundException::new);
-
         OperatorForecastTO forecastTO = new OperatorForecastTO();
-
-        Integer forecast = (orderDBO.getAfterProduct() != null)
-                ? orderDBO.getWorkflows().stream()
-                        .flatMap(workflowDBO -> workflowDBO.getTasks().stream())
-                        .flatMap(taskDBO -> taskDBO.getItems().stream())
-                        .map(ItemDBO::getTimeRequired)
-                        .filter(Objects::nonNull) // Filter out null values
-                        .mapToInt(Integer::intValue)
-                        .sum()
-                : null;
-        forecastTO.setForecast(forecast);
+        forecastTO.setTotalTimeRequired(orderDBO.getTotalTimeRequired());
 
         return forecastTO;
     }
+
 }

@@ -114,6 +114,7 @@ public class EditorControllerTest {
         // Verify the order is created by asserting the created order matches the new order
         EditorOrderTO actual = apiHelper.getEditorOrderGET(response.getId(), authorizationHeader, 200);
         orderHelper.assertEditorOrdersEqual(actual, response);
+        equipmentHelper.assertEditorEquipmentsListEqual(response.getEquipment(), actual.getEquipment());
     }
 
     @Test
@@ -457,6 +458,7 @@ public class EditorControllerTest {
 
         // Comparing
         orderHelper.assertEditorOrdersEqual(actual, expected);
+        equipmentHelper.assertEditorEquipmentsListEqual(actual.getEquipment(), actual.getEquipment());
     }
 
     @Test
@@ -754,6 +756,7 @@ public class EditorControllerTest {
         toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 200);
         EditorOrderTO actual = this.apiHelper.getEditorOrderGET(toBeUpdated.getId(), authorizationHeader, 200);
         this.orderHelper.assertEditorOrdersEqual(toBeUpdated, actual);
+        equipmentHelper.assertEditorEquipmentsListEqual(actual.getEquipment(), toBeUpdated.getEquipment());
     }
 
     @Test
@@ -790,6 +793,7 @@ public class EditorControllerTest {
         toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 200);
         EditorOrderTO actual = this.apiHelper.getEditorOrderGET(toBeUpdated.getId(), authorizationHeader, 200);
         this.orderHelper.assertEditorOrdersEqual(toBeUpdated, actual);
+        equipmentHelper.assertEditorEquipmentsListEqual(actual.getEquipment(), toBeUpdated.getEquipment());
     }
 
     @Test
@@ -1004,7 +1008,7 @@ public class EditorControllerTest {
         toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 200);
         EditorOrderTO actual = this.apiHelper.getEditorOrderGET(toBeUpdated.getId(), authorizationHeader, 200);
         this.orderHelper.assertEditorOrdersEqual(toBeUpdated, actual);
-
+        equipmentHelper.assertEditorEquipmentsListEqual(actual.getEquipment(), toBeUpdated.getEquipment());
     }
 
     @Test
@@ -1112,6 +1116,7 @@ public class EditorControllerTest {
         toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 200);
         EditorOrderTO actual = this.apiHelper.getEditorOrderGET(toBeUpdated.getId(), authorizationHeader, 200);
         this.orderHelper.assertEditorOrdersEqual(toBeUpdated, actual);
+        equipmentHelper.assertEditorEquipmentsListEqual(actual.getEquipment(), toBeUpdated.getEquipment());
     }
 
     @Test

@@ -38,9 +38,12 @@ public class OperatorOrderTO {
     @Size(min = 1, message = "Equipment list cannot be empty")
     private List<@NotNull(message = "Equipment cannot be null") OperatorEquipmentTO> equipment;
 
+    private OperatorForecastTO forecast;
+
     public OperatorOrderTO() {
         this.workflows = new ArrayList<OperatorWorkflowTO>();
         this.equipment = new ArrayList<OperatorEquipmentTO>();
+        this.forecast = new OperatorForecastTO();
     }
 
 }

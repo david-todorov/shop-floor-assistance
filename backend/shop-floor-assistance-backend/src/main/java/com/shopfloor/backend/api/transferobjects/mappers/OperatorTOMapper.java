@@ -44,6 +44,9 @@ public class OperatorTOMapper {
         //Workflows, tasks and items
         operatorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
 
+        //Forecast
+        operatorOrderTO.getForecast().setTotalTimeRequired(orderDBO.getTotalTimeRequired());
+
         return operatorOrderTO;
     }
 

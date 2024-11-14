@@ -83,11 +83,12 @@ public class OrderHelper {
         assertEquals(expected.getUpdatedAt(), actual.getUpdatedAt());
         assertEquals(expected.getUpdatedBy(), actual.getUpdatedBy());
 
-        //Compare the product
-        assertEditorProductsEqual(expected.getProductAfter(), actual.getProductAfter());
-
+        //Compare the products
         if(expected.getProductBefore() != null && actual.getProductBefore() != null) {
             assertEditorProductsEqual(expected.getProductBefore(), actual.getProductBefore());
+        }
+        if(expected.getProductAfter() != null && actual.getProductAfter() != null) {
+            assertEditorProductsEqual(expected.getProductAfter(), actual.getProductAfter());
         }
 
         //Compare the equipment
@@ -100,6 +101,11 @@ public class OrderHelper {
         assertEquals(expected.getWorkflows().size(), actual.getWorkflows().size());
         for (int i = 0; i < expected.getWorkflows().size(); i++) {
             assertEditorWorkflowsEqual(expected.getWorkflows().get(i), actual.getWorkflows().get(i));
+        }
+
+        // Compare forecasts
+        if(expected.getForecast() != null && actual.getForecast() != null) {
+            assertEquals(expected.getForecast().getTotalTimeRequired(), actual.getForecast().getTotalTimeRequired());
         }
     }
 
