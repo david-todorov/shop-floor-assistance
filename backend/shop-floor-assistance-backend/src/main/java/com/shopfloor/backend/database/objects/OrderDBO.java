@@ -50,12 +50,8 @@ public class OrderDBO {
     @OrderBy("orderingIndex ASC")
     private List<WorkflowDBO> workflows;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "order_equipment",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "equipment_id")
-    )
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @JoinTable(name = "order_equipment", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "equipment_id"))
     private List<EquipmentDBO> equipment;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -66,7 +62,7 @@ public class OrderDBO {
     @JoinColumn(name = "after_product_id")
     private ProductDBO afterProduct;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "order")
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY, mappedBy = "order")
     private List<ExecutionDBO> executions;
 
     public OrderDBO() {
@@ -155,4 +151,22 @@ public class OrderDBO {
         }
     }
 
+    public void sortEntities() {
+        // Sort workflows if they are not empty
+        if (!workflows.isEmpty()) {
+            workflows.sort(Comparator.comparingInt(WorkflowDBO::getOrderingIndex));
+            for (WorkflowDBO workflow : workflows) {
+                // Sort tasks within the workflow if they are not empty
+                if (!workflow.getTasks().isEmpty()) {
+                    workflow.getTasks().sort(Comparator.comparingInt(TaskDBO::getOrderingIndex));
+                    for (TaskDBO task : workflow.getTasks()) {
+                        // Sort items within the task if they are not empty
+                        if (!task.getItems().isEmpty()) {
+                            task.getItems().sort(Comparator.comparingInt(ItemDBO::getOrderingIndex));
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
