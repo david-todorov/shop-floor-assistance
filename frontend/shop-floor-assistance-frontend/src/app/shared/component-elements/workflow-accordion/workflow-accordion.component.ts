@@ -9,6 +9,8 @@ import { workflowTO } from '../../../types/workflowTO';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { taskTO } from '../../../types/taskTO';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatDialog } from '@angular/material/dialog';
+import { EditWorkflowDialogComponent } from '../edit-workflow-dialog/edit-workflow-dialog.component';
 
 @Component({
   selector: 'app-workflow-accordion',

@@ -1,0 +1,23 @@
+.radio-group {
+    @apply flex flex-row gap-x-2;
+  /* display: flex;
+  flex-direction: row;
+  margin: 15px 0;
+  align-items: flex-start;
+  */
+} 
+
+.radio-button {
+  margin: 5px;
+}
+
+.main-container{
+  @apply  flex-grow 
+  rounded-lg h-full border-2 border-accent 
+  p-4 overflow-auto min-w-[650px] flex flex-col justify-between
+  ;
+}
+
+.expansion-panel-content {
+  @apply mt-4 text-gray-600 !important;
+}

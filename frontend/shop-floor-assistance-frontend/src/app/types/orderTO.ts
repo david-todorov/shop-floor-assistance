@@ -7,7 +7,9 @@ export type orderTO = {
     orderNumber: string;
     name: string;
     description?: string; 
+
     workflows: workflowTO[]; 
+    
     createdBy?: number;
     updatedBy?: number;
     createdAt?: Date;

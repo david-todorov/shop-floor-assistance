@@ -179,7 +179,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       this.itemUIStates[index] = { editMode: false, 
         showDescription: false, 
         updatedTitle: item.name,
-        updatedDescription: item.longDescription,
+        updatedDescription: item.description,
         upDatedTimeReq: item.timeRequired};
     });
   }
@@ -211,7 +211,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       return;
     }
     this.items[index].name= this.itemUIStates[index].updatedTitle;
-    this.items[index].longDescription= this.itemUIStates[index].updatedDescription;
+    this.items[index].description= this.itemUIStates[index].updatedDescription;
     this.items[index].timeRequired= this.itemUIStates[index].upDatedTimeReq;
   }
 
@@ -260,7 +260,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       event.stopPropagation();
       const newItem: itemTO= { 
         name: 'New Item', 
-        longDescription: 'Item description', 
+        description: 'Item description', 
         timeRequired: null 
       };
       this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items.push(newItem);

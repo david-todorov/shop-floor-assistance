@@ -93,9 +93,9 @@ updateItemsInOrder(event: itemTO[]) {
 
     // Set taskId for each item only if currentTask.id is defined
     event.forEach(item => {
-      if (currentTask.id !== undefined) {
-        item.taskId = currentTask.id; // Assign currentTask's ID to taskId
-      }
+      // if (currentTask.id !== undefined) {
+      //   item.taskId = currentTask.id; // Assign currentTask's ID to taskId
+      // }
     });
 
     currentTask.items = event;

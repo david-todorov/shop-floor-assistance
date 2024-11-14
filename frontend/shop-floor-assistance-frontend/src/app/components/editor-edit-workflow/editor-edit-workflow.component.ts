@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { orderTO } from '../../types/orderTO';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
-import { dummyOrder } from '../../types/dummyData';
+// import { dummyOrder } from '../../types/dummyData';
 import { WorkflowAccordionComponent } from '../../shared/component-elements/workflow-accordion/workflow-accordion.component';
 import { TaskTabComponent } from '../../shared/component-elements/task-tab/task-tab.component';
 import { ButtonComponent } from "../../shared/component-elements/button/button.component";
@@ -11,15 +11,21 @@ import { workflowTO } from '../../types/workflowTO';
 import { itemUIStates } from '../../shared/component-elements/workflowUI-state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuggestionsComponent } from '../../shared/component-elements/suggestions/suggestions.component';
+import { CommonModule } from '@angular/common';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-editor-edit-workflow',
   standalone: true,
   imports: [
-    WorkflowAccordionComponent,
-    TaskTabComponent,
-    ButtonComponent,
-    SuggestionsComponent
+  SuggestionsComponent,
+  CommonModule,
+  MatSnackBarModule,
+  WorkflowAccordionComponent,
+  TaskTabComponent,
+  ButtonComponent
+
+
 ],
   templateUrl: './editor-edit-workflow.component.html',
   styleUrl: './editor-edit-workflow.component.css'
@@ -52,7 +58,7 @@ export class EditorEditWorkflowComponent implements OnInit {
           //for fallback method in complete
         },
         complete: ()=>{
-          this.order= dummyOrder;// This is fallback, since apis do not function now. TAKE OUT IN PROD VERSION
+          // this.order= dummyOrder;// This is fallback, since apis do not function now. TAKE OUT IN PROD VERSION
           console.log('done', this.order);
 
         }
@@ -104,7 +110,7 @@ export class EditorEditWorkflowComponent implements OnInit {
           items: [
             {
               name: 'INew Item',
-              longDescription: 'New item: Description',
+              description: 'New item: Description',
               timeRequired: null,
             }
           ]

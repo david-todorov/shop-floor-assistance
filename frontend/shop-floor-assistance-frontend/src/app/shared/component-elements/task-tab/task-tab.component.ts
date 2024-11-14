@@ -131,9 +131,14 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
         name: 'New Task', 
         description: 'Task Description', 
         items: [
-          { name: 'New Item', 
-            longDescription: 'Item Description', 
-            timeRequired: null }
+          // { name: 'New Item', 
+          //   description: 'Item Description', 
+          //   timeRequired: null }
+            { 
+              name: 'New Item', 
+              description: 'Item Description',
+              timeRequired: null 
+             }
           ] 
         };
       this.order.workflows[this.workflowIndex].tasks.push(newTask);

@@ -12,8 +12,8 @@ export type itemUIStates= {
         editMode: boolean, 
         showDescription: boolean,
         updatedTitle: string;
-        updatedDescription: string;
-        upDatedTimeReq: number | null;
+        updatedDescription?: string;
+        upDatedTimeReq?: number | null;
     }
 }
 
