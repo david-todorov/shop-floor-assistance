@@ -1,0 +1,59 @@
+<div class="container p-14 border rounded-lg shadow max-w-4xl mx-auto">
+  <span class="text-2xl font-semibold mb-5 block text-center">Create Equipment from Template</span>
+
+  <div class="two-column-layout">
+    <!-- Suggestions Section -->
+    <div class="suggestions border-r pr-4">
+      <div class="text-center mb-5">
+        <span class="text-xl font-semibold">Select a Template to Start:</span>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 mb-5">
+        <div *ngFor="let suggestion of suggestions" class="suggestion-card p-4 border rounded cursor-pointer hover:bg-gray-100" (click)="selectSuggestion(suggestion)">
+          <h3 class="font-semibold">{{ suggestion.name }}</h3>
+          <p>{{ suggestion.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equipment Form Section -->
+    <div class="edit-form pl-4" *ngIf="selectedEquipment">
+      <div class="text-center mb-5">
+        <span class="text-xl font-semibold">Edit Selected Template:</span>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-4 mb-5">
+        <div class="font-semibold">Equipment Number</div>
+        <div>
+          <input 
+            type="text" 
+            placeholder="Enter Equipment Number" 
+            class="input-field" 
+            [(ngModel)]="selectedEquipment.equipmentNumber" 
+            (input)="checkUniqueEquipmentNumber()"
+          >
+          <p *ngIf="equipmentNumberExists" class="text-red-500 text-sm">Equipment number must be unique.</p>
+        </div>
+
+        <div class="font-semibold">Name</div>
+        <div>
+          <input type="text" placeholder="Enter Name" class="input-field" [(ngModel)]="selectedEquipment.name">
+        </div>
+
+        <div class="font-semibold">Description</div>
+        <div>
+          <input type="text" placeholder="Enter Description" class="input-field" [(ngModel)]="selectedEquipment.description">
+        </div>
+
+        <div class="font-semibold">Type</div>
+        <div>
+          <input type="text" placeholder="Enter Type" class="input-field" [(ngModel)]="selectedEquipment.type">
+        </div>
+      </div>
+      
+      <div class="text-center mt-4">
+        <app-button (onClick)="createEquipment($event)" [disabled]="createDisabled" [label]="createBtnLabel"></app-button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="min-w-[300px] min-h-[200px]">
+    @if(orderExists){
+        @if(order.workflows.length > 0){
+            <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)">
+                @for(workflow of order.workflows; track $index){
+                    <mat-expansion-panel [expanded]="expandedPanels[$index]" cdkDrag>
+                        <mat-expansion-panel-header (click)="selectWorkflow($index)" 
+                                                    [ngClass]="{'selected-element': selectedWorkflowIndex === $index}">
+                            <mat-panel-title>
+                                {{ workflow.name }}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="expansion-panel-content">
+                            <p>{{ workflow.description }}</p>
+                        </div>
+                    </mat-expansion-panel>
+                }
+            </mat-accordion>
+        }@else {
+            <h1 class="font-bold text-red-600 text-lg">There are no workflows in the specified order!</h1>
+        }
+    }@else {
+        <h1>The specified order could not be found!</h1>
+    }
+</div>

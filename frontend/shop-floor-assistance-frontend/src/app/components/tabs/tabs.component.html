@@ -1,7 +1,0 @@
-<mat-tab-group *ngIf="selectedWorkflow">
-  <mat-tab *ngFor="let task of selectedWorkflow.tasks" [label]="task.name">
-    <app-expansion [task]="task"></app-expansion>
-  </mat-tab>
-</mat-tab-group>
-
-

@@ -1,0 +1,64 @@
+:host {
+    --order-text-table-rows: #7777BF;
+}
+/* Angular table elements */
+.mat-mdc-header-row { /* header */
+    color: white !important;
+    background-color: #0477BF !important;
+    border-radius: 5px !important;
+}
+
+.mat-mdc-row { /* row */
+    color: var(--text-table-rows) !important;
+    height: 45px !important;
+}
+
+.mat-mdc-row:nth-child(even) {
+    background-color: #F2F2F2 !important;
+}
+
+.mat-mdc-row:nth-child(odd) {
+    background-color: white !important;
+}
+
+.mat-mdc-cell {
+    border: none !important;
+}
+
+.mat-mdc-table {
+    /* border: 2px solid #0477BF; */
+    border-collapse: separate;
+    /* border-radius: 15px !important; */
+    overflow: hidden;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); */
+    width: 100%;
+}
+/* Overall container, scrollbar */
+.container {
+    @apply border-2 border-primary rounded-lg !important;
+    height: 320px;
+    overflow: auto; 
+}
+table {
+    width: 100%;
+}
+
+.container::-webkit-scrollbar {
+    @apply w-4 h-10;
+}
+
+.container::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 hover:bg-scrollbar-hover rounded-lg !important;
+}
+
+.container::-webkit-scrollbar-track {
+    @apply bg-gray-200 rounded-tr-lg rounded-br-lg;
+    position: relative !important;
+}
+.container::-webkit-scrollbar-track-piece:start {
+    margin-top: 56px;
+}
+
+.search-field{
+    @apply w-full max-w-md border-2 border-primary rounded-full  text-lg m-2 p-1 pl-5 !important;
+}

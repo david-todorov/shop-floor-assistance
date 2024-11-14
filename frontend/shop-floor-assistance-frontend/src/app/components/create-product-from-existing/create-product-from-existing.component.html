@@ -1,0 +1,78 @@
+<div class="container p-14 border rounded-lg shadow max-w-4xl mx-auto">
+  <span class="text-2xl font-semibold mb-5 block text-center">Create Product from Template</span>
+
+  <div class="two-column-layout">
+    <!-- Suggestions Section -->
+    <div class="suggestions border-r pr-4">
+      <div class="text-center mb-5">
+        <span class="text-xl font-semibold">Select a Template to Start:</span>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 mb-5">
+        <div *ngFor="let suggestion of suggestions"
+          class="suggestion-card p-4 border rounded cursor-pointer hover:bg-gray-100"
+          (click)="selectSuggestion(suggestion)">
+          <h3 class="font-semibold">{{ suggestion.name }}</h3>
+          <p>{{ suggestion.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equipment Form Section -->
+    <div class="edit-form pl-4" *ngIf="selectedProduct">
+      <div class="text-center mb-5">
+        <span class="text-xl font-semibold">Edit Selected Template:</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mb-5">
+        <div class="font-semibold">Product Number</div>
+        <div>
+          <input type="text" placeholder="Enter Product Number" class="input-field"
+            [(ngModel)]="selectedProduct.productNumber" (input)="checkUniqueProductNumber()">
+          <p *ngIf="productNumberExists" class="text-red-500 text-sm">Product number must be unique.</p>
+        </div>
+
+        <div class="font-semibold">Name</div>
+        <div>
+          <input type="text" placeholder="Enter Name" class="input-field" [(ngModel)]="selectedProduct.name">
+        </div>
+
+        <div class="font-semibold">Type</div>
+        <div>
+          <input type="text" placeholder="Enter Type" class="input-field" [(ngModel)]="selectedProduct.type">
+        </div>
+
+        <div class="font-semibold">Description</div>
+        <div>
+          <input type="text" placeholder="Enter Description" class="input-field"
+            [(ngModel)]="selectedProduct.description">
+        </div>
+
+        <div class="font-semibold">Language</div>
+        <div>
+          <input type="text" placeholder="Enter Language" class="input-field" [(ngModel)]="selectedProduct.language">
+        </div>
+
+        <div class="font-semibold">Country</div>
+        <div>
+          <input type="text" placeholder="Enter Country" class="input-field" [(ngModel)]="selectedProduct.country">
+        </div>
+
+        <div class="font-semibold">Package Size</div>
+        <div>
+          <input type="text" placeholder="Enter Package Size" class="input-field"
+            [(ngModel)]="selectedProduct.packageSize">
+        </div>
+
+        <div class="font-semibold">Package Type</div>
+        <div>
+          <input type="text" placeholder="Enter Package Type" class="input-field"
+            [(ngModel)]="selectedProduct.packageType">
+        </div>
+
+        <div class="text-center mt-4">
+        <app-button (onClick)="createProduct($event)" [disabled]="createDisabled" [label]="createBtnLabel"></app-button>
+      </div>
+    </div>
+  </div>
+</div>

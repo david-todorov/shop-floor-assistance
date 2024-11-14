@@ -1,7 +1,15 @@
+import { workflowTO } from "./workflowTO"; 
 import { itemTO } from "./itemTO";
 
-export type taskTO={
-    name: string;
-    description: string;
-    items: itemTO[];
-}
+export type taskTO = {
+  id?: number;
+  name: string;
+  description?: string;
+
+  createdBy?: number;
+  updatedBy?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+
+  items: itemTO[]; 
+};

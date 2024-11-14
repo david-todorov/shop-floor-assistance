@@ -1,0 +1,12 @@
+<!-- editor-homepage.component.html -->
+<div class="p-4 border rounded-lg shadow">
+  <!-- <h3 class="font-bold">Editor Homepage</h3> -->
+  <span class="text-2xl font-semibold mb-3">Editor Homepage</span> <!-- Title -->
+  <div class="w-full text-center flex flex-col space-y-2">
+  <span class="text-xl font-semibold mb-3">What do you want to modify?</span>
+    <app-button class="w-full" label="Orders" (click)="selectoption(0)"></app-button>
+    <app-button class="w-full" label="Equipment" (click)="selectoption(1)"></app-button>
+    <app-button class="w-full" label="Product" (click)="selectoption(2)"></app-button>
+  </div>
+</div>
+

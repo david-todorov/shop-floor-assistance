@@ -1,0 +1,23 @@
+.fade-edge {
+    position: relative;
+    border-radius: 10px;
+    /* Make the borders round */
+    overflow: hidden;
+    /* Ensure the pseudo-element does not overflow */
+}
+
+.fade-edge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    /* Make the borders round */
+    background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0) 80%, rgba(255, 255, 255, 1));
+    filter: blur(10px);
+    /* Apply blur effect */
+    pointer-events: none;
+    /* Ensure the overlay does not interfere with interactions */
+}

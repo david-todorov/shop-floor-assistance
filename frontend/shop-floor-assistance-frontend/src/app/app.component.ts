@@ -1,21 +1,36 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { AuthService } from './service/auth.service';
-import { LoginComponent } from './login/login/login.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { OperatorAssistanceComponent } from './operator-assistance/operator-assistance.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+
+import { HeaderComponent } from './components/header/header.component';
+import { WelcomeComponent } from './components/welcome/welcome.component';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HomeComponent, RouterLink, RouterModule, LoginComponent,
-    HttpClientModule, OperatorAssistanceComponent],
+  imports: [
+    MatSlideToggleModule, 
+    MatSliderModule, 
+    MatToolbarModule, 
+    MatIconModule,
+    RouterOutlet,
+    RouterLink,
+    HeaderComponent,
+    WelcomeComponent
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [AuthService]
+  providers: []
 })
-export class AppComponent {
-  title = 'shop-floor-assistance-frontend';
-  constructor(private authService: AuthService) { }
+export class AppComponent{
+
+  title = 'Digital Workflow Assistant';
+  
 }

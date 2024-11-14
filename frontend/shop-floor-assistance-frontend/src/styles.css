@@ -1,7 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.custom-toolbar {
+    @apply  flex items-center justify-between pl-5 pr-5 bg-white !important;
+}
+
+.login-btn{
+        @apply flex items-center border border-primary 
+        rounded mr-10 shadow
+        hover:bg-background hover:text-primary hover:shadow-inner 
+        transform hover:scale-125 
+        hover:bg-opacity-50 
+        transition ease-out duration-300;
+}
+.flex-col-justify-center{
+    @apply flex flex-col justify-center items-center ;
+}
+
+.flex-row-justify-center {
+    @apply flex flex-row justify-center items-center;
+}
+
+.input-field {
+    @apply w-full 
+    max-w-md border-b-2 
+    border-b-primary 
+    focus:border-primary 
+    focus:rounded-full focus:ring-1 focus:ring-primary 
+    text-lg m-2 p-1 pl-5 !important;
+}
+
+.input-field:focus {
+    outline-width: 0;
+}

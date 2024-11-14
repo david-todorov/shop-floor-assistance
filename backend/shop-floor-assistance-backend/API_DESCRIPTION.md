@@ -276,7 +276,6 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: List of orders as TOs from the database.
 ---
 
-#STABLE
 #### `GET /operator/orders/{orderId}`
 - **Description**: Retrieves an existing order identified by the specified `orderId`.
 - **Parameters**:
@@ -287,7 +286,6 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: The requested  order as TO, examine please the OperatorOrderTO, if some questions ask me
 ---
 
-#STABLE
 #### `POST /operator/start/{orderId}`
 - **Description**:  Starts an execution of an order and returns `started` execution TO.
 - **Parameters**:
@@ -298,9 +296,8 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: Started execution as `execution TO`
 ---
 
-#STABLE
 #### `PUT /operator/finish/{executionId}`
-- **Description**:  Finish an execution of an order and return the `finished` execution TO.
+- **Description**:  Finish an execution of an order and returns `finished` execution TO.
 - **Parameters**:
   - `{executionId}`: The unique identifier of the started execution.
 - **Throws**:
@@ -309,9 +306,8 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: Finished execution as `execution TO`
 ---
 
-#STABLE
 #### `PUT /operator/abort/{executionId}`
-- **Description**:  Abort an execution of an order and return `aborted` execution TO.
+- **Description**:  Abort an execution of an order and returns `aborted` execution TO.
 - **Parameters**:
   - `{executionId}`: The unique identifier of the started execution.
 - **Throws**:
@@ -320,7 +316,6 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: Aborted execution as `execution TO`
 ---
 
-#STABLE
 #### `GET /operator/forecast/{orderId}`
 - **Description**: Retrieves a forecast for an order by the specified `orderId`.
 - **Parameters**:
