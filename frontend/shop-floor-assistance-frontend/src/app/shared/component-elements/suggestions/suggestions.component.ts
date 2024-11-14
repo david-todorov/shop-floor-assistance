@@ -46,7 +46,9 @@ export class SuggestionsComponent {
     this.suggestionService.triggerDrop(event,index);
     console.log('service dispatched in suggestionscomponent with index', index)
   }
-
+trackByFn(item: itemTO): itemTO {
+    return item;
+  }
 
 
 

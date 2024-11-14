@@ -12,6 +12,9 @@ import { orderTO } from '../../../types/orderTO';
 import { UIService } from '../../../services/ui.service';
 import { ButtonComponent } from '../button/button.component';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Subscription } from 'rxjs';
+import { SuggestionsService } from '../../../services/suggestions.service';
+import { itemDropEventType } from '../../../types/itemDropEventType';
 
 
 @Component({
@@ -33,23 +36,42 @@ import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from 
 })
 export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     drop(event: CdkDragDrop<itemTO[]>): void {
+       console.log('wwwwwwwwwww')
       if(this.workflowIndex!=null && this.taskIndex!=null){
         const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
-        // moveItemInArray(items, event.previousIndex, event.currentIndex);
         if (event.previousContainer === event.container) {
           moveItemInArray(items, event.previousIndex, event.currentIndex);
-        } else{
-            transferArrayItem(
-              event.previousContainer.data,
-              // event.container.data,
-              items,
-              event.previousIndex,
-              event.currentIndex
-            );
+        } else {
+          transferArrayItem(
+            event.previousContainer.data,
+            items,
+            event.previousIndex,
+            event.currentIndex
+          );
+          console.log('event.previousContainer.data,event.previousIndex, event.currentIndex')
+          console.log( event.previousContainer.data,event.previousIndex,event.currentIndex)
         }
       }
     this.onOrderUpdate.emit(this.order);
   }
+
+
+
+
+  private dropSubscription!: Subscription;
+  
+
+ 
+ 
+
+
+
+
+
+
+
+
+
 
 
 
@@ -71,7 +93,9 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   @ViewChild(MatAccordion) accordion!: MatAccordion;
   //-----------------------------------------
 
-  constructor(private cdr:ChangeDetectorRef, private uiService: UIService){}
+  constructor(private cdr:ChangeDetectorRef, 
+    private uiService: UIService,
+    private suggestionService: SuggestionsService){}
 
   //--life cycle hooks
   ngOnInit(): void {
@@ -84,10 +108,21 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     if (Object.keys(this.checkStatuses).length === 0) {
       this.initializeCheckStatuses();
     }
+
+    this.dropSubscription = this.suggestionService.drop$.subscribe((event: CdkDragDrop<itemTO[]>) => {
+      console.log('dropSubscription received')
+      this.drop(event);
+    });
+
   }
+
 
   ngOnDestroy(): void {
     this.uiService.setItemIndices(this.itemIndices);
+    if (this.dropSubscription) {
+      this.dropSubscription.unsubscribe();
+    }
+ 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
