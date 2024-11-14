@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { catchError, of } from 'rxjs';
 import { Router } from '@angular/router';
-import { equipmentTO } from '../../types/equipmentTO';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
+import { productTO } from '../../types/productTO';
 
 @Component({
   selector: 'app-create-product-from-existing',
@@ -14,19 +14,22 @@ import { ButtonComponent } from '../../shared/component-elements/button/button.c
   templateUrl: './create-product-from-existing.component.html',
   styleUrl: './create-product-from-existing.component.css'
 })
-export class CreateProductFromExistingComponent implements OnInit {
-  equipment: equipmentTO = {
-    equipmentNumber: "",
-    name: "",
-    description: "",
-    type: "",
-    orders: [],
+export class CreateProductFromExistingComponent {
+  product: productTO = {
+    productNumber: '',
+    name: '',
+    description: '',
+    language:'',
+    country:'',
+    type: '',
+    packageSize: '',
+    packageType: '',
   };
-  selectedEquipment: equipmentTO | null = null;
-  suggestions: equipmentTO[] = []; // Store fetched suggestions
+  selectedProduct: productTO | null = null;
+  suggestions: productTO[] = []; // Store fetched suggestions
   createDisabled: boolean = true;
-  createBtnLabel: string = 'Create Equipment';
-  equipmentNumberExists: boolean = false; // To track uniqueness of equipment number
+  createBtnLabel: string = 'Create Product';
+  productNumberExists: boolean = false; // To track uniqueness of equipment number
   
   constructor(
     private router: Router,
@@ -39,7 +42,7 @@ export class CreateProductFromExistingComponent implements OnInit {
 
   loadSuggestions() {
     // Fetch suggestions from the backend
-    this.backendCommunicationService.getEquipmentSuggestions().subscribe(
+    this.backendCommunicationService.getProductSuggestions().subscribe(
       (data) => {
         this.suggestions = data;
       },
@@ -49,57 +52,63 @@ export class CreateProductFromExistingComponent implements OnInit {
     );
   }
 
-  selectSuggestion(suggestion: equipmentTO) {
-    // Populate the form with the selected suggestion's data
-    this.equipment = { ...suggestion, equipmentNumber: '' };
-    this.createDisabled = true; // Disable the button until the new equipment number is unique
+  selectSuggestion(suggestion: productTO) {
+    console.log("Suggestion selected:", suggestion); // Debugging line
+    this.selectedProduct = { ...suggestion, productNumber: '' };
+    //this.createDisabled = true; // Disable the button until the new equipment number is unique
   }
 
-  checkUniqueEquipmentNumber() {
-    // Check if the entered equipment number matches any in the suggestions list
-    this.equipmentNumberExists = this.suggestions.some(
-      (suggestion) => suggestion.equipmentNumber === this.equipment.equipmentNumber
-    );
+    checkUniqueProductNumber() {
+    if (this.selectedProduct) {
+      // Check if the equipment number exists in suggestions
+      this.productNumberExists = this.suggestions.some(
+        (suggestion) => suggestion.productNumber === this.selectedProduct!.productNumber
+      );
 
-    // Enable the create button only if the equipment number is unique and other fields are filled
-    this.createDisabled = this.equipmentNumberExists || !(
-      this.equipment.equipmentNumber &&
-      this.equipment.name &&
-      this.equipment.description &&
-      this.equipment.type &&
-      Array.isArray(this.equipment.orders)
-    );
+      // Enable the button only if all fields are filled and the equipment number is unique
+      this.createDisabled = this.productNumberExists || !(
+        this.selectedProduct.productNumber &&
+        this.selectedProduct.name &&
+        this.selectedProduct.description &&
+        this.selectedProduct.type &&
+        this.selectedProduct.country &&
+        this.selectedProduct.language &&
+        this.selectedProduct.packageSize &&
+        this.selectedProduct.packageType
+      );
+    }
   }
 
-  createEquipment(event: MouseEvent) {
-    if (event.type === 'click' && !this.equipmentNumberExists) {
-      this.backendCommunicationService.createEquipment(this.equipment)
+  createProduct(event: MouseEvent) {
+    if (event.type === 'click' && !this.productNumberExists) {
+      console.log("Payload being sent:", this.selectedProduct);
+      this.backendCommunicationService.createProduct(this.selectedProduct)
         .pipe(
           catchError((error) => {
-            console.error('Error creating equipment:', error);
-            alert('Failed to create equipment. Please try again.');
+            console.error('Error creating product:', error);
+            alert('Failed to create product. Please try again.');
             return of(null); // Return null to continue with the observable flow
           })
         )
         .subscribe({
           next: (response) => {
             if (response) {
-              console.log('Equipment created successfully:', response);
-              alert('Equipment created successfully!');
+              console.log('Product created successfully:', response);
+              alert('Product created successfully!');
 
               // Delay navigation to allow the user to see the message
               setTimeout(() => {
-                this.router.navigateByUrl('/editor/equipment');
+                this.router.navigateByUrl('/editor/products');
               }, 1000); // 1-second delay
             }
           },
           error: () => {
-            console.error('Unexpected error occurred during equipment creation.');
+            console.error('Unexpected error occurred during product creation.');
           }
         });
     } else {
-      console.error('Equipment number must be unique');
-      alert('Please enter a unique equipment number.');
+      console.error('Product number must be unique');
+      alert('Please enter a unique product number.');
     }
   }
 

@@ -55,24 +55,7 @@ export class CreateEquipmentFromExistingComponent {
     //this.createDisabled = true; // Disable the button until the new equipment number is unique
   }
 
-  /* checkUniqueEquipmentNumber() {
-    // Check if the entered equipment number matches any in the suggestions list
-    this.equipmentNumberExists = this.suggestions.some(
-      (suggestion) => suggestion.equipmentNumber === this.equipment.equipmentNumber
-    );
-
-    // Enable the create button only if the equipment number is unique and other fields are filled
-    this.createDisabled = this.equipmentNumberExists || !(
-      this.equipment.equipmentNumber &&
-      this.equipment.name &&
-      this.equipment.description &&
-      this.equipment.type &&
-      Array.isArray(this.equipment.orders)
-    );
-  } */
-
-
-  checkUniqueEquipmentNumber() {
+    checkUniqueEquipmentNumber() {
     if (this.selectedEquipment) {
       // Check if the equipment number exists in suggestions
       this.equipmentNumberExists = this.suggestions.some(
