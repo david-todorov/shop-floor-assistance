@@ -7,13 +7,26 @@ export type workflowStates= {
     }
 }
 
-export type itemFlowStates= {
+export type itemUIStates= {
     [key: number]:{
         editMode: boolean, 
         showDescription: boolean,
         updatedTitle: string;
-        updatedDescription?: string;
-        upDatedTimeReq?: number | null;
-        checkStatus: boolean;
+        updatedDescription: string;
+        upDatedTimeReq: number | null;
     }
 }
+
+
+
+// export type itemCheckedStatus= {
+//   checked: boolean;
+// }
+
+// export type taskCheckedStatus= {
+//   items: itemCheckedStatus[];
+// }
+
+// export type workflowCheckedStatus= {
+//   tasks: taskCheckedStatus[];
+// }

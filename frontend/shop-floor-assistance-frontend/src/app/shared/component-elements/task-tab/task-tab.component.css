@@ -4,7 +4,6 @@
     bg-blue-50 
     min-h-96
     !important;
-
 }
 
 .selected-tab {
@@ -21,6 +20,33 @@
 }
 
 /* ----------- */
+::ng-deep .mdc-tab {
+    padding: 0px !important;
+    justify-content: flex-start !important;
+}
+
+::ng-deep .mat-mdc-tab .mdc-tab__content {
+    padding: 0px !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    flex: 1 1 0% !important;
+}
+
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+    margin: 0px !important;
+    display: flex !important;
+    flex: 1 1 0% !important;
+    line-height: 2.5 !important;
+    justify-content: center !important;
+}
+
+.add-task-btn {
+    @apply px-4 !important;
+    display: flex;
+    justify-content: center !important;
+    flex: 1 1 0%;
+}
+/* ---------- */
 .selected-element {
     @apply bg-accent !important;
 }
@@ -45,3 +71,22 @@
 .edit-textarea {
     @apply text-shade w-full p-2 overflow-auto border border-primary rounded-lg focus:outline-none !important;
 }
+
+/* -------------- */
+
+/* .cdk-drag-preview {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+} */
+
+
+
+

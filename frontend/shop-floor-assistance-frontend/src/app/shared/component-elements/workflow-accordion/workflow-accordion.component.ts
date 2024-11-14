@@ -7,9 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { workflowStates } from '../workflowUI-state';
 import { workflowTO } from '../../../types/workflowTO';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { EditWorkflowDialogComponent } from '../edit-workflow-dialog/edit-workflow-dialog.component';
-
+import { taskTO } from '../../../types/taskTO';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-workflow-accordion',
@@ -20,7 +19,8 @@ import { EditWorkflowDialogComponent } from '../edit-workflow-dialog/edit-workfl
     MatIconModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DragDropModule
   ],
   templateUrl: './workflow-accordion.component.html',
   styleUrl: './workflow-accordion.component.css'
@@ -28,10 +28,12 @@ import { EditWorkflowDialogComponent } from '../edit-workflow-dialog/edit-workfl
 
 
 export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewInit{
+  drop(event: CdkDragDrop<workflowTO[]>): void {
+    moveItemInArray(this.order.workflows, event.previousIndex, event.currentIndex);
+    this.onOrderUpdate.emit(this.order);
+  }
 
   @Input() order!: orderTO;
-  @Input() doneAll: boolean= true;
-
 
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onSelect = new EventEmitter<number | null>();
@@ -53,6 +55,7 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
   
   ngOnInit(): void {
     this.selectedWorkflowIndex= 0;
+    this.initializeWorkflowStates();
     
   }
   
@@ -67,6 +70,7 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
   }
 
   initializeWorkflowStates() {
+    console.log(this.order)
     this.orderExists= (this.order!== null && this.order != undefined);
     if(this.orderExists){
       this.order.workflows.forEach((workflow: any, index: number) => {
@@ -75,30 +79,12 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
           updatedTitle: workflow.name,
           updatedDescription: workflow.description};
       });
-      // this.expandedPanels= new Array(this.order.workflows.length).fill(false);
-      // this.selectedWorkflowIndex= 0;
     }
   }
 
-addNewWorkflow() {
-    if (this.newWorkflowInProgress) {
-      return; // Prevent adding another workflow while one is in progress
-    }
-    const newWorkflow = {
-      workflowNumber: (this.order.workflows.length + 1).toString(),
-      name: '',
-      description: '',
-      tasks: []
-    };
-    this.order.workflows.push(newWorkflow);
-    this.newWorkflowInProgress = true;
-    this.onOrderUpdate.emit(this.order);
-  }
-
-
- selectWorkflow(index: number) {
-    if (this.workFlowStates[index].editMode || this.newWorkflowInProgress) {
-      return; // Do not trigger selectWorkflow if in edit mode or new workflow is in progress
+  selectWorkflow(index: number) {
+    if (this.workFlowStates[index].editMode) {
+      return; // Do not trigger selectWorkflow if in edit mode
     }
     this.selectedWorkflowIndex = index;
     this.onSelect.emit(this.selectedWorkflowIndex);
@@ -133,7 +119,6 @@ addNewWorkflow() {
     }
     this.order.workflows[index].name= this.workFlowStates[index].updatedTitle;
     this.order.workflows[index].description= this.workFlowStates[index].updatedDescription;
-    
   };
   
 
@@ -150,7 +135,6 @@ addNewWorkflow() {
       this.expandedPanels = new Array(this.order.workflows.length).fill(false); // Ensure all panels are closed
       this.onOrderUpdate.emit(this.order);
       this.onSelect.emit(this.selectedWorkflowIndex);
-
     }
   }
 

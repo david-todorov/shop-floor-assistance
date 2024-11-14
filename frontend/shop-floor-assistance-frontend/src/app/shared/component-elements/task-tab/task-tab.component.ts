@@ -1,15 +1,14 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { orderTO } from '../../../types/orderTO';
 import { CommonModule } from '@angular/common';
-import { ThemePalette } from '@angular/material/core';
-import { workflowStates } from '../workflowUI-state';
 import { taskTO } from '../../../types/taskTO';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { ItemAccordionComponent } from '../item-accordion/item-accordion.component';
-import { itemTO } from '../../../types/itemTO';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-task-tab',
@@ -19,125 +18,160 @@ import { itemTO } from '../../../types/itemTO';
     MatTabsModule,
     CommonModule,
     MatDialogModule,
-    EditTaskDialogComponent,
-    ItemAccordionComponent
+    ItemAccordionComponent,
+    DragDropModule,
   ],
   templateUrl: './task-tab.component.html',
   styleUrl: './task-tab.component.css'
 })
-export class TaskTabComponent implements OnInit, OnChanges {
+export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
 
+  @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
-  @Input() orderUpdated!: orderTO;
-  @Input() doneAll: boolean[] = [];
+  
+  @Output() onOrderUpdate = new EventEmitter<orderTO>();
+  @Output() onWorkflowChange = new EventEmitter<number | null>();
+  @Output() ontaskChange = new EventEmitter<number | null>();
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
 
-  @Output() orderUpdateFromTasks = new EventEmitter<orderTO>();
-  @Output() onSelect = new EventEmitter<number | null>();
-
-  selectedTaskIndex: number | null = 0;
-  orderExists: boolean = false;
-
-  taskFlowStates: workflowStates= {};
-
+  taskIndex: number | null = 0;
+  orderExists: boolean= false;
   tasks!: taskTO[];
+  btnLabelAddTask: string= 'Add task';
 
   constructor(public dialog: MatDialog,
-    private cdr: ChangeDetectorRef
-  ) { }
+              private cdr:ChangeDetectorRef,
+              private snackBar: MatSnackBar
+  ){}
 
   ngOnInit(): void {
-    // this.initializeWorkflowStates();
-    if (this.workflowIndex === null || this.workflowIndex === undefined) {
+    if (this.workflowIndex == null) {
       this.workflowIndex = 0;
+      setTimeout(() => {
+      this.setTabGroupIndex(0);
+    })
     }
   }
 
+  ngAfterViewInit(): void {
+     setTimeout(() => {
+      this.setTabGroupIndex(0);
+    })
+  }
+
+  setTabGroupIndex(index: number): void {
+    setTimeout(() => {
+      this.tabGroup.selectedIndex = index;
+      this.cdr.detectChanges(); 
+    });
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['orderUpdated'] || changes['workflowIndex']) {
-      // this.initializeWorkflowStates();
+    if (changes['workflowIndex']) {
+      this.taskIndex = 0;
+      this.onWorkflowChange.emit(this.workflowIndex);
+    }
+    if (changes['workflowIndex'] || changes['order'] || changes['taskIndex']) {
       this.getTasksForSelectedWorkflow();
+      console.log('Relevant changes detected:', changes);
     }
   }
 
   getTasksForSelectedWorkflow() {
-
-    if (this.workflowIndex !== null &&
-      this.workflowIndex !== undefined &&
-      this.orderUpdated &&
-      this.orderUpdated.workflows) {
-      this.tasks = this.orderUpdated.workflows[this.workflowIndex].tasks;
-      this.tasks = [...this.orderUpdated.workflows[this.workflowIndex].tasks]; // Create a new array reference
-      console.log('The selected index is:', this.selectedTaskIndex)
-      console.log('The selected tasks are is:', this.tasks)
-    } else {
-      this.tasks = [];
+    if(this.workflowIndex != null && this.order.workflows) {
+      this.tasks = [...this.order.workflows[this.workflowIndex].tasks];
+    }else{
+      this.tasks=[];
     }
   }
 
-  initializeWorkflowStates() {
-
-  }
-
-  deleteTasks(index: any, event: MouseEvent) {
+  deleteTasks(index: any,event: MouseEvent) {
     if (this.workflowIndex !== null) {
       event.stopPropagation();
-      this.orderUpdated.workflows[this.workflowIndex].tasks.splice(index, 1);
-      if(index>=this.orderUpdated.workflows[this.workflowIndex].tasks.length && this.selectedTaskIndex !=null){
-      this.selectedTaskIndex-=1;
-    }
-
-    this.tasks = [...this.orderUpdated.workflows[this.workflowIndex].tasks]; // Create a new array reference
-    this.orderUpdateFromTasks.emit(this.orderUpdated);
-  }
-}
-
-editTask(task: taskTO) {
-  const dialogRef = this.dialog.open(EditTaskDialogComponent, {
-    width: '750px',
-    data: { ...task },
-    panelClass: 'custom-dialog-container'
-  });
-
-  dialogRef.afterClosed().subscribe(result => {
-    if (result && this.workflowIndex != null && this.selectedTaskIndex != null) {
-      console.log(result)
-      this.orderUpdated.workflows[this.workflowIndex].tasks[this.selectedTaskIndex].name = result.taskname;
-      this.orderUpdated.workflows[this.workflowIndex].tasks[this.selectedTaskIndex].description = result.description;
-    }
-    this.orderUpdateFromTasks.emit(this.orderUpdated);
-  });
-
-}
-
-onTabChange(index: number): void {
-  this.selectedTaskIndex = index;
-  console.log('Selected tab index:', this.selectedTaskIndex);
-}
-
-updateItemsInOrder(event: itemTO[]) {
-  if (this.workflowIndex != null && this.selectedTaskIndex != null) {
-    const currentTask = this.orderUpdated.workflows[this.workflowIndex].tasks[this.selectedTaskIndex];
-    
-    console.log('Current Task ID:', currentTask.id); // Debugging line
-
-    // Set taskId for each item only if currentTask.id is defined
-    event.forEach(item => {
-      if (currentTask.id !== undefined) {
-        item.taskId = currentTask.id; // Assign currentTask's ID to taskId
+      this.order.workflows[this.workflowIndex].tasks.splice(index, 1);
+      if(index>=this.order.workflows[this.workflowIndex].tasks.length && this.taskIndex !=null){
+        this.taskIndex-=1;
       }
+      this.tasks = [...this.order.workflows[this.workflowIndex].tasks];
+      this.onOrderUpdate.emit(this.order);
+    }
+  }
+
+  editTask(task: taskTO) {
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      width: '750px',
+      data: { ...task },
+      panelClass: 'custom-dialog-container' 
     });
 
-    currentTask.items = event;
-    this.orderUpdateFromTasks.emit(this.orderUpdated);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && this.workflowIndex!=null && this.taskIndex!=null) {
+        this.order.workflows[this.workflowIndex].tasks[this.taskIndex].name= result.taskname;
+        this.order.workflows[this.workflowIndex].tasks[this.taskIndex].description= result.description;
+      }
+      this.onOrderUpdate.emit(this.order);
+    });
+
+}
+
+  updateItemsInOrder(event: orderTO){
+    // if(this.workflowIndex!=null && this.taskIndex!=null){
+      this.onOrderUpdate.emit(this.order);
+    // }
   }
-}
+
+  onTaskSelected(taskIndex: number) {
+    this.ontaskChange.emit(taskIndex);
+  }
+
+    resolveAddTAsk(event: any) {
+    if(this.workflowIndex!=null){
+      event.stopPropagation();
+      const newTask: taskTO= {
+        name: 'New Task', 
+        description: 'Task Description', 
+        items: [
+          { name: 'New Item', 
+            longDescription: 'Item Description', 
+            timeRequired: null }
+          ] 
+        };
+      this.order.workflows[this.workflowIndex].tasks.push(newTask);
+      console.log(this.order)
+      this.order= {...this.order};
+      this.onOrderUpdate.emit(this.order);
+      this.tabGroup.selectedIndex = 0;
+      this.showSnackbar('New task appended to the end of the workflow!');
+    }
+  }
+
+  showSnackbar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 1500
+    });
+  }
+
+  // ---Drag functions--------------------
+  drop(event: CdkDragDrop<taskTO[]>){
+    let previousIndex = parseInt(event.previousContainer.id.replace("task-",""));
+    let currentIndex = parseInt(event.container.id.replace("task-",""));
+    moveItemInArray(this.tasks, previousIndex, currentIndex);
+    if(this.workflowIndex!=null){
+      this.order.workflows[this.workflowIndex].tasks= [...this.tasks];
+    }
+    this.onOrderUpdate.emit(this.order);
+  }
+
+ getAllDragTabs(index:number){
+    let taskList = []
+    for(let i=0;i<this.tasks.length;i++){
+      if(i!=index){
+        taskList.push("task-"+i);
+      }
+    }
+    return taskList;
+  }
+// ----------------------------------------------
 
 
-
-
-resolveCheck(event: boolean, index: number) {
-  this.doneAll[index]=event;
-  const allTasksDone= this.doneAll.every(state => state);
-  console.log('all tasks done', allTasksDone)
-}
 }

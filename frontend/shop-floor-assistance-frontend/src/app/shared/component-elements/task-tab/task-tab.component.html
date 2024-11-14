@@ -1,32 +1,55 @@
 <div class="w-full">
-    <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" (selectedIndexChange)="onTabChange($event)">
-        <mat-tab *ngFor="let task of tasks; let i = index">
-            <ng-template mat-tab-label>
-                <span class="mr-10">{{ task.name }}</span>
-                <div class="whitespace-nowrap flex flex-row gap-x-3 justify-between">
-                    <button mat-icon-button (click)="editTask(task)" [hidden]="selectedTaskIndex !== i">
-                        <mat-icon>edit</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="deleteTasks(i, $event)" [hidden]="selectedTaskIndex !== i">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                    <button *ngIf="doneAll[i]" class="done-all" mat-icon-button>
-                        <mat-icon>done_all</mat-icon>
-                    </button>
+    <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" 
+         [(selectedIndex)]="taskIndex" (selectedIndexChange)="onTaskSelected($event)" >
+         <!-- (selectedIndexChange)="onTabChange($event)"> -->
+        @for(task of tasks;track $index){
+            <mat-tab >
+                <ng-template mat-tab-label>
+                    <div [id]="'task-'+$index" class="drag-list" cdkDropList cdkDropListOrientation="horizontal" 
+                    (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="getAllDragTabs($index)">
+                        <div class="drag-box flex flex-row items-center " cdkDrag>
+                            <span class="mx-4 px- pt-1 text-lg ">{{ task.name }}</span>
+                            <div class="pt-3 justify-center">
+                                <div class=" whitespace-nowrap flex flex-row gap-x-3 gap-y-3 justify-between">
+                                    <button mat-icon-button (click)="editTask(task)" [hidden]="taskIndex !== $index">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="deleteTasks($index,$event)" [hidden]="taskIndex !== $index">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                    <!-- @if(doneAll[$index]){ -->
+                                    <!--<button class="done-all" mat-icon-button>
+                                            <mat-icon>done_all</mat-icon>
+                                        </button> -->
+                                    <!-- } -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+                <div class="p-4">
+                    <p class="text-primary m-2 text-lg underline">Description:</p>
+                    <p class=" m-2">{{ task.description }}</p>
                 </div>
+                <div class="m-4 p-2  overflow-hidden border border-red-600">
+                        <app-item-accordion 
+                        [order]="order"
+                        [workflowIndex]="workflowIndex"
+                        [taskIndex]="taskIndex"
+                        
+                        (onOrderUpdate)="updateItemsInOrder($event)" 
+                        >
+                        </app-item-accordion>
+                </div>
+            </mat-tab>
+        }
+        <mat-tab >
+            <ng-template mat-tab-label>
+                <button mat-icon-button (click)="resolveAddTAsk($event)" class="add-task-btn border border-white bg-accent p-2 rounded-tr-md text-xl">
+                    <mat-icon>add</mat-icon>
+                    Add Task
+                </button>
             </ng-template>
-            <div class="p-4">
-                <p class="text-primary m-2 text-lg underline">Description:</p>
-                <p class="m-2">{{ task.description }}</p>
-            </div>
-            <div class="m-4 p-2 overflow-hidden">
-                <app-item-accordion 
-                    (updatedItemsFromTasks)="updateItemsInOrder($event)" 
-                    [selectedTab]="selectedTaskIndex"
-                    [selectedTasks]="tasks"
-                    (itemsCheckStatus)="resolveCheck($event, i)">
-                </app-item-accordion>
-            </div>
         </mat-tab>
     </mat-tab-group>
 </div>

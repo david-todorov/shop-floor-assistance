@@ -1,36 +1,34 @@
 <div class="min-w-[300px] min-h-[200px]">
-    <ng-container *ngIf="orderExists; else noOrder">
-        <ng-container *ngIf="order.workflows.length > 0; else noWorkflows">
-            <mat-accordion>
-                <!-- Existing Workflows -->
-                <mat-expansion-panel *ngFor="let workflow of order.workflows; let i = index; trackBy: trackByIndex"
-                    [expanded]="expandedPanels[i]" [disabled]="isAnyWorkflowInEditMode()">
-                    
-                    <mat-expansion-panel-header 
-                        (click)="!isAnyWorkflowInEditMode() && selectWorkflow(i)"
-                        [ngClass]="{'expanded-header': expandedPanels[i], 'collapsed-header': !expandedPanels[i]}"
-                    >
-                        <mat-panel-title>
-                            {{ workflow.name }}
-                        </mat-panel-title>
-                        
-                        <!-- Icons for Edit, Delete, Done -->
-                        <div class="header-icons">
-                            <button mat-icon-button (click)="toggleEditMode(i, $event)">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                            <button mat-icon-button (click)="deleteWorkflow(i, $event)">
-                                <mat-icon>delete</mat-icon>
-                            </button>
-                            <!-- <button mat-icon-button (click)="editWorkflow(i, $event)">
-  <mat-icon>edit</mat-icon>
-</button> -->
+    @if(orderExists){
+        @if(order.workflows.length>0){
+            <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)">
+                @for(workflow of order.workflows; track $index){
+                    <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode()" cdkDrag> <!-- && !workFlowStates[$index].editMode "> -->
+                        <mat-expansion-panel-header (click)="!isAnyWorkflowInEditMode() && selectWorkflow($index)" [ngClass]="{'selected-element': selectedWorkflowIndex === $index}">
+                            <mat-panel-title>
+                                @if(!workFlowStates[$index].editMode){
+                                    {{ workflow.name }}
+                                }@else{
+                                    <input class="edit-field" [(ngModel)]="workFlowStates[$index].updatedTitle" [value]="workflow.name">
+                                }
+                            </mat-panel-title>
 
-                            <button mat-icon-button class="done-all" (click)="$event.stopPropagation()">
-                                <mat-icon>done_all</mat-icon>
-                            </button>
-                        </div>
-                    </mat-expansion-panel-header>
+                            <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
+                                <div class="whitespace-nowrap">
+                                    <button mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="selectedWorkflowIndex !== $index">
+                                        <mat-icon>{{ workFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="deleteWorkflow($index,$event)" [hidden]="selectedWorkflowIndex !== $index">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                    <!-- @if(){ -->
+                                        <button class="done-all" mat-icon-button>
+                                            <mat-icon>done_all</mat-icon>
+                                        </button>
+                                    <!-- } -->
+                                </div>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
 
                     <div class="expansion-panel-content">
                         <p>{{ workflow.description }}</p>

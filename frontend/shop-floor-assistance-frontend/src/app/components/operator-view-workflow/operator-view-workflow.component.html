@@ -43,7 +43,8 @@
         </div> -->
 
         <div class="col-span-2 h-fulloverflow-auto w-2/3 p-4 min-w-[650px] min-h-[200px]  absolute top-0 left-1/3">
-            <app-operator-task-tab [orderUpdated]="order" [workflowIndex]="selectedWorkflowIndex"
-                (orderUpdateFromTasks)="updateOrder($event)"></app-operator-task-tab>
+            <app-task-tab [order]="order" [workflowIndex]="selectedWorkflowIndex"
+                (onOrderUpdate)="updateOrder($event)"></app-task-tab>
         </div>
     </div>
+</div>
