@@ -1,21 +1,32 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { orderTO } from '../../types/orderTO';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
-import { TaskTabComponent } from '../../shared/component-elements/task-tab/task-tab.component';
 import { OperatorWorkflowAccordionComponent } from '../../shared/component-elements/operator-workflow-accordion/operator-workflow-accordion.component';
+import { OperatorTaskTabComponent } from '../../shared/component-elements/operator-task-tab/operator-task-tab.component';
+import { workflowTO } from '../../types/workflowTO';
 
 @Component({
   selector: 'app-operator-view-workflow',
   standalone: true,
   imports: [RouterModule,  
-    OperatorWorkflowAccordionComponent,TaskTabComponent 
+    OperatorWorkflowAccordionComponent,OperatorTaskTabComponent
   ],
   templateUrl: './operator-view-workflow.component.html',
   styleUrl: './operator-view-workflow.component.css'
 })
-export class OperatorViewWorkflowComponent {
+
+export class OperatorViewWorkflowComponent implements OnInit {
+
+  @Input() order!: orderTO;
+  @Output() onOrderUpdate = new EventEmitter<orderTO>();
+  
+  expandedPanels: boolean[] = [];
+  selectedWorkflowIndex: number | null = null;
+
+
+
   
  constructor(private backendCommunicationService: BackendCommunicationService,
     private route: ActivatedRoute,) {
@@ -41,19 +52,25 @@ export class OperatorViewWorkflowComponent {
     });
   }
 
+ ngOnInit(): void {
+    this.initializeExpandedPanels();
+  }
 
-  order!: orderTO;
-  selectedWorkflowIndex!: number | null;
+  // Initialize expanded panels based on the number of workflows
+  private initializeExpandedPanels(): void {
+    this.expandedPanels = new Array(this.order?.workflows?.length || 0).fill(false);
+  }
 
 
-  updateOrder(order: orderTO) {
+  updateOrder(order: orderTO) : void{
     this.order = { ...order };
     console.log('updates order received at parent', this.order)
   }
 
-  onSelect(selectedWorkflow: number | null) {
+  onSelect(selectedWorkflow: number | null): void {
     this.selectedWorkflowIndex = selectedWorkflow;
   }
+
 
 }
 
