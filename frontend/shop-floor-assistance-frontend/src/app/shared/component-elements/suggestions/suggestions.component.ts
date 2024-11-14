@@ -10,6 +10,7 @@ import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { SuggestionsService } from '../../../services/suggestions.service';
 import { itemDropEvent } from '../../../types/itemDropEventType';
+import { itemDropEvent } from '../../../types/itemDropEventType';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -46,9 +47,8 @@ export class SuggestionsComponent {
     this.suggestionService.triggerDrop(event,index);
     console.log('service dispatched in suggestionscomponent with index', index)
   }
-trackByFn(item: itemTO): itemTO {
-    return item;
-  }
+
+
 
 
 
@@ -56,9 +56,9 @@ trackByFn(item: itemTO): itemTO {
   elementSelected: string= 'Workflows';
   elementsOffered: string[] = ['Workflows', 'Tasks', 'Items'];
 
-  // order: orderTO= '';
-  // workflows: workflowTO[]= this.order.workflows;
-  // tasks: taskTO[]= this.order.workflows[0].tasks;
-  // items_sugg: itemTO[]= this.order.workflows[1].tasks[0].items;
+  order: orderTO= dummyOrder;
+  workflows: workflowTO[]= this.order.workflows;
+  tasks: taskTO[]= this.order.workflows[0].tasks;
+  items_sugg: itemTO[]= this.order.workflows[1].tasks[0].items;
 
 }

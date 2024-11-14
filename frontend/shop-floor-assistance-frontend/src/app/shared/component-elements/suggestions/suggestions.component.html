@@ -12,7 +12,13 @@
             }@else if(elementSelected==='Items'){
                 <div>
                     
+                    
                         <mat-accordion     
+                        cdkDropList id="items_sugg" 
+                        [cdkDropListData]="items_sugg" 
+                        (cdkDropListDropped)="drop($event)"
+                        >
+                        @for(item of items_sugg; track $index){
                         cdkDropList id="items_sugg" 
                         [cdkDropListData]="items_sugg" 
                         (cdkDropListDropped)="drop($event)"
@@ -31,6 +37,8 @@
                             </mat-expansion-panel>
                         }
                     </mat-accordion>
+                        }
+                    </mat-accordion>
                 </div>
             }    
         </div>
@@ -43,5 +51,4 @@
         </mat-radio-group>
     </div>
 </div>
- -->
- <p>suggestions here</p>
+

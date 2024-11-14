@@ -1,7 +1,12 @@
 <div class=" p-2">
     @if(items && items.length>0){
-        <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)"
-    cdkDropList id="externalItems" 
+        <mat-accordion 
+        cdkDropList 
+        
+        [cdkDropListData]="items"
+
+
+        (cdkDropListDropped)="drop($event)"
    
         
         >

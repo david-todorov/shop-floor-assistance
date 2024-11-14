@@ -14,7 +14,7 @@ import { ButtonComponent } from '../button/button.component';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Subscription } from 'rxjs';
 import { SuggestionsService } from '../../../services/suggestions.service';
-import { itemDropEventType } from '../../../types/itemDropEventType';
+import { itemDropEvent } from '../../../types/itemDropEventType';
 
 
 @Component({
@@ -35,10 +35,55 @@ import { itemDropEventType } from '../../../types/itemDropEventType';
   styleUrl: './item-accordion.component.css'
 })
 export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
-    drop(event: CdkDragDrop<itemTO[]>): void {
-       console.log('wwwwwwwwwww')
-      if(this.workflowIndex!=null && this.taskIndex!=null){
+  //   drop(event: CdkDragDrop<itemTO[]>): void {
+  //      console.log('wwwwwwwwwww')
+  //     if(this.workflowIndex!=null && this.taskIndex!=null){
+  //       const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
+  //       if (event.previousContainer === event.container) {
+  //         moveItemInArray(items, event.previousIndex, event.currentIndex);
+  //       } else {
+  //         transferArrayItem(
+  //           event.previousContainer.data,
+  //           items,
+  //           event.previousIndex,
+  //           event.currentIndex
+  //         );
+  //         console.log('event.previousContainer.data,event.previousIndex, event.currentIndex')
+  //         console.log( event.previousContainer.data,event.previousIndex,event.currentIndex)
+  //       }
+  //     }
+  //   this.onOrderUpdate.emit(this.order);
+  // }
+
+
+   drop(customEvent: itemDropEvent | CdkDragDrop<itemTO[]>): void {
+    console.log('drop event is: ', customEvent)
+    if ('index' in customEvent) {
+      // Handle external drop
+      const { dropEvent, index } = customEvent;
+       if(this.workflowIndex!=null && this.taskIndex!=null){
+      const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
+      // debugger;
+      if (dropEvent.previousContainer !== dropEvent.container) {
+
+        moveItemInArray(items, dropEvent.previousIndex, dropEvent.currentIndex);
+      } else {
+        console.log('in drop event, index is', index)
+        transferArrayItem(
+          dropEvent.previousContainer.data,
+          items,
+          index,
+          dropEvent.currentIndex
+        );
+      }
+    }
+      this.onOrderUpdate.emit(this.order);
+    } else {
+      // Handle internal drop
+      const event = customEvent as CdkDragDrop<itemTO[]>;
+     if(this.workflowIndex!=null && this.taskIndex!=null){
         const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
+        
         if (event.previousContainer === event.container) {
           moveItemInArray(items, event.previousIndex, event.currentIndex);
         } else {
@@ -52,8 +97,10 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
           console.log( event.previousContainer.data,event.previousIndex,event.currentIndex)
         }
       }
-    this.onOrderUpdate.emit(this.order);
+     this.onOrderUpdate.emit(this.order);
+    }
   }
+
 
 
 
@@ -109,11 +156,14 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       this.initializeCheckStatuses();
     }
 
-    this.dropSubscription = this.suggestionService.drop$.subscribe((event: CdkDragDrop<itemTO[]>) => {
+    // this.dropSubscription = this.suggestionService.drop$.subscribe((event: CdkDragDrop<itemTO[]>) => {
+    //   console.log('dropSubscription received')
+    //   this.drop(event);
+    // });
+    this.dropSubscription = this.suggestionService.drop$.subscribe((itemEvent: itemDropEvent) => {
       console.log('dropSubscription received')
-      this.drop(event);
+      this.drop(itemEvent);
     });
-
   }
 
 
@@ -136,7 +186,8 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
 
         this.cleanUpCheckStatuses();
         this.cleanUpItemIndices();
-      }
+   
+   }
     }
   }
   //---------------------------------------------------------------
