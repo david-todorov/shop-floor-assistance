@@ -18,7 +18,7 @@ import { OperatorTaskTabComponent } from '../../shared/component-elements/operat
   selector: 'app-operator-view-workflow',
   standalone: true,
   imports: [RouterModule, RouterLink,
-    OperatorWorkflowAccordionComponent, OperatorTaskTabComponent
+    OperatorWorkflowAccordionComponent, OperatorTaskTabComponent, CommonModule
   ],
   templateUrl: './operator-view-workflow.component.html',
   styleUrl: './operator-view-workflow.component.css'

@@ -7,6 +7,7 @@ import { BackendCommunicationService } from '../../services/backend-communicatio
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
+
 @Component({
   selector: 'app-operator',
   standalone: true,
@@ -63,6 +64,17 @@ export class OperatorComponent implements OnInit{
     }
      return;
   }
+
+  // loadOrdersWithForecast() {
+  //   this.operatorService.getOrders().subscribe(orders => {
+  //     this.loadedOrders = orders.map(order => {
+  //       this.operatorService.getForecast(order.id).subscribe(forecast => {
+  //         order.forecastingTimeEstimate = forecast.totalTimeRequired;
+  //       });
+  //       return order;
+  //     });
+  //   });
+  // }
 
 }
 

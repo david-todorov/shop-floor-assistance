@@ -51,9 +51,18 @@
             <td mat-cell *matCellDef="let order"> {{ order.productAfter?.name }} </td>
         </ng-container>
 
+        <!-- Forecasting Time Estimate Column -->
+        <ng-container matColumnDef="Forecasting Time Estimate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Forecasting Time Estimate </th>
+            <td mat-cell *matCellDef="let order"> {{ order.total_time_required }} mins </td>
+        </ng-container>
+
+        <!-- Header and Row Definitions -->
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+
+
     <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
     </mat-paginator> -->
 </div>
