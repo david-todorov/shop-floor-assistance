@@ -32,31 +32,21 @@ export class SuggestionsComponent {
   
   drop(event:  CdkDragDrop<itemTO[]>) {
     
-    // if (event.previousContainer === event.container) {
-    //   debugger;
-    //   moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    // } else {
-    //   transferArrayItem(
-    //     event.previousContainer.data,
-    //     event.container.data,
-    //     event.previousIndex,
-    //     event.currentIndex
-    //   );
-    // }
+    if (event.previousContainer === event.container) {
+      // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      const item = event.container.data[event.previousIndex];
+      event.container.data.splice(event.previousIndex, 1);
+      event.container.data.splice(event.currentIndex, 0, item);
+    }
     const index = event.previousIndex;
-    this.suggestionService.triggerDrop(event,index);
+    // this.suggestionService.triggerDrop(event);
     console.log('service dispatched in suggestionscomponent with index', index)
   }
-
-
-
-
-
 
   elementSelected: string= 'Workflows';
   elementsOffered: string[] = ['Workflows', 'Tasks', 'Items'];
 
-  // order: orderTO= dummyOrder;
+ 
   workflows: workflowTO[]= sampleWorkflows;
   tasks: taskTO[]= sampleTasks;
   items_sugg: itemTO[]= sampleItems;

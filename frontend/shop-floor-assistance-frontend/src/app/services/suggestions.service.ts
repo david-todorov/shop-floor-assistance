@@ -9,11 +9,11 @@ import { itemDropEvent } from '../types/itemDropEventType';
 })
 export class SuggestionsService {
 
-  private dropItem = new Subject<itemDropEvent>();
+  private dropItem = new Subject<CdkDragDrop<itemTO[]>>();
   drop$ = this.dropItem.asObservable();
 
-  triggerDrop(dropEvent: CdkDragDrop<itemTO[]>, index: number): void {
-    this.dropItem.next({dropEvent, index});
+  triggerDrop(event: CdkDragDrop<itemTO[]>): void {
+    this.dropItem.next(event);
   }
   
 }

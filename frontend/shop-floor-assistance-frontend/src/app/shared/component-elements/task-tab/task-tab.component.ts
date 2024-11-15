@@ -47,22 +47,38 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
   ngOnInit(): void {
     if (this.workflowIndex == null) {
       this.workflowIndex = 0;
-      setTimeout(() => {
+      this.taskIndex = 0;
       this.setTabGroupIndex(0);
-    })
     }
+    
   }
 
   ngAfterViewInit(): void {
-     setTimeout(() => {
+      // setTimeout(() => {
       this.setTabGroupIndex(0);
-    })
+    // })
   }
 
-  setTabGroupIndex(index: number): void {
-    setTimeout(() => {
-      this.tabGroup.selectedIndex = index;
-      this.cdr.detectChanges(); 
+
+
+  async setTabGroupIndex(index: number): Promise<void> {
+    await this.waitForTabGroup();
+    this.tabGroup.selectedIndex = index;
+    this.cdr.detectChanges();
+  }
+
+  private waitForTabGroup(): Promise<void>{
+    return new Promise((resolve)=>{
+      if(this.tabGroup){
+        resolve();
+      }else{
+        const interval= setInterval(()=>{
+          if(this.tabGroup){
+            clearInterval(interval);
+            resolve();
+          }
+        },50);
+      }
     });
   }
 

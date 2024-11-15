@@ -35,93 +35,6 @@ import { itemDropEvent } from '../../../types/itemDropEventType';
   styleUrl: './item-accordion.component.css'
 })
 export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
-  //   drop(event: CdkDragDrop<itemTO[]>): void {
-  //      console.log('wwwwwwwwwww')
-  //     if(this.workflowIndex!=null && this.taskIndex!=null){
-  //       const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
-  //       if (event.previousContainer === event.container) {
-  //         moveItemInArray(items, event.previousIndex, event.currentIndex);
-  //       } else {
-  //         transferArrayItem(
-  //           event.previousContainer.data,
-  //           items,
-  //           event.previousIndex,
-  //           event.currentIndex
-  //         );
-  //         console.log('event.previousContainer.data,event.previousIndex, event.currentIndex')
-  //         console.log( event.previousContainer.data,event.previousIndex,event.currentIndex)
-  //       }
-  //     }
-  //   this.onOrderUpdate.emit(this.order);
-  // }
-
-
-   drop(customEvent: itemDropEvent | CdkDragDrop<itemTO[]>): void {
-    console.log('drop event is: ', customEvent)
-    if ('index' in customEvent) {
-      // Handle external drop
-      const { dropEvent, index } = customEvent;
-       if(this.workflowIndex!=null && this.taskIndex!=null){
-      const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
-      // debugger;
-      if (dropEvent.previousContainer !== dropEvent.container) {
-
-        moveItemInArray(items, dropEvent.previousIndex, dropEvent.currentIndex);
-      } else {
-        console.log('in drop event, index is', index)
-        transferArrayItem(
-          dropEvent.previousContainer.data,
-          items,
-          index,
-          dropEvent.currentIndex
-        );
-      }
-    }
-      this.onOrderUpdate.emit(this.order);
-    } else {
-      // Handle internal drop
-      const event = customEvent as CdkDragDrop<itemTO[]>;
-     if(this.workflowIndex!=null && this.taskIndex!=null){
-        const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
-        
-        if (event.previousContainer === event.container) {
-          moveItemInArray(items, event.previousIndex, event.currentIndex);
-        } else {
-          transferArrayItem(
-            event.previousContainer.data,
-            items,
-            event.previousIndex,
-            event.currentIndex
-          );
-          console.log('event.previousContainer.data,event.previousIndex, event.currentIndex')
-          console.log( event.previousContainer.data,event.previousIndex,event.currentIndex)
-        }
-      }
-     this.onOrderUpdate.emit(this.order);
-    }
-  }
-
-
-
-
-
-  private dropSubscription!: Subscription;
-  
-
- 
- 
-
-
-
-
-
-
-
-
-
-
-
-
 
   @Input() order!:orderTO;
   @Input() workflowIndex!:number | null;
@@ -133,6 +46,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   items!:itemTO[];
   btnLabelAddItem: string= 'Add Item'
 
+
   //-Helper variables to maintain UI state
   itemUIStates: itemUIStates= {};
   itemIndices: {[workflowIndex: number]:{ [taskIndex: number]: number } } = {};
@@ -141,8 +55,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   //-----------------------------------------
 
   constructor(private cdr:ChangeDetectorRef, 
-    private uiService: UIService,
-    private suggestionService: SuggestionsService){}
+    private uiService: UIService){}
 
   //--life cycle hooks
   ngOnInit(): void {
@@ -150,29 +63,15 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     if (Object.keys(this.itemIndices).length === 0) {
       this.initializeItemIndices();
     }
-
     this.checkStatuses = this.uiService.getItemStatuses();
     if (Object.keys(this.checkStatuses).length === 0) {
       this.initializeCheckStatuses();
     }
-
-    // this.dropSubscription = this.suggestionService.drop$.subscribe((event: CdkDragDrop<itemTO[]>) => {
-    //   console.log('dropSubscription received')
-    //   this.drop(event);
-    // });
-    this.dropSubscription = this.suggestionService.drop$.subscribe((itemEvent: itemDropEvent) => {
-      console.log('dropSubscription received')
-      this.drop(itemEvent);
-    });
   }
 
 
   ngOnDestroy(): void {
     this.uiService.setItemIndices(this.itemIndices);
-    if (this.dropSubscription) {
-      this.dropSubscription.unsubscribe();
-    }
- 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -367,6 +266,30 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       this.order= {...this.order};
       this.onOrderUpdate.emit(this.order);
     }
+  }
+
+    drop(event: CdkDragDrop<itemTO[]>): void {
+    console.log('dropEvent fired')
+    console.log('event.container','event.previousContainer)',event.container, event.previousContainer)
+    console.log(event.container===event.previousContainer)
+    console.log('event.previousIndex, event.currentIndex')
+    console.log( event.previousIndex,event.currentIndex)
+
+    if(this.workflowIndex!=null && this.taskIndex!=null){
+      const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
+      if (event.previousContainer === event.container) {
+        moveItemInArray(items, event.previousIndex, event.currentIndex);
+      }else{
+        transferArrayItem(
+          event.previousContainer.data,
+          items,
+          event.previousIndex,
+          event.currentIndex
+        );
+
+      }
+    }
+  this.onOrderUpdate.emit(this.order);
   }
 
 }
