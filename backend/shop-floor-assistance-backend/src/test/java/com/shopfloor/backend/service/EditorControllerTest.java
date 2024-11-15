@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -448,6 +449,218 @@ public class EditorControllerTest {
 
         //Changing order completely from user perspective
         this.alteringOrderCompletely(expected);
+
+        //Updating the order
+        Long orderId = expected.getId();
+        expected = apiHelper.updateEditorOrderPUT(orderId, expected, authorizationHeader, 200);
+
+        //Getting the actual updated order
+        EditorOrderTO actual = apiHelper.getEditorOrderGET(orderId, authorizationHeader, 200);
+
+        // Comparing
+        orderHelper.assertEditorOrdersEqual(actual, expected);
+        equipmentHelper.assertEditorEquipmentsListEqual(actual.getEquipment(), actual.getEquipment());
+    }
+
+    @Test
+    public void when_UpdateOrderWith_AddNewWorkflow_Then_OK() throws Exception {
+
+        this.populateProductAndEquipment();
+        // Get the authorization header for the authenticated user
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+
+
+        //Preparing existing Order
+        EditorOrderTO expected = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(expected);
+        expected = apiHelper.createEditorOrderPOST(expected, authorizationHeader, 201);
+
+
+        //Changing order completely from user perspective
+        this.alteringOrderCompletely(expected);
+        // Creating Workflow 1: Change Over
+        EditorWorkflowTO changeOverWorkflow = new EditorWorkflowTO();
+        changeOverWorkflow.setName("New Workflow");
+        changeOverWorkflow.setDescription("Description for new Workflow");
+        // Creating Task 1 for Change Over: Cleaning
+        EditorTaskTO cleaningTask = new EditorTaskTO();
+        cleaningTask.setName("New Task");
+        cleaningTask.setDescription("Description for new task");
+        cleaningTask.setItems(new ArrayList<>(Arrays.asList(new EditorItemTO("New Item 1", "Safely remove any remaining tablets from the machine", 25), new EditorItemTO("New Item 1", "Clear out any unused leaflets from previous production", 10), new EditorItemTO("New Item 1", "Remove any leftover cartons from the machine to prevent mix-ups", 20))));
+        // Creating Task 2 for Change Over: Mounting
+        EditorTaskTO mountingTask = new EditorTaskTO();
+        mountingTask.setName("Mounting");
+        mountingTask.setDescription("Mounting");
+        mountingTask.setItems(new ArrayList<>(Arrays.asList(new EditorItemTO("New Item 1", "Ensure heating plates are properly functioning and aligned", 10), new EditorItemTO("New Item 1", "Adjust the forming layout to match the new product requirements", 60), new EditorItemTO("New Item 1", "Replace or adjust the sealing roll for the new product", 45), new EditorItemTO("New Item 1", "Update machine settings according to product specifications", null))));
+        expected.getWorkflows().add(changeOverWorkflow);
+
+
+        //Updating the order
+        Long orderId = expected.getId();
+        expected = apiHelper.updateEditorOrderPUT(orderId, expected, authorizationHeader, 200);
+
+        //Getting the actual updated order
+        EditorOrderTO actual = apiHelper.getEditorOrderGET(orderId, authorizationHeader, 200);
+
+        // Comparing
+        orderHelper.assertEditorOrdersEqual(actual, expected);
+        equipmentHelper.assertEditorEquipmentsListEqual(actual.getEquipment(), actual.getEquipment());
+    }
+
+    @Test
+    public void when_UpdateOrderWith_RemoveNewWorkflow_Then_OK() throws Exception {
+
+        this.populateProductAndEquipment();
+        // Get the authorization header for the authenticated user
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+
+
+        //Preparing existing Order
+        EditorOrderTO expected = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(expected);
+        expected = apiHelper.createEditorOrderPOST(expected, authorizationHeader, 201);
+
+        expected.getWorkflows().remove(0);
+
+
+        //Updating the order
+        Long orderId = expected.getId();
+        expected = apiHelper.updateEditorOrderPUT(orderId, expected, authorizationHeader, 200);
+
+        //Getting the actual updated order
+        EditorOrderTO actual = apiHelper.getEditorOrderGET(orderId, authorizationHeader, 200);
+
+        // Comparing
+        orderHelper.assertEditorOrdersEqual(actual, expected);
+        equipmentHelper.assertEditorEquipmentsListEqual(actual.getEquipment(), actual.getEquipment());
+    }
+
+    @Test
+    public void when_UpdateOrderWith_AddNewTask_Then_OK() throws Exception {
+
+        this.populateProductAndEquipment();
+        // Get the authorization header for the authenticated user
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+
+
+        //Preparing existing Order
+        EditorOrderTO expected = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(expected);
+        expected = apiHelper.createEditorOrderPOST(expected, authorizationHeader, 201);
+
+
+        //Changing order completely from user perspective
+        this.alteringOrderCompletely(expected);
+
+        // Creating Task 1 for Change Over: Cleaning
+        EditorTaskTO cleaningTask = new EditorTaskTO();
+        cleaningTask.setName("New Task");
+        cleaningTask.setDescription("Description for new task");
+        cleaningTask.setItems(new ArrayList<>(Arrays.asList(new EditorItemTO("New Item 1", "Safely remove any remaining tablets from the machine", 25), new EditorItemTO("New Item 1", "Clear out any unused leaflets from previous production", 10), new EditorItemTO("New Item 1", "Remove any leftover cartons from the machine to prevent mix-ups", 20))));
+        // Creating Task 2 for Change Over: Mounting
+        EditorTaskTO mountingTask = new EditorTaskTO();
+        mountingTask.setName("Mounting");
+        mountingTask.setDescription("Mounting");
+        mountingTask.setItems(new ArrayList<>(Arrays.asList(new EditorItemTO("New Item 1", "Ensure heating plates are properly functioning and aligned", 10), new EditorItemTO("New Item 1", "Adjust the forming layout to match the new product requirements", 60), new EditorItemTO("New Item 1", "Replace or adjust the sealing roll for the new product", 45), new EditorItemTO("New Item 1", "Update machine settings according to product specifications", null))));
+        expected.getWorkflows().get(0).getTasks().add(cleaningTask);
+        expected.getWorkflows().get(0).getTasks().add(mountingTask);
+
+
+        //Updating the order
+        Long orderId = expected.getId();
+        expected = apiHelper.updateEditorOrderPUT(orderId, expected, authorizationHeader, 200);
+
+        //Getting the actual updated order
+        EditorOrderTO actual = apiHelper.getEditorOrderGET(orderId, authorizationHeader, 200);
+
+        // Comparing
+        orderHelper.assertEditorOrdersEqual(actual, expected);
+        equipmentHelper.assertEditorEquipmentsListEqual(actual.getEquipment(), actual.getEquipment());
+    }
+
+    @Test
+    public void when_UpdateOrderWith_RemoveTask_Then_OK() throws Exception {
+
+        this.populateProductAndEquipment();
+        // Get the authorization header for the authenticated user
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+
+
+        //Preparing existing Order
+        EditorOrderTO expected = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(expected);
+        expected = apiHelper.createEditorOrderPOST(expected, authorizationHeader, 201);
+
+
+        //Changing order completely from user perspective
+        this.alteringOrderCompletely(expected);
+
+        expected.getWorkflows().get(0).getTasks().remove(0);
+
+
+        //Updating the order
+        Long orderId = expected.getId();
+        expected = apiHelper.updateEditorOrderPUT(orderId, expected, authorizationHeader, 200);
+
+        //Getting the actual updated order
+        EditorOrderTO actual = apiHelper.getEditorOrderGET(orderId, authorizationHeader, 200);
+
+        // Comparing
+        orderHelper.assertEditorOrdersEqual(actual, expected);
+        equipmentHelper.assertEditorEquipmentsListEqual(actual.getEquipment(), actual.getEquipment());
+    }
+
+    @Test
+    public void when_UpdateOrderWith_AddNewItemTask_Then_OK() throws Exception {
+
+        this.populateProductAndEquipment();
+        // Get the authorization header for the authenticated user
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+
+
+        //Preparing existing Order
+        EditorOrderTO expected = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(expected);
+        expected = apiHelper.createEditorOrderPOST(expected, authorizationHeader, 201);
+
+
+        //Changing order completely from user perspective
+        this.alteringOrderCompletely(expected);
+
+        expected.getWorkflows().get(0).getTasks().get(0).getItems().add(new EditorItemTO("New Item 1", "Ensure heating plates are properly functioning and aligned", 10));
+
+
+        //Updating the order
+        Long orderId = expected.getId();
+        expected = apiHelper.updateEditorOrderPUT(orderId, expected, authorizationHeader, 200);
+
+        //Getting the actual updated order
+        EditorOrderTO actual = apiHelper.getEditorOrderGET(orderId, authorizationHeader, 200);
+
+        // Comparing
+        orderHelper.assertEditorOrdersEqual(actual, expected);
+        equipmentHelper.assertEditorEquipmentsListEqual(actual.getEquipment(), actual.getEquipment());
+    }
+
+    @Test
+    public void when_UpdateOrderWith_RemoveItemTask_Then_OK() throws Exception {
+
+        this.populateProductAndEquipment();
+        // Get the authorization header for the authenticated user
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+
+
+        //Preparing existing Order
+        EditorOrderTO expected = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        this.assignProductAndEquipmentFor(expected);
+        expected = apiHelper.createEditorOrderPOST(expected, authorizationHeader, 201);
+
+
+        //Changing order completely from user perspective
+        this.alteringOrderCompletely(expected);
+
+        expected.getWorkflows().get(0).getTasks().get(0).getItems().remove(0);
+
 
         //Updating the order
         Long orderId = expected.getId();
@@ -1081,6 +1294,7 @@ public class EditorControllerTest {
 
         toBeUpdated = this.apiHelper.updateEditorOrderPUT(toBeUpdated.getId(), toBeUpdated, authorizationHeader, 404);
     }
+
     @Test
     public void when_UpdateOrder_WithNewExistingProductAfter_Then_OK() throws Exception {
         EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("After");
