@@ -2,13 +2,9 @@
     @if(items && items.length>0){
         <mat-accordion 
         cdkDropList 
-        id="itemsInTasks"
+        [id]="dropListIdFromTask"
         [cdkDropListData]="items"
-
-
         (cdkDropListDropped)="drop($event)"
-   
-        
         >
             @for(item of items; track $index){
             <mat-expansion-panel   [disabled]="isAnyWorkflowInEditMode()" cdkDrag>

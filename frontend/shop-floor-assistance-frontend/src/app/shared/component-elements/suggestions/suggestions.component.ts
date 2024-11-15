@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { workflowTO } from '../../../types/workflowTO';
@@ -26,22 +26,23 @@ import { dummyOrder, sampleItems, sampleTasks, sampleWorkflows } from '../../../
   templateUrl: './suggestions.component.html',
   styleUrl: './suggestions.component.css'
 })
-export class SuggestionsComponent {
+export class SuggestionsComponent implements OnInit{
+  receivedItemIds: string[]=[];
 
   constructor(private suggestionService: SuggestionsService){}
+
+  ngOnInit(): void {
+    this.receivedItemIds= this.suggestionService.getDropListIds();
+  }
   
   drop(event:  CdkDragDrop<itemTO[]>) {
-    
     if (event.previousContainer === event.container) {
       // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       const item = event.container.data[event.previousIndex];
       event.container.data.splice(event.previousIndex, 1);
       event.container.data.splice(event.currentIndex, 0, item);
     }
-    const index = event.previousIndex;
-    // this.suggestionService.triggerDrop(event);
-    console.log('service dispatched in suggestionscomponent with index', index)
-  }
+    const index = event.previousIndex;  }
 
   elementSelected: string= 'Workflows';
   elementsOffered: string[] = ['Workflows', 'Tasks', 'Items'];

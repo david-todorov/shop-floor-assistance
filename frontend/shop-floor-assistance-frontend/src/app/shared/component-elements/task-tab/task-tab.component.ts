@@ -38,6 +38,7 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
   orderExists: boolean= false;
   tasks!: taskTO[];
   btnLabelAddTask: string= 'Add task';
+itemsInTasks: string='itemsInTasks';
 
   constructor(public dialog: MatDialog,
               private cdr:ChangeDetectorRef,
