@@ -15,6 +15,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from 
 import { Subscription } from 'rxjs';
 import { SuggestionsService } from '../../../services/suggestions.service';
 import { itemDropEvent } from '../../../types/itemDropEventType';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -55,11 +56,13 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
 
   @Input() dropListIdFromTask: string='itemsInTasks';
   dropListIds: string[] = [];
+
   //-----------------------------------------
 
   constructor(private cdr:ChangeDetectorRef, 
     private uiService: UIService,
-  private suggestionService: SuggestionsService){}
+    private suggestionService: SuggestionsService,
+    private snackBar: MatSnackBar){}
 
   //--life cycle hooks
   ngOnInit(): void {
@@ -188,9 +191,6 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     });
   }
 
-
-
-
   deleteItems(index: number,event: MouseEvent) {
     if(this.taskIndex!=null && this.workflowIndex !=null){
       event.stopPropagation();
@@ -274,13 +274,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     }
   }
 
-    drop(event: CdkDragDrop<itemTO[]>): void {
-    console.log('dropEvent fired')
-    console.log('event.container','event.previousContainer)',event.container, event.previousContainer)
-    console.log(event.container===event.previousContainer)
-    console.log('event.previousIndex, event.currentIndex')
-    console.log( event.previousIndex,event.currentIndex)
-
+  drop(event: CdkDragDrop<itemTO[]>): void {
     if(this.workflowIndex!=null && this.taskIndex!=null){
       const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
       if (event.previousContainer === event.container) {
@@ -292,10 +286,16 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
           event.previousIndex,
           event.currentIndex
         );
-
       }
+      this.showSnackbar('New item added to task!');
     }
   this.onOrderUpdate.emit(this.order);
+  }
+
+  showSnackbar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 1500
+    });
   }
 
 }

@@ -10,7 +10,7 @@
                     <p>Tasks selected</p>
                 </div>
             }@else if(elementSelected==='Items'){
-                <div>
+                <div class=" w-full">
                     <mat-accordion     
                         cdkDropList id="items_sugg" 
                         [cdkDropListData]="items_sugg" 
@@ -19,8 +19,8 @@
                         >
                         @for(item of items_sugg; track $index){
                             <mat-expansion-panel cdkDrag>
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title class="flex flex-row justify-between w-1/2">
+                                <mat-expansion-panel-header class="">
+                                    <mat-panel-title class=" flex flex-row justify-between w-1/2">
                                         {{ item.name }}
                                         <p class="">Time required (minutes): {{ item.timeRequired }}</p>
                                     </mat-panel-title>
@@ -36,7 +36,7 @@
         </div>
     </div>
     <div>
-        <mat-radio-group class="radio-group align-bottom justify-end border border-purple-500" [(ngModel)]="elementSelected">
+        <mat-radio-group class="radio-group align-bottom justify-end" [(ngModel)]="elementSelected">
             @for (element of elementsOffered; track element) {
             <mat-radio-button class="radio-button" [value]="element">{{element}}</mat-radio-button>
             }
