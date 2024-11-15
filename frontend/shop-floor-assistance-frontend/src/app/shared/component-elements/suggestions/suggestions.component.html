@@ -1,4 +1,4 @@
-<!-- <div class="col-span-2  w-full h-5/6  p-4 ">
+<div class="col-span-2  w-full h-5/6  p-4 ">
     <div class="main-container">
         <div>
             @if(elementSelected==='Workflows') {
@@ -11,14 +11,7 @@
                 </div>
             }@else if(elementSelected==='Items'){
                 <div>
-                    
-                    
-                        <mat-accordion     
-                        cdkDropList id="items_sugg" 
-                        [cdkDropListData]="items_sugg" 
-                        (cdkDropListDropped)="drop($event)"
-                        >
-                        @for(item of items_sugg; track $index){
+                    <mat-accordion     
                         cdkDropList id="items_sugg" 
                         [cdkDropListData]="items_sugg" 
                         (cdkDropListDropped)="drop($event)"
@@ -32,15 +25,13 @@
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <div class="expansion-panel-content">
-                                    <p>{{ item.longDescription }}</p>
+                                    <p>{{ item.description }}</p>
                                 </div>
                             </mat-expansion-panel>
                         }
                     </mat-accordion>
-                        }
-                    </mat-accordion>
                 </div>
-            }    
+            }
         </div>
     </div>
     <div>
@@ -51,4 +42,4 @@
         </mat-radio-group>
     </div>
 </div>
-
+ 

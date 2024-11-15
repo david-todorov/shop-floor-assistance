@@ -10,8 +10,8 @@ import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { SuggestionsService } from '../../../services/suggestions.service';
 import { itemDropEvent } from '../../../types/itemDropEventType';
-import { itemDropEvent } from '../../../types/itemDropEventType';
 import { CommonModule } from '@angular/common';
+import { dummyOrder } from '../../../types/dummyData';
 
 @Component({
   selector: 'app-suggestions',

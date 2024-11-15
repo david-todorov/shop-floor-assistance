@@ -15,6 +15,7 @@ import { ButtonComponent } from '../../shared/component-elements/button/button.c
 })
 export class EditorEditProductComponent {
   product: productTO = {
+    id: 0,
     productNumber: "",
     name: "",
     description: "",

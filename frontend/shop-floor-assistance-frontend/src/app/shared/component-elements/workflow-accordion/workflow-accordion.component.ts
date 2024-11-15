@@ -8,7 +8,7 @@ import { workflowStates } from '../workflowUI-state';
 import { workflowTO } from '../../../types/workflowTO';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { taskTO } from '../../../types/taskTO';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { EditWorkflowDialogComponent } from '../edit-workflow-dialog/edit-workflow-dialog.component';
 

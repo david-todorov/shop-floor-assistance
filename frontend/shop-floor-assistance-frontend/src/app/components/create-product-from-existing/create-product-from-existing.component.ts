@@ -16,6 +16,7 @@ import { productTO } from '../../types/productTO';
 })
 export class CreateProductFromExistingComponent {
   product: productTO = {
+    id: 0,
     productNumber: '',
     name: '',
     description: '',
