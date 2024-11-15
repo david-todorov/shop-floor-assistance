@@ -77,7 +77,6 @@ public class EditorServiceImpl implements EditorService {
 
     @Override
     public List<EditorWorkflowTO> getWorkflowsSuggestions(EditorProductTO productAfter) {
-
         List<EditorWorkflowTO> suggested = new ArrayList<>();
         Long productId = productAfter.getId();
 
@@ -88,15 +87,18 @@ public class EditorServiceImpl implements EditorService {
 
         // Use streams to filter orders where 'productBefore' is null
         productAfterDBO.getOrdersAsAfterProduct().stream()
-                .filter(ordersAsAfter -> ordersAsAfter.getBeforeProduct() == null) // filter orders with null 'productBefore'
-                .forEach(ordersAsAfter -> suggested.addAll(this.editorToMapper.toWorkflowTOs(ordersAsAfter.getWorkflows())));
+                .filter(ordersAsAfter -> ordersAsAfter.getBeforeProduct() == null)
+                .forEach(ordersAsAfter -> this.editorToMapper.toWorkflowTOs(ordersAsAfter.getWorkflows())
+                        .forEach(workflow -> {
+                            nullifyWorkflowIds(workflow); // Set ID and nested IDs to null
+                            suggested.add(workflow);
+                        }));
 
         return suggested;
     }
 
     @Override
     public List<EditorTaskTO> getTasksSuggestions(EditorProductTO productAfter) {
-
         List<EditorTaskTO> suggested = new ArrayList<>();
         Long productId = productAfter.getId();
 
@@ -107,9 +109,13 @@ public class EditorServiceImpl implements EditorService {
 
         // Use streams to filter orders where 'productBefore' is null
         productAfterDBO.getOrdersAsAfterProduct().stream()
-                .filter(ordersAsAfter -> ordersAsAfter.getBeforeProduct() == null) // filter orders with null 'productBefore'
+                .filter(ordersAsAfter -> ordersAsAfter.getBeforeProduct() == null)
                 .forEach(ordersAsAfter -> ordersAsAfter.getWorkflows().forEach(
-                        workflow -> suggested.addAll(this.editorToMapper.toTaskTOs(workflow.getTasks()))
+                        workflow -> this.editorToMapper.toTaskTOs(workflow.getTasks())
+                                .forEach(task -> {
+                                    nullifyTaskIds(task); // Set ID and nested IDs to null
+                                    suggested.add(task);
+                                })
                 ));
 
         return suggested;
@@ -117,7 +123,6 @@ public class EditorServiceImpl implements EditorService {
 
     @Override
     public List<EditorItemTO> getItemsSuggestions(EditorProductTO productAfter) {
-
         List<EditorItemTO> suggested = new ArrayList<>();
         Long productId = productAfter.getId();
 
@@ -131,7 +136,11 @@ public class EditorServiceImpl implements EditorService {
                 .filter(ordersAsAfter -> ordersAsAfter.getBeforeProduct() == null)
                 .forEach(ordersAsAfter -> ordersAsAfter.getWorkflows().forEach(
                         workflow -> workflow.getTasks().forEach(
-                                task -> suggested.addAll(this.editorToMapper.toItemTOs(task.getItems()))
+                                task -> this.editorToMapper.toItemTOs(task.getItems())
+                                        .forEach(item -> {
+                                            nullifyItemIds(item); // Set ID to null
+                                            suggested.add(item);
+                                        })
                         )
                 ));
 
@@ -391,6 +400,24 @@ public class EditorServiceImpl implements EditorService {
 
     private EquipmentDBO getEquipmentIfExists(String equipmentNumber) {
         return this.equipmentRepository.findByEquipmentNumber(equipmentNumber).orElse(null);
+    }
+
+    private void nullifyWorkflowIds(EditorWorkflowTO workflow) {
+        workflow.setId(null);
+        for (EditorTaskTO task : workflow.getTasks()) {
+            nullifyTaskIds(task);
+        }
+    }
+
+    private void nullifyTaskIds(EditorTaskTO task) {
+        task.setId(null);
+        for (EditorItemTO item : task.getItems()) {
+            nullifyItemIds(item);
+        }
+    }
+
+    private void nullifyItemIds(EditorItemTO item) {
+        item.setId(null);
     }
 
 }
