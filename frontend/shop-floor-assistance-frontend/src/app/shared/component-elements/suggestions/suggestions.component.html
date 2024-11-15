@@ -2,8 +2,27 @@
     <div class="main-container">
         <div>
             @if(elementSelected==='Workflows') {
-                <div>
-                    <p>Workflows selected</p>
+                <div class=" w-full">
+                    <mat-accordion 
+                        cdkDropList id="workflows_suggestions" 
+                        [cdkDropListData]="workflows_suggestions" 
+                        (cdkDropListDropped)="drop($event)"
+                        [cdkDropListConnectedTo]="'workflows'"
+                        >
+                        @for(workflow of workflows_suggestions; track $index){
+                        <mat-expansion-panel cdkDrag>
+                            <mat-expansion-panel-header class="">
+                                <mat-panel-title class=" flex flex-row justify-between w-1/2">
+                                    {{ workflow.name }}
+                                    <!-- <p class="">Time required (minutes): {{ item.timeRequired }}</p> -->
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="expansion-panel-content">
+                                <p>{{ workflow.description }}</p>
+                            </div>
+                        </mat-expansion-panel>
+                        }
+                    </mat-accordion>
                 </div>
             }@else if (elementSelected==='Tasks'){
                 <div>
@@ -12,12 +31,12 @@
             }@else if(elementSelected==='Items'){
                 <div class=" w-full">
                     <mat-accordion     
-                        cdkDropList id="items_sugg" 
-                        [cdkDropListData]="items_sugg" 
+                        cdkDropList id="items_suggestions" 
+                        [cdkDropListData]="items_suggestions" 
                         (cdkDropListDropped)="drop($event)"
                         [cdkDropListConnectedTo]="receivedItemIds"
                         >
-                        @for(item of items_sugg; track $index){
+                        @for(item of items_suggestions; track $index){
                             <mat-expansion-panel cdkDrag>
                                 <mat-expansion-panel-header class="">
                                     <mat-panel-title class=" flex flex-row justify-between w-1/2">

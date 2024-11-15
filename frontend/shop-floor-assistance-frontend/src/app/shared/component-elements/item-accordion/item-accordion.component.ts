@@ -105,9 +105,6 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       this.order.workflows.forEach((workflow, workflowIndex) => {
         workflow.tasks.forEach((task, taskIndex) => {
           this.uiService.setSelectedItemIndex(workflowIndex, taskIndex, 0);
-          // 
-          // this.itemIndices[workflowIndex] = this.itemIndices[workflowIndex] || {};
-          // this.itemIndices[workflowIndex][taskIndex] = 0;
         });
       });
     }
@@ -286,8 +283,8 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
           event.previousIndex,
           event.currentIndex
         );
+        this.showSnackbar('New item added to task!');
       }
-      this.showSnackbar('New item added to task!');
     }
   this.onOrderUpdate.emit(this.order);
   }

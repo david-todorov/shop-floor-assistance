@@ -35,21 +35,21 @@ export class SuggestionsComponent implements OnInit{
     this.receivedItemIds= this.suggestionService.getDropListIds();
   }
   
-  drop(event:  CdkDragDrop<itemTO[]>) {
-    if (event.previousContainer === event.container) {
+  drop(event: CdkDragDrop<itemTO[]> | CdkDragDrop<workflowTO[]>) {
+    if (event.previousContainer === event.container){
       // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       const item = event.container.data[event.previousIndex];
       event.container.data.splice(event.previousIndex, 1);
       event.container.data.splice(event.currentIndex, 0, item);
     }
-    const index = event.previousIndex;  }
+  }
 
   elementSelected: string= 'Workflows';
   elementsOffered: string[] = ['Workflows', 'Tasks', 'Items'];
 
  
-  workflows: workflowTO[]= sampleWorkflows;
-  tasks: taskTO[]= sampleTasks;
-  items_sugg: itemTO[]= sampleItems;
+  workflows_suggestions: workflowTO[]= sampleWorkflows;
+  tasks_suggestions: taskTO[]= sampleTasks;
+  items_suggestions: itemTO[]= sampleItems;
 
 }
