@@ -11,7 +11,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from 
 import { SuggestionsService } from '../../../services/suggestions.service';
 import { itemDropEvent } from '../../../types/itemDropEventType';
 import { CommonModule } from '@angular/common';
-import { dummyOrder } from '../../../types/dummyData';
+import { dummyOrder, sampleItems, sampleTasks, sampleWorkflows } from '../../../types/dummyData';
 
 @Component({
   selector: 'app-suggestions',
@@ -56,9 +56,9 @@ export class SuggestionsComponent {
   elementSelected: string= 'Workflows';
   elementsOffered: string[] = ['Workflows', 'Tasks', 'Items'];
 
-  order: orderTO= dummyOrder;
-  workflows: workflowTO[]= this.order.workflows;
-  tasks: taskTO[]= this.order.workflows[0].tasks;
-  items_sugg: itemTO[]= this.order.workflows[1].tasks[0].items;
+  // order: orderTO= dummyOrder;
+  workflows: workflowTO[]= sampleWorkflows;
+  tasks: taskTO[]= sampleTasks;
+  items_sugg: itemTO[]= sampleItems;
 
 }
