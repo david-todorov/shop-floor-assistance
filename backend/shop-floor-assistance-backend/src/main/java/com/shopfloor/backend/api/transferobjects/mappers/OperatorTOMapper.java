@@ -45,7 +45,7 @@ public class OperatorTOMapper {
         operatorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
 
         //Forecast
-        operatorOrderTO.getForecast().setTotalTimeRequired(orderDBO.getTotalTimeRequired());
+        operatorOrderTO.setForecast(toForecastTO(orderDBO));
 
         return operatorOrderTO;
     }
@@ -125,6 +125,20 @@ public class OperatorTOMapper {
         ArrayList<OperatorProductTO> operatorProductTOs = new ArrayList<>();
         productDBOS.forEach(productDBO -> operatorProductTOs.add(toProductTO(productDBO)));
         return operatorProductTOs;
+    }
+
+    public OperatorForecastTO toForecastTO(OrderDBO orderDBO){
+        OperatorForecastTO operatorForecastTO = new OperatorForecastTO();
+        operatorForecastTO.setTotalTimeRequired(orderDBO.getTotalTimeRequired());
+
+        return operatorForecastTO;
+    }
+
+    public ArrayList<OperatorForecastTO> toForecastTOs(List<OrderDBO> orderDBOs) {
+        ArrayList<OperatorForecastTO> operatorForecastTOS = new ArrayList<>();
+        orderDBOs.forEach(orderDBO -> operatorForecastTOS.add(toForecastTO(orderDBO)));
+
+        return operatorForecastTOS;
     }
 
     private OperatorProductTO mapBasicProductProperties(ProductDBO productDBO) {

@@ -1,4 +1,4 @@
-package com.shopfloor.backend.services;
+package com.shopfloor.backend.services.implementations;
 
 import com.shopfloor.backend.api.transferobjects.mappers.OperatorTOMapper;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorExecutionTO;
@@ -12,6 +12,7 @@ import com.shopfloor.backend.database.objects.OrderDBO;
 import com.shopfloor.backend.database.repositories.ExecutionRepository;
 import com.shopfloor.backend.database.repositories.OrderRepository;
 import com.shopfloor.backend.security.AuthenticatedUserDetails;
+import com.shopfloor.backend.services.interfaces.OperatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

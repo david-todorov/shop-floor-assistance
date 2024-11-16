@@ -1,4 +1,4 @@
-package com.shopfloor.backend.services;
+package com.shopfloor.backend.services.implementations;
 
 import com.shopfloor.backend.api.transferobjects.editors.*;
 import com.shopfloor.backend.api.transferobjects.mappers.EditorTOMapper;
@@ -13,6 +13,7 @@ import com.shopfloor.backend.database.repositories.EquipmentRepository;
 import com.shopfloor.backend.database.repositories.OrderRepository;
 import com.shopfloor.backend.database.repositories.ProductRepository;
 import com.shopfloor.backend.security.AuthenticatedUserDetails;
+import com.shopfloor.backend.services.interfaces.EditorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

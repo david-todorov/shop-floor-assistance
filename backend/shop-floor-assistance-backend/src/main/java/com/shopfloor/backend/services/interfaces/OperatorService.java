@@ -1,4 +1,4 @@
-package com.shopfloor.backend.services;
+package com.shopfloor.backend.services.interfaces;
 
 import com.shopfloor.backend.api.transferobjects.operators.OperatorExecutionTO;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorForecastTO;
