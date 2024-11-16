@@ -1,9 +1,10 @@
-package com.shopfloor.backend.services;
+package com.shopfloor.backend.services.implementations;
 
 import com.shopfloor.backend.api.transferobjects.authentication.AuthenticationUserResponseTO;
 import com.shopfloor.backend.api.transferobjects.authentication.LoginUserRequestTO;
 import com.shopfloor.backend.database.objects.UserDBO;
 import com.shopfloor.backend.security.JwtService;
+import com.shopfloor.backend.services.interfaces.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

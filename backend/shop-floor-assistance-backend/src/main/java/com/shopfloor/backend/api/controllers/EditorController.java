@@ -1,8 +1,8 @@
 package com.shopfloor.backend.api.controllers;
 
 import com.shopfloor.backend.api.transferobjects.editors.*;
-import com.shopfloor.backend.services.EditorService;
-import com.shopfloor.backend.services.EditorServiceImpl;
+import com.shopfloor.backend.services.implementations.EditorServiceImpl;
+import com.shopfloor.backend.services.interfaces.EditorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -149,19 +149,19 @@ public class EditorController {
         return this.editorService.getProductsSuggestions(limit);
     }
 
-    @GetMapping("workflows/suggestions")
+    @PostMapping("workflows/suggestions")
     @ResponseStatus(HttpStatus.OK)
     public List<EditorWorkflowTO> getWorkflowsSuggestions(@Valid @RequestBody EditorProductTO productAfter) {
         return this.editorService.getWorkflowsSuggestions(productAfter);
     }
 
-    @GetMapping("tasks/suggestions")
+    @PostMapping("tasks/suggestions")
     @ResponseStatus(HttpStatus.OK)
     public List<EditorTaskTO> getTasksSuggestions(@Valid @RequestBody EditorProductTO productAfter) {
         return this.editorService.getTasksSuggestions(productAfter);
     }
 
-    @GetMapping("items/suggestions")
+    @PostMapping("items/suggestions")
     @ResponseStatus(HttpStatus.OK)
     public List<EditorItemTO> getItemsSuggestions(@Valid @RequestBody EditorProductTO productAfter) {
         return this.editorService.getItemsSuggestions(productAfter);

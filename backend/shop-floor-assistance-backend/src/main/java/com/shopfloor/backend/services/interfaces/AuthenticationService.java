@@ -1,4 +1,4 @@
-package com.shopfloor.backend.services;
+package com.shopfloor.backend.services.interfaces;
 
 import com.shopfloor.backend.api.transferobjects.authentication.AuthenticationUserResponseTO;
 import com.shopfloor.backend.api.transferobjects.authentication.LoginUserRequestTO;

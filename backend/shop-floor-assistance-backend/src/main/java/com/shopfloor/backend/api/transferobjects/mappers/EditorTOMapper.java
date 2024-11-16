@@ -77,6 +77,8 @@ public class EditorTOMapper {
 
         editorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
 
+        editorOrderTO.setForecast(toForecastTO(orderDBO));
+
         return editorOrderTO;
     }
 
@@ -123,6 +125,13 @@ public class EditorTOMapper {
         return editorItemTO;
     }
 
+    public EditorForecastTO toForecastTO(OrderDBO orderDBO) {
+        EditorForecastTO editorForecastTO = new EditorForecastTO();
+        editorForecastTO.setTotalTimeRequired(orderDBO.getTotalTimeRequired());
+
+        return editorForecastTO;
+    }
+
     public ArrayList<EditorOrderTO> toOrderTOs(List<OrderDBO> orderDBOS) {
         ArrayList<EditorOrderTO> editorOrderTOS = new ArrayList<>();
         orderDBOS.forEach(orderDBO -> editorOrderTOS.add(toOrderTO(orderDBO)));
@@ -145,6 +154,12 @@ public class EditorTOMapper {
         ArrayList<EditorItemTO> editorItemTOS = new ArrayList<>();
         itemDBOs.forEach(itemDBO -> editorItemTOS.add(toItemTO(itemDBO)));
         return editorItemTOS;
+    }
+
+    public ArrayList<EditorForecastTO> toForecastTOs(List<OrderDBO> orderDBOs) {
+        ArrayList<EditorForecastTO> editorForecastTOS = new ArrayList<>();
+        orderDBOs.forEach(orderDBO -> editorForecastTOS.add(toForecastTO(orderDBO)));
+        return editorForecastTOS;
     }
 
     private EditorOrderTO mapBasicOrderProperties(OrderDBO orderDBO) {
