@@ -2,8 +2,8 @@ package com.shopfloor.backend.api.controllers;
 
 import com.shopfloor.backend.api.transferobjects.authentication.AuthenticationUserResponseTO;
 import com.shopfloor.backend.api.transferobjects.authentication.LoginUserRequestTO;
-import com.shopfloor.backend.services.AuthenticationService;
-import com.shopfloor.backend.services.AuthenticationServiceImpl;
+import com.shopfloor.backend.services.implementations.AuthenticationServiceImpl;
+import com.shopfloor.backend.services.interfaces.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
