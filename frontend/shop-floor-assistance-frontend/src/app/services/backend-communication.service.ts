@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -148,16 +148,18 @@ export class BackendCommunicationService {
   }
 
   //Suggestions
-  getWorkflowSuggestions(productAfter: productTO): Observable<any> {
+  // getWorkflowSuggestions(productAfter: productTO): Observable<any> {
+  //   return this.http.post(`${this.apiServerURL}editor/workflows/suggestions`, {productAfter});
+  // }
+
+  getWorkflowSuggestions(productAfter: productTO): Observable<HttpResponse<any>> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(`${this.apiServerURL}editor/workflows/suggestions`, JSON.stringify(productAfter), {headers});
+    return this.http.post<HttpResponse<any>>(`${this.apiServerURL}editor/workflows/suggestions`, productAfter, { headers, observe: 'response' });
   }
-  getTaskSuggestions(productAfter: productTO): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(`${this.apiServerURL}editor/tasks/suggestions`, JSON.stringify(productAfter), {headers});
-  }
-  getItemSuggestions(productAfter: productTO): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(`${this.apiServerURL}editor/items/suggestions`, JSON.stringify(productAfter), {headers});
-  }
+
+  // getTaskSuggestions(productAfter: productTO): Observable<any> {
+    
+  // }
+  // getItemSuggestions(productAfter: productTO): Observable<any> {
+  // }
 }

@@ -49,26 +49,27 @@ export class SuggestionsComponent implements OnInit{
     }
   }
 
+
+
   getWorkflowSuggestions(): void {
-    console.log('productafter in suggestions',this.productAfter)
+    console.log('product after is', this.productAfter);
     this.backendCommunicationService.getWorkflowSuggestions(this.productAfter).pipe(
-      map(response => {
+      map((response: HttpResponse<any>) => {
         if (response.status === 200) {
           return response.body;
         } else {
           throw new Error('Unexpected response status: ' + response.status);
-          // alert('Error retrieving suggestions: '+response.status);
         }
       }),
       catchError(err => {
-        console.error('Error getting workflow suggestions:', err);
+        console.error('Error fetching workflow suggestions:', err);
         return of(null);
       })
     ).subscribe({
       next: (response: any) => {
         if (response) {
-          // this.workflows_suggestions = response;
-          console.log('Workflow suggestions:', this.workflows_suggestions);
+          this.workflows_suggestions = response;
+          console.log('Workflow suggestions loaded:', this.workflows_suggestions);
         }
       },
       error: (err) => {
@@ -77,81 +78,16 @@ export class SuggestionsComponent implements OnInit{
     });
   }
 
+
   getTaskSuggestions(): void {
-    console.log('productafter in suggestions',this.productAfter)
-    this.backendCommunicationService.getTaskSuggestions(this.productAfter).pipe(
-      map(response => {
-        if (response.status === 200) {
-          return response.body;
-        } else {
-          throw new Error('Unexpected response status: ' + response.status);
-          // alert('Error retrieving suggestions: '+response.status);
-        }
-      }),
-      catchError(err => {
-        console.error('Error getting task suggestions:', err);
-        return of(null);
-      })
-    ).subscribe({
-      next: (response: any) => {
-        if (response) {
-          // this.workflows_suggestions = response;
-          console.log('Item suggestions:', this.items_suggestions);
-        }
-      },
-      error: (err) => {
-        console.error('An error occurred while retrieving task suggestions:', err);
-      }
-    });
+//
   }
 
   getItemSuggestions(): void {
-    console.log('productafter in suggestions',this.productAfter)
-    this.backendCommunicationService.getItemSuggestions(this.productAfter).pipe(
-      map(response => {
-        if (response.status === 200) {
-          return response.body;
-        } else {
-          throw new Error('Unexpected response status: ' + response.status);
-          // alert('Error retrieving suggestions: '+response.status);
-        }
-      }),
-      catchError(err => {
-        console.error('Error getting item suggestions:', err);
-        return of(null);
-      })
-    ).subscribe({
-      next: (response: any) => {
-        if (response) {
-          // this.workflows_suggestions = response;
-          console.log('Item suggestions:', this.items_suggestions);
-        }
-      },
-      error: (err) => {
-        console.error('An error occurred while retrieving item suggestions:', err);
-      }
-    });
+    //
   }
 
-// onElementSelected(event: any) {
-//   console.log(event);
-//    this.backendCommunicationService.getWorkflowSuggestions().pipe(
-//       catchError((err) => {
-//         console.error('Error fetching equipment:', err);
-//         return of([]);
-//       })
-//     ).subscribe({
-//       next: (response: any) => {
-//         // this.workflows_suggestions = response; 
-//         console.log(response)
-//         console.log('Equipment loaded:', this.workflows_suggestions);
-//       },
-//       error: (err) => {
-//         console.error('An error occurred while retreiving workflow suggestions:', err);
-//         return;
-//       }
-//     });
-// }
+
 
 
 
