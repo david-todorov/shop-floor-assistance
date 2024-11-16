@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { SuggestionsService } from '../../../services/suggestions.service';
 import { Global } from '../../../services/globals';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-task-tab',
@@ -22,6 +23,7 @@ import { Global } from '../../../services/globals';
     MatDialogModule,
     ItemAccordionComponent,
     DragDropModule,
+    ButtonComponent
   ],
   templateUrl: './task-tab.component.html',
   styleUrl: './task-tab.component.css'
