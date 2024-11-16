@@ -37,7 +37,6 @@
                             <mat-expansion-panel-header class="">
                                 <mat-panel-title class=" flex flex-row justify-between w-1/2">
                                     {{ task.name }}
-                                    <!-- <p class="">Time required (minutes): {{ item.timeRequired }}</p> -->
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
                             <div class="expansion-panel-content">
@@ -74,7 +73,9 @@
         </div>
     </div>
     <div>
-        <mat-radio-group class="radio-group align-bottom justify-end" [(ngModel)]="elementSelected">
+       
+        <mat-radio-group class="radio-group align-bottom justify-end items-center" [(ngModel)]="elementSelected">
+            <p class="font-bold text-lg">Get suggestions for:</p>
             @for (element of elementsOffered; track element) {
             <mat-radio-button class="radio-button" [value]="element">{{element}}</mat-radio-button>
             }
