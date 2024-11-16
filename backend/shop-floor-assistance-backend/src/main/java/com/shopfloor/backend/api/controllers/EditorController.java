@@ -1,8 +1,8 @@
 package com.shopfloor.backend.api.controllers;
 
 import com.shopfloor.backend.api.transferobjects.editors.*;
-import com.shopfloor.backend.services.interfaces.EditorService;
 import com.shopfloor.backend.services.implementations.EditorServiceImpl;
+import com.shopfloor.backend.services.interfaces.EditorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

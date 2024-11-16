@@ -125,7 +125,7 @@ public class EditorTOMapper {
         return editorItemTO;
     }
 
-    public EditorForecastTO toForecastTO(OrderDBO orderDBO){
+    public EditorForecastTO toForecastTO(OrderDBO orderDBO) {
         EditorForecastTO editorForecastTO = new EditorForecastTO();
         editorForecastTO.setTotalTimeRequired(orderDBO.getTotalTimeRequired());
 

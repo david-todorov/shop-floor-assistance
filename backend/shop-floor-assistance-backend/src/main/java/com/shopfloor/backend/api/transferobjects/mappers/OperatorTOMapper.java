@@ -127,7 +127,7 @@ public class OperatorTOMapper {
         return operatorProductTOs;
     }
 
-    public OperatorForecastTO toForecastTO(OrderDBO orderDBO){
+    public OperatorForecastTO toForecastTO(OrderDBO orderDBO) {
         OperatorForecastTO operatorForecastTO = new OperatorForecastTO();
         operatorForecastTO.setTotalTimeRequired(orderDBO.getTotalTimeRequired());
 
