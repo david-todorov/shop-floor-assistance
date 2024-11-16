@@ -3,7 +3,6 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { LoginRegisterComponent } from './components/login-register/login-register.component';
 import { OperatorComponent } from './components/operator/operator.component';
 import { OperatorViewWorkflowComponent } from './components/operator-view-workflow/operator-view-workflow.component';
-import { EditorOrderComponent } from './components/editor-order/editor-order.component';
 import { EditorEditOrderComponent } from './components/editor-edit-order/editor-edit-order.component';
 import { EditorHomepageComponent } from './components/editor-homepage/editor-homepage.component';
 import { EditorEquipmentComponent } from './components/editor-equipment/editor-equipment.component';
@@ -18,6 +17,7 @@ import { CreateEquipmentFromExistingComponent } from './components/create-equipm
 import { EquipmentCreationOptionComponent } from './components/equipment-creation-option/equipment-creation-option.component';
 import { ProductCreationOptionComponent } from './components/product-creation-option/product-creation-option.component';
 import { CreateProductFromExistingComponent } from './components/create-product-from-existing/create-product-from-existing.component';
+import { EditorOrderComponent } from './components/editor-order/editor-order.component';
 
 export const routes: Routes = [
     { path: '', component: WelcomeComponent },

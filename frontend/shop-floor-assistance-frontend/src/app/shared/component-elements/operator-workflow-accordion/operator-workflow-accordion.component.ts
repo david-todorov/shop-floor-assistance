@@ -4,11 +4,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { orderTO } from '../../../types/orderTO';
 import { MatIconModule } from '@angular/material/icon';
+import { workflowStates } from '../workflowUI-state';
 import { workflowTO } from '../../../types/workflowTO';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { taskTO } from '../../../types/taskTO';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatDialog } from '@angular/material/dialog';
+import { OperatorTaskTabComponent } from '../operator-task-tab/operator-task-tab.component';
+
 
 
 @Component({
@@ -21,7 +23,8 @@ import { MatDialog } from '@angular/material/dialog';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    DragDropModule
+    DragDropModule,
+    OperatorTaskTabComponent
   ],
   templateUrl: './operator-workflow-accordion.component.html',
   styleUrl: './operator-workflow-accordion.component.css'
@@ -30,8 +33,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 export class OperatorWorkflowAccordionComponent implements OnInit, OnChanges, AfterViewInit{
 
-
-  drop(event: CdkDragDrop<workflowTO[]>): void {
+ drop(event: CdkDragDrop<workflowTO[]>): void {
     moveItemInArray(this.order.workflows, event.previousIndex, event.currentIndex);
     this.onOrderUpdate.emit(this.order);
   }
@@ -43,18 +45,36 @@ export class OperatorWorkflowAccordionComponent implements OnInit, OnChanges, Af
 
   orderExists: boolean= false;
   selectedWorkflowIndex: number | null = 0;
+  workFlowStates: workflowStates= {};
   expandedPanels: boolean[] = [];
- 
 
-  constructor(private cdr: ChangeDetectorRef, private dialog: MatDialog) {}
-  ngOnChanges(changes: SimpleChanges): void {
-    throw new Error('Method not implemented.');
-  }
+ constructor(private cdr: ChangeDetectorRef) {}
 
   
   ngOnInit(): void {
     this.selectedWorkflowIndex= 0;
+    this.initializeWorkflowStates();
     
+  }
+
+ngOnChanges(changes: SimpleChanges): void {
+    if (changes['order']) {
+      this.initializeWorkflowStates();
+    }
+  }
+
+
+  initializeWorkflowStates() {
+    console.log(this.order)
+    this.orderExists= (this.order!== null && this.order != undefined);
+    if(this.orderExists){
+      this.order.workflows.forEach((workflow: any, index: number) => {
+        this.workFlowStates[index] = { editMode: false, 
+          showDescription: false, 
+          updatedTitle: workflow.name,
+          updatedDescription: workflow.description};
+      });
+    }
   }
   
   ngAfterViewInit(): void {
@@ -63,12 +83,14 @@ export class OperatorWorkflowAccordionComponent implements OnInit, OnChanges, Af
   
 
 
-  selectWorkflow(index: number) {
+ selectWorkflow(index: number) {
+    if (this.workFlowStates[index].editMode) {
+      return; // Do not trigger selectWorkflow if in edit mode
+    }
     this.selectedWorkflowIndex = index;
     this.onSelect.emit(this.selectedWorkflowIndex);
   }
 
-  
 
 
   trackByIndex(index: number, item: any): any {

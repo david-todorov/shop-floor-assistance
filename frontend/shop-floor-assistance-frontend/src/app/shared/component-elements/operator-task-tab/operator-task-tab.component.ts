@@ -5,10 +5,9 @@ import { orderTO } from '../../../types/orderTO';
 import { CommonModule } from '@angular/common';
 import { taskTO } from '../../../types/taskTO';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
-import { OperatoritemAccordionComponent } from '../operator-item-accordion/operator-item-accordion.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { OperatoritemAccordionComponent } from '../operator-item-accordion/operator-item-accordion.component';
 
 @Component({
   selector: 'app-operator-task-tab',
@@ -26,7 +25,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 })
 export class OperatorTaskTabComponent implements OnInit, OnChanges, AfterViewInit{
 
-  @Input() order!: orderTO;
+ @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
   
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
@@ -35,95 +34,69 @@ export class OperatorTaskTabComponent implements OnInit, OnChanges, AfterViewIni
   @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
 
   taskIndex: number | null = 0;
-  orderExists: boolean= false;
   tasks!: taskTO[];
-  
 
-  constructor(public dialog: MatDialog,
-              private cdr:ChangeDetectorRef,
-              private snackBar: MatSnackBar
-  ){}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     if (this.workflowIndex == null) {
       this.workflowIndex = 0;
       setTimeout(() => {
-      this.setTabGroupIndex(0);
-    })
+        this.setTabGroupIndex(0);
+      });
     }
   }
 
   ngAfterViewInit(): void {
-     setTimeout(() => {
+    setTimeout(() => {
       this.setTabGroupIndex(0);
-    })
+    });
   }
 
   setTabGroupIndex(index: number): void {
     setTimeout(() => {
       this.tabGroup.selectedIndex = index;
-      this.cdr.detectChanges(); 
+      this.cdr.detectChanges();
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['workflowIndex']) {
-      this.taskIndex = 0;
-      this.onWorkflowChange.emit(this.workflowIndex);
+  // ngOnChanges(): void {
+  //   if (changes['workflowIndex']) {
+  //     this.taskIndex = 0;
+  //     this.onWorkflowChange.emit(this.workflowIndex);
+  //   }
+  //   if (changes['workflowIndex'] || changes['order'] || changes['taskIndex']) {
+  //     this.getTasksForSelectedWorkflow();
+  //     console.log('Relevant changes detected:', changes);
+  //   }
+  // }
+ngOnChanges(): void {
+    if (this.workflowIndex !== null && this.order?.workflows) {
+        this.tasks = this.order.workflows[this.workflowIndex]?.tasks || [];
+        console.log('Tasks for workflow:', this.tasks);
     }
-    if (changes['workflowIndex'] || changes['order'] || changes['taskIndex']) {
-      this.getTasksForSelectedWorkflow();
-      console.log('Relevant changes detected:', changes);
-    }
-  }
+}
 
-  getTasksForSelectedWorkflow() {
-    if(this.workflowIndex != null && this.order.workflows) {
+
+
+  getTasksForSelectedWorkflow(): void {
+    if (this.workflowIndex != null && this.order.workflows) {
       this.tasks = [...this.order.workflows[this.workflowIndex].tasks];
-    }else{
-      this.tasks=[];
+    } else {
+      this.tasks = [];
     }
   }
 
-
-  updateItemsInOrder(event: orderTO){
-    // if(this.workflowIndex!=null && this.taskIndex!=null){
-      this.onOrderUpdate.emit(this.order);
-    // }
-  }
-
-  onTaskSelected(taskIndex: number) {
+  onTaskSelected(taskIndex: number): void {
     this.ontaskChange.emit(taskIndex);
   }
-
 
   showSnackbar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 1500
     });
   }
-
-  // ---Drag functions--------------------
-  drop(event: CdkDragDrop<taskTO[]>){
-    let previousIndex = parseInt(event.previousContainer.id.replace("task-",""));
-    let currentIndex = parseInt(event.container.id.replace("task-",""));
-    moveItemInArray(this.tasks, previousIndex, currentIndex);
-    if(this.workflowIndex!=null){
-      this.order.workflows[this.workflowIndex].tasks= [...this.tasks];
-    }
-    this.onOrderUpdate.emit(this.order);
-  }
-
- getAllDragTabs(index:number){
-    let taskList = []
-    for(let i=0;i<this.tasks.length;i++){
-      if(i!=index){
-        taskList.push("task-"+i);
-      }
-    }
-    return taskList;
-  }
-// ----------------------------------------------
-
-
 }
