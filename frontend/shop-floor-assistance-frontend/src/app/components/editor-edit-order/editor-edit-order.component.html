@@ -17,6 +17,25 @@
                             <td class="field">Description:</td>
                             <td class="value">{{order.description}}</td>
                         </tr>
+                        <tr>
+                            <td class="field">Equipments:</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                @for(equipment of order.equipment; track $index){
+                                    <tr class="value">{{equipment.name}}</tr>
+                                }
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td class="field">Product Before:</td>
+                            <td class="value">{{order.productBefore}}</td>
+                        </tr>
+                        <tr>
+                            <td class="field">Product After:</td>
+                            <td class="value">{{order.productAfter.name}}</td>
+                        </tr> -->
                     </tbody>
                 </table>
                 }@else {

@@ -157,9 +157,13 @@ export class BackendCommunicationService {
     return this.http.post<HttpResponse<any>>(`${this.apiServerURL}editor/workflows/suggestions`, productAfter, { headers, observe: 'response' });
   }
 
-  // getTaskSuggestions(productAfter: productTO): Observable<any> {
-    
-  // }
-  // getItemSuggestions(productAfter: productTO): Observable<any> {
-  // }
+  getTaskSuggestions(productAfter: productTO): Observable<HttpResponse<any>> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<HttpResponse<any>>(`${this.apiServerURL}editor/tasks/suggestions`, productAfter, { headers, observe: 'response' });
+  }
+
+  getItemSuggestions(productAfter: productTO): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<HttpResponse<any>>(`${this.apiServerURL}editor/items/suggestions`, productAfter, { headers, observe: 'response' });
+  }
 }
