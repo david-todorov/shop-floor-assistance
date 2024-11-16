@@ -12,6 +12,7 @@ import { SuggestionsService } from '../../../services/suggestions.service';
 import { itemDropEvent } from '../../../types/itemDropEventType';
 import { CommonModule } from '@angular/common';
 import { dummyOrder, sampleItems, sampleTasks, sampleWorkflows } from '../../../types/dummyData';
+import { Global } from '../../../services/globals';
 
 @Component({
   selector: 'app-suggestions',
@@ -28,14 +29,17 @@ import { dummyOrder, sampleItems, sampleTasks, sampleWorkflows } from '../../../
 })
 export class SuggestionsComponent implements OnInit{
   receivedItemIds: string[]=[];
+  receivedTaskIds: string[]=[];
+  id_container: string= Global.task_suggestions_container_id;
 
   constructor(private suggestionService: SuggestionsService){}
 
   ngOnInit(): void {
-    this.receivedItemIds= this.suggestionService.getDropListIds();
+    this.receivedItemIds= this.suggestionService.getDropItemIds();
+    this.receivedTaskIds= this.suggestionService.getDropTaskIds();
   }
   
-  drop(event: CdkDragDrop<itemTO[]> | CdkDragDrop<workflowTO[]>) {
+  drop(event: CdkDragDrop<itemTO[]> | CdkDragDrop<workflowTO[]> | CdkDragDrop<taskTO[]>) {
     if (event.previousContainer === event.container){
       // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       const item = event.container.data[event.previousIndex];

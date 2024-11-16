@@ -2,7 +2,7 @@
     @if(items && items.length>0){
         <mat-accordion 
         cdkDropList 
-        [id]="dropListIdFromTask"
+        [id]="dropItemIdFromTask"
         [cdkDropListData]="items"
         (cdkDropListDropped)="drop($event)"
         >

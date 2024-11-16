@@ -5,8 +5,14 @@
         @for(task of tasks;track $index){
             <mat-tab >
                 <ng-template mat-tab-label>
-                    <div [id]="'task-'+$index" class="drag-list" cdkDropList cdkDropListOrientation="horizontal" 
-                    (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="getAllDragTabs($index)">
+                    <div class="drag-list"  
+                        #taskElement
+                        cdkDropList [id]="'task-'+$index" 
+                        cdkDropListOrientation="horizontal" 
+                        (cdkDropListDropped)="drop($event)" 
+                        [cdkDropListConnectedTo]="getAllDragTabs($index)"
+                        
+                        >
                         <div class="drag-box flex flex-row items-center " cdkDrag>
                             <span class="mx-4 px- pt-1 text-lg ">{{ task.name }}</span>
                             <div class="pt-3 justify-center">
@@ -36,7 +42,7 @@
                         [order]="order"
                         [workflowIndex]="workflowIndex"
                         [taskIndex]="taskIndex"
-                        [dropListIdFromTask]="'itemsInTasks'+$index"
+                        [dropItemIdFromTask]="'itemsInTasks'+$index"
                         
                         (onOrderUpdate)="updateItemsInOrder($event)" 
                         >

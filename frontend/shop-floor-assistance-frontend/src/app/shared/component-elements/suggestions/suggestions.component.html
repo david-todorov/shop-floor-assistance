@@ -25,8 +25,27 @@
                     </mat-accordion>
                 </div>
             }@else if (elementSelected==='Tasks'){
-                <div>
-                    <p>Tasks selected</p>
+                <div class=" w-full">
+                    <mat-accordion 
+                        cdkDropList [id]="id_container" 
+                        [cdkDropListData]="tasks_suggestions"
+                        (cdkDropListDropped)="drop($event)" 
+                        [cdkDropListConnectedTo]="receivedTaskIds"
+                        >
+                        @for(task of tasks_suggestions; track $index){
+                        <mat-expansion-panel cdkDrag>
+                            <mat-expansion-panel-header class="">
+                                <mat-panel-title class=" flex flex-row justify-between w-1/2">
+                                    {{ task.name }}
+                                    <!-- <p class="">Time required (minutes): {{ item.timeRequired }}</p> -->
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="expansion-panel-content">
+                                <p>{{ task.description }}</p>
+                            </div>
+                        </mat-expansion-panel>
+                        }
+                    </mat-accordion>
                 </div>
             }@else if(elementSelected==='Items'){
                 <div class=" w-full">

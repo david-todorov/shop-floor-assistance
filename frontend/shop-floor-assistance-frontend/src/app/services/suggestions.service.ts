@@ -9,16 +9,33 @@ import { itemDropEvent } from '../types/itemDropEventType';
 })
 export class SuggestionsService {
   
-  private dropListIds: string[] = [];
+  private dropItemIds: string[] = [];
+  private dropTaskIds: string[] = [];
 
-  addDropListId(id: string): void {
-    if (!this.dropListIds.includes(id)) {
-      this.dropListIds.push(id);
+
+  addDropItemId(id: string): void {
+    if (!this.dropItemIds.includes(id)) {
+      this.dropItemIds.push(id);
     }
   }
 
-  getDropListIds(): string[] {
-    return this.dropListIds;
+  getDropItemIds(): string[] {
+    return this.dropItemIds;
   }
+
+  addDropTaskId(id: string): void {
+    if (!this.dropTaskIds.includes(id)) {
+      this.dropTaskIds.push(id);
+    }
+  }
+
+  getDropTaskIds(): string[] {
+    return this.dropTaskIds;
+  }
+
+  setDropTaskIdArray(tasklist: string[]){
+    this.dropTaskIds= tasklist;
+  }
+
   
 }

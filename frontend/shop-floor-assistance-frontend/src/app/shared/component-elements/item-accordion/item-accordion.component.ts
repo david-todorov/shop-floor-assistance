@@ -54,8 +54,8 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   checkStatuses: {[workflow: number]: { [task: number]: {[item: number]: boolean}}} = {};
   @ViewChild(MatAccordion) accordion!: MatAccordion;
 
-  @Input() dropListIdFromTask: string='itemsInTasks';
-  dropListIds: string[] = [];
+  @Input() dropItemIdFromTask: string='itemsInTasks';
+  dropItemIds: string[] = [];
 
   //-----------------------------------------
 
@@ -74,8 +74,8 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     if (Object.keys(this.checkStatuses).length === 0) {
       this.initializeCheckStatuses();
     }
-    this.dropListIds.push(this.dropListIdFromTask);
-    this.suggestionService.addDropListId(this.dropListIdFromTask);
+    // this.dropItemIds.push(this.dropItemIdFromTask);
+    this.suggestionService.addDropItemId(this.dropItemIdFromTask);
   }
 
 
