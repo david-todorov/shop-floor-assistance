@@ -20,30 +20,30 @@
 
     <div class="font-semibold">Equipment</div>
     <div>
-      <select class="input-field" [(ngModel)]="order.equipment" title="Select Equipment">
+      <select class="input-field" [(ngModel)]="selectedEquipment" (ngModelChange)="onEquipmentChange($event)" title="Equipment" required>
         <option *ngFor="let equipment of equipmentList" [ngValue]="equipment">{{ equipment.equipmentNumber }}</option>
       </select>
     </div>
 
     <div class="font-semibold">Product (old)</div>
     <div>
-      <select class="input-field" [(ngModel)]="order.productBefore" title="Product Before">
+      <select class="input-field" [(ngModel)]="selectedProductBefore" (ngModelChange)="onProductBeforeChange($event)" title="Product Before" required>
         <option *ngFor="let product of productList" [ngValue]="product">{{ product.productNumber }}</option>
       </select>
     </div>
 
     <div class="font-semibold">Product (new)</div>
     <div>
-      <select class="input-field" [(ngModel)]="order.productAfter" title="Product After">
+      <select class="input-field" [(ngModel)]="selectedProductAfter" (ngModelChange)="onProductAfterChange($event)" title="Product After" required>
         <option *ngFor="let product of productList" [ngValue]="product">{{ product.productNumber }}</option>
       </select>
     </div>
   </div>
 
   <div class="order-form text-center mt-4">
-    <app-button (click)="submitOrderData()" [disabled]="nextDisabled"
-            [label]="nextBtnLabel"></app-button>
+    <app-button (click)="saveOrder($event)" [disabled]="createDisabled"
+            [label]="createBtnLabel"></app-button>
   </div>
 
 <!-- EditorCreateOrderComponent as a child component -->
-<!-- <app-editor-create-order [order]="order"></app-editor-create-order> -->
+<!-- <app-editor-create-order [orderData]="order"></app-editor-create-order>  -->
