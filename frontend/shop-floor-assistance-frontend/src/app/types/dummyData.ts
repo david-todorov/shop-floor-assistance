@@ -21,7 +21,7 @@ export const dummyOrder: orderTO= {
         "type": "8x2 blister"
          }
     ],
-    "productBefore": [
+    "productBefore":
         {   "id": 1,
             "productNumber": "P0001",
             "name": "Aspirin XYZ",
@@ -32,8 +32,7 @@ export const dummyOrder: orderTO= {
             "language": "German",
             "description": "8x2 Blister"
         },
-    ],
-    "productAfter": [
+    "productAfter":
         {   "id": 5,
             "productNumber": "P0002",
             "name": "Opium ABC",
@@ -43,8 +42,7 @@ export const dummyOrder: orderTO= {
             "country": "Germany",
             "packageSize": "8x2",
             "packageType": "Blister"
-        }
-    ],
+        },
     "workflows": [
         {
             "name": "Change Over",
@@ -519,7 +517,7 @@ export const sampleOrders: orderTO[]=
         "type": "8x2 blister"
          }
     ],
-    "productBefore": [
+    "productBefore":
         {   "id": 1,
             "productNumber": "P0001",
             "name": "Aspirin XYZ",
@@ -530,8 +528,7 @@ export const sampleOrders: orderTO[]=
             "language": "German",
             "description": "8x2 Blister"
         },
-    ],
-    "productAfter": [
+    "productAfter":
         {   "id": 4,
             "productNumber": "P0004",
             "name": "Aspirin XYZ",
@@ -542,7 +539,6 @@ export const sampleOrders: orderTO[]=
             "packageSize": "8x2",
             "packageType": "Blister"
         },
-    ],
     "workflows": [
         {
             "name": "Change Over",
@@ -756,7 +752,7 @@ export const sampleOrders: orderTO[]=
         "type": "8x2 blister"
          }
     ],
-    "productBefore": [
+    "productBefore":
         {   "id": 1,
             "productNumber": "P0001",
             "name": "Aspirin XYZ",
@@ -767,8 +763,7 @@ export const sampleOrders: orderTO[]=
             "language": "German",
             "description": "8x2 Blister"
         },
-    ],
-    "productAfter": [
+    "productAfter":
         {   "id": 4,
             "productNumber": "P0004",
             "name": "Aspirin XYZ",
@@ -779,7 +774,6 @@ export const sampleOrders: orderTO[]=
             "packageSize": "8x2",
             "packageType": "Blister"
         },
-    ],
     "workflows": [
         {
             "name": "Change Over",
@@ -893,7 +887,7 @@ export const sampleOrders: orderTO[]=
         "type": "8x2 blister"
          }
     ],
-    "productBefore": [
+    "productBefore":
         {   "id": 5,
             "productNumber": "P0002",
             "name": "Opium ABC",
@@ -904,8 +898,7 @@ export const sampleOrders: orderTO[]=
             "packageSize": "8x2",
             "packageType": "Blister"
         },
-    ],
-    "productAfter": [
+    "productAfter":
         {   "id": 1,
             "productNumber": "P0001",
             "name": "Aspirin XYZ",
@@ -916,7 +909,6 @@ export const sampleOrders: orderTO[]=
             "language": "German",
             "description": "8x2 Blister"
         },
-    ],
     "workflows": [
         {
             "name": "Change Over",
@@ -1130,7 +1122,7 @@ export const sampleOrders: orderTO[]=
         "type": "8x2 blister"
          }
     ],
-    "productBefore": [
+    "productBefore":
         {   "id": 1,
             "productNumber": "P0001",
             "name": "Aspirin XYZ",
@@ -1141,8 +1133,7 @@ export const sampleOrders: orderTO[]=
             "language": "German",
             "description": "8x2 Blister"
         },
-    ],
-    "productAfter": [
+    "productAfter":
         {   "id": 5,
             "productNumber": "P0002",
             "name": "Opium ABC",
@@ -1153,7 +1144,6 @@ export const sampleOrders: orderTO[]=
             "packageSize": "8x2",
             "packageType": "Blister"
         },
-    ],
     "workflows": [
         {
             "name": "Change Over",

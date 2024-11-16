@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { userRoleTO, userTO } from '../types/userTO';
 import { loginState } from '../shared/component-elements/login-state';
+import { productTO } from '../types/productTO';
 // import { productTO } from '../types/productTO';
 
 @Injectable({
@@ -147,6 +148,16 @@ export class BackendCommunicationService {
   }
 
   //Suggestions
-  
-
+  getWorkflowSuggestions(productAfter: productTO): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(`${this.apiServerURL}editor/workflows/suggestions`, JSON.stringify(productAfter), {headers});
+  }
+  getTaskSuggestions(productAfter: productTO): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(`${this.apiServerURL}editor/tasks/suggestions`, JSON.stringify(productAfter), {headers});
+  }
+  getItemSuggestions(productAfter: productTO): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(`${this.apiServerURL}editor/items/suggestions`, JSON.stringify(productAfter), {headers});
+  }
 }
