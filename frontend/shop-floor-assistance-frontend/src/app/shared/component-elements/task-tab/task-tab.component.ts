@@ -30,12 +30,6 @@ import { ButtonComponent } from '../button/button.component';
 })
 export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
 
-
-
-
-
-
-
   @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
   

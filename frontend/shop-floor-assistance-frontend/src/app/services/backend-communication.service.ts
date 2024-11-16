@@ -146,4 +146,7 @@ export class BackendCommunicationService {
     return this.http.delete(`${this.apiServerURL}editor/products/${id}`);
   }
 
+  //Suggestions
+  
+
 }

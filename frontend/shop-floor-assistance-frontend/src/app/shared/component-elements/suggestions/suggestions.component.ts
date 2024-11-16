@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { workflowTO } from '../../../types/workflowTO';
@@ -28,20 +28,24 @@ import { Global } from '../../../services/globals';
   styleUrl: './suggestions.component.css'
 })
 export class SuggestionsComponent implements OnInit{
+onElementSelected(event: any) {
+  console.log(event)
+}
   receivedItemIds: string[]=[];
   receivedTaskIds: string[]=[];
   id_container: string= Global.task_suggestions_container_id;
+  @Input() orderId!: number;
 
   constructor(private suggestionService: SuggestionsService){}
 
   ngOnInit(): void {
+    console.log('order id is', this.orderId)
     this.receivedItemIds= this.suggestionService.getDropItemIds();
     this.receivedTaskIds= this.suggestionService.getDropTaskIds();
   }
   
   drop(event: CdkDragDrop<itemTO[]> | CdkDragDrop<workflowTO[]> | CdkDragDrop<taskTO[]>) {
     if (event.previousContainer === event.container){
-      // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       const item = event.container.data[event.previousIndex];
       event.container.data.splice(event.previousIndex, 1);
       event.container.data.splice(event.currentIndex, 0, item);
