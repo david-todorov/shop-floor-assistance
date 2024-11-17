@@ -11,7 +11,7 @@ import { EditorCreateEquipmentComponent } from './components/editor-create-equip
 import { EditorCreateProductComponent } from './components/editor-create-product/editor-create-product.component';
 import { EditorEditEquipmentComponent } from './components/editor-edit-equipment/editor-edit-equipment.component';
 import { EditorEditProductComponent } from './components/editor-edit-product/editor-edit-product.component';
-import { EditorCreateOrderComponent } from './components/editor-create-order-form/editor-create-order.component';
+import { EditorCreateOrderComponent } from './components/editor-create-order/editor-create-order.component';
 import { CreateEquipmentFromExistingComponent } from './components/create-equipment-from-existing/create-equipment-from-existing.component';
 import { EquipmentCreationOptionComponent } from './components/equipment-creation-option/equipment-creation-option.component';
 import { ProductCreationOptionComponent } from './components/product-creation-option/product-creation-option.component';

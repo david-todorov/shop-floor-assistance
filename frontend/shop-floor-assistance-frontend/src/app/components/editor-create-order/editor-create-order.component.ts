@@ -9,8 +9,20 @@ import { equipmentTO } from '../../types/equipmentTO';
 import { productTO } from '../../types/productTO';
 import { orderTO } from '../../types/orderTO';
 
+const defaultProduct: productTO = {
+  id: 0,
+  productNumber: "DEFAULT",
+  name: "Default Product",
+  language: "N/A",
+  type: "N/A",
+  country: "N/A",
+  packageSize: "N/A",
+  packageType: "N/A",
+  description: "Default product description"
+};
+
 @Component({
-  selector: 'app-order-form',
+  selector: 'app-editor-create-order',
   standalone: true,
   imports: [FormsModule, CommonModule, ButtonComponent],
   templateUrl: './editor-create-order.component.html',
@@ -21,9 +33,9 @@ export class EditorCreateOrderComponent implements OnInit {
     orderNumber: "",
     name: "",
     description: "",
+    productAfter: defaultProduct,
+    productBefore: defaultProduct,
     equipment: [],
-    productAfter: null,
-    productBefore: null,
     workflows: []
   };
 
@@ -101,14 +113,14 @@ export class EditorCreateOrderComponent implements OnInit {
   }
 
   onProductBeforeChange(selectedProductBefore: productTO) {
-  console.log('Selected Product Before:', this.selectedProductBefore);
-  this.order.productBefore = selectedProductBefore;
-}
+    console.log('Selected Product Before:', this.selectedProductBefore);
+    this.order.productBefore = selectedProductBefore;
+  }
 
-onProductAfterChange(selectedProductAfter: productTO) {
-  console.log('Selected Product After:', this.selectedProductAfter);
-  this.order.productAfter = selectedProductAfter;
-}
+  onProductAfterChange(selectedProductAfter: productTO) {
+    console.log('Selected Product After:', this.selectedProductAfter);
+    this.order.productAfter = selectedProductAfter;
+  }
 
   saveOrder(event: MouseEvent) {
     if (event.type === 'click' && this.isFormComplete()) {
