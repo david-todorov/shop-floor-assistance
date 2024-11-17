@@ -40,7 +40,7 @@ export class EditorCreateOrderComponent implements OnInit {
   };
 
   equipmentList: equipmentTO[] = [];
-  selectedEquipment: equipmentTO | null = null;
+  selectedEquipment: equipmentTO[] = []; //Allow user to choose multiple equipment
   productList: productTO[] = [];
   selectedProductBefore: productTO | null = null;
   selectedProductAfter: productTO | null = null;
@@ -86,9 +86,9 @@ export class EditorCreateOrderComponent implements OnInit {
       .subscribe((equipment: equipmentTO[]) => this.equipmentList = equipment);
   }
 
-  onEquipmentChange(selectedEquipment: equipmentTO) {
-    console.log('Selected Equipment:', selectedEquipment);
-    this.order.equipment = [selectedEquipment];
+  onEquipmentChange(selectedEquipments: equipmentTO[]) {
+    console.log('Selected Equipment:', selectedEquipments);
+    this.order.equipment = [...selectedEquipments];
   }
 
 

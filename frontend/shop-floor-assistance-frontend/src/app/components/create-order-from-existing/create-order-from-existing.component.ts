@@ -45,7 +45,7 @@ export class CreateOrderFromExistingComponent {
   createBtnLabel: string = 'Create Order';
   orderNumberExists: boolean = false;
   equipmentList: equipmentTO[] = [];
-  selectedEquipment: equipmentTO | null = null;
+  selectedEquipment: equipmentTO[] = [];
   productList: productTO[] = [];
   selectedProductBefore: productTO | null = null;
   selectedProductAfter: productTO | null = null;
@@ -81,9 +81,9 @@ export class CreateOrderFromExistingComponent {
       });
   }
 
-  onEquipmentChange(selectedEquipment: equipmentTO) {
-    console.log('Selected Equipment:', selectedEquipment);
-    this.order.equipment = [selectedEquipment];
+  onEquipmentChange(selectedEquipments: equipmentTO[]) {
+    console.log('Selected Equipment:', selectedEquipments);
+    this.order.equipment = [...selectedEquipments];
   }
 
 
@@ -138,7 +138,7 @@ export class CreateOrderFromExistingComponent {
   selectSuggestion(suggestion: orderTO) {
     console.log("Order suggestion selected:", suggestion);
     this.selectedOrder = { ...suggestion, orderNumber: "" }; // Copy selected order but reset the order number
-    this.selectedEquipment = suggestion.equipment?.[0] || null; 
+    this.selectedEquipment = suggestion.equipment || []; 
     this.selectedProductBefore = suggestion.productBefore || null; 
     this.selectedProductAfter = suggestion.productAfter || null; 
   }

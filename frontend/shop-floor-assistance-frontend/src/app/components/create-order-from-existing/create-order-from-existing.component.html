@@ -69,10 +69,13 @@
             [(ngModel)]="selectedEquipment"
             (ngModelChange)="onEquipmentChange($event)"
             title="Equipment"
-            required
+             multiple required
           >
-            <option *ngIf="selectedEquipment" [ngValue]="selectedEquipment">Current: {{ selectedEquipment.equipmentNumber }}
+            <!-- Display all currently selected equipment -->
+            <option *ngFor="let equipment of selectedEquipment" [ngValue]="equipment">
+            Current: {{ equipment.equipmentNumber }}
             </option>
+            <!-- Display all available equipment -->
             <option *ngFor="let equipment of equipmentList" [ngValue]="equipment">{{ equipment.equipmentNumber }}
             </option>
           </select>

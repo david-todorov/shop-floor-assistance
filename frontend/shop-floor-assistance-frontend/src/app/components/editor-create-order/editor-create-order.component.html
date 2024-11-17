@@ -21,7 +21,7 @@
     <div class="font-semibold">Equipment</div>
     <div>
       <select class="input-field" [(ngModel)]="selectedEquipment" (ngModelChange)="onEquipmentChange($event)"
-        title="Equipment" required>
+        title="Equipment" multiple required>
         <option *ngFor="let equipment of equipmentList" [ngValue]="equipment">{{ equipment.equipmentNumber }}</option>
       </select>
     </div>
@@ -46,6 +46,3 @@
   <div class="order-form text-center mt-4">
     <app-button (click)="saveOrder($event)" [disabled]="createDisabled" [label]="createBtnLabel"></app-button>
   </div>
-
-  <!-- EditorCreateOrderComponent as a child component -->
-  <!-- <app-editor-create-order [orderData]="order"></app-editor-create-order>  -->
