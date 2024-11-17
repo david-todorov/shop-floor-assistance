@@ -1,47 +1,85 @@
-<!-- <div class="col-span-2  w-full h-5/6  p-4 ">
-    <div class="main-container">
-        <div>
+<div class="col-span-2  w-full h-5/6  p-4 ">
+    <div class="main-container shadow-lg">
+        <div >
             @if(elementSelected==='Workflows') {
-                <div>
-                    <p>Workflows selected</p>
+                <div class=" w-full">
+                    <mat-accordion 
+                        cdkDropList id="workflows_suggestions" 
+                        [cdkDropListData]="workflows_suggestions" 
+                        (cdkDropListDropped)="drop($event)"
+                        [cdkDropListConnectedTo]="'workflows'"
+                        >
+                        @for(workflow of workflows_suggestions; track $index){
+                        <mat-expansion-panel cdkDrag>
+                            <mat-expansion-panel-header class="">
+                                <mat-panel-title class=" flex flex-row justify-between w-1/2">
+                                    {{ workflow.name }}
+                                    <!-- <p class="">Time required (minutes): {{ item.timeRequired }}</p> -->
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="expansion-panel-content">
+                                <p>{{ workflow.description }}</p>
+                            </div>
+                        </mat-expansion-panel>
+                        }
+                    </mat-accordion>
                 </div>
             }@else if (elementSelected==='Tasks'){
-                <div>
-                    <p>Tasks selected</p>
+                <div class=" w-full">
+                    <mat-accordion 
+                        cdkDropList [id]="id_container" 
+                        [cdkDropListData]="tasks_suggestions"
+                        (cdkDropListDropped)="drop($event)" 
+                        [cdkDropListConnectedTo]="receivedTaskIds"
+                        >
+                        @for(task of tasks_suggestions; track $index){
+                        <mat-expansion-panel cdkDrag>
+                            <mat-expansion-panel-header class="">
+                                <mat-panel-title class=" flex flex-row justify-between w-1/2">
+                                    {{ task.name }}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="expansion-panel-content">
+                                <p>{{ task.description }}</p>
+                            </div>
+                        </mat-expansion-panel>
+                        }
+                    </mat-accordion>
                 </div>
             }@else if(elementSelected==='Items'){
-                <div>
-                    
-                        <mat-accordion     
-                        cdkDropList id="items_sugg" 
-                        [cdkDropListData]="items_sugg" 
+                <div class=" w-full">
+                    <mat-accordion     
+                        cdkDropList id="items_suggestions" 
+                        [cdkDropListData]="items_suggestions" 
                         (cdkDropListDropped)="drop($event)"
+                        [cdkDropListConnectedTo]="receivedItemIds"
                         >
-                        @for(item of items_sugg; track $index){
+                        @for(item of items_suggestions; track $index){
                             <mat-expansion-panel cdkDrag>
-                                <mat-expansion-panel-header>
-                                    <mat-panel-title class="flex flex-row justify-between w-1/2">
+                                <mat-expansion-panel-header class="">
+                                    <mat-panel-title class=" flex flex-row justify-between w-1/2">
                                         {{ item.name }}
                                         <p class="">Time required (minutes): {{ item.timeRequired }}</p>
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <div class="expansion-panel-content">
-                                    <p>{{ item.longDescription }}</p>
+                                    <p>{{ item.description }}</p>
                                 </div>
                             </mat-expansion-panel>
                         }
                     </mat-accordion>
                 </div>
-            }    
+            }
         </div>
     </div>
     <div>
-        <mat-radio-group class="radio-group align-bottom justify-end border border-purple-500" [(ngModel)]="elementSelected">
+       
+        <mat-radio-group class="radio-group align-bottom justify-end items-center" [(ngModel)]="elementSelected" (ngModelChange)="onElementSelected($event)">
+            <p class="font-bold text-lg">Get suggestions for:</p>
             @for (element of elementsOffered; track element) {
-            <mat-radio-button class="radio-button" [value]="element">{{element}}</mat-radio-button>
+                <mat-radio-button class="radio-button" [value]="element">{{element}}</mat-radio-button>
             }
         </mat-radio-group>
     </div>
 </div>
- -->
- <p>suggestions here</p>
+ 

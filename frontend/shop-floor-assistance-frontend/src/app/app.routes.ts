@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { LoginRegisterComponent } from './components/login-register/login-register.component';
 import { OperatorComponent } from './components/operator/operator.component';
-import { OperatorViewWorkflowComponent } from './components/operator-view-workflow/operator-view-workflow.component';
 import { EditorOrderComponent } from './components/editor-order/editor-order.component';
 import { EditorEditOrderComponent } from './components/editor-edit-order/editor-edit-order.component';
 import { EditorHomepageComponent } from './components/editor-homepage/editor-homepage.component';
@@ -23,7 +22,7 @@ export const routes: Routes = [
     { path: '', component: WelcomeComponent },
     { path: 'login', component: LoginRegisterComponent },
     { path: 'operator/orders', component: OperatorComponent, },
-    { path: 'operator/orders/:id', component: OperatorViewWorkflowComponent, },
+    // { path: 'operator/orders/:id', component: OperatorViewWorkflowComponent, },
     { path: 'editor/orders', component: EditorOrderComponent, },
     { path: 'editor/orders/:id', component:EditorEditOrderComponent,},
     { path: 'editor-orders/order-form', component: OrderFormComponent, },

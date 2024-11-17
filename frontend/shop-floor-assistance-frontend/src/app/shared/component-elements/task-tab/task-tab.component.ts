@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { orderTO } from '../../../types/orderTO';
@@ -8,7 +8,10 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { ItemAccordionComponent } from '../item-accordion/item-accordion.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { SuggestionsService } from '../../../services/suggestions.service';
+import { Global } from '../../../services/globals';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-task-tab',
@@ -20,6 +23,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
     MatDialogModule,
     ItemAccordionComponent,
     DragDropModule,
+    ButtonComponent
   ],
   templateUrl: './task-tab.component.html',
   styleUrl: './task-tab.component.css'
@@ -38,31 +42,62 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
   orderExists: boolean= false;
   tasks!: taskTO[];
   btnLabelAddTask: string= 'Add task';
+  itemsInTasks: string='itemsInTasks';
 
   constructor(public dialog: MatDialog,
               private cdr:ChangeDetectorRef,
-              private snackBar: MatSnackBar
+              private snackBar: MatSnackBar,
+              private suggestionService: SuggestionsService,
   ){}
 
   ngOnInit(): void {
     if (this.workflowIndex == null) {
       this.workflowIndex = 0;
-      setTimeout(() => {
+      this.taskIndex = 0;
       this.setTabGroupIndex(0);
-    })
     }
+  //      this.taskElements.forEach((taskElement, index) => {
+  //   const id = taskElement.nativeElement.id;
+  //   console.log(`Task element ID for index ${index}:`, id);
+  // });
   }
 
   ngAfterViewInit(): void {
-     setTimeout(() => {
+      // setTimeout(() => {
       this.setTabGroupIndex(0);
-    })
+    // })
+    //  this.tasks.forEach((_, i) => {
+    //   const dropTaskId = `task-${i}`;
+    //   this.suggestionService.addDropTaskId(dropTaskId);
+    // });
+    // console.log('all tabs,', this.suggestionService.getDropTaskIds())
+    // this.taskElements.forEach((taskElement, index) => {
+    // const dropTaskId = taskElement.nativeElement.id;
+    // // console.log(`Task element ID for index ${index}:`, dropTaskId);
+    // this.suggestionService.addDropTaskId(dropTaskId);
+  // });
   }
 
-  setTabGroupIndex(index: number): void {
-    setTimeout(() => {
-      this.tabGroup.selectedIndex = index;
-      this.cdr.detectChanges(); 
+
+
+  async setTabGroupIndex(index: number): Promise<void> {
+    await this.waitForTabGroup();
+    this.tabGroup.selectedIndex = index;
+    this.cdr.detectChanges();
+  }
+
+  private waitForTabGroup(): Promise<void>{
+    return new Promise((resolve)=>{
+      if(this.tabGroup){
+        resolve();
+      }else{
+        const interval= setInterval(()=>{
+          if(this.tabGroup){
+            clearInterval(interval);
+            resolve();
+          }
+        },50);
+      }
     });
   }
 
@@ -158,22 +193,51 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
 
   // ---Drag functions--------------------
   drop(event: CdkDragDrop<taskTO[]>){
-    let previousIndex = parseInt(event.previousContainer.id.replace("task-",""));
-    let currentIndex = parseInt(event.container.id.replace("task-",""));
-    moveItemInArray(this.tasks, previousIndex, currentIndex);
     if(this.workflowIndex!=null){
-      this.order.workflows[this.workflowIndex].tasks= [...this.tasks];
-    }
+      let currentIndex = parseInt(event.previousContainer.id.replace("task-",""));
+      let targetIndex = parseInt(event.container.id.replace("task-",""));
+      let sourceArray!: taskTO[]; 
+      let sourceIndex!: number;
+
+      const tasks= this.order.workflows[this.workflowIndex].tasks
+
+      if(event.previousContainer.id=== Global.task_suggestions_container_id){
+        sourceArray= event.previousContainer.data;
+        sourceIndex= event.previousIndex;
+      }else{
+        sourceArray= tasks;
+        sourceIndex= currentIndex;
+      }
+      transferArrayItem(sourceArray, tasks,sourceIndex,targetIndex);
+      
+      // if(event.previousContainer.id=== Global.task_suggestions_container_id){
+      //    transferArrayItem(
+      //       event.previousContainer.data,
+      //       tasks,
+      //       event.previousIndex,
+      //       targetIndex);
+      // }else{
+      //   transferArrayItem(
+      //     tasks,
+      //     tasks,
+      //     currentIndex,
+      //     targetIndex);}
+      //   }
+      }
     this.onOrderUpdate.emit(this.order);
   }
+
 
  getAllDragTabs(index:number){
     let taskList = []
     for(let i=0;i<this.tasks.length;i++){
       if(i!=index){
         taskList.push("task-"+i);
+        this.suggestionService.addDropTaskId("task-"+i)
       }
     }
+    // this.suggestionService.setDropTaskIdArray(taskList);
+    // console.log('in tasklist in tabsss: tasklist', this.suggestionService.getDropTaskIds())
     return taskList;
   }
 // ----------------------------------------------
