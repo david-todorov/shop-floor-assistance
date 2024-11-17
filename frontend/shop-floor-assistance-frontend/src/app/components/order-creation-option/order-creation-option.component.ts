@@ -12,6 +12,9 @@ import { ButtonComponent } from "../../shared/component-elements/button/button.c
 export class OrderCreationOptionComponent {
   constructor(private router: Router) {}
 
+  createBtnLabel: string = 'From template';
+  createNewBtnLabel: string = 'Create new';
+
   createFromScratch() {
     // Navigate to the "Create from Scratch" component
     this.router.navigateByUrl('/editor-orders/create');

@@ -56,7 +56,7 @@ export class EditorOrderComponent implements OnInit {
     if ($event.type === 'click') {
       if (action === 'create') {
         // Directly navigate to the create equipment route without checking for equipment
-        this.router.navigateByUrl('/editor-orders/order-form');
+        this.router.navigateByUrl('/editor-orders/creation-option');
       } else if (action === 'edit') {
         if (!this.order || this.order.id === undefined) {
           alert('You must specify an order with a valid ID!');

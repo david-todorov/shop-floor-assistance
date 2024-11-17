@@ -16,6 +16,8 @@ import { CreateEquipmentFromExistingComponent } from './components/create-equipm
 import { EquipmentCreationOptionComponent } from './components/equipment-creation-option/equipment-creation-option.component';
 import { ProductCreationOptionComponent } from './components/product-creation-option/product-creation-option.component';
 import { CreateProductFromExistingComponent } from './components/create-product-from-existing/create-product-from-existing.component';
+import { OrderCreationOptionComponent } from './components/order-creation-option/order-creation-option.component';
+import { CreateOrderFromExistingComponent } from './components/create-order-from-existing/create-order-from-existing.component';
 
 export const routes: Routes = [
     { path: '', component: WelcomeComponent },
@@ -24,7 +26,9 @@ export const routes: Routes = [
     // { path: 'operator/orders/:id', component: OperatorViewWorkflowComponent, },
     { path: 'editor/orders', component: EditorOrderComponent, },
     { path: 'editor/orders/:id', component: EditorEditOrderComponent, },
-    { path: 'editor-orders/order-form', component: EditorCreateOrderComponent, },
+    { path: 'editor-orders/creation-option', component: OrderCreationOptionComponent, },
+    { path: 'editor-orders/create', component: EditorCreateOrderComponent, },
+    { path: 'editor-orders/create-from-existing', component: CreateOrderFromExistingComponent, },
     { path: 'editor-homepage', component: EditorHomepageComponent, },
     { path: 'editor/equipment', component: EditorEquipmentComponent, },
     { path: 'editor/equipment/:id', component: EditorEditEquipmentComponent, },
