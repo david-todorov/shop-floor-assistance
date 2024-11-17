@@ -16,6 +16,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./editor-create-product.component.css']
 })
 
+
 export class EditorCreateProductComponent {
   product: productTO = {
     productNumber: '',
