@@ -1,6 +1,5 @@
 export type itemTO = {
   id?: number;
- 
   name: string;
   description?: string;
   timeRequired?: number| null;  

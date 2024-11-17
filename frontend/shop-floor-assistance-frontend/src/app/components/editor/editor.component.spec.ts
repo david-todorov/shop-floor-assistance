@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OperatorTaskTabComponent } from './operator-task-tab.component';
+import { EditorComponent } from './editor.component';
 
-describe('OperatorTaskTabComponent', () => {
-  let component: OperatorTaskTabComponent;
-  let fixture: ComponentFixture<OperatorTaskTabComponent>;
+describe('EditorComponent', () => {
+  let component: EditorComponent;
+  let fixture: ComponentFixture<EditorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OperatorTaskTabComponent]
+      imports: [EditorComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(OperatorTaskTabComponent);
+    fixture = TestBed.createComponent(EditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

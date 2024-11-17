@@ -9,6 +9,7 @@ import { ButtonComponent } from '../../shared/component-elements/button/button.c
 import { SuggestionsComponent } from '../../shared/component-elements/suggestions/suggestions.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { workflowTO } from '../../types/workflowTO';
+import { productTO } from '../../types/productTO';
 
 
 @Component({
@@ -19,14 +20,19 @@ import { workflowTO } from '../../types/workflowTO';
   styleUrl: './editor-edit-order.component.css'
 })
 export class EditorEditOrderComponent {
- btnLabelAddWorkflow: string= 'Add Workflow';
+  btnLabelAddWorkflow: string= 'Add Workflow';
+  orderId!:number;
+  productAfter!:productTO;
+
+  order!: orderTO;
+  selectedWorkflowIndex!: number | null;
 
   constructor(private backendCommunicationService: BackendCommunicationService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar) {
     this.route.params.subscribe(params => {
-      const orderId = params['id'];
-      this.backendCommunicationService.getEditorOrder(orderId).pipe(
+      this.orderId = params['id'];
+      this.backendCommunicationService.getEditorOrder(this.orderId).pipe(
         catchError((err) => {
           console.error(err);
           return of(null);
@@ -35,6 +41,9 @@ export class EditorEditOrderComponent {
         next: (response) => {
           if (response) {
             this.order = response; // Assign the retrieved order data
+            this.productAfter= this.order.productAfter;
+            
+            console.log('product after in edit page is: ', this.productAfter)
           } else {
             console.warn('No order found');
           }
@@ -47,8 +56,7 @@ export class EditorEditOrderComponent {
   }
 
 
-  order!: orderTO;
-  selectedWorkflowIndex!: number | null;
+
 
 
   updateOrder(order: orderTO) {
