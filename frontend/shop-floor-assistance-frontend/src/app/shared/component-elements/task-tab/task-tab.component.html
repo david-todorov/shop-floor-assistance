@@ -1,12 +1,21 @@
-<div class="w-full">
+<div class="w-full flex flex-col ">
+    <div class="flex justify-end -mt-4 mb-3">
+    <app-button (onClick)="resolveAddTAsk($event)" [label]="btnLabelAddTask"></app-button>
+    </div>
     <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" 
          [(selectedIndex)]="taskIndex" (selectedIndexChange)="onTaskSelected($event)" >
          <!-- (selectedIndexChange)="onTabChange($event)"> -->
         @for(task of tasks;track $index){
             <mat-tab >
                 <ng-template mat-tab-label>
-                    <div [id]="'task-'+$index" class="drag-list" cdkDropList cdkDropListOrientation="horizontal" 
-                    (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="getAllDragTabs($index)">
+                    <div class="drag-list"  
+                        #taskElement
+                        cdkDropList [id]="'task-'+$index" 
+                        cdkDropListOrientation="horizontal" 
+                        (cdkDropListDropped)="drop($event)" 
+                        [cdkDropListConnectedTo]="getAllDragTabs($index)"
+                        
+                        >
                         <div class="drag-box flex flex-row items-center " cdkDrag>
                             <span class="mx-4 px- pt-1 text-lg ">{{ task.name }}</span>
                             <div class="pt-3 justify-center">
@@ -31,11 +40,12 @@
                     <p class="text-primary m-2 text-lg underline">Description:</p>
                     <p class=" m-2">{{ task.description }}</p>
                 </div>
-                <div class="m-4 p-2  overflow-hidden border ">
+                <div class="m-4 p-2  overflow-hidden border rounded-lg">
                         <app-item-accordion 
                         [order]="order"
                         [workflowIndex]="workflowIndex"
                         [taskIndex]="taskIndex"
+                        [dropItemIdFromTask]="'itemsInTasks'+$index"
                         
                         (onOrderUpdate)="updateItemsInOrder($event)" 
                         >
@@ -43,13 +53,13 @@
                 </div>
             </mat-tab>
         }
-        <mat-tab >
+        <!-- <mat-tab >
             <ng-template mat-tab-label>
                 <button mat-icon-button (click)="resolveAddTAsk($event)" class="add-task-btn border border-white bg-accent p-2 rounded-tr-md text-xl">
                     <mat-icon>add</mat-icon>
                     Add Task
                 </button>
             </ng-template>
-        </mat-tab>
+        </mat-tab> -->
     </mat-tab-group>
 </div>

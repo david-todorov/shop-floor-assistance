@@ -19,6 +19,7 @@ import { Component } from '@angular/core';
 
 export class EditorCreateProductComponent {
   product: productTO = {
+    id: 0,
     productNumber: '',
     name: '',
     description: '',

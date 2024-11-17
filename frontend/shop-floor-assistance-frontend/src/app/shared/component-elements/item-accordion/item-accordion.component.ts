@@ -11,7 +11,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { orderTO } from '../../../types/orderTO';
 import { UIService } from '../../../services/ui.service';
 import { ButtonComponent } from '../button/button.component';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Subscription } from 'rxjs';
+import { SuggestionsService } from '../../../services/suggestions.service';
+import { itemDropEvent } from '../../../types/itemDropEventType';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -32,14 +36,6 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
   styleUrl: './item-accordion.component.css'
 })
 export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
-    drop(event: CdkDragDrop<itemTO[]>): void {
-      if(this.workflowIndex!=null && this.taskIndex!=null){
-        const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
-        moveItemInArray(items, event.previousIndex, event.currentIndex);
-      }
-    this.onOrderUpdate.emit(this.order);
-  }
-
 
   @Input() order!:orderTO;
   @Input() workflowIndex!:number | null;
@@ -51,14 +47,22 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   items!:itemTO[];
   btnLabelAddItem: string= 'Add Item'
 
+
   //-Helper variables to maintain UI state
   itemUIStates: itemUIStates= {};
   itemIndices: {[workflowIndex: number]:{ [taskIndex: number]: number } } = {};
   checkStatuses: {[workflow: number]: { [task: number]: {[item: number]: boolean}}} = {};
   @ViewChild(MatAccordion) accordion!: MatAccordion;
+
+  @Input() dropItemIdFromTask: string='itemsInTasks';
+  dropItemIds: string[] = [];
+
   //-----------------------------------------
 
-  constructor(private cdr:ChangeDetectorRef, private uiService: UIService){}
+  constructor(private cdr:ChangeDetectorRef, 
+    private uiService: UIService,
+    private suggestionService: SuggestionsService,
+    private snackBar: MatSnackBar){}
 
   //--life cycle hooks
   ngOnInit(): void {
@@ -66,12 +70,14 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     if (Object.keys(this.itemIndices).length === 0) {
       this.initializeItemIndices();
     }
-
     this.checkStatuses = this.uiService.getItemStatuses();
     if (Object.keys(this.checkStatuses).length === 0) {
       this.initializeCheckStatuses();
     }
+    // this.dropItemIds.push(this.dropItemIdFromTask);
+    this.suggestionService.addDropItemId(this.dropItemIdFromTask);
   }
+
 
   ngOnDestroy(): void {
     this.uiService.setItemIndices(this.itemIndices);
@@ -88,7 +94,8 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
 
         this.cleanUpCheckStatuses();
         this.cleanUpItemIndices();
-      }
+   
+   }
     }
   }
   //---------------------------------------------------------------
@@ -98,9 +105,6 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       this.order.workflows.forEach((workflow, workflowIndex) => {
         workflow.tasks.forEach((task, taskIndex) => {
           this.uiService.setSelectedItemIndex(workflowIndex, taskIndex, 0);
-          // 
-          // this.itemIndices[workflowIndex] = this.itemIndices[workflowIndex] || {};
-          // this.itemIndices[workflowIndex][taskIndex] = 0;
         });
       });
     }
@@ -184,9 +188,6 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     });
   }
 
-
-
-
   deleteItems(index: number,event: MouseEvent) {
     if(this.taskIndex!=null && this.workflowIndex !=null){
       event.stopPropagation();
@@ -268,6 +269,30 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       this.order= {...this.order};
       this.onOrderUpdate.emit(this.order);
     }
+  }
+
+  drop(event: CdkDragDrop<itemTO[]>): void {
+    if(this.workflowIndex!=null && this.taskIndex!=null){
+      const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
+      if (event.previousContainer === event.container) {
+        moveItemInArray(items, event.previousIndex, event.currentIndex);
+      }else{
+        transferArrayItem(
+          event.previousContainer.data,
+          items,
+          event.previousIndex,
+          event.currentIndex
+        );
+        this.showSnackbar('New item added to task!');
+      }
+    }
+  this.onOrderUpdate.emit(this.order);
+  }
+
+  showSnackbar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 1500
+    });
   }
 
 }

@@ -32,7 +32,7 @@ export class EditorComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-    this.backendCommunicationService.getOperatorOrders().pipe(
+    this.backendCommunicationService.getAllOrders().pipe(
       catchError((err)=>{
         console.log(err);
         return of(null);

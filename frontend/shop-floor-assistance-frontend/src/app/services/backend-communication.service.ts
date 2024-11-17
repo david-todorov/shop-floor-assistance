@@ -1,10 +1,11 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { userRoleTO, userTO } from '../types/userTO';
 import { loginState } from '../shared/component-elements/login-state';
+import { productTO } from '../types/productTO';
 // import { productTO } from '../types/productTO';
 
 @Injectable({
@@ -146,4 +147,23 @@ export class BackendCommunicationService {
     return this.http.delete(`${this.apiServerURL}editor/products/${id}`);
   }
 
+  //Suggestions
+  // getWorkflowSuggestions(productAfter: productTO): Observable<any> {
+  //   return this.http.post(`${this.apiServerURL}editor/workflows/suggestions`, {productAfter});
+  // }
+
+  getWorkflowSuggestions(productAfter: productTO): Observable<HttpResponse<any>> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<HttpResponse<any>>(`${this.apiServerURL}editor/workflows/suggestions`, productAfter, { headers, observe: 'response' });
+  }
+
+  getTaskSuggestions(productAfter: productTO): Observable<HttpResponse<any>> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<HttpResponse<any>>(`${this.apiServerURL}editor/tasks/suggestions`, productAfter, { headers, observe: 'response' });
+  }
+
+  getItemSuggestions(productAfter: productTO): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<HttpResponse<any>>(`${this.apiServerURL}editor/items/suggestions`, productAfter, { headers, observe: 'response' });
+  }
 }

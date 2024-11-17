@@ -8,9 +8,10 @@ import { workflowStates } from '../workflowUI-state';
 import { workflowTO } from '../../../types/workflowTO';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { taskTO } from '../../../types/taskTO';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { EditWorkflowDialogComponent } from '../edit-workflow-dialog/edit-workflow-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-workflow-accordion',
@@ -30,11 +31,6 @@ import { EditWorkflowDialogComponent } from '../edit-workflow-dialog/edit-workfl
 
 
 export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewInit{
-  drop(event: CdkDragDrop<workflowTO[]>): void {
-    moveItemInArray(this.order.workflows, event.previousIndex, event.currentIndex);
-    this.onOrderUpdate.emit(this.order);
-  }
-
   @Input() order!: orderTO;
 
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
@@ -44,21 +40,14 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
   selectedWorkflowIndex: number | null = 0;
   workFlowStates: workflowStates= {};
   expandedPanels: boolean[] = [];
-  newWorkflowInProgress: boolean = false;
 
-   // Define newWorkflow property here
-  newWorkflow = {
-    name: '',
-    description: ''
-  };
+  constructor(private cdr: ChangeDetectorRef, 
+              private dialog: MatDialog,
+              private snackBar: MatSnackBar) {}
 
-  constructor(private cdr: ChangeDetectorRef, private dialog: MatDialog) {}
-
-  
   ngOnInit(): void {
     this.selectedWorkflowIndex= 0;
     this.initializeWorkflowStates();
-    
   }
   
   ngAfterViewInit(): void {
@@ -105,15 +94,6 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     }
   }
 
-    doneAddingWorkflow(index: number) {
-    if (!this.workFlowStates[index].updatedTitle || this.workFlowStates[index].updatedTitle.trim() === '') {
-      alert('Workflow name cannot be empty!');
-      return;
-    }
-    this.newWorkflowInProgress = false;
-    this.onOrderUpdate.emit(this.order);
-  }
-
   saveOrder(index: number){
     if(this.workFlowStates[index].updatedTitle=='' || this.workFlowStates[index].updatedTitle==null){
       alert('The workflow name cannot be empty!');
@@ -144,13 +124,8 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     return Object.values(this.workFlowStates).some(state => state.editMode);
   }
 
-  trackByIndex(index: number, item: any): any {
-  return index;
-}
-
   editWorkflow(workflowIndex: number): void {
     const workflow = this.order.workflows[workflowIndex];
-
     const dialogRef = this.dialog.open(EditWorkflowDialogComponent, {
       width: '400px',
       data: {
@@ -169,7 +144,27 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     });
   }
 
+  drop(event: CdkDragDrop<workflowTO[]>): void {
+    // moveItemInArray(this.order.workflows, event.previousIndex, event.currentIndex);
+    if (event.previousContainer === event.container) {
+      moveItemInArray(this.order.workflows, event.previousIndex, event.currentIndex);
+    }else{
+        transferArrayItem(
+          event.previousContainer.data,
+          this.order.workflows,
+          event.previousIndex,
+          event.currentIndex
+        );
+        this.showSnackbar('New item added to workflows!');
+      }
+    this.onOrderUpdate.emit(this.order);
+  }
 
+  showSnackbar(message: string): void {
+    this.snackBar.open(message, 'Close',{
+      duration: 1500
+    });
+  }
 }
 
 
