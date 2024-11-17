@@ -17,5 +17,7 @@ export type orderTO = {
     productBefore: productTO; 
     productAfter: productTO;
     equipment: equipmentTO[];
-    total_time_required?: number;
+     forecast?: {
+    total_time_required: number | null;
+  };
 };
