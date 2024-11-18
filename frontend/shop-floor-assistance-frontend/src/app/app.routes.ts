@@ -23,7 +23,7 @@ export const routes: Routes = [
     { path: '', component: WelcomeComponent },
     { path: 'login', component: LoginRegisterComponent },
     { path: 'operator/orders', component: OperatorComponent, },
-    // { path: 'operator/orders/:id', component: OperatorViewWorkflowComponent, },
+    { path: 'operator/orders/:id', component: OperatorViewWorkflowComponent, },
     { path: 'editor/orders', component: EditorOrderComponent, },
     { path: 'editor/orders/:id', component:EditorEditOrderComponent,},
     { path: 'editor-orders/order-form', component: OrderFormComponent, },
