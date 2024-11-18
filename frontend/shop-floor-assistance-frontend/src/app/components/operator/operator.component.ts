@@ -46,7 +46,7 @@ ngOnInit(): void {
                     return of({ total_time_required: null }); // Default to null if there's an error
                 })
             ).subscribe((forecast) => {
-                order.forecast = forecast; // Assign forecast data
+                // order.forecast = forecast; // Assign forecast data
             });
             return order;
         });

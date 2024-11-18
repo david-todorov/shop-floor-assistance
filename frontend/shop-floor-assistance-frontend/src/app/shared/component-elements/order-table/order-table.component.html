@@ -54,9 +54,10 @@
          <!-- Forecast Column -->
         <ng-container matColumnDef="Forecast">
             <th mat-header-cell *matHeaderCellDef> Forecast </th>
-            <td mat-cell *matCellDef="let order">
-                {{ order.forecast?.total_time_required || 'min' }}
-            </td>
+            <th mat-header-cell *matHeaderCellDef> Forecast (min) </th>
+    <td mat-cell *matCellDef="let order">
+      {{ order.forecast?.totalTimeRequired !== null ? order.forecast.totalTimeRequired : 'N/A' }}
+    </td>
         </ng-container>
 
         <!-- Header and Row Definitions -->
