@@ -56,7 +56,7 @@
                         >
                         @for(item of items_suggestions; track $index){
                             <mat-expansion-panel cdkDrag>
-                                <mat-expansion-panel-header class="">
+                                <mat-expansion-panel-header>
                                     <mat-panel-title class=" flex flex-row justify-between w-1/2">
                                         {{ item.name }}
                                         <p class="">Time required (minutes): {{ item.timeRequired }}</p>
@@ -67,6 +67,7 @@
                                 </div>
                             </mat-expansion-panel>
                         }
+                      
                     </mat-accordion>
                 </div>
             }

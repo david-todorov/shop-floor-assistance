@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
+import { itemCheckStatuses, itemIndices, taskCheckStatuses } from '../shared/component-elements/workflowUI-state';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UIService {
-  private itemIndices: { [workflowIndex: number]: { [taskIndex: number]: number } } = {};
-  private checkStatuses: {[workflow: number]: { [task: number]: {[item: number]: boolean}}} = {};
+  private itemIndices: itemIndices = {};
+  private itemCheckStatuses: itemCheckStatuses = {};
+  private taskCheckStatuses: taskCheckStatuses = {};
 
 
   
@@ -24,11 +26,11 @@ export class UIService {
     return null;
   }
 
-  getItemIndices(): {[workflowIndex: number]: { [taskIndex: number]: number} } {
+  getItemIndices(): itemIndices {
     return this.itemIndices;
   }
 
-  setItemIndices(itemIndices: { [workflowIndex: number]: { [taskIndex: number]: number } }): void {
+  setItemIndices(itemIndices: itemIndices): void {
     this.itemIndices = itemIndices;
   }
 
@@ -36,44 +38,36 @@ export class UIService {
 
 
   setSelectedItemStatus(workflow: number, task: number, item: number, status: boolean): void {
-    if (!this.checkStatuses[workflow]) {
-      this.checkStatuses[workflow] = {};
+    if (!this.itemCheckStatuses[workflow]) {
+      this.itemCheckStatuses[workflow] = {};
     }
-    this.checkStatuses[workflow][task][item] = status;
+    this.itemCheckStatuses[workflow][task][item] = status;
   }
 
 
   
   getSelectedItemStatus(workflow: number, task: number, item: number): boolean | null {
-    if (this.checkStatuses[workflow] && this.checkStatuses[workflow][task] && this.checkStatuses[workflow][task][item]!== undefined) {
-      return this.checkStatuses[workflow][task][item];
+    if (this.itemCheckStatuses[workflow] && this.itemCheckStatuses[workflow][task] && this.itemCheckStatuses[workflow][task][item]!== undefined) {
+      return this.itemCheckStatuses[workflow][task][item];
     }
     return null;
   }
 
-  getItemStatuses(): {[workflow: number]: { [task: number]: {[item: number]: boolean}}} {
-    return this.checkStatuses;
+  getItemStatuses(): itemCheckStatuses {
+    return this.itemCheckStatuses;
   }
 
-  setItemStatuses(itemStatuses: {[workflow: number]: { [task: number]: {[item: number]: boolean}}}): void {
-    this.checkStatuses = itemStatuses;
+  setItemStatuses(itemStatuses: itemCheckStatuses): void {
+    this.itemCheckStatuses = itemStatuses;
   }
 
-  //   setItemStatuses(itemStatuses: { [workflow: number]: { [task: number]: { [item: number]: boolean } } }): void {
-  //   for (const workflow in itemStatuses) {
-  //     if (itemStatuses.hasOwnProperty(workflow)) {
-  //       this.checkStatuses[workflow] = this.checkStatuses[workflow] || {};
-  //       for (const task in itemStatuses[workflow]) {
-  //         if (itemStatuses[workflow].hasOwnProperty(task)) {
-  //           this.checkStatuses[workflow][task] = this.checkStatuses[workflow][task] || {};
-  //           for (const item in itemStatuses[workflow][task]) {
-  //             if (itemStatuses[workflow][task].hasOwnProperty(item)) {
-  //               this.checkStatuses[workflow][task][item] = itemStatuses[workflow][task][item];
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  // ---------------------------------------
+  setTaskStatuses(taskStatuses: taskCheckStatuses): void {
+    this.taskCheckStatuses = taskStatuses;
+  }
+
+  getTaskStatuses(): taskCheckStatuses {
+    return this.taskCheckStatuses;
+  }
+
 }
