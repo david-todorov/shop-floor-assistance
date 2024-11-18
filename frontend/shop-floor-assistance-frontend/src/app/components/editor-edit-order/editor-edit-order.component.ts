@@ -23,7 +23,7 @@ import { itemCheckStatuses } from '../../shared/component-elements/workflowUI-st
 })
 export class EditorEditOrderComponent {
   
-
+  isEditorMode=false;
 
 
 
