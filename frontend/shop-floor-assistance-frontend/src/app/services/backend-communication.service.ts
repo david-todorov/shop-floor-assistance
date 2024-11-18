@@ -80,7 +80,7 @@ export class BackendCommunicationService {
 
 
   getForecast(id: number): Observable<{ totalTimeRequired: number | null }> {
-    return this.http.get<{ totalTimeRequired: number | null }>(`${this.apiServerURL}/operator/forecast/${id}`);
+    return this.http.get<{ totalTimeRequired: number | null }>(`${this.apiServerURL}operator/forecast/${id}`);
   }
 
   //Orders

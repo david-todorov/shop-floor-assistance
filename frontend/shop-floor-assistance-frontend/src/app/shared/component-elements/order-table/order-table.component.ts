@@ -49,11 +49,20 @@ export class OrderTableComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   fetchForecastForOrders(): void {
-    if (this.orders && this.orders.length > 0) {
+   if (this.orders && this.orders.length > 0) {
+    const updatedOrders: orderTO[] = [];
+
       this.orders.forEach(order => {
         this.backendCommunicationService.getForecast(order.id!).subscribe(
           (forecast) => {
             order.forecast = forecast; // Assign forecast data
+            updatedOrders.push(order);
+
+            // Update the table only when all orders are processed
+          if (updatedOrders.length === this.orders.length) {
+            this.dataSource.data = updatedOrders;
+            console.log('DataSource updated with forecasts:', this.dataSource.data); // Debugging
+          }
           },
           (err) => console.error(`Error fetching forecast for order ${order.id}:`, err)
         );
