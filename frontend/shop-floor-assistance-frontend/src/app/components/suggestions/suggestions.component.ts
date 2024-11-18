@@ -1,21 +1,19 @@
 import { Component, Input, input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatRadioModule } from '@angular/material/radio';
-import { workflowTO } from '../../../types/workflowTO';
-import { orderTO } from '../../../types/orderTO';
-import { taskTO } from '../../../types/taskTO';
-import { itemTO } from '../../../types/itemTO';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
-import { SuggestionsService } from '../../../services/suggestions.service';
-import { itemDropEvent } from '../../../types/itemDropEventType';
 import { CommonModule } from '@angular/common';
-import { dummyOrder, sampleItems, sampleTasks, sampleWorkflows } from '../../../types/dummyData';
-import { Global } from '../../../services/globals';
-import { BackendCommunicationService } from '../../../services/backend-communication.service';
 import { catchError, map, of } from 'rxjs';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { productTO } from '../../../types/productTO';
+import { MatRadioModule } from '@angular/material/radio';
+import { Global } from '../../services/globals';
+import { productTO } from '../../types/productTO';
+import { SuggestionsService } from '../../services/suggestions.service';
+import { BackendCommunicationService } from '../../services/backend-communication.service';
+import { itemTO } from '../../types/itemTO';
+import { workflowTO } from '../../types/workflowTO';
+import { taskTO } from '../../types/taskTO';
+
 
 @Component({
   selector: 'app-suggestions',
@@ -54,7 +52,7 @@ export class SuggestionsComponent implements OnInit{
     }
   }
 
-  elementSelected: string= 'Workflows';
+  elementSelected: string= '';
   elementsOffered: string[] = ['Workflows', 'Tasks', 'Items'];
 
  

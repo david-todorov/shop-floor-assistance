@@ -6,19 +6,28 @@ import { catchError, of } from 'rxjs';
 import { WorkflowAccordionComponent } from '../../shared/component-elements/workflow-accordion/workflow-accordion.component';
 import { TaskTabComponent } from "../../shared/component-elements/task-tab/task-tab.component";
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
-import { SuggestionsComponent } from '../../shared/component-elements/suggestions/suggestions.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { workflowTO } from '../../types/workflowTO';
 import { productTO } from '../../types/productTO';
+import { SuggestionsComponent } from '../suggestions/suggestions.component';
+import { itemCheckStatuses } from '../../shared/component-elements/workflowUI-state';
 
 @Component({
   selector: 'app-editor-edit-order',
   standalone: true,
-  imports: [WorkflowAccordionComponent, TaskTabComponent, ButtonComponent, SuggestionsComponent ],
+  imports: [WorkflowAccordionComponent, 
+    TaskTabComponent, ButtonComponent, SuggestionsComponent],
   templateUrl: './editor-edit-order.component.html',
   styleUrl: './editor-edit-order.component.css'
 })
 export class EditorEditOrderComponent {
+  
+
+
+
+
+
+
   btnLabelAddWorkflow: string= 'Add Workflow';
   saveBtnLabel: string = 'Save Order';
   orderId!:number;
@@ -26,6 +35,9 @@ export class EditorEditOrderComponent {
 
   order!: orderTO;
   selectedWorkflowIndex!: number | null;
+
+  checkedOrder!: orderTO;
+  checkStatuses!: itemCheckStatuses;
 
   constructor(private backendCommunicationService: BackendCommunicationService,
     private route: ActivatedRoute,
@@ -43,8 +55,8 @@ export class EditorEditOrderComponent {
           if (response) {
             this.order = response; // Assign the retrieved order data
             this.productAfter= this.order.productAfter;
-            
-            console.log('product after in edit page is: ', this.productAfter)
+            this.filterOrder(this.initializeCheckStatuses());
+            console.log('checkedOrder on initial loading', this.checkedOrder)
           } else {
             console.warn('No order found');
           }
@@ -86,34 +98,7 @@ export class EditorEditOrderComponent {
     this.selectedWorkflowIndex = selectedWorkflow;
   }
 
-  // Method to add a new workflow
-  addNewWorkflow() {
-    const newWorkflow = {
-      workflowNumber: (this.order.workflows.length + 1).toString(),
-      name: 'New Workflow', // Default name for the new workflow
-      tasks: [] // Initialize with an empty array for tasks
-    };
-
-    this.order.workflows.push(newWorkflow);
-    console.log('New workflow added:', newWorkflow);
-  }
-
-  addNewTask() {
-    if (this.selectedWorkflowIndex !== null && this.order.workflows[this.selectedWorkflowIndex]) {
-      const newTask = {
-        taskNumber: (this.order.workflows[this.selectedWorkflowIndex].tasks.length + 1).toString(), // Unique identifier for the task
-        name: 'New Task', // Assign default name for the new task
-        workflows: [], // Initialize as an empty array for workflows if it's required
-        items: [] // Initialize with an empty array of items
-      };
-      this.order.workflows[this.selectedWorkflowIndex].tasks.push(newTask);
-      console.log('New task added:', newTask);
-    } else {
-      console.warn('No workflow selected to add a task');
-    }
-  }
-
-    resolveAddWorkflow(event: MouseEvent): void {
+  resolveAddWorkflow(event: MouseEvent): void {
     event.stopPropagation();
     const newWorkflow: workflowTO = {
       name: 'New Workflow',
@@ -124,7 +109,7 @@ export class EditorEditOrderComponent {
           description: 'New Task: Description',
           items: [
             {
-              name: 'INew Item',
+              name: 'New Item',
               description: 'New item: Description',
               timeRequired: null,
             }
@@ -138,9 +123,46 @@ export class EditorEditOrderComponent {
     this.showSnackbar('New workflow appended to the end of the workflows!');
   }
 
-     showSnackbar(message: string): void {
+  showSnackbar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 1500
     });
+  }
+
+  onItemsCheckReceived(checkStatuses: itemCheckStatuses): void {
+    this.filterOrder(checkStatuses);
+  }
+
+  initializeCheckStatuses(): itemCheckStatuses {
+    this.checkStatuses = {};
+    this.order.workflows.forEach((workflow, workflowIndex) => {
+      this.checkStatuses[workflowIndex] = {};
+      workflow.tasks.forEach((task, taskIndex) => {
+        this.checkStatuses[workflowIndex][taskIndex] = {};
+        task.items.forEach((item, itemIndex) => {
+          this.checkStatuses[workflowIndex][taskIndex][itemIndex] = false;
+        });
+      });
+    });
+    return this.checkStatuses;
+  }
+
+  filterOrder(checkStatuses: itemCheckStatuses){
+    this.checkedOrder = {
+      ...this.order,
+      workflows: this.order.workflows.map((workflow, workflowIndex) => {
+        return {
+          ...workflow,
+          tasks: workflow.tasks.map((task, taskIndex) => {
+            return {
+              ...task,
+              items: task.items.filter((item, itemIndex) => {
+                return checkStatuses[workflowIndex][taskIndex][itemIndex];
+              })
+            };
+          })
+        };
+      })
+    };
   }
 }
