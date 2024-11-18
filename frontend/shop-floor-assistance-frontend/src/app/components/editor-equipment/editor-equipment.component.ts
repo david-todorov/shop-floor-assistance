@@ -18,9 +18,11 @@ export class EditorEquipmentComponent implements OnInit {
 
   equipment!: equipmentTO;
   loadedEquipment!: equipmentTO[];
-  editDisabled: boolean = false;
+  editDisabled: boolean = true;
   createDisabled: boolean = false;
-  editBtnLabel: string = 'Edit / Delete';
+  deleteDisabled: boolean = true;
+  editBtnLabel: string = 'Edit Equipment';
+  deleteBtnLabel: string = 'Delete Equipment';
   createBtnLabel: string = 'Create Equipment';
 
 
@@ -54,7 +56,9 @@ export class EditorEquipmentComponent implements OnInit {
   }
 
   equipmentSelected($event: any) {
-    this.equipment = $event
+    this.equipment = $event;
+    this.deleteDisabled = !this.equipment || !this.equipment.id;
+    this.editDisabled = !this.equipment || !this.equipment.id;
   }
 
   resolveButtonClick($event: any, action: string): void {
@@ -69,10 +73,39 @@ export class EditorEquipmentComponent implements OnInit {
           console.log('Selected equipment:', this.equipment);
           this.router.navigate(['/editor/equipment', this.equipment.id]); // Use the numeric ID for navigation
         }
+      } else if (action === 'delete') {
+        this.deleteEquipment();
       }
-
     }
-    return;
   }
 
+  deleteEquipment(): void {
+    if (!this.equipment || !this.equipment.id) {
+      alert('You must select equipment with a valid ID to delete!');
+      return;
+    }
+
+    const confirmDelete = confirm(
+      `Are you sure you want to delete the equipment: ${this.equipment.name} (ID: ${this.equipment.id})?`
+    );
+
+    if (confirmDelete) {
+      this.backendCommunicationService.deleteEditorEquipment(this.equipment.id).subscribe({
+        next: () => {
+          alert(`Equipment with ID ${this.equipment.id} deleted successfully.`);
+          // Remove the deleted equipment from the loadedEquipment array
+          this.loadedEquipment = this.loadedEquipment.filter(
+            (e) => e.id !== this.equipment.id
+          );
+          // Clear the selected equipment and disable the delete button
+          this.equipment = undefined!;
+          this.deleteDisabled = true;
+        },
+        error: (error) => {
+          console.error('Error deleting equipment:', error);
+          alert('Failed to delete the equipment. Please try again.');
+        },
+      });
+    }
+  }
 }

@@ -25,7 +25,6 @@ export class EditorEditEquipmentComponent {
   numericId: number | null = null;
   updateDisabled: boolean = false;
   updateBtnLabel: string = 'Update Equipment';
-  deleteBtnLabel: string = "Delete Equipment";
 
   constructor(
     private route: ActivatedRoute,
@@ -46,7 +45,6 @@ export class EditorEditEquipmentComponent {
     } else {
       console.error('Invalid numeric ID:', idParam);
       alert('Invalid equipment ID. Please use a numeric ID.');
-      // Optionally redirect to a different page or handle this error as needed
     }
   }
 
@@ -106,40 +104,15 @@ export class EditorEditEquipmentComponent {
     );
   }
 
-  deleteEquipment() {
-    if (confirm('Are you sure you want to delete this equipment? This action cannot be undone.')) {
-      if (this.numericId !== null) {
-        this.backendCommunicationService.deleteEditorEquipment(this.numericId).subscribe({
-          next: () => {
-            alert('Equipment deleted successfully!');
-            setTimeout(() => {
-                this.router.navigateByUrl('/editor/equipment');
-              }, 1000); 
-          },
-          error: (error) => {
-            console.error('Error deleting equipment:', error);
-            alert('Failed to delete equipment. Please try again.');
-          }
-        });
-      } else {
-        alert('Invalid equipment ID. Cannot delete.');
-      }
-    }
-  }
-
   resolveButtonClick($event: any, action: string): void {
-    if ($event.type === 'click') {
-      if (action === 'create') {
-        this.router.navigateByUrl('/editor-equipment/create');
-      } else if (action === 'edit') {
-        if (!this.equipment || this.numericId === null) {
-          alert('You must specify an equipment with a valid ID!');
-        } else {
-          this.router.navigate(['/editor/equipment', this.numericId]);
-        }
-      } else if (action === 'delete') {
-        this.deleteEquipment();
-      }
+  if ($event.type === 'click' && action === 'edit') {
+    if (!this.equipment || this.numericId === null) {
+      alert('You must specify an equipment with a valid ID!');
+    } else {
+      this.router.navigate(['/editor/equipment', this.numericId]);
     }
   }
+}
+
+
 }
