@@ -10,11 +10,12 @@ import { SuggestionsComponent } from '../../shared/component-elements/suggestion
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { workflowTO } from '../../types/workflowTO';
 import { productTO } from '../../types/productTO';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-operator-view-workflow',
   standalone: true,
-  imports: [WorkflowAccordionComponent, TaskTabComponent, ButtonComponent, SuggestionsComponent],
+  imports: [WorkflowAccordionComponent, TaskTabComponent, ButtonComponent, SuggestionsComponent, CommonModule],
   templateUrl: './operator-view-workflow.component.html',
   styleUrl: './operator-view-workflow.component.css'
 })

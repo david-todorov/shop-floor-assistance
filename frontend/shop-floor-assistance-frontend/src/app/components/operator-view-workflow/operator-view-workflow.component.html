@@ -3,41 +3,40 @@
         <div class="col-span-1 w-1/3 h-full  min-w-[350px] min-h-[200px]">
             <div class="  w-full h-full p-4">
                 @if(order){
-                <table class=" table-auto min-w-full  p-4">
-                    <tbody>
-                        <tr>
-                            <td class="field">Name:</td>
-                            <td class="value">{{order.name}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field">Order number:</td>
-                            <td class="value">{{order.orderNumber}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field">Description:</td>
-                            <td class="value">{{order.description}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field">Equipments:</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>
-                                @for(equipment of order.equipment; track $index){
-                                    <tr class="value">{{equipment.equipmentNumber}}</tr>
-                                }
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="field">Product Before:</td>
-                            <td class="value">{{order.productBefore.productNumber}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field">Product After:</td>
-                            <td class="value">{{order.productAfter.productNumber}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                
+        <div>
+            <table class="table-auto min-w-full p-2">
+                <tbody>
+                    <tr>
+                        <td class="field">Name:</td>
+                        <td class="value">{{ order.name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="field">Order number:</td>
+                        <td class="value">{{ order.orderNumber }}</td>
+                    </tr>
+                    <tr>
+                        <td class="field">Description:</td>
+                        <td class="value">{{ order.description }}</td>
+                    </tr>
+                    <tr>
+                        <td class="field">Equipments:</td>
+                        <td class="value"><span *ngFor="let equipment of order.equipment; let i = index">
+                           {{ equipment.equipmentNumber }}<span *ngIf="i < order.equipment.length - 1">, </span> </span>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td class="field">Product Before:</td>
+                        <td class="value">{{ order.productBefore.productNumber }}</td>
+                    </tr>
+                    <tr>
+                        <td class="field">Product After:</td>
+                        <td class="value">{{ order.productAfter.productNumber }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+           
                 }@else {
                 <h1>The specified order could not be found!</h1>
                 }
