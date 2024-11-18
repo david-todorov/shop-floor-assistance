@@ -43,10 +43,25 @@ export class OrderTableComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['orders'] && changes['orders'].currentValue) {
-      this.dataSource.data = this.orders; // Update dataSource when orders change
+      this.fetchForecastForOrders(); // Fetch forecast data for orders
       console.log('Orders updated in OrderTableComponent:', this.orders);
     }
   }
+
+  fetchForecastForOrders(): void {
+    if (this.orders && this.orders.length > 0) {
+      this.orders.forEach(order => {
+        this.backendCommunicationService.getForecast(order.id!).subscribe(
+          (forecast) => {
+            order.forecast = forecast; // Assign forecast data
+          },
+          (err) => console.error(`Error fetching forecast for order ${order.id}:`, err)
+        );
+      });
+      this.dataSource.data = this.orders; // Update the dataSource with updated orders
+    }
+  }
+
 
   displayedColumns: string[] = ['select', 'Order No.', 'Name', 'Description', 'Equipment', 'Product Before', 'Product After', 'Forecast'];
 

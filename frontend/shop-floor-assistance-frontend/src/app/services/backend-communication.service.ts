@@ -79,8 +79,8 @@ export class BackendCommunicationService {
     return this.http.put<OperatorExecutionTO>(`${this.apiServerURL}operator/finish/${id}`, {});}
 
 
-  getForecast(id: number): Observable<any> {
-    return this.http.get(`${this.apiServerURL}/api/forecast/${id}`);
+  getForecast(id: number): Observable<{ totalTimeRequired: number | null }> {
+    return this.http.get<{ totalTimeRequired: number | null }>(`${this.apiServerURL}/operator/forecast/${id}`);
   }
 
   //Orders

@@ -46,7 +46,7 @@ ngOnInit(): void {
                     return of({ total_time_required: null }); // Default to null if there's an error
                 })
             ).subscribe((forecast) => {
-                order.forecast = forecast; // Assign forecast data
+                // order.forecast = forecast; // Assign forecast data
             });
             return order;
         });
@@ -61,42 +61,31 @@ ngOnInit(): void {
   }
 
 resolveButtonClick($event: any) {
-    if ($event.type === 'click') {
-        if (!this.order) {
-            alert('You must specify an order!');
-            return;
-        }
-
-        // Step 1: Get order details
-        this.backendCommunicationService.getOperatorOrder(this.order.id!)
-            .subscribe({
-                next: (orderDetails: any) => {
-                    console.log('Order details retrieved successfully:', orderDetails);
-
-                    // Step 2: Start execution
-                    this.backendCommunicationService.startOrder(this.order.id!, orderDetails)
-                        .subscribe({
-                            next: (response: OperatorExecutionTO) => {
-                                console.log('Order started successfully:', response);
-                                this.execution = response; // Save execution details
-                                this.executionStarted = true; // Mark execution as started
-
-                                // Step 3: Navigate to the new window
-                                this.router.navigate(['operator/orders', this.order.id]);
-                            },
-                            error: (err) => {
-                                console.error('Error starting the order:', err);
-                                alert('Failed to start the order. Please try again.');
-                            }
-                        });
-                },
-                error: (err) => {
-                    console.error('Error fetching order details:', err);
-                    alert('Failed to retrieve order details. Please try again.');
-                }
-            });
+  if ($event.type === 'click') {
+    if (!this.order) {
+      alert('You must specify an order!');
+      return;
     }
+
+    // Post the order to the backend
+    this.backendCommunicationService.startOrder(this.order.id!, this.order)
+      .subscribe({
+        next: (response: OperatorExecutionTO) => {
+          console.log('Order started successfully:', response);
+
+          // Pass the execution ID to the next window using query parameters
+          this.router.navigate(['/operator/orders', this.order.id], {
+            queryParams: { executionId: response.id }
+          });
+        },
+        error: (err) => {
+          console.error('Error starting the order:', err);
+          alert('Failed to start the order. Please check the details.');
+        }
+      });
+  }
 }
+
 
 
 }

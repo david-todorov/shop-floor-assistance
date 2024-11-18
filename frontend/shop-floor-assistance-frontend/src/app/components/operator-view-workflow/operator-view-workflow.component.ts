@@ -11,11 +11,12 @@ import { workflowTO } from '../../types/workflowTO';
 import { productTO } from '../../types/productTO';
 import { CommonModule } from '@angular/common';
 import { OperatorExecutionTO } from '../../types/OperatorExecutionTO';
+import { Router ,RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-operator-view-workflow',
   standalone: true,
-  imports: [WorkflowAccordionComponent, TaskTabComponent, ButtonComponent,  CommonModule],
+  imports: [WorkflowAccordionComponent, TaskTabComponent, ButtonComponent,  CommonModule, RouterLink ],
   templateUrl: './operator-view-workflow.component.html',
   styleUrl: './operator-view-workflow.component.css'
 })
@@ -31,37 +32,54 @@ export class OperatorViewWorkflowComponent {
   execution!: OperatorExecutionTO | null; // Tracks the current execution
   numericId: number | null = null;
 
-  constructor(private backendCommunicationService: BackendCommunicationService,
-    private route: ActivatedRoute,
-    private snackBar: MatSnackBar) {
-    this.route.params.subscribe(params => {
-      this.orderId = params['id'];
-      this.backendCommunicationService.getOperatorOrder(this.orderId).pipe(
-        catchError((err) => {
-          console.error(err);
-          return of(null);
-        })
-      ).subscribe({
-        next: (response) => {
-          if (response) {
-            this.order = response; // Assign the retrieved order data
-            this.productAfter= this.order.productAfter;
-            
-            console.log('product after in edit page is: ', this.productAfter)
-          } else {
-            console.warn('No order found');
-          }
-        },
-        complete: () => {
-          console.log('Order retrieval complete:', this.order);
-        }
-      });
-    });
-  }
+  constructor(
+  private backendCommunicationService: BackendCommunicationService,
+  private route: ActivatedRoute,
+  private snackBar: MatSnackBar,
+  private router: Router // Add this line
+) {
+  this.route.params.subscribe(params => {
+    this.orderId = params['id'];
+    this.backendCommunicationService.getOperatorOrder(this.orderId).pipe(
+      catchError((err) => {
+        console.error(err);
+        return of(null);
+      })
+    ).subscribe({
+      next: (response) => {
+        if (response) {
+          this.order = response; // Assign the retrieved order data
+          this.productAfter = this.order.productAfter;
 
-  ngOnInit() {
-    console.log('Component initialized with orderId:', this.orderId);
+          console.log('product after in edit page is: ', this.productAfter);
+        } else {
+          console.warn('No order found');
+        }
+      },
+      complete: () => {
+        console.log('Order retrieval complete:', this.order);
+      }
+    });
+  });
 }
+
+
+ngOnInit() {
+  console.log('Component initialized with orderId:', this.orderId);
+
+  // Fetch executionId from query parameters
+  this.route.queryParams.subscribe(params => {
+    const executionId = params['executionId'];
+    if (executionId) {
+      this.execution = { id: +executionId } as OperatorExecutionTO; // Create a basic execution object with the ID
+      console.log('Execution ID received:', executionId);
+    } else {
+      console.warn('No execution ID found in query parameters.');
+    }
+  });
+}
+
+
 
 
 finishOrder(event: MouseEvent) {
@@ -74,20 +92,21 @@ finishOrder(event: MouseEvent) {
         this.backendCommunicationService.finishOrder(this.execution.id)
             .subscribe({
                 next: (response: OperatorExecutionTO) => {
-                    this.execution = null; // Reset the execution
-                    this.executionStarted = false; // Reset the execution state
-                    console.log('Order finished successfully:', response);
-                    this.showSnackbar('Order has been marked as finished!');
+                    console.log('Execution finished successfully:', response);
+                    this.execution = null; // Reset execution
+                    this.executionStarted = false; // Reset state
+                    this.showSnackbar('Order marked as finished successfully!');
+
+                    // Navigate back to the orders page
+                    this.router.navigateByUrl('/operator/orders');
                 },
                 error: (err) => {
-                    console.error('Error finishing the order:', err);
-                    alert('Failed to finish the order. Please try again.');
+                    console.error('Error finishing execution:', err);
+                    alert('Failed to finish the execution. Please try again.');
                 }
             });
     }
 }
-
-
 
 
   updateOrder(order: orderTO) {
