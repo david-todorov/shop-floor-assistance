@@ -19,9 +19,8 @@
                         cdkDropListOrientation="horizontal" 
                         (cdkDropListDropped)="drop($event)" 
                         [cdkDropListConnectedTo]="getAllDragTabs($index)"
-                        
                         >
-                        <div class="drag-box flex flex-row items-center " cdkDrag>
+                        <div class="drag-box flex flex-row items-center " [cdkDragDisabled]="!isEditorMode" cdkDrag>
                             <span class="mx-4 px- pt-1 text-lg ">{{ task.name }}</span>
                             <div class="pt-3 justify-center">
                                 <div class=" whitespace-nowrap flex flex-row gap-x-3 gap-y-3 justify-between">
