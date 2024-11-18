@@ -38,7 +38,7 @@
                                 <mat-icon>done_all</mat-icon>
                             </button>
                             <!-- } -->
-                            <mat-checkbox [(ngModel)]="checkStatuses[workflowIndex??-1][taskIndex??-1][$index]" 
+                            <mat-checkbox [(ngModel)]="itemsCheckStatuses[workflowIndex??-1][taskIndex??-1][$index]" 
                                             (change)="updateCheckStatus(workflowIndex??-1, taskIndex??-1, $index, $event.checked)"/>
                         </div>
                     </mat-panel-description>

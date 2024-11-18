@@ -1,13 +1,13 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { catchError, map, of } from 'rxjs';
-import { ButtonComponent } from "../../shared/component-elements/button/button.component";
+import { Router } from '@angular/router';
+import { orderTO } from '../../types/orderTO';
+import { ButtonComponent } from '../../shared/component-elements/button/button.component'
 import { equipmentTO } from '../../types/equipmentTO';
 import { productTO } from '../../types/productTO';
-import { orderTO } from '../../types/orderTO';
 
 const defaultProduct: productTO = {
   id: 0,
@@ -22,46 +22,38 @@ const defaultProduct: productTO = {
 };
 
 @Component({
-  selector: 'app-editor-create-order',
+  selector: 'app-create-order-from-existing',
   standalone: true,
-  imports: [FormsModule, CommonModule, ButtonComponent],
-  templateUrl: './editor-create-order.component.html',
-  styleUrl: './editor-create-order.component.css'
+  imports: [CommonModule, FormsModule, ButtonComponent],
+  templateUrl: './create-order-from-existing.component.html',
+  styleUrl: './create-order-from-existing.component.css'
 })
-export class EditorCreateOrderComponent implements OnInit {
-  order: orderTO = {
+export class CreateOrderFromExistingComponent {
+ order: orderTO = {
     orderNumber: "",
     name: "",
     description: "",
     productAfter: defaultProduct,
     productBefore: defaultProduct,
-    equipment: [],
+    equipment: [], 
     workflows: []
   };
 
+  selectedOrder: orderTO | null = null;
+  suggestions: orderTO[] = []; // Store fetched orders as suggestions
+  createDisabled: boolean = true;
+  createBtnLabel: string = 'Create Order';
+  orderNumberExists: boolean = false;
   equipmentList: equipmentTO[] = [];
-  selectedEquipment: equipmentTO[] = []; //Allow user to choose multiple equipment
+  selectedEquipment: equipmentTO[] = [];
   productList: productTO[] = [];
   selectedProductBefore: productTO | null = null;
   selectedProductAfter: productTO | null = null;
-  createDisabled: boolean = false;
-  createBtnLabel: string = 'Create';
-
-  orderState = {
-    buttonIcon: 'save',
-    buttonLabel: 'Save Order',
-    isSaved: false
-  };
 
   constructor(
     private router: Router,
     private backendCommunicationService: BackendCommunicationService
   ) { }
-
-  ngOnInit() {
-    this.fetchEquipment();
-    this.fetchProducts();
-  }
 
   fetchEquipment() {
     this.backendCommunicationService.getAllEditorEquipment()
@@ -83,7 +75,10 @@ export class EditorCreateOrderComponent implements OnInit {
           return of([]);
         })
       )
-      .subscribe((equipment: equipmentTO[]) => this.equipmentList = equipment);
+      .subscribe((equipment: equipmentTO[]) => {
+        this.equipmentList = equipment;
+       console.log("Equipment List:", this.equipmentList);
+      });
   }
 
   onEquipmentChange(selectedEquipments: equipmentTO[]) {
@@ -122,30 +117,69 @@ export class EditorCreateOrderComponent implements OnInit {
     this.order.productAfter = selectedProductAfter;
   }
 
-  saveOrder(event: MouseEvent) {
-    if (event.type === 'click' && this.isFormComplete()) {
-      console.log('Order Payload:', this.order); // Debugging line
-      this.backendCommunicationService.createOrder(this.order)
+  ngOnInit() {
+    this.fetchEquipment();
+    this.fetchProducts();
+    this.loadSuggestions();
+  }
+
+  loadSuggestions() {
+    // Fetch existing orders from the backend
+    this.backendCommunicationService.getEditorOrders().subscribe(
+      (data) => {
+        this.suggestions = data;
+      },
+      (error) => {
+        console.error('Error fetching order suggestions:', error);
+      }
+    );
+  }
+
+  selectSuggestion(suggestion: orderTO) {
+    console.log("Order suggestion selected:", suggestion);
+    this.selectedOrder = { ...suggestion, orderNumber: "" }; // Copy selected order but reset the order number
+    this.selectedEquipment = suggestion.equipment || []; 
+    this.selectedProductBefore = suggestion.productBefore || null; 
+    this.selectedProductAfter = suggestion.productAfter || null; 
+  }
+
+  checkUniqueOrderNumber() {
+    if (this.selectedOrder) {
+      // Check if the order number exists in suggestions
+      this.orderNumberExists = this.suggestions.some(
+        (suggestion) => suggestion.orderNumber === this.selectedOrder!.orderNumber
+      );
+
+      // Enable the button only if all fields are filled and the order number is unique
+      this.createDisabled = this.orderNumberExists || !(
+        this.selectedOrder.orderNumber &&
+        this.selectedOrder.name &&
+        this.selectedOrder.description &&
+        this.order.equipment &&
+        this.order.productBefore &&
+        this.order.productAfter
+      );
+    }
+  }
+
+  createOrder(event: MouseEvent) {
+    if (event.type === 'click' && !this.orderNumberExists) {
+      console.log("Payload being sent:", this.selectedOrder);
+      this.backendCommunicationService.createOrder(this.selectedOrder!)
         .pipe(
           catchError((error) => {
             console.error('Error creating order:', error);
             alert('Failed to create order. Please try again.');
-            return of(null);
+            return of(null); 
           })
         )
         .subscribe({
           next: (response: any) => {
             if (response && response.id) {
               console.log('Order created successfully:', response);
-
-              // Update UI states
-              this.orderState.buttonIcon = 'check_circle';
-              this.orderState.buttonLabel = 'Saved';
-              this.orderState.isSaved = true;
-
               alert('Order created successfully!');
 
-              // Delay navigation
+              // Delay navigation to allow the user to see the message
               setTimeout(() => {
                 this.router.navigate(['/editor/orders', response.id]);
               }, 1000); // 1-second delay
@@ -156,22 +190,8 @@ export class EditorCreateOrderComponent implements OnInit {
           }
         });
     } else {
-      alert('Please fill in all fields before saving.');
+      console.error('Order number must be unique');
+      alert('Please enter a unique order number.');
     }
-  }
-
-  isFormComplete(): boolean {
-    return !!(
-      this.order.orderNumber &&
-      this.order.name &&
-      this.order.description &&
-      this.order.equipment &&
-      this.order.productBefore &&
-      this.order.productAfter
-    );
-  }
-
-  checkFormCompletion() {
-    this.createDisabled = !this.isFormComplete();
   }
 }

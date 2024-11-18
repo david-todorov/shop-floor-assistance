@@ -12,6 +12,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from 
 import { SuggestionsService } from '../../../services/suggestions.service';
 import { Global } from '../../../services/globals';
 import { ButtonComponent } from '../button/button.component';
+import { itemCheckStatuses, taskCheckStatuses } from '../workflowUI-state';
 
 @Component({
   selector: 'app-task-tab',
@@ -29,6 +30,18 @@ import { ButtonComponent } from '../button/button.component';
   styleUrl: './task-tab.component.css'
 })
 export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
+onItemsChecked(event: itemCheckStatuses) {
+  this.onItemsCheckedReceived.emit(event);
+}
+
+  status!:taskCheckStatuses;
+
+  updateTasksInOrder(event: taskCheckStatuses){
+    this.status= event;
+  }
+
+  @Output() onItemsCheckedReceived = new EventEmitter<itemCheckStatuses>();
+
 
   @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
