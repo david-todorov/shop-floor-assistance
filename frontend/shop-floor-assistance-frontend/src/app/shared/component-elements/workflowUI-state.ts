@@ -17,16 +17,6 @@ export type itemUIStates= {
     }
 }
 
-
-
-// export type itemCheckedStatus= {
-//   checked: boolean;
-// }
-
-// export type taskCheckedStatus= {
-//   items: itemCheckedStatus[];
-// }
-
-// export type workflowCheckedStatus= {
-//   tasks: taskCheckedStatus[];
-// }
+export type itemIndices= { [workflowIndex: number]: { [taskIndex: number]: number } };
+export type itemCheckStatuses= {[workflow: number]: { [task: number]: {[item: number]: boolean}}};
+export type taskCheckStatuses= {[workflow: number]: { [task: number]: boolean}};

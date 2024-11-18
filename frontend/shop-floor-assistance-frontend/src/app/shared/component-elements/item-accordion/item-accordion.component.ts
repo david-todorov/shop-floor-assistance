@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { itemUIStates } from '../workflowUI-state';
+import { itemCheckStatuses, itemIndices, itemUIStates, taskCheckStatuses } from '../workflowUI-state';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { orderTO } from '../../../types/orderTO';
 import { UIService } from '../../../services/ui.service';
@@ -14,7 +14,6 @@ import { ButtonComponent } from '../button/button.component';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { SuggestionsService } from '../../../services/suggestions.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 
 @Component({
   selector: 'app-item-accordion',
@@ -48,8 +47,10 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
 
   //-Helper variables to maintain UI state
   itemUIStates: itemUIStates= {};
-  itemIndices: {[workflowIndex: number]:{ [taskIndex: number]: number } } = {};
-  itemsCheckStatuses: {[workflow: number]: { [task: number]: {[item: number]: boolean}}} = {};
+  itemIndices: itemIndices= {};
+  itemsCheckStatuses: itemCheckStatuses = {};
+  tasksCheckStatuses: taskCheckStatuses = {};
+
   @ViewChild(MatAccordion) accordion!: MatAccordion;
 
   @Input() dropItemIdFromTask: string='itemsInTasks';
@@ -70,7 +71,10 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     }
     this.itemsCheckStatuses = this.uiService.getItemStatuses();
     if (Object.keys(this.itemsCheckStatuses).length === 0) {
-      this.initializeCheckStatuses();
+      this.initializeItemCheckStatuses();
+    }
+    if (Object.keys(this.tasksCheckStatuses).length === 0) {
+      this.initializeTaskCheckStatuses();
     }
     // this.dropItemIds.push(this.dropItemIdFromTask);
     this.suggestionService.addDropItemId(this.dropItemIdFromTask);
@@ -90,9 +94,9 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
         this.getItemsForSelectedTask();
         this.initializeItemUIStates(); 
 
-        this.cleanUpCheckStatuses();
+        this.cleanUpItemCheckStatuses();
+        this.cleanUpTaskCheckStatuses();
         this.cleanUpItemIndices();
-   
    }
     }
   }
@@ -108,7 +112,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     }
   }
 
-  initializeCheckStatuses(): void {
+  initializeItemCheckStatuses(): void {
     if (this.order && this.order.workflows) {
       this.order.workflows.forEach((workflow, workflowIndex) => {
         workflow.tasks.forEach((task, taskIndex) => {
@@ -123,9 +127,21 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     }
   }
 
-  cleanUpCheckStatuses(): void {
+  initializeTaskCheckStatuses(): void {
+    if (this.order && this.order.workflows) {
+      this.order.workflows.forEach((workflow, workflowIndex) => {
+        workflow.tasks.forEach((task, taskIndex) => {
+            this.tasksCheckStatuses[workflowIndex] = this.tasksCheckStatuses[workflowIndex] || {};
+            this.tasksCheckStatuses[workflowIndex][taskIndex] =  false;
+            this.uiService.setTaskStatuses(this.tasksCheckStatuses);
+        });
+      });
+    }
+  }
+
+  cleanUpItemCheckStatuses(): void {
     this.itemsCheckStatuses = this.uiService.getItemStatuses();
-    const newCheckStatuses: { [workflowIndex: number]: { [taskIndex: number]: { [itemIndex: number]: boolean } } } = {};
+    const newCheckStatuses: itemCheckStatuses = {};
     if (this.order && this.order.workflows) {
       this.order.workflows.forEach((workflow, workflowIndex) => {
         newCheckStatuses[workflowIndex] = {};
@@ -143,6 +159,25 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     }
     this.itemsCheckStatuses = newCheckStatuses;
     this.uiService.setItemStatuses(this.itemsCheckStatuses);
+  }
+
+  cleanUpTaskCheckStatuses(): void {
+    this.tasksCheckStatuses = this.uiService.getTaskStatuses();
+    const newCheckStatuses: taskCheckStatuses = {};
+    if (this.order && this.order.workflows) {
+      this.order.workflows.forEach((workflow, workflowIndex) => {
+        newCheckStatuses[workflowIndex] = {};
+        workflow.tasks.forEach((task, taskIndex) => {
+            if (this.tasksCheckStatuses[workflowIndex] && this.tasksCheckStatuses[workflowIndex][taskIndex] !== undefined) {
+              newCheckStatuses[workflowIndex][taskIndex] = this.tasksCheckStatuses[workflowIndex][taskIndex];
+            } else {
+              newCheckStatuses[workflowIndex][taskIndex] = false;
+            }
+        });
+      });
+    }
+    this.tasksCheckStatuses = newCheckStatuses;
+    this.uiService.setTaskStatuses(this.tasksCheckStatuses);
   }
 
   cleanUpItemIndices(): void {
@@ -247,11 +282,14 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     this.itemsCheckStatuses[workflowIndex][taskIndex][itemIndex] = checked;
     this.uiService.setSelectedItemStatus(workflowIndex, taskIndex, itemIndex, checked);
     console.log('checkstatuses',this.itemsCheckStatuses);
-    if(Object.values(this.itemsCheckStatuses[workflowIndex][taskIndex]).every(status=>status===true)){
-      console.log('All checked in at', this.order.workflows[workflowIndex].tasks[taskIndex].name);
-    }else{
-       console.log('Not all checked at', this.order.workflows[workflowIndex].tasks[taskIndex].name);
-    }
+    // if(Object.values(this.itemsCheckStatuses[workflowIndex][taskIndex]).every(status=>status===true)){
+    //   console.log('All checked in at', this.order.workflows[workflowIndex].tasks[taskIndex].name);
+    // }else{
+    //    console.log('Not all checked at', this.order.workflows[workflowIndex].tasks[taskIndex].name);
+    // }
+    const taskChecked= Object.values(this.itemsCheckStatuses[workflowIndex][taskIndex]).every(status=>status===true);
+    this.tasksCheckStatuses[workflowIndex][taskIndex]=taskChecked;
+    console.log('tasks checked = ', this.tasksCheckStatuses)
   }
   
   closeAllPanels(): void {
