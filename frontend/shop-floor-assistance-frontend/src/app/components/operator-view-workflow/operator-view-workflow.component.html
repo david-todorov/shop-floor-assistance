@@ -37,10 +37,14 @@
                     [label]="btnLabelFinish" 
                     class="btn btn-primary">
                 </app-button>
-                <app-button label="Abort" (onClick)="abortOrder($event)" [isDanger]="true"></app-button>
+                <app-button 
+                    (onClick)="abortOrder($event)" 
+                    [label]="btnLabelAbort" 
+                    class="btn btn-danger">
+                </app-button>
+            </div>
+            </div>
 
-            </div>
-            </div>
         </div>
   
     </div>
