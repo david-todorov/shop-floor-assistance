@@ -24,7 +24,7 @@ export const routes: Routes = [
     { path: 'login', component: LoginRegisterComponent },
     { path: 'operator/orders', component: OperatorComponent, },
     { path: 'operator/orders/:id', component: OperatorViewWorkflowComponent, },
-    { path: 'editor/orders', component: EditorOrderComponent, },
+    // { path: 'editor/orders', component: EditorOrderComponent, },
     { path: 'editor/orders/:id', component: EditorEditOrderComponent, },
     { path: 'editor-orders/creation-option', component: OrderCreationOptionComponent, },
     { path: 'editor-orders/create', component: EditorCreateOrderComponent, },

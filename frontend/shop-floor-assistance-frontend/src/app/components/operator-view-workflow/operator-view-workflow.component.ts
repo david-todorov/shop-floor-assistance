@@ -6,7 +6,6 @@ import { catchError, of } from 'rxjs';
 import { WorkflowAccordionComponent } from '../../shared/component-elements/workflow-accordion/workflow-accordion.component';
 import { TaskTabComponent } from "../../shared/component-elements/task-tab/task-tab.component";
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
-import { SuggestionsComponent } from '../../shared/component-elements/suggestions/suggestions.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { workflowTO } from '../../types/workflowTO';
 import { productTO } from '../../types/productTO';
@@ -16,7 +15,7 @@ import { OperatorExecutionTO } from '../../types/OperatorExecutionTO';
 @Component({
   selector: 'app-operator-view-workflow',
   standalone: true,
-  imports: [WorkflowAccordionComponent, TaskTabComponent, ButtonComponent, SuggestionsComponent, CommonModule],
+  imports: [WorkflowAccordionComponent, TaskTabComponent, ButtonComponent,  CommonModule],
   templateUrl: './operator-view-workflow.component.html',
   styleUrl: './operator-view-workflow.component.css'
 })

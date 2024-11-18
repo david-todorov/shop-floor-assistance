@@ -34,7 +34,7 @@
                             </button>
     
                             <!-- @if(itemUIStates[$index].checkStatus){ -->
-                            <button *ngIf="!isOperatorMode" class="done-all"  [hidden]="!checkStatuses[workflowIndex??-1][taskIndex??-1][$index]" mat-icon-button>
+                            <button *ngIf="!isOperatorMode" class="done-all"  [hidden]="!itemsCheckStatuses[workflowIndex??-1][taskIndex??-1][$index]" mat-icon-button>
                                 <mat-icon>done_all</mat-icon>
                             </button>
                             <!-- } -->
