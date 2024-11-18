@@ -26,15 +26,15 @@
                     </mat-panel-title>
                     <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
                         <div class="whitespace-nowrap flex flex-row items-center justify-center">
-                            <button mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
+                            <button *ngIf="!isOperatorMode" mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
                                 <mat-icon>{{ itemUIStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
                             </button>
-                            <button mat-icon-button (click)="deleteItems($index,$event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
+                            <button *ngIf="!isOperatorMode" mat-icon-button (click)="deleteItems($index,$event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
                                 <mat-icon>delete</mat-icon>
                             </button>
     
                             <!-- @if(itemUIStates[$index].checkStatus){ -->
-                            <button class="done-all"  [hidden]="!checkStatuses[workflowIndex??-1][taskIndex??-1][$index]" mat-icon-button>
+                            <button *ngIf="!isOperatorMode" class="done-all"  [hidden]="!checkStatuses[workflowIndex??-1][taskIndex??-1][$index]" mat-icon-button>
                                 <mat-icon>done_all</mat-icon>
                             </button>
                             <!-- } -->
@@ -55,5 +55,5 @@
             }
         </mat-accordion>
     }
-    <app-button (onClick)="resolveAddItem($event)" [label]="btnLabelAddItem" class="w-fit"></app-button>
+    <app-button *ngIf="!isOperatorMode" (onClick)="resolveAddItem($event)" [label]="btnLabelAddItem" class="w-fit"></app-button>
 </div>

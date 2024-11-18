@@ -1,6 +1,6 @@
 <div class="w-full flex flex-col ">
     <div class="flex justify-end -mt-4 mb-3">
-    <app-button (onClick)="resolveAddTAsk($event)" [label]="btnLabelAddTask"></app-button>
+    <app-button *ngIf="!isOperatorMode" (onClick)="resolveAddTAsk($event)" [label]="btnLabelAddTask"></app-button>
     </div>
     <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" 
          [(selectedIndex)]="taskIndex" (selectedIndexChange)="onTaskSelected($event)" >
@@ -20,10 +20,10 @@
                             <span class="mx-4 px- pt-1 text-lg ">{{ task.name }}</span>
                             <div class="pt-3 justify-center">
                                 <div class=" whitespace-nowrap flex flex-row gap-x-3 gap-y-3 justify-between">
-                                    <button mat-icon-button (click)="editTask(task)" [hidden]="taskIndex !== $index">
+                                    <button *ngIf="!isOperatorMode" mat-icon-button (click)="editTask(task)" [hidden]="taskIndex !== $index">
                                         <mat-icon>edit</mat-icon>
                                     </button>
-                                    <button mat-icon-button (click)="deleteTasks($index,$event)" [hidden]="taskIndex !== $index">
+                                    <button *ngIf="!isOperatorMode" mat-icon-button (click)="deleteTasks($index,$event)" [hidden]="taskIndex !== $index">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                     <!-- @if(doneAll[$index]){ -->
@@ -46,7 +46,7 @@
                         [workflowIndex]="workflowIndex"
                         [taskIndex]="taskIndex"
                         [dropItemIdFromTask]="'itemsInTasks'+$index"
-                        
+                        [isOperatorMode]="isOperatorMode"
                         (onOrderUpdate)="updateItemsInOrder($event)" 
                         >
                         </app-item-accordion>

@@ -1,44 +1,64 @@
 <div class="grid grid-rows-3 h-screen m-5">
-    <!-- Order Details -->
-    <div class="row-span-1 w-full flex whitespace-nowrap">
-        <div class="col-span-1 w-1/3 h-full min-w-[350px] min-h-[200px]">
-            <div class="w-full h-full p-4">
-                @if(order) {
-                    <table class="table-auto min-w-full p-4">
-                        <tbody>
-                            <tr><td class="field">Name:</td><td class="value">{{order.name}}</td></tr>
-                            <tr><td class="field">Order number:</td><td class="value">{{order.orderNumber}}</td></tr>
-                            <tr><td class="field">Description:</td><td class="value">{{order.description}}</td></tr>
-                            <!-- <tr><td class="field">Equipment:</td><td class="value">{{equip.equipmentNumber }}</td></tr>
-                            <tr><td class="field">Forecasting Time Estimate:</td><td class="value">{{ order.total_time_required }} mins</td></tr> -->
-                        </tbody>
-                    </table>
-                } @else {
-                    <h1>The specified order could not be found!</h1>
+    <div class="row-span-1 w-full flex  whitespace-nowrap">
+        <div class="col-span-1 w-1/3 h-full  min-w-[350px] min-h-[200px]">
+            <div class="  w-full h-full p-4">
+                @if(order){
+                <table class=" table-auto min-w-full  p-4">
+                    <tbody>
+                        <tr>
+                            <td class="field">Name:</td>
+                            <td class="value">{{order.name}}</td>
+                        </tr>
+                        <tr>
+                            <td class="field">Order number:</td>
+                            <td class="value">{{order.orderNumber}}</td>
+                        </tr>
+                        <tr>
+                            <td class="field">Description:</td>
+                            <td class="value">{{order.description}}</td>
+                        </tr>
+                        <tr>
+                            <td class="field">Equipments:</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                @for(equipment of order.equipment; track $index){
+                                    <tr class="value">{{equipment.equipmentNumber}}</tr>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="field">Product Before:</td>
+                            <td class="value">{{order.productBefore.productNumber}}</td>
+                        </tr>
+                        <tr>
+                            <td class="field">Product After:</td>
+                            <td class="value">{{order.productAfter.productNumber}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                }@else {
+                <h1>The specified order could not be found!</h1>
                 }
             </div>
         </div>
-
+  
+        <!-- <div class=" min-w-[986px] min-h-[280px]">
+            <app-suggestions class="w-full" [productAfter]="productAfter"></app-suggestions>
+        </div> -->
     </div>
 
-    <!-- Workflow and Tasks -->
-<div class="grid grid-cols-3 gap-4">
-  <!-- Left Workflow Accordion -->
-  <div class="col-span-1 h-auto p-4 border rounded-md shadow">
-    <app-operator-workflow-accordion
-      [order]="order"
-      (onOrderUpdate)="updateOrder($event)"
-      (onSelect)="onSelect($event)">
-    </app-operator-workflow-accordion>
-  </div>
-
-  <!-- Right Task Tabs -->
-  <div class="col-span-2 h-auto p-4 border rounded-md shadow">
-    <app-operator-task-tab
-      [order]="order"
-      [workflowIndex]="selectedWorkflowIndex"
-      (onOrderUpdate)="updateOrder($event)">
-    </app-operator-task-tab>
-  </div>
-</div>
+    <div class="row-span-2 grid grid-cols-3 relative pt-12 ">
+        <div class="col-span-1 overflow-auto w-full h-full  p-4 min-w-[350px] min-h-[200px] mt-20">
+            <app-workflow-accordion (onOrderUpdate)="updateOrder($event)" (onSelect)="onSelect($event)" [order]="order" [isOperatorMode]="true">
+            </app-workflow-accordion>
+            <!-- <app-button (onClick)="resolveAddWorkflow($event)" [label]="btnLabelAddWorkflow"></app-button> -->
+        </div>
+        <div
+            class="col-span-2 h-fulloverflow-auto w-2/3 p-4 min-w-[650px] min-h-[200px]  absolute top-0 left-1/3  mt-8">
+            <app-task-tab [order]="order" [workflowIndex]="selectedWorkflowIndex"
+                (onOrderUpdate)="updateOrder($event)" [isOperatorMode]="true"></app-task-tab>
+        </div>
+    </div>
 </div>

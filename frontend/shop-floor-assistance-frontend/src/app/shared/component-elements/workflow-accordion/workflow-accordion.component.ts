@@ -32,6 +32,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewInit{
   @Input() order!: orderTO;
+  @Input() isOperatorMode: boolean = false;
+
 
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onSelect = new EventEmitter<number | null>();

@@ -32,6 +32,8 @@ export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
 
   @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
+  @Input() isOperatorMode: boolean = false;
+
   
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onWorkflowChange = new EventEmitter<number | null>();
