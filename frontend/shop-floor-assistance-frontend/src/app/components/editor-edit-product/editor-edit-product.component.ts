@@ -29,7 +29,6 @@ export class EditorEditProductComponent {
   numericId: number | null = null;
   updateDisabled: boolean = false;
   updateBtnLabel: string = 'Update Product';
-  deleteBtnLabel: string = "Delete Product";
 
   constructor(
     private route: ActivatedRoute,
@@ -54,12 +53,12 @@ export class EditorEditProductComponent {
     }
   }
   fetchProductDetails() {
-     if (this.numericId !== null) {
+    if (this.numericId !== null) {
       this.backendCommunicationService.getEditorProduct(this.numericId).subscribe({
         next: (data) => {
           this.product = data;
           console.log('Fetched product details:', this.product); // Log the product details for debugging
-          this.checkFormCompletion(); 
+          this.checkFormCompletion();
         },
         error: (error) => {
           console.error('Error loading product:', error);
@@ -116,37 +115,12 @@ export class EditorEditProductComponent {
     );
   }
 
-  deleteProduct() {
-    if (confirm('Are you sure you want to delete this Product? This action cannot be undone.')) {
-      if (this.numericId !== null) {
-        this.backendCommunicationService.deleteEditorProduct(this.numericId).subscribe({
-          next: () => {
-            alert('Product deleted successfully!');
-            this.router.navigateByUrl('/editor/products');
-          },
-          error: (error) => {
-            console.error('Error deleting product:', error);
-            alert('Failed to delete product. Please try again.');
-          }
-        });
-      } else {
-        alert('Invalid product ID. Cannot delete.');
-      }
-    }
-  }
-
   resolveButtonClick($event: any, action: string): void {
-    if ($event.type === 'click') {
-      if (action === 'create') {
-        this.router.navigateByUrl('/editor-product/create');
-      } else if (action === 'edit') {
-        if (!this.product || this.numericId === null) {
-          alert('You must specify a product with a valid ID!');
-        } else {
-          this.router.navigate(['/editor/products', this.numericId]);
-        }
-      } else if (action === 'delete') {
-        this.deleteProduct();
+    if ($event.type === 'click' && action === 'edit') {
+      if (!this.product || this.numericId === null) {
+        alert('You must specify an equipment with a valid ID!');
+      } else {
+        this.router.navigate(['/editor/products', this.numericId]);
       }
     }
   }

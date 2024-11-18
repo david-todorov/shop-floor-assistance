@@ -19,9 +19,9 @@ export class EditorOrderComponent implements OnInit {
   btnLabel: string = 'Start Wizard';
   order!: orderTO;
   loadedOrders!: orderTO[];
-  editDisabled: boolean = false;
+  editDisabled: boolean = true;
   createDisabled: boolean = false;
-  deleteDisabled: boolean = false;
+  deleteDisabled: boolean = true;
   editBtnLabel: string = 'Edit Order';
   deleteBtnLabel: string = 'Delete Order';
   createBtnLabel: string = 'Create Order';
@@ -53,6 +53,7 @@ export class EditorOrderComponent implements OnInit {
   orderSelected($event: any) {
     this.order = $event;
     this.deleteDisabled = !this.order || !this.order.id;
+    this.editDisabled = !this.order || !this.order.id;
   }
 
   resolveButtonClick($event: any, action: string): void {
