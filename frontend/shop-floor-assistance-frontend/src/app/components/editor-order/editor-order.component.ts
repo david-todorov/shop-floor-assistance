@@ -21,7 +21,9 @@ export class EditorOrderComponent implements OnInit {
   loadedOrders!: orderTO[];
   editDisabled: boolean = false;
   createDisabled: boolean = false;
+  deleteDisabled: boolean = false;
   editBtnLabel: string = 'Edit Order';
+  deleteBtnLabel: string = 'Delete Order';
   createBtnLabel: string = 'Create Order';
 
   constructor(private router: Router,
@@ -49,7 +51,8 @@ export class EditorOrderComponent implements OnInit {
   }
 
   orderSelected($event: any) {
-    this.order = $event
+    this.order = $event;
+    this.deleteDisabled = !this.order || !this.order.id;
   }
 
   resolveButtonClick($event: any, action: string): void {
@@ -64,10 +67,38 @@ export class EditorOrderComponent implements OnInit {
           console.log('Selected order:', this.order);
           this.router.navigate(['/editor/orders', this.order.id]); // Use the numeric ID for navigation
         }
+      } else if (action === 'delete') {
+        this.deleteOrder();
       }
-
     }
-    return;
   }
 
+  deleteOrder(): void {
+    if (!this.order || !this.order.id) {
+      alert('You must select an order with a valid ID to delete!');
+      return;
+    }
+
+    const confirmDelete = confirm(
+      `Are you sure you want to delete the order: ${this.order.name} (ID: ${this.order.id})?`
+    );
+
+    if (confirmDelete) {
+      this.backendCommunicationService.deleteEditorOrder(this.order.id).subscribe({
+        next: () => {
+          alert(`Order with ID ${this.order.id} deleted successfully.`);
+          // Remove the deleted order from the loadedOrders array
+          this.loadedOrders = this.loadedOrders.filter(
+            (o) => o.id !== this.order.id
+          );
+          // Clear the selected order
+          this.order = undefined!;
+        },
+        error: (error) => {
+          console.error('Error deleting order:', error);
+          alert('Failed to delete the order. Please try again.');
+        },
+      });
+    }
+  }
 }
