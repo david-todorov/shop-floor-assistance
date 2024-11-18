@@ -37,8 +37,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   @Input() order!:orderTO;
   @Input() workflowIndex!:number | null;
   @Input() taskIndex!: number | null;
-  @Input() isOperatorMode: boolean = false;
-
+  @Input() isEditorMode!: boolean;
   
   @Output() onOrderUpdate= new EventEmitter<orderTO>();
   @Output() onItemsChecked= new EventEmitter<itemCheckStatuses>();

@@ -4,17 +4,14 @@
             <mat-accordion 
                 cdkDropList 
                 (cdkDropListDropped)="drop($event)"
-                
-                      
-        [id]="'workflows'"
-   
-                
-                
-                
-                
+                [id]="'workflows'"
                 >
                 @for(workflow of order.workflows; track $index){
-                    <mat-expansion-panel [expanded]="expandedPanels[$index]" [disabled]="isAnyWorkflowInEditMode()" cdkDrag> <!-- && !workFlowStates[$index].editMode "> -->
+                    <mat-expansion-panel 
+                        [expanded]="expandedPanels[$index]" 
+                        [disabled]="isAnyWorkflowInEditMode()" 
+                        cdkDrag [cdkDragDisabled]="!isEditorMode"
+                        > <!-- && !workFlowStates[$index].editMode "> -->
                         <mat-expansion-panel-header (click)="!isAnyWorkflowInEditMode() && selectWorkflow($index)" [ngClass]="{'selected-element': selectedWorkflowIndex === $index}">
                             <mat-panel-title>
                                 @if(!workFlowStates[$index].editMode){
@@ -26,16 +23,23 @@
 
                             <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
                                 <div class="whitespace-nowrap">
-                                    <button *ngIf="!isOperatorMode" mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="selectedWorkflowIndex !== $index">
-                                        <mat-icon>{{ workFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
+                                    @if(isEditorMode){
+                                    <button mat-icon-button 
+                                        (click)="toggleEditMode($index, $event)" 
+                                        [hidden]="selectedWorkflowIndex !== $index">
+                                            <mat-icon>{{ workFlowStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
                                     </button>
-                                    <button *ngIf="!isOperatorMode" mat-icon-button (click)="deleteWorkflow($index,$event)" [hidden]="selectedWorkflowIndex !== $index">
+                                    <button mat-icon-button 
+                                        (click)="deleteWorkflow($index,$event)" 
+                                        [hidden]="selectedWorkflowIndex !== $index">
                                         <mat-icon>delete</mat-icon>
                                     </button>
+                                    }
+
                                     <!-- @if(){ -->
-                                        <button *ngIf="!isOperatorMode" class="done-all" mat-icon-button>
+                                        <!-- <button class="done-all" mat-icon-button>
                                             <mat-icon>done_all</mat-icon>
-                                        </button>
+                                        </button> -->
                                     <!-- } -->
                                 </div>
                             </mat-panel-description>

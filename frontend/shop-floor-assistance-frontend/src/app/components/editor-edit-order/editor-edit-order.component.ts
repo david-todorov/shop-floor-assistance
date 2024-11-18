@@ -23,7 +23,7 @@ import { CommonModule } from '@angular/common';
 })
 export class EditorEditOrderComponent {
   
-
+  isEditorMode=false;
 
 
 
