@@ -1,6 +1,11 @@
 <div class="w-full flex flex-col ">
     <div class="flex justify-end -mt-4 mb-3">
-    <app-button *ngIf="!isOperatorMode" (onClick)="resolveAddTAsk($event)" [label]="btnLabelAddTask"></app-button>
+        @if(isEditorMode){
+            <app-button 
+                (onClick)="resolveAddTAsk($event)" 
+                [label]="btnLabelAddTask">
+            </app-button>
+            }
     </div>
     <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" 
          [(selectedIndex)]="taskIndex" (selectedIndexChange)="onTaskSelected($event)" >
@@ -14,18 +19,23 @@
                         cdkDropListOrientation="horizontal" 
                         (cdkDropListDropped)="drop($event)" 
                         [cdkDropListConnectedTo]="getAllDragTabs($index)"
-                        
                         >
-                        <div class="drag-box flex flex-row items-center " cdkDrag>
+                        <div class="drag-box flex flex-row items-center " [cdkDragDisabled]="!isEditorMode" cdkDrag>
                             <span class="mx-4 px- pt-1 text-lg ">{{ task.name }}</span>
                             <div class="pt-3 justify-center">
                                 <div class=" whitespace-nowrap flex flex-row gap-x-3 gap-y-3 justify-between">
-                                    <button *ngIf="!isOperatorMode" mat-icon-button (click)="editTask(task)" [hidden]="taskIndex !== $index">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-                                    <button *ngIf="!isOperatorMode" mat-icon-button (click)="deleteTasks($index,$event)" [hidden]="taskIndex !== $index">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
+                                    @if(isEditorMode){
+                                        <button mat-icon-button 
+                                            (click)="editTask(task)" 
+                                            [hidden]="taskIndex !== $index">
+                                                <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <button mat-icon-button 
+                                            (click)="deleteTasks($index,$event)" 
+                                            [hidden]="taskIndex !== $index">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    }
                                     
                                     <!-- <button class="done-all" mat-icon-button>
                                             <mat-icon >done_all</mat-icon>
@@ -46,7 +56,8 @@
                         [workflowIndex]="workflowIndex"
                         [taskIndex]="taskIndex"
                         [dropItemIdFromTask]="'itemsInTasks'+$index"
-                        [isOperatorMode]="isOperatorMode"
+                        [isEditorMode]="isEditorMode"
+                        
                         (onOrderUpdate)="updateItemsInOrder($event)" 
                         (onItemsChecked)="onItemsChecked($event)"
                         
