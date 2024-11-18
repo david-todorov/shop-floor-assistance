@@ -26,11 +26,11 @@
                                     <button mat-icon-button (click)="deleteTasks($index,$event)" [hidden]="taskIndex !== $index">
                                         <mat-icon>delete</mat-icon>
                                     </button>
-                                    <!-- @if(doneAll[$index]){ -->
-                                    <!--<button class="done-all" mat-icon-button>
-                                            <mat-icon>done_all</mat-icon>
-                                        </button> -->
-                                    <!-- } -->
+                                    
+                                    <!-- <button class="done-all" mat-icon-button>
+                                            <mat-icon >done_all</mat-icon>
+                                    </button> -->
+                                    
                                 </div>
                             </div>
                         </div>
@@ -48,6 +48,8 @@
                         [dropItemIdFromTask]="'itemsInTasks'+$index"
                         
                         (onOrderUpdate)="updateItemsInOrder($event)" 
+                        (onItemsChecked)="onItemsChecked($event)"
+                        
                         >
                         </app-item-accordion>
                 </div>

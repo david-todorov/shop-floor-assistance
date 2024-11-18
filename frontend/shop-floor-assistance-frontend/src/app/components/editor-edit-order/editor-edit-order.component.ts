@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { workflowTO } from '../../types/workflowTO';
 import { productTO } from '../../types/productTO';
 import { SuggestionsComponent } from '../suggestions/suggestions.component';
+import { itemCheckStatuses } from '../../shared/component-elements/workflowUI-state';
 
 
 @Component({
@@ -21,12 +22,22 @@ import { SuggestionsComponent } from '../suggestions/suggestions.component';
   styleUrl: './editor-edit-order.component.css'
 })
 export class EditorEditOrderComponent {
+  
+
+
+
+
+
+
   btnLabelAddWorkflow: string= 'Add Workflow';
   orderId!:number;
   productAfter!:productTO;
 
   order!: orderTO;
   selectedWorkflowIndex!: number | null;
+
+  checkedOrder!: orderTO;
+  checkStatuses!: itemCheckStatuses;
 
   constructor(private backendCommunicationService: BackendCommunicationService,
     private route: ActivatedRoute,
@@ -43,8 +54,8 @@ export class EditorEditOrderComponent {
           if (response) {
             this.order = response; // Assign the retrieved order data
             this.productAfter= this.order.productAfter;
-            
-            console.log('product after in edit page is: ', this.productAfter)
+            this.filterOrder(this.initializeCheckStatuses());
+            console.log('checkedOrder on initial loading', this.checkedOrder)
           } else {
             console.warn('No order found');
           }
@@ -90,9 +101,46 @@ export class EditorEditOrderComponent {
     this.showSnackbar('New workflow appended to the end of the workflows!');
   }
 
-     showSnackbar(message: string): void {
+  showSnackbar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 1500
     });
+  }
+
+  onItemsCheckReceived(checkStatuses: itemCheckStatuses): void {
+    this.filterOrder(checkStatuses);
+  }
+
+  initializeCheckStatuses(): itemCheckStatuses {
+    this.checkStatuses = {};
+    this.order.workflows.forEach((workflow, workflowIndex) => {
+      this.checkStatuses[workflowIndex] = {};
+      workflow.tasks.forEach((task, taskIndex) => {
+        this.checkStatuses[workflowIndex][taskIndex] = {};
+        task.items.forEach((item, itemIndex) => {
+          this.checkStatuses[workflowIndex][taskIndex][itemIndex] = false;
+        });
+      });
+    });
+    return this.checkStatuses;
+  }
+
+  filterOrder(checkStatuses: itemCheckStatuses){
+    this.checkedOrder = {
+      ...this.order,
+      workflows: this.order.workflows.map((workflow, workflowIndex) => {
+        return {
+          ...workflow,
+          tasks: workflow.tasks.map((task, taskIndex) => {
+            return {
+              ...task,
+              items: task.items.filter((item, itemIndex) => {
+                return checkStatuses[workflowIndex][taskIndex][itemIndex];
+              })
+            };
+          })
+        };
+      })
+    };
   }
 }

@@ -39,6 +39,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   @Input() taskIndex!: number | null;
   
   @Output() onOrderUpdate= new EventEmitter<orderTO>();
+  @Output() onItemsChecked= new EventEmitter<itemCheckStatuses>();
 
   expandedPanels: boolean[] = [];
   items!:itemTO[];
@@ -290,6 +291,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     const taskChecked= Object.values(this.itemsCheckStatuses[workflowIndex][taskIndex]).every(status=>status===true);
     this.tasksCheckStatuses[workflowIndex][taskIndex]=taskChecked;
     console.log('tasks checked = ', this.tasksCheckStatuses)
+    this.onItemsChecked.emit(this.itemsCheckStatuses)
   }
   
   closeAllPanels(): void {
