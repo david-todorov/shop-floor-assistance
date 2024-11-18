@@ -45,6 +45,7 @@ onItemsChecked(event: itemCheckStatuses) {
 
   @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
+  @Input() isEditorMode!: boolean;
   
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onWorkflowChange = new EventEmitter<number | null>();

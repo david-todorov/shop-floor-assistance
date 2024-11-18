@@ -26,17 +26,25 @@
                     </mat-panel-title>
                     <mat-panel-description class="flex flex-row justify-end whitespace-nowrap">
                         <div class="whitespace-nowrap flex flex-row items-center justify-center">
-                            <button mat-icon-button (click)="toggleEditMode($index, $event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
-                                <mat-icon>{{ itemUIStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
-                            </button>
-                            <button mat-icon-button (click)="deleteItems($index,$event)" [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index">
-                                <mat-icon>delete</mat-icon>
-                            </button>
+                            @if(isEditorMode){
+                                <button mat-icon-button 
+                                    (click)="toggleEditMode($index, $event)" 
+                                    [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index"
+                                    >
+                                        <mat-icon>{{ itemUIStates[$index].editMode ? 'warning' : 'edit' }}</mat-icon>
+                                </button>
+                                <button mat-icon-button 
+                                    (click)="deleteItems($index,$event)" 
+                                    [hidden]="itemIndices[workflowIndex??-1][taskIndex??-1] !== $index"
+                                    >
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            }
     
                             <!-- @if(itemUIStates[$index].checkStatus){ -->
-                            <button class="done-all"  [hidden]="!itemsCheckStatuses[workflowIndex??-1][taskIndex??-1][$index]" mat-icon-button>
+                            <!-- <button class="done-all"  [hidden]="!itemsCheckStatuses[workflowIndex??-1][taskIndex??-1][$index]" mat-icon-button>
                                 <mat-icon>done_all</mat-icon>
-                            </button>
+                            </button> -->
                             <!-- } -->
                             <mat-checkbox [(ngModel)]="itemsCheckStatuses[workflowIndex??-1][taskIndex??-1][$index]" 
                                             (change)="updateCheckStatus(workflowIndex??-1, taskIndex??-1, $index, $event.checked)"/>
@@ -55,5 +63,10 @@
             }
         </mat-accordion>
     }
-    <app-button (onClick)="resolveAddItem($event)" [label]="btnLabelAddItem" class="w-fit"></app-button>
+    @if(isEditorMode){
+        <app-button 
+            (onClick)="resolveAddItem($event)" 
+            [label]="btnLabelAddItem" class="w-fit">
+        </app-button>
+    }
 </div>
