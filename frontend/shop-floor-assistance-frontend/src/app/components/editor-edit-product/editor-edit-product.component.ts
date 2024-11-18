@@ -53,6 +53,8 @@ export class EditorEditProductComponent {
       // Optionally redirect to a different page or handle this error as needed
     }
   }
+
+  
   fetchProductDetails() {
      if (this.numericId !== null) {
       this.backendCommunicationService.getEditorProduct(this.numericId).subscribe({

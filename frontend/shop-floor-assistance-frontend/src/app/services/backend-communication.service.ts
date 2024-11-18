@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { userRoleTO, userTO } from '../types/userTO';
 import { loginState } from '../shared/component-elements/login-state';
 import { productTO } from '../types/productTO';
+import { OperatorExecutionTO } from '../types/OperatorExecutionTO';
 // import { productTO } from '../types/productTO';
 
 @Injectable({
@@ -69,6 +70,14 @@ export class BackendCommunicationService {
   getOperatorOrder(id: number): Observable<any>{
     return this.http.get(`${this.apiServerURL}operator/orders/${id}`);
   }
+
+  startOrder(id: number, orderData: any): Observable<OperatorExecutionTO> {
+  return this.http.post<OperatorExecutionTO>(`${this.apiServerURL}operator/start/${id}`, orderData);
+  }
+
+  finishOrder(id: number): Observable<OperatorExecutionTO> {
+    return this.http.put<OperatorExecutionTO>(`${this.apiServerURL}operator/finish/${id}`, {});}
+
 
   getForecast(id: number): Observable<any> {
     return this.http.get(`${this.apiServerURL}/api/forecast/${id}`);

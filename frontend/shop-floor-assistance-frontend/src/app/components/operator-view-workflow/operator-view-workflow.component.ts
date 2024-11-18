@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { workflowTO } from '../../types/workflowTO';
 import { productTO } from '../../types/productTO';
 import { CommonModule } from '@angular/common';
+import { OperatorExecutionTO } from '../../types/OperatorExecutionTO';
 
 @Component({
   selector: 'app-operator-view-workflow',
@@ -21,12 +22,15 @@ import { CommonModule } from '@angular/common';
 })
 export class OperatorViewWorkflowComponent {
 
-  // btnLabelAddWorkflow: string= 'Add Workflow';
+  btnLabelFinish: string= 'Finish';
   orderId!:number;
   productAfter!:productTO;
 
   order!: orderTO;
   selectedWorkflowIndex!: number | null;
+  executionStarted: boolean = false; // Tracks if an execution is in progress
+  execution!: OperatorExecutionTO | null; // Tracks the current execution
+  numericId: number | null = null;
 
   constructor(private backendCommunicationService: BackendCommunicationService,
     private route: ActivatedRoute,
@@ -56,6 +60,33 @@ export class OperatorViewWorkflowComponent {
     });
   }
 
+  ngOnInit() {
+    console.log('Component initialized with orderId:', this.orderId);
+}
+
+
+finishOrder(event: MouseEvent) {
+    if (event.type === 'click') {
+        if (!this.execution || !this.execution.id) {
+            alert('No execution found to finish!');
+            return;
+        }
+
+        this.backendCommunicationService.finishOrder(this.execution.id)
+            .subscribe({
+                next: (response: OperatorExecutionTO) => {
+                    this.execution = null; // Reset the execution
+                    this.executionStarted = false; // Reset the execution state
+                    console.log('Order finished successfully:', response);
+                    this.showSnackbar('Order has been marked as finished!');
+                },
+                error: (err) => {
+                    console.error('Error finishing the order:', err);
+                    alert('Failed to finish the order. Please try again.');
+                }
+            });
+    }
+}
 
 
 
@@ -69,32 +100,7 @@ export class OperatorViewWorkflowComponent {
     this.selectedWorkflowIndex = selectedWorkflow;
   }
 
-  // Method to add a new workflow
-  addNewWorkflow() {
-    const newWorkflow = {
-      workflowNumber: (this.order.workflows.length + 1).toString(),
-      name: 'New Workflow', // Default name for the new workflow
-      tasks: [] // Initialize with an empty array for tasks
-    };
 
-    this.order.workflows.push(newWorkflow);
-    console.log('New workflow added:', newWorkflow);
-  }
-
-  addNewTask() {
-    if (this.selectedWorkflowIndex !== null && this.order.workflows[this.selectedWorkflowIndex]) {
-      const newTask = {
-        taskNumber: (this.order.workflows[this.selectedWorkflowIndex].tasks.length + 1).toString(), // Unique identifier for the task
-        name: 'New Task', // Assign default name for the new task
-        workflows: [], // Initialize as an empty array for workflows if it's required
-        items: [] // Initialize with an empty array of items
-      };
-      this.order.workflows[this.selectedWorkflowIndex].tasks.push(newTask);
-      console.log('New task added:', newTask);
-    } else {
-      console.warn('No workflow selected to add a task');
-    }
-  }
 
     resolveAddWorkflow(event: MouseEvent): void {
     event.stopPropagation();
