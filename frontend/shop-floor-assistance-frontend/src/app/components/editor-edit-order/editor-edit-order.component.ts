@@ -11,12 +11,13 @@ import { workflowTO } from '../../types/workflowTO';
 import { productTO } from '../../types/productTO';
 import { SuggestionsComponent } from '../suggestions/suggestions.component';
 import { itemCheckStatuses } from '../../shared/component-elements/workflowUI-state';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-editor-edit-order',
   standalone: true,
   imports: [WorkflowAccordionComponent, 
-    TaskTabComponent, ButtonComponent, SuggestionsComponent],
+    TaskTabComponent, ButtonComponent, SuggestionsComponent, CommonModule],
   templateUrl: './editor-edit-order.component.html',
   styleUrl: './editor-edit-order.component.css'
 })

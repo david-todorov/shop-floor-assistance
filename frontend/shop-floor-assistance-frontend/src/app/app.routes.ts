@@ -18,13 +18,14 @@ import { ProductCreationOptionComponent } from './components/product-creation-op
 import { CreateProductFromExistingComponent } from './components/create-product-from-existing/create-product-from-existing.component';
 import { OrderCreationOptionComponent } from './components/order-creation-option/order-creation-option.component';
 import { CreateOrderFromExistingComponent } from './components/create-order-from-existing/create-order-from-existing.component';
+import { EditorOrderComponent } from './components/editor-order/editor-order.component';
 
 export const routes: Routes = [
     { path: '', component: WelcomeComponent },
     { path: 'login', component: LoginRegisterComponent },
     { path: 'operator/orders', component: OperatorComponent, },
     { path: 'operator/orders/:id', component: OperatorViewWorkflowComponent, },
-    // { path: 'editor/orders', component: EditorOrderComponent, },
+    { path: 'editor/orders', component: EditorOrderComponent, },
     { path: 'editor/orders/:id', component: EditorEditOrderComponent, },
     { path: 'editor-orders/creation-option', component: OrderCreationOptionComponent, },
     { path: 'editor-orders/create', component: EditorCreateOrderComponent, },

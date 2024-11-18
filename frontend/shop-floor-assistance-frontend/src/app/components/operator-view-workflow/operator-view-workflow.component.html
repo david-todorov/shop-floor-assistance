@@ -25,14 +25,6 @@
                            {{ equipment.equipmentNumber }}<span *ngIf="i < order.equipment.length - 1">, </span> </span>
                         </td>
                     </tr>
-                     <tr>
-                        <td class="field">Product Before:</td>
-                        <td class="value">{{ order.productBefore.productNumber }}</td>
-                    </tr>
-                    <tr>
-                        <td class="field">Product After:</td>
-                        <td class="value">{{ order.productAfter.productNumber }}</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -42,10 +34,14 @@
                 }
             </div>
         </div>
-  
+
+        <div class="row-span-1 flex justify-end items-right p-20">
+        <app-button (onClick)="finishOrder($event)" [label]="btnLabelFinish"></app-button>
     </div>
 
-    <div class="row-span-2 grid grid-cols-3 relative pt-12 ">
+    </div>
+
+    <div class="row-span-2 grid grid-cols-3 relative pt-12  ">
         <div class="col-span-1 overflow-auto w-full h-full  p-4 min-w-[350px] min-h-[200px] mt-20">
             <app-workflow-accordion (onOrderUpdate)="updateOrder($event)" (onSelect)="onSelect($event)" [order]="order" [isOperatorMode]="true">
             </app-workflow-accordion>
@@ -56,10 +52,5 @@
                 (onOrderUpdate)="updateOrder($event)" [isOperatorMode]="true"></app-task-tab>
         </div>
 
-    </div>
-    
-<!-- Button Row -->
-    <div class="row-span-1 flex justify-end items-center p-4">
-        <app-button (onClick)="finishOrder($event)" [label]="btnLabelFinish" class="btn btn-primary"></app-button>
     </div>
 </div>
