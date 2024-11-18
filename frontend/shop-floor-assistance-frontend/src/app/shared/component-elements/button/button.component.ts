@@ -14,6 +14,8 @@ export class ButtonComponent {
   @Input() disabled!: boolean;
   @Output() onClick = new EventEmitter<any>();
 
+
+
   onClickButton(event: MouseEvent) {
       this.onClick.emit(event);
     }

@@ -23,11 +23,7 @@ import { CommonModule } from '@angular/common';
 })
 export class EditorEditOrderComponent {
   
-  isEditorMode=false;
-
-
-
-
+  isEditorMode=true;
 
   btnLabelAddWorkflow: string= 'Add Workflow';
   saveBtnLabel: string = 'Save Order';

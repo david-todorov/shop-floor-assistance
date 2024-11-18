@@ -83,6 +83,10 @@ export class BackendCommunicationService {
     return this.http.get<{ totalTimeRequired: number | null }>(`${this.apiServerURL}operator/forecast/${id}`);
   }
 
+  abortOrderid(id: number): Observable<OperatorExecutionTO> {
+    return this.http.put<OperatorExecutionTO>(`${this.apiServerURL}operator/abort/${id}`, {});}
+
+
   //Orders
   getEditorOrders(): Observable<any> {
     return this.http.get(`${this.apiServerURL}editor/orders`);

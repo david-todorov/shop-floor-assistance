@@ -12,6 +12,7 @@ import { productTO } from '../../types/productTO';
 import { CommonModule } from '@angular/common';
 import { OperatorExecutionTO } from '../../types/OperatorExecutionTO';
 import { Router ,RouterLink } from '@angular/router';
+import { itemCheckStatuses } from '../../shared/component-elements/workflowUI-state';
 
 @Component({
   selector: 'app-operator-view-workflow',
@@ -23,9 +24,11 @@ import { Router ,RouterLink } from '@angular/router';
 export class OperatorViewWorkflowComponent {
 
   btnLabelFinish: string= 'Finish';
+  btnLabelAbort: string= 'Abort';
   orderId!:number;
   productAfter!:productTO;
-
+  isEditorMode=false;
+  checkedOrder!: orderTO;
   order!: orderTO;
   selectedWorkflowIndex!: number | null;
   executionStarted: boolean = false; // Tracks if an execution is in progress
@@ -108,6 +111,32 @@ finishOrder(event: MouseEvent) {
     }
 }
 
+abortOrder(event: MouseEvent) {
+    if (event.type === 'click') {
+        if (!this.execution || !this.execution.id) {
+            alert('No execution found to abort!');
+            return;
+        }
+
+        this.backendCommunicationService.abortOrderid(this.execution.id)
+            .subscribe({
+                next: (response: OperatorExecutionTO) => {
+                    console.log('Execution finished successfully:', response);
+                    this.execution = null; // Reset execution
+                    this.executionStarted = false; // Reset state
+                    this.showSnackbar('Order marked as finished successfully!');
+
+                    // Navigate back to the orders page
+                    this.router.navigateByUrl('/operator/orders');
+                },
+                error: (err) => {
+                    console.error('Error finishing execution:', err);
+                    alert('Failed to finish the execution. Please try again.');
+                }
+            });
+    }
+}
+
 
   updateOrder(order: orderTO) {
     this.order = { ...order };
@@ -118,31 +147,27 @@ finishOrder(event: MouseEvent) {
     this.selectedWorkflowIndex = selectedWorkflow;
   }
 
+onItemsCheckReceived(checkStatuses: itemCheckStatuses): void {
+    this.filterOrder(checkStatuses);
+  }
 
-
-    resolveAddWorkflow(event: MouseEvent): void {
-    event.stopPropagation();
-    const newWorkflow: workflowTO = {
-      name: 'New Workflow',
-      description: 'New workflow: Description',
-      tasks: [
-        {
-          name: 'New Task',
-          description: 'New Task: Description',
-          items: [
-            {
-              name: 'INew Item',
-              description: 'New item: Description',
-              timeRequired: null,
-            }
-          ]
-        }
-      ]
+   filterOrder(checkStatuses: itemCheckStatuses){
+    this.checkedOrder = {
+      ...this.order,
+      workflows: this.order.workflows.map((workflow, workflowIndex) => {
+        return {
+          ...workflow,
+          tasks: workflow.tasks.map((task, taskIndex) => {
+            return {
+              ...task,
+              items: task.items.filter((item, itemIndex) => {
+                return checkStatuses[workflowIndex][taskIndex][itemIndex];
+              })
+            };
+          })
+        };
+      })
     };
-    this.order.workflows.push(newWorkflow);
-    this.order= {...this.order};
-    console.log('updated order', this.order)
-    this.showSnackbar('New workflow appended to the end of the workflows!');
   }
 
      showSnackbar(message: string): void {
