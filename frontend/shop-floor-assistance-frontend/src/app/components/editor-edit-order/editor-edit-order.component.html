@@ -24,9 +24,9 @@
                             <td></td>
                             <td>
                                 @for(equipment of order.equipment; track $index){
-                                    <tr class="value">{{equipment.name}}</tr>
-                                }
-                            </td>
+                        <tr class="value">{{equipment.name}}</tr>
+                        }
+                        </td>
                         </tr>
                         <!-- <tr>
                             <td class="field">Product Before:</td>
@@ -42,8 +42,12 @@
                 <h1>The specified order could not be found!</h1>
                 }
             </div>
+
+            <div class="w-7/12 mx-4">
+                <app-button (onClick)="saveOrder($event)" [label]="saveBtnLabel"></app-button>
+            </div>
         </div>
-  
+
         <div class=" min-w-[986px] min-h-[280px]">
             <app-suggestions class="w-full" [productAfter]="productAfter"></app-suggestions>
         </div>

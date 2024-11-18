@@ -1,5 +1,5 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { orderTO } from '../../types/orderTO';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
@@ -11,7 +11,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { workflowTO } from '../../types/workflowTO';
 import { productTO } from '../../types/productTO';
 
-
 @Component({
   selector: 'app-editor-edit-order',
   standalone: true,
@@ -21,6 +20,7 @@ import { productTO } from '../../types/productTO';
 })
 export class EditorEditOrderComponent {
   btnLabelAddWorkflow: string= 'Add Workflow';
+  saveBtnLabel: string = 'Save Order';
   orderId!:number;
   productAfter!:productTO;
 
@@ -29,6 +29,7 @@ export class EditorEditOrderComponent {
 
   constructor(private backendCommunicationService: BackendCommunicationService,
     private route: ActivatedRoute,
+    private router: Router,
     private snackBar: MatSnackBar) {
     this.route.params.subscribe(params => {
       this.orderId = params['id'];
@@ -55,13 +56,30 @@ export class EditorEditOrderComponent {
     });
   }
 
-
-
-
-
   updateOrder(order: orderTO) {
     this.order = { ...order };
     console.log('updates order received at parent', this.order)
+  }
+
+
+  saveOrder(event: MouseEvent): void {
+    if (event.type === 'click' && this.order) {
+      this.backendCommunicationService.updateEditorOrder(this.orderId, this.order)
+        .pipe(
+          catchError((error) => {
+            console.error('Error updating order:', error);
+            this.showSnackbar('Failed to save the order. Please try again.');
+            return of(null);
+          })
+        )
+        .subscribe((response) => {
+          if (response) {
+            this.showSnackbar('Order updated successfully!');
+            // Redirect or update UI
+            this.router.navigateByUrl('/editor/orders');
+          }
+        });
+    }
   }
 
   onSelect(selectedWorkflow: number | null) {
