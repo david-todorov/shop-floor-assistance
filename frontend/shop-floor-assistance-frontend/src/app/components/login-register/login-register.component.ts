@@ -48,14 +48,28 @@ export class LoginRegisterComponent implements OnInit, OnDestroy{
     }
 
   ngOnInit(): void {
-    this.backendCommunicationService.loginUIState$.subscribe(
-      (state) => {
-        this.loginUIState = state;
-      },
-      ()=>{
-         this.loginUIState= this.backendCommunicationService.getloginUIState();
+    this.loginUIState= this.backendCommunicationService.getloginUIState();
+    if(this.loginUIState && this.loginUIState.isLoggedIn){
+      switch(this.loginUIState.currentRole){
+        case 'editor':
+          console.log('logged as', this.loginUIState.currentRole)
+          this.router.navigateByUrl('/editor-homepage');
+          break;
+        case 'operator':
+          console.log('logged as', this.loginUIState.currentRole)
+          this.router.navigateByUrl('/operator/orders');
+          break;
       }
-    );
+    }else{      
+      this.backendCommunicationService.loginUIState$.subscribe(
+        (state) => {
+          this.loginUIState = state;
+        },
+        ()=>{
+           this.loginUIState= this.backendCommunicationService.getloginUIState();
+        }
+      );
+    }
   }
 
   ngOnDestroy(): void {

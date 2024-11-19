@@ -148,9 +148,6 @@ export class BackendCommunicationService {
   }
 
   //Suggestions
-  // getWorkflowSuggestions(productAfter: productTO): Observable<any> {
-  //   return this.http.post(`${this.apiServerURL}editor/workflows/suggestions`, {productAfter});
-  // }
 
   getWorkflowSuggestions(productAfter: productTO): Observable<HttpResponse<any>> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });

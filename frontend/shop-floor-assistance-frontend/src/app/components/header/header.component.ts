@@ -75,8 +75,6 @@ export class HeaderComponent {
 
   onSubmit() {
     if(!this.loginUIState.isLoggedIn){
-
-
       this.loginUIState.isLoginVisible= false;
       this.loginUIState.buttonLabel= 'Log In';
       this.loginUIState.buttonIcon= 'login';
