@@ -9,6 +9,7 @@ module.exports = {
         background: '#F2F2F2',
         shade: '#595959',
         dark:'#0D0D0D',
+        'red-btn': '#FF0000', // Adding red color for the button
                 scrollbar: {
           DEFAULT: '#66ADD9', // Default scrollbar color
           hover: '#0477BF', // Hover state scrollbar color
