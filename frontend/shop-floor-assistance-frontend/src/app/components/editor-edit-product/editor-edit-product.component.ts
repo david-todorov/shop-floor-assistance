@@ -14,6 +14,7 @@ import { ButtonComponent } from '../../shared/component-elements/button/button.c
   styleUrl: './editor-edit-product.component.css'
 })
 export class EditorEditProductComponent {
+
   product: productTO = {
     id: 0,
     productNumber: "",
@@ -126,4 +127,6 @@ export class EditorEditProductComponent {
       }
     }
   }
+
+
 }

@@ -103,4 +103,9 @@ export class EditorOrderComponent implements OnInit {
       });
     }
   }
+
+    confirmHome() {
+this.router.navigateByUrl('/editor-homepage');
+}
+
 }
