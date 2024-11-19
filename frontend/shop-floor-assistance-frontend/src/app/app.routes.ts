@@ -18,25 +18,26 @@ import { EquipmentCreationOptionComponent } from './components/equipment-creatio
 import { ProductCreationOptionComponent } from './components/product-creation-option/product-creation-option.component';
 import { CreateProductFromExistingComponent } from './components/create-product-from-existing/create-product-from-existing.component';
 import { authGuard } from './guards/auth.guard';
+import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
         { path: '', component: WelcomeComponent },
         { path: 'login', component: LoginRegisterComponent,},
-        { path: 'operator/orders', component: OperatorComponent, canActivate:[authGuard] },
+        { path: 'operator/orders', component: OperatorComponent, canActivate:[authGuard, roleGuard] },
         // { path: 'operator/orders/:id', component: OperatorViewWorkflowComponent, canActivate:[authGuard] },
-        { path: 'editor/orders', component: EditorOrderComponent, canActivate:[authGuard] },
-        { path: 'editor/orders/:id', component:EditorEditOrderComponent, canActivate:[authGuard] },
-        { path: 'editor-orders/order-form', component: OrderFormComponent, canActivate:[authGuard] },
-        { path: 'editor-orders/create', component: EditorCreateOrderComponent, canActivate:[authGuard] },
-        { path: 'editor-homepage', component: EditorHomepageComponent, canActivate:[authGuard] },
-        { path: 'editor/equipment', component: EditorEquipmentComponent, canActivate:[authGuard] },
-        { path: 'editor/equipment/:id', component: EditorEditEquipmentComponent,canActivate:[authGuard] },
-        { path: 'editor-equipment/creation-option', component: EquipmentCreationOptionComponent, canActivate:[authGuard] },
-        { path: 'editor-equipment/create', component: EditorCreateEquipmentComponent, canActivate:[authGuard] },
-        { path: 'editor-equipment/create-from-existing', component: CreateEquipmentFromExistingComponent, canActivate:[authGuard] },
-        { path: 'editor/products', component: EditorProductComponent, canActivate:[authGuard] },
-        { path: 'editor/product/:id', component: EditorEditProductComponent, canActivate:[authGuard] },
-        { path: 'editor-product/creation-option', component: ProductCreationOptionComponent,canActivate:[authGuard] },
-        { path: 'editor-product/create', component: EditorCreateProductComponent, canActivate:[authGuard] },
-        { path: 'editor-product/create-from-existing', component: CreateProductFromExistingComponent, canActivate:[authGuard] }
+        { path: 'editor/orders', component: EditorOrderComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor/orders/:id', component:EditorEditOrderComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor-orders/order-form', component: OrderFormComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor-orders/create', component: EditorCreateOrderComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor-homepage', component: EditorHomepageComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor/equipment', component: EditorEquipmentComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor/equipment/:id', component: EditorEditEquipmentComponent,canActivate:[authGuard, roleGuard] },
+        { path: 'editor-equipment/creation-option', component: EquipmentCreationOptionComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor-equipment/create', component: EditorCreateEquipmentComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor-equipment/create-from-existing', component: CreateEquipmentFromExistingComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor/products', component: EditorProductComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor/product/:id', component: EditorEditProductComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor-product/creation-option', component: ProductCreationOptionComponent,canActivate:[authGuard, roleGuard] },
+        { path: 'editor-product/create', component: EditorCreateProductComponent, canActivate:[authGuard, roleGuard] },
+        { path: 'editor-product/create-from-existing', component: CreateProductFromExistingComponent, canActivate:[authGuard, roleGuard] }
     ]

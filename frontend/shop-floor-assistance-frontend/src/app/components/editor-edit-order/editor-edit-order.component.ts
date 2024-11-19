@@ -23,11 +23,7 @@ import { itemCheckStatuses } from '../../shared/component-elements/workflowUI-st
 })
 export class EditorEditOrderComponent {
   
-  isEditorMode=false;
-
-
-
-
+  isEditorMode=true;
 
   btnLabelAddWorkflow: string= 'Add Workflow';
   orderId!:number;
