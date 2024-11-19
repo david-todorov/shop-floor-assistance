@@ -85,6 +85,7 @@ export class LoginRegisterComponent implements OnInit, OnDestroy{
 
   loadUserPage(userRole: string) {
     if(userRole === 'editor'){
+      console.log('looged in as ediotr')
       this.router.navigateByUrl('/editor-homepage');
     }else if(userRole === 'operator'){
       this.router.navigateByUrl('/operator/orders');

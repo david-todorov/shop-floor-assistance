@@ -17,25 +17,26 @@ import { CreateEquipmentFromExistingComponent } from './components/create-equipm
 import { EquipmentCreationOptionComponent } from './components/equipment-creation-option/equipment-creation-option.component';
 import { ProductCreationOptionComponent } from './components/product-creation-option/product-creation-option.component';
 import { CreateProductFromExistingComponent } from './components/create-product-from-existing/create-product-from-existing.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-    { path: '', component: WelcomeComponent },
-    { path: 'login', component: LoginRegisterComponent },
-    { path: 'operator/orders', component: OperatorComponent, },
-    // { path: 'operator/orders/:id', component: OperatorViewWorkflowComponent, },
-    { path: 'editor/orders', component: EditorOrderComponent, },
-    { path: 'editor/orders/:id', component:EditorEditOrderComponent,},
-    { path: 'editor-orders/order-form', component: OrderFormComponent, },
-    { path: 'editor-orders/create', component: EditorCreateOrderComponent, },
-    { path: 'editor-homepage', component: EditorHomepageComponent, },
-    { path: 'editor/equipment', component: EditorEquipmentComponent, },
-    { path: 'editor/equipment/:id', component: EditorEditEquipmentComponent, },
-    { path: 'editor-equipment/creation-option', component: EquipmentCreationOptionComponent, },
-    { path: 'editor-equipment/create', component: EditorCreateEquipmentComponent, }, 
-    { path: 'editor-equipment/create-from-existing', component: CreateEquipmentFromExistingComponent, },
-    { path: 'editor/products', component: EditorProductComponent, },
-    { path: 'editor/product/:id', component: EditorEditProductComponent, },
-    { path: 'editor-product/creation-option', component: ProductCreationOptionComponent, },
-    { path: 'editor-product/create', component: EditorCreateProductComponent },
-    { path: 'editor-product/create-from-existing', component: CreateProductFromExistingComponent, },   
-];
+        { path: '', component: WelcomeComponent },
+        { path: 'login', component: LoginRegisterComponent,},
+        { path: 'operator/orders', component: OperatorComponent, canActivate:[authGuard] },
+        // { path: 'operator/orders/:id', component: OperatorViewWorkflowComponent, canActivate:[authGuard] },
+        { path: 'editor/orders', component: EditorOrderComponent, canActivate:[authGuard] },
+        { path: 'editor/orders/:id', component:EditorEditOrderComponent, canActivate:[authGuard] },
+        { path: 'editor-orders/order-form', component: OrderFormComponent, canActivate:[authGuard] },
+        { path: 'editor-orders/create', component: EditorCreateOrderComponent, canActivate:[authGuard] },
+        { path: 'editor-homepage', component: EditorHomepageComponent, canActivate:[authGuard] },
+        { path: 'editor/equipment', component: EditorEquipmentComponent, canActivate:[authGuard] },
+        { path: 'editor/equipment/:id', component: EditorEditEquipmentComponent,canActivate:[authGuard] },
+        { path: 'editor-equipment/creation-option', component: EquipmentCreationOptionComponent, canActivate:[authGuard] },
+        { path: 'editor-equipment/create', component: EditorCreateEquipmentComponent, canActivate:[authGuard] },
+        { path: 'editor-equipment/create-from-existing', component: CreateEquipmentFromExistingComponent, canActivate:[authGuard] },
+        { path: 'editor/products', component: EditorProductComponent, canActivate:[authGuard] },
+        { path: 'editor/product/:id', component: EditorEditProductComponent, canActivate:[authGuard] },
+        { path: 'editor-product/creation-option', component: ProductCreationOptionComponent,canActivate:[authGuard] },
+        { path: 'editor-product/create', component: EditorCreateProductComponent, canActivate:[authGuard] },
+        { path: 'editor-product/create-from-existing', component: CreateProductFromExistingComponent, canActivate:[authGuard] }
+    ]
