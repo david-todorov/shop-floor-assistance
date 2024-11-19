@@ -16,6 +16,7 @@ import { ButtonComponent } from '../../shared/component-elements/button/button.c
 
 export class EditorEquipmentComponent implements OnInit {
 
+
   equipment!: equipmentTO;
   loadedEquipment!: equipmentTO[];
   editDisabled: boolean = true;
@@ -108,4 +109,5 @@ export class EditorEquipmentComponent implements OnInit {
       });
     }
   }
+
 }

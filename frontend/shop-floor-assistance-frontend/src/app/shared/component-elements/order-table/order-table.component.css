@@ -44,7 +44,7 @@ table {
 }
 
 .container::-webkit-scrollbar {
-    @apply w-4 h-10;
+    @apply w-4 h-4 !important;
 }
 
 .container::-webkit-scrollbar-thumb {

@@ -17,7 +17,7 @@ import { itemCheckStatuses } from '../../shared/component-elements/workflowUI-st
 @Component({
   selector: 'app-operator-view-workflow',
   standalone: true,
-  imports: [WorkflowAccordionComponent, TaskTabComponent, ButtonComponent,  CommonModule, RouterLink ],
+  imports: [WorkflowAccordionComponent, TaskTabComponent, ButtonComponent,  CommonModule],
   templateUrl: './operator-view-workflow.component.html',
   styleUrl: './operator-view-workflow.component.css'
 })
