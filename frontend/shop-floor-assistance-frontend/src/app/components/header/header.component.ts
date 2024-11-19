@@ -99,4 +99,28 @@ export class HeaderComponent {
       this.router.navigateByUrl('');
     }
   }
+
+  getHomeRoute(): string {
+    switch (this.backendCommunicationService.getloginUIState().currentRole) {
+      case 'editor':
+        return '/editor-homepage';
+      case 'operator':
+        return '/operator-homepage';
+      default:
+        return '/';
+    }
+  }
+  
+  getOrdersRoute(): string {
+    switch (this.backendCommunicationService.getloginUIState().currentRole) {
+      case 'editor':
+        return '/editor/orders';
+      case 'operator':
+        return '/operator/orders';
+      default:
+        return '/';
+    }
+  }
+
+
 }

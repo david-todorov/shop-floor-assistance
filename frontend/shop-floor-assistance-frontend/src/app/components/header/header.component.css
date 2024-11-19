@@ -1,3 +1,20 @@
 .user-role {
-    @apply flex items-center border border-primary rounded mr-10 shadow ;
+    @apply flex items-center  rounded mr-10 shadow ;
+}
+.nav-link {
+    @apply  m-4 text-base border-none bg-transparent underline
+    flex items-center *:hover:bg-background hover:text-primary 
+    transform hover:scale-125 
+    hover:bg-opacity-50 
+    transition ease-out duration-100
+    !important;
+}
+
+.toolbar{
+    @apply bg-white !important;
+}
+
+.icon{
+    @apply  bg-transparent hover:bg-white   *:hover:bg-white  transform hover:scale-125 
+    hover:bg-opacity-50 transition ease-out duration-100 !important;
 }
