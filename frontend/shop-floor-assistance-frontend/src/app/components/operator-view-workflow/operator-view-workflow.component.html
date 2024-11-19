@@ -31,17 +31,22 @@
                 <h1>The specified order could not be found!</h1>
                 }
 
-                  <div class="flex justify-end items-center space-x-8 p-4">
+                  <div class="flex justify-start items-center space-x-8 p-4">
+
+                  <button class="w-44 mt-4 bg-red-500 text-white hover:bg-red-600 transition ease-in-out duration-300 px-4 py-2 rounded-full focus:outline-none"
+                  (click)="abortOrder($event)">Abort</button>
+
                 <app-button 
                     (onClick)="finishOrder($event)" 
                     [label]="btnLabelFinish" 
                     class="btn btn-primary">
                 </app-button>
-                <app-button 
+                
+                <!-- <app-button 
                     (onClick)="abortOrder($event)" 
                     [label]="btnLabelAbort" 
                     class="btn btnred">
-                </app-button>
+                </app-button> -->
             </div>
             </div>
 
