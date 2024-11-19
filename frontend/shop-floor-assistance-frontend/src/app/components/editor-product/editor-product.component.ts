@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
 import { ProductTableComponent } from '../../shared/component-elements/product-table/product-table.component';
-import { productTO } from '../../types/productTO';
+import { productTO } from '../../shared/types/productTO';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
 
 @Component({

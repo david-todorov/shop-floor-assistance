@@ -1,9 +1,9 @@
 import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
-import { orderTO } from '../../../types/orderTO';
+import { orderTO } from '../../types/orderTO';
 import { CommonModule } from '@angular/common';
-import { taskTO } from '../../../types/taskTO';
+import { taskTO } from '../../types/taskTO';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
 import { ItemAccordionComponent } from '../item-accordion/item-accordion.component';
@@ -12,7 +12,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from 
 import { SuggestionsService } from '../../../services/suggestions.service';
 import { Global } from '../../../services/globals';
 import { ButtonComponent } from '../button/button.component';
-import { itemCheckStatuses, taskCheckStatuses } from '../workflowUI-state';
+import { itemCheckStatuses, taskCheckStatuses } from '../../types/workflowUI-state';
 
 @Component({
   selector: 'app-task-tab',

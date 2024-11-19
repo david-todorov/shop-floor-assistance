@@ -1,14 +1,14 @@
 import { ChangeDetectorRef, Component, EventEmitter, input, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { itemTO } from '../../../types/itemTO';
-import { taskTO } from '../../../types/taskTO';
+import { itemTO } from '../../types/itemTO';
+import { taskTO } from '../../types/taskTO';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { itemCheckStatuses, itemIndices, itemUIStates, taskCheckStatuses } from '../workflowUI-state';
+import { itemCheckStatuses, itemIndices, itemUIStates, taskCheckStatuses } from '../../types/workflowUI-state';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { orderTO } from '../../../types/orderTO';
+import { orderTO } from '../../types/orderTO';
 import { UIService } from '../../../services/ui.service';
 import { ButtonComponent } from '../button/button.component';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';

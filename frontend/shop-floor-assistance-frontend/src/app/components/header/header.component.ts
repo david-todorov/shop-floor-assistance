@@ -5,7 +5,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { loginState } from '../../shared/component-elements/login-state';
+import { loginState } from '../../shared/types/login-state';
 import { Location } from '@angular/common';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 

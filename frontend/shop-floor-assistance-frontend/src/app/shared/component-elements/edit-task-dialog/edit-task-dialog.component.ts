@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { taskTO } from '../../../types/taskTO';
+import { taskTO } from '../../types/taskTO';
 import { ButtonComponent } from '../button/button.component';
 
 @Component({

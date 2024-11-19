@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { loginState } from '../../shared/component-elements/login-state';
+import { loginState } from '../../shared/types/login-state';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';

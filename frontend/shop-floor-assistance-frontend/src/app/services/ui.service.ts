@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { itemCheckStatuses, itemIndices, taskCheckStatuses } from '../shared/component-elements/workflowUI-state';
+import { itemCheckStatuses, itemIndices, taskCheckStatuses } from '../shared/types/workflowUI-state';
 
 @Injectable({
   providedIn: 'root'

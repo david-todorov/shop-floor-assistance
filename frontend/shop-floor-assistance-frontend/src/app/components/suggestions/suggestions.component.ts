@@ -7,12 +7,12 @@ import { catchError, map, of } from 'rxjs';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { MatRadioModule } from '@angular/material/radio';
 import { Global } from '../../services/globals';
-import { productTO } from '../../types/productTO';
+import { productTO } from '../../shared/types/productTO';
 import { SuggestionsService } from '../../services/suggestions.service';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
-import { itemTO } from '../../types/itemTO';
-import { workflowTO } from '../../types/workflowTO';
-import { taskTO } from '../../types/taskTO';
+import { itemTO } from '../../shared/types/itemTO';
+import { workflowTO } from '../../shared/types/workflowTO';
+import { taskTO } from '../../shared/types/taskTO';
 
 
 @Component({

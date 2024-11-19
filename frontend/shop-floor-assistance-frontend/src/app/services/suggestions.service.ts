@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { itemTO } from '../types/itemTO';
+import { itemTO } from '../shared/types/itemTO';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Subject } from 'rxjs';
-import { itemDropEvent } from '../types/itemDropEventType';
+import { itemDropEvent } from '../shared/types/itemDropEventType';
 
 @Injectable({
   providedIn: 'root'

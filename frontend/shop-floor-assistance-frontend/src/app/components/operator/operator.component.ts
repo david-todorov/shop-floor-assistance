@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderTableComponent } from '../../shared/component-elements/order-table/order-table.component';
-import { orderTO } from '../../types/orderTO';
+import { orderTO } from '../../shared/types/orderTO';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
 import { Router, RouterLink } from '@angular/router';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
-import { OperatorExecutionTO } from '../../types/OperatorExecutionTO';
+import { OperatorExecutionTO } from '../../shared/types/OperatorExecutionTO';
 
 
 @Component({

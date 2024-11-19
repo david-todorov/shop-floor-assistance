@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { OrderTableComponent } from '../../shared/component-elements/order-table/order-table.component';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
 import { Router, RouterLink } from '@angular/router';
-import { orderTO } from '../../types/orderTO';
+import { orderTO } from '../../shared/types/orderTO';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
-import { sampleOrders } from '../../types/dummyData';
+import { sampleOrders } from '../../shared/types/dummyData';
 
 @Component({
   selector: 'app-editor',

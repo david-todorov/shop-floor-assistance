@@ -5,7 +5,7 @@ import { catchError, of } from 'rxjs';
 import { EquipmentTableComponent } from '../../shared/component-elements/equipment-table/equipment-table.component';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
 import { EditorEquipmentComponent } from '../editor-equipment/editor-equipment.component';
-import { equipmentTO } from '../../types/equipmentTO';
+import { equipmentTO } from '../../shared/types/equipmentTO';
 import { Component } from '@angular/core';
 
 @Component({
