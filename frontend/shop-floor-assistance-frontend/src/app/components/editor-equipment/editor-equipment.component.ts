@@ -110,7 +110,4 @@ export class EditorEquipmentComponent implements OnInit {
     }
   }
 
-  confirmHome() {
-this.router.navigateByUrl('/editor-homepage');
-}
 }

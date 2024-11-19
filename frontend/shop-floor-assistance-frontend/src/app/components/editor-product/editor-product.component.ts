@@ -108,8 +108,4 @@ export class EditorProductComponent implements OnInit {
       });
     }
   }
-
-    confirmHome() {
-this.router.navigateByUrl('/editor-homepage');
-}
 }
