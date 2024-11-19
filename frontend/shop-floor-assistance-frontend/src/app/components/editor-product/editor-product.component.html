@@ -6,6 +6,12 @@
         <app-button (onClick)="resolveButtonClick($event, 'edit')" [disabled]="editDisabled"
             [label]="editBtnLabel"></app-button>
     </div>
+
+    <div class="w-7/12 mx-4">
+        <app-button (onClick)="resolveButtonClick($event, 'delete')" [disabled]="deleteDisabled"
+            [label]="deleteBtnLabel"></app-button>
+    </div>
+    
     <div class="w-7/12 mx-4">
         <app-button (onClick)="resolveButtonClick($event, 'create')" [disabled]="createDisabled"
             [label]="createBtnLabel"></app-button>

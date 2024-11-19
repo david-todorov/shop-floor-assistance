@@ -1,0 +1,21 @@
+.container {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.two-column-layout {
+  display: flex;
+  gap: 20px;
+}
+
+.suggestions {
+  flex: 1;
+  max-width: 250px; /* Adjust as needed */
+  border-right: 1px solid #ccc;
+  padding-right: 20px;
+}
+
+.edit-form {
+  flex: 2;
+  padding-left: 20px;
+}

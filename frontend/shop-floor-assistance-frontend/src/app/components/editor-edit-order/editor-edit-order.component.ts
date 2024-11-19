@@ -1,5 +1,5 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { orderTO } from '../../types/orderTO';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
@@ -11,25 +11,22 @@ import { workflowTO } from '../../types/workflowTO';
 import { productTO } from '../../types/productTO';
 import { SuggestionsComponent } from '../suggestions/suggestions.component';
 import { itemCheckStatuses } from '../../shared/component-elements/workflowUI-state';
-
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-editor-edit-order',
   standalone: true,
   imports: [WorkflowAccordionComponent, 
-    TaskTabComponent, ButtonComponent, SuggestionsComponent],
+    TaskTabComponent, ButtonComponent, SuggestionsComponent, CommonModule],
   templateUrl: './editor-edit-order.component.html',
   styleUrl: './editor-edit-order.component.css'
 })
 export class EditorEditOrderComponent {
   
-  isEditorMode=false;
-
-
-
-
+  isEditorMode=true;
 
   btnLabelAddWorkflow: string= 'Add Workflow';
+  saveBtnLabel: string = 'Save Order';
   orderId!:number;
   productAfter!:productTO;
 
@@ -41,6 +38,7 @@ export class EditorEditOrderComponent {
 
   constructor(private backendCommunicationService: BackendCommunicationService,
     private route: ActivatedRoute,
+    private router: Router,
     private snackBar: MatSnackBar) {
     this.route.params.subscribe(params => {
       this.orderId = params['id'];
@@ -70,6 +68,27 @@ export class EditorEditOrderComponent {
   updateOrder(order: orderTO) {
     this.order = { ...order };
     console.log('updates order received at parent', this.order)
+  }
+
+
+  saveOrder(event: MouseEvent): void {
+    if (event.type === 'click' && this.order) {
+      this.backendCommunicationService.updateEditorOrder(this.orderId, this.order)
+        .pipe(
+          catchError((error) => {
+            console.error('Error updating order:', error);
+            this.showSnackbar('Failed to save the order. Please try again.');
+            return of(null);
+          })
+        )
+        .subscribe((response) => {
+          if (response) {
+            this.showSnackbar('Order updated successfully!');
+            // Redirect or update UI
+            this.router.navigateByUrl('/editor/orders');
+          }
+        });
+    }
   }
 
   onSelect(selectedWorkflow: number | null) {

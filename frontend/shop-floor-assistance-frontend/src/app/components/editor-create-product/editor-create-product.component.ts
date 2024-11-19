@@ -11,10 +11,11 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-editor-create-product',
   standalone: true,
-  imports: [FormsModule, ProductTableComponent, ButtonComponent, EditorProductComponent],
+  imports: [FormsModule, ButtonComponent],
   templateUrl: './editor-create-product.component.html',
   styleUrls: ['./editor-create-product.component.css']
 })
+
 
 export class EditorCreateProductComponent {
   product: productTO = {

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditorCreateOrderComponent } from './editor-create-order.component';
 
-describe('EditorCreateOrderComponent', () => {
+describe('OrderFormComponent', () => {
   let component: EditorCreateOrderComponent;
   let fixture: ComponentFixture<EditorCreateOrderComponent>;
 
@@ -10,7 +10,7 @@ describe('EditorCreateOrderComponent', () => {
     await TestBed.configureTestingModule({
       imports: [EditorCreateOrderComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(EditorCreateOrderComponent);
     component = fixture.componentInstance;

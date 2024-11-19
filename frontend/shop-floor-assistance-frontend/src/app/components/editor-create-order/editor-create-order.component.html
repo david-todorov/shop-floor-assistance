@@ -1,47 +1,48 @@
+<div class="order-form p-4 border rounded-lg shadow max-w-lg mx-auto">
+  <span class="text-2xl font-semibold mb-5 block text-center">Editor Workspace</span>
 
-    <div class="grid grid-rows-3 h-screen m-5">
-        <div class="row-span-1 w-full flex whitespace-nowrap">
-            <div class="col-span-1 w-1/3 h-full min-w-[350px] min-h-[200px]">
-                <div class="w-full h-full p-4">
-                    <!-- Use *ngIf to check if order is defined -->
-                    <table *ngIf="order" class="table-auto min-w-full p-4">
-                        <tbody>
-                            <tr>
-                                <td class="field">Name:</td>
-                                <td class="value">{{ order.name }}</td>
-                            </tr>
-                            <tr>
-                                <td class="field">Order number:</td>
-                                <td class="value">{{ order.orderNumber }}</td>
-                            </tr>
-                            <tr>
-                                <td class="field">Description:</td>
-                                <td class="value">{{ order.description }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Display message if order is undefined -->
-                    <h1 *ngIf="!order">The specified order could not be found!</h1>
-                </div>
-            </div>
-            <div class="col-span-2 w-2/3 h-full p-4">
-                <div
-                    class="suggestion-box flex-grow rounded-lg h-full border-2 border-accent p-4 overflow-auto min-w-[650px] min-h-[200px]">
-                    <p class="font-bold">Autofill suggestions here..</p>
-                </div>
-            </div>
-        </div>
+  <div class="text-center mb-5">
+    <span class="text-xl font-semibold">New Order:</span>
+  </div>
 
-        <div class="row-span-2 grid grid-cols-3 relative pt-12">
-            <div class="col-span-1 overflow-auto w-full h-full p-4 min-w-[350px] min-h-[200px]">
-                <!-- Add New Workflow Icon at the bottom of the workflow list -->
-                <div class="add-workflow-container flex items-center space-x-2 p-4">
-                    <button (click)="addNewWorkflow()"
-                        class="add-workflow-btn flex items-center text-primary font-bold text-sm">
-                        <span>➕</span> <!-- Simple icon to add a new workflow -->
-                        <span class="ml-2">Add New Workflow</span>
-                    </button>
-                </div>
-            </div>
-        </div>
+  <div class="grid grid-cols-2 gap-4 mb-5">
+    <div class="font-semibold">Name</div>
+    <div><input type="text" placeholder="Enter Order Name" class="input-field" [(ngModel)]="order.name">
     </div>
+
+    <div class="font-semibold">Order Number</div>
+    <div><input type="text" placeholder="Enter Order Number" class="input-field" [(ngModel)]="order.orderNumber">
+    </div>
+
+    <div class="font-semibold">Description</div>
+    <div><input type="text" placeholder="Enter Order Description" class="input-field" [(ngModel)]="order.description">
+    </div>
+
+    <div class="font-semibold">Equipment</div>
+    <div>
+      <select class="input-field" [(ngModel)]="selectedEquipment" (ngModelChange)="onEquipmentChange($event)"
+        title="Equipment" multiple required>
+        <option *ngFor="let equipment of equipmentList" [ngValue]="equipment">{{ equipment.equipmentNumber }}</option>
+      </select>
+    </div>
+
+    <div class="font-semibold">Product (old)</div>
+    <div>
+      <select class="input-field" [(ngModel)]="selectedProductBefore" (ngModelChange)="onProductBeforeChange($event)"
+        title="Product Before" required>
+        <option *ngFor="let product of productList" [ngValue]="product">{{ product.productNumber }}</option>
+      </select>
+    </div>
+
+    <div class="font-semibold">Product (new)</div>
+    <div>
+      <select class="input-field" [(ngModel)]="selectedProductAfter" (ngModelChange)="onProductAfterChange($event)"
+        title="Product After" required>
+        <option *ngFor="let product of productList" [ngValue]="product">{{ product.productNumber }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="order-form text-center mt-4">
+    <app-button (click)="saveOrder($event)" [disabled]="createDisabled" [label]="createBtnLabel"></app-button>
+  </div>
