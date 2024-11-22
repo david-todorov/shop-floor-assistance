@@ -1,16 +1,16 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { orderTO } from '../../types/orderTO';
+import { orderTO } from '../../shared/types/orderTO';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { catchError, of } from 'rxjs';
 import { WorkflowAccordionComponent } from '../../shared/component-elements/workflow-accordion/workflow-accordion.component';
 import { TaskTabComponent } from "../../shared/component-elements/task-tab/task-tab.component";
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { workflowTO } from '../../types/workflowTO';
-import { productTO } from '../../types/productTO';
+import { workflowTO } from '../../shared/types/workflowTO';
+import { productTO } from '../../shared/types/productTO';
 import { SuggestionsComponent } from '../suggestions/suggestions.component';
-import { itemCheckStatuses } from '../../shared/component-elements/workflowUI-state';
+import { itemCheckStatuses } from '../../shared/types/workflowUI-state';
 import { CommonModule } from '@angular/common';
 
 @Component({

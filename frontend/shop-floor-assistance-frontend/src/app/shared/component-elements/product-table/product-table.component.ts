@@ -4,7 +4,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import { productTO } from '../../../types/productTO';
+import { productTO } from '../../types/productTO';
 
 
 @Component({

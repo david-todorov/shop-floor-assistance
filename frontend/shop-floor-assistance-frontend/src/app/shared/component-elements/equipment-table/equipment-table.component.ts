@@ -3,7 +3,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import { equipmentTO } from '../../../types/equipmentTO';
+import { equipmentTO } from '../../types/equipmentTO';
 
 @Component({
   selector: 'app-equipment-table',

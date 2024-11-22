@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { catchError, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
-import { productTO } from '../../types/productTO';
+import { productTO } from '../../shared/types/productTO';
 
 @Component({
   selector: 'app-create-product-from-existing',

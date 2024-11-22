@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { userRoleTO, userTO } from '../types/userTO';
-import { loginState } from '../shared/component-elements/login-state';
-import { productTO } from '../types/productTO';
-import { OperatorExecutionTO } from '../types/OperatorExecutionTO';
+import { userRoleTO, userTO } from '../shared/types/userTO';
+import { loginState } from '../shared/types/login-state';
+import { productTO } from '../shared/types/productTO';
+import { OperatorExecutionTO } from '../shared/types/OperatorExecutionTO';
 // import { productTO } from '../types/productTO';
 
 @Injectable({

@@ -5,7 +5,7 @@ import { catchError, of } from 'rxjs';
 import { ProductTableComponent } from '../../shared/component-elements/product-table/product-table.component';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
 import { EditorProductComponent } from '../editor-product/editor-product.component';
-import { productTO } from '../../types/productTO';
+import { productTO } from '../../shared/types/productTO';
 import { Component } from '@angular/core';
 
 @Component({

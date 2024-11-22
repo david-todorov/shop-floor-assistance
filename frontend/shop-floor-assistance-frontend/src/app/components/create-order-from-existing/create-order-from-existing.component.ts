@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { catchError, map, of } from 'rxjs';
 import { Router } from '@angular/router';
-import { orderTO } from '../../types/orderTO';
+import { orderTO } from '../../shared/types/orderTO';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component'
-import { equipmentTO } from '../../types/equipmentTO';
-import { productTO } from '../../types/productTO';
+import { equipmentTO } from '../../shared/types/equipmentTO';
+import { productTO } from '../../shared/types/productTO';
 
 const defaultProduct: productTO = {
   id: 0,

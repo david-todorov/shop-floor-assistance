@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
-import { equipmentTO } from '../../types/equipmentTO';
+import { equipmentTO } from '../../shared/types/equipmentTO';
 import { catchError, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';

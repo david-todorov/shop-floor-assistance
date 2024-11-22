@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { catchError, of } from 'rxjs';
 import { Router } from '@angular/router';
-import { equipmentTO } from '../../types/equipmentTO';
+import { equipmentTO } from '../../shared/types/equipmentTO';
 import { ButtonComponent } from '../../shared/component-elements/button/button.component';
 
 @Component({

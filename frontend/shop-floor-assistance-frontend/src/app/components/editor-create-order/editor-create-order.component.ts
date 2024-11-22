@@ -5,9 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { catchError, map, of } from 'rxjs';
 import { ButtonComponent } from "../../shared/component-elements/button/button.component";
-import { equipmentTO } from '../../types/equipmentTO';
-import { productTO } from '../../types/productTO';
-import { orderTO } from '../../types/orderTO';
+import { equipmentTO } from '../../shared/types/equipmentTO';
+import { productTO } from '../../shared/types/productTO';
+import { orderTO } from '../../shared/types/orderTO';
 
 const defaultProduct: productTO = {
   id: 0,
