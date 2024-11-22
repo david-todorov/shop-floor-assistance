@@ -124,7 +124,7 @@ abortOrder(event: MouseEvent) {
                     console.log('Execution finished successfully:', response);
                     this.execution = null; // Reset execution
                     this.executionStarted = false; // Reset state
-                    this.showSnackbar('Order marked as finished successfully!');
+                    this.showSnackbar('Order marked as abort!');
 
                     // Navigate back to the orders page
                     this.router.navigateByUrl('/operator/orders');
