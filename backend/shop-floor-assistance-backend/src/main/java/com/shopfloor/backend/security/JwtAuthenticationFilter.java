@@ -18,13 +18,24 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Filter for JWT authentication.
+ * This filter intercepts HTTP requests to validate JWT tokens and set the authentication context.
+ * @author David Todorov (https://github.com/david-todorov)
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final HandlerExceptionResolver handlerExceptionResolver;
-
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+    /**
+     * Constructor for JwtAuthenticationFilter.
+     *
+     * @param jwtService the tests for handling JWT operations
+     * @param userDetailsService the tests for loading user details
+     * @param handlerExceptionResolver the resolver for handling exceptions
+     */
     public JwtAuthenticationFilter(
             JwtService jwtService,
             UserDetailsService userDetailsService,
@@ -35,6 +46,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
+    /**
+     * Filters incoming HTTP requests to validate JWT tokens.
+     *
+     * @param request the HTTP request
+     * @param response the HTTP response
+     * @param filterChain the filter chain
+     * @throws ServletException if a servlet error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,

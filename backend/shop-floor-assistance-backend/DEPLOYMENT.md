@@ -20,9 +20,14 @@ Your application requires the following environment variables for proper configu
   The preferred way is to directly set the environment variables in `application.properties` file, rather than pass them, similarly to `application-test.properties`.
   Please examine both files, especially `spring.jpa.hibernate.ddl-auto` property.
 
-### Step 2: Install Dependencies
+### Step 2: Navigate to the root of the backend
 
-To install all the necessary dependencies for the application, run the following command at the root of your project:
+```bash
+cd ~/path/to/shop-floor-assistance/backend/shop-floor-assistance-backend
+```
+
+### Step 3: Install Dependencies
+To install all the necessary dependencies for the application
 
 ```bash
 ./mvnw clean install
@@ -30,7 +35,7 @@ To install all the necessary dependencies for the application, run the following
 
 This will download the required dependencies and compile the application.
 
-### Step 3: Run the Application
+### Step 4: Run the Application
 
 To run the Spring Boot application, use the following Maven command:
 

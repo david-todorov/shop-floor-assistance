@@ -4,9 +4,7 @@ import com.shopfloor.backend.database.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,12 +19,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Each handler method constructs a `ProblemDetail` object with an HTTP status,
  * the original exception message, and a custom description to provide clarity
  * on the error encountered.
- *
- * It may be used in future it may be not
+ * @author David Todorov (https://github.com/david-todorov)
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Handles ExecutionNotFoundException.
+     *
+     * @param ex the exception
+     * @return a ProblemDetail object with NOT_FOUND status and a description
+     */
     @ExceptionHandler(ExecutionNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleExecutionNotFound(ExecutionNotFoundException ex) {
@@ -35,6 +38,12 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    /**
+     * Handles EquipmentNotFoundException.
+     *
+     * @param ex the exception
+     * @return a ProblemDetail object with NOT_FOUND status and a description
+     */
     @ExceptionHandler(EquipmentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleEquipmentNotFound(EquipmentNotFoundException ex) {
@@ -43,6 +52,12 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    /**
+     * Handles DuplicateEquipmentException.
+     *
+     * @param ex the exception
+     * @return a ProblemDetail object with CONFLICT status and a description
+     */
     @ExceptionHandler(DuplicateEquipmentException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ProblemDetail handleEquipmentAlreadyExists(DuplicateEquipmentException ex) {
@@ -51,6 +66,12 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    /**
+     * Handles DuplicateProductException.
+     *
+     * @param ex the exception
+     * @return a ProblemDetail object with CONFLICT status and a description
+     */
     @ExceptionHandler(DuplicateProductException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ProblemDetail handleProductAlreadyExists(DuplicateProductException ex) {
@@ -59,6 +80,12 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    /**
+     * Handles ProductNotFoundException.
+     *
+     * @param ex the exception
+     * @return a ProblemDetail object with NOT_FOUND status and a description
+     */
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleProductNotFound(ProductNotFoundException ex) {
@@ -67,18 +94,27 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    /**
+     * Handles HttpMessageNotReadableException.
+     *
+     * @param ex the exception
+     * @return a ProblemDetail object with BAD_REQUEST status and a description
+     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleRequestBodyIsNull(HttpMessageNotReadableException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Request body is missing or invalid");
         problemDetail.setProperty("description", "The request body must not be null or malformed.");
-
-        // Optionally, you can include more details if needed (e.g., the error message)
         problemDetail.setProperty("error", "Request body is null or could not be read.");
-
         return problemDetail;
     }
 
+    /**
+     * Handles MethodArgumentNotValidException.
+     *
+     * @param ex the exception
+     * @return a ProblemDetail object with BAD_REQUEST status and a description
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -87,6 +123,12 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    /**
+     * Handles OrderNotFoundException.
+     *
+     * @param ex the exception
+     * @return a ProblemDetail object with NOT_FOUND status and a description
+     */
     @ExceptionHandler(OrderNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleUserNotFound(OrderNotFoundException ex) {
@@ -95,14 +137,12 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ProblemDetail handleUserNotFound(UserNotFoundException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problemDetail.setProperty("description", "The requested user was not found.");
-        return problemDetail;
-    }
-
+    /**
+     * Handles DuplicatedOrderException.
+     *
+     * @param ex the exception
+     * @return a ProblemDetail object with CONFLICT status and a description
+     */
     @ExceptionHandler(DuplicatedOrderException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ProblemDetail handleOrderAlreadyExists(DuplicatedOrderException ex) {
@@ -111,35 +151,17 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    /**
+     * Handles BadCredentialsException.
+     *
+     * @param ex the exception
+     * @return a ProblemDetail object with UNAUTHORIZED status and a description
+     */
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ProblemDetail handleBadCredentials(BadCredentialsException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
         problemDetail.setProperty("description", "The username or password is incorrect");
-        return problemDetail;
-    }
-
-    @ExceptionHandler(DisabledException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ProblemDetail handleDisabledAccount(DisabledException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
-        problemDetail.setProperty("description", "This account is disabled");
-        return problemDetail;
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ProblemDetail handleAccessDenied(AccessDeniedException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
-        problemDetail.setProperty("description", "You do not have permission to access this resource");
-        return problemDetail;
-    }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ProblemDetail handleGeneralException(Exception ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        problemDetail.setProperty("description", "An unexpected error occurred");
         return problemDetail;
     }
 

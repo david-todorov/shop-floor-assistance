@@ -1,8 +1,6 @@
-package com.shopfloor.backend.service;
+package com.shopfloor.backend.tests;
 
 import com.shopfloor.backend.api.transferobjects.authentication.LoginUserRequestTO;
-import com.shopfloor.backend.database.repositories.OrderRepository;
-import com.shopfloor.backend.database.repositories.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +8,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+/**
+ * Integration tests for the authentication controller.
+ *
+ * This class contains tests for various authentication scenarios, including
+ * login with valid and invalid credentials, and access control for different
+ * user roles.
+ * @author David Todorov (https://github.com/david-todorov)
+ */
 @ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AuthControllerTest {
 
+    /**
+     * Helper for API-related operations.
+     */
     @Autowired
     private ApiHelper apiHelper;
 
