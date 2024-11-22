@@ -1,4 +1,4 @@
-package com.shopfloor.backend.service;
+package com.shopfloor.backend.tests;
 
 import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
@@ -8,9 +8,19 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Helper class for building and comparing EditorProductTO objects.
+ * @author David Todorov (https://github.com/david-todorov)
+ */
 @Component
 public class ProductHelper {
 
+    /**
+     * Builds a complete EditorProductTO object with predefined values.
+     *
+     * @param productNumber the product number
+     * @return the complete EditorProductTO object
+     */
     public EditorProductTO buildCompleteEditorProductTO(String productNumber){
         EditorProductTO editorProduct = new EditorProductTO();
 
@@ -30,7 +40,12 @@ public class ProductHelper {
         return editorProduct;
     }
 
-    //TODO
+    /**
+     * Asserts that two EditorProductTO objects are equal.
+     *
+     * @param expected the expected EditorProductTO object
+     * @param actual the actual EditorProductTO object
+     */
     public void assertEditorProductsEqual(EditorProductTO expected, EditorProductTO actual){
         if(expected.getId() != null && actual.getId() != null) {
             assertEquals(expected.getId(), actual.getId());
@@ -56,6 +71,12 @@ public class ProductHelper {
         assertEquals(expected.getUpdatedBy(), actual.getUpdatedBy());
     }
 
+    /**
+     * Asserts that two EditorOrderTO objects are equal.
+     *
+     * @param expected the expected EditorOrderTO object
+     * @param actual the actual EditorOrderTO object
+     */
     private void assertEditorProductsOrdersEqual(EditorOrderTO expected, EditorOrderTO actual){
         if(expected.getId() != null && actual.getId() != null) {
             assertEquals(expected.getId(), actual.getId());

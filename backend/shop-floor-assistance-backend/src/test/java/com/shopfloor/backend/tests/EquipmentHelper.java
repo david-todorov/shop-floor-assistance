@@ -1,8 +1,7 @@
-package com.shopfloor.backend.service;
+package com.shopfloor.backend.tests;
 
 import com.shopfloor.backend.api.transferobjects.editors.EditorEquipmentTO;
 import com.shopfloor.backend.api.transferobjects.editors.EditorOrderTO;
-import com.shopfloor.backend.api.transferobjects.editors.EditorProductTO;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,9 +9,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Helper class for building and comparing EditorEquipmentTO objects.
+ * @author David Todorov (https://github.com/david-todorov)
+ */
 @Component
 public class EquipmentHelper {
 
+    /**
+     * Builds a complete EditorEquipmentTO object with predefined values.
+     *
+     * @param equipmentNumber the equipment number
+     * @return the complete EditorEquipmentTO object
+     */
     public EditorEquipmentTO buildCompleteEditorEquipmentTO(String equipmentNumber){
         EditorEquipmentTO editorEquipment = new EditorEquipmentTO();
         editorEquipment.setEquipmentNumber(equipmentNumber);
@@ -24,6 +33,11 @@ public class EquipmentHelper {
         return editorEquipment;
     }
 
+    /**
+     * Builds a list of complete EditorEquipmentTO objects with predefined values.
+     *
+     * @return the list of complete EditorEquipmentTO objects
+     */
     public ArrayList<EditorEquipmentTO> buildCompleteEditorEquipmentTOs(){
         ArrayList<EditorEquipmentTO> equipments = new ArrayList<>();
         equipments.add(buildCompleteEditorEquipmentTO("E0001"));
@@ -34,6 +48,12 @@ public class EquipmentHelper {
         return equipments;
     }
 
+    /**
+     * Asserts that two lists of EditorEquipmentTO objects are equal.
+     *
+     * @param expected the expected list of EditorEquipmentTO objects
+     * @param actual the actual list of EditorEquipmentTO objects
+     */
     public void assertEditorEquipmentsListEqual(List<EditorEquipmentTO> expected, List<EditorEquipmentTO> actual){
         assertEquals(expected.size(), actual.size());
 
@@ -42,6 +62,12 @@ public class EquipmentHelper {
         }
     }
 
+    /**
+     * Asserts that two EditorEquipmentTO objects are equal.
+     *
+     * @param expected the expected EditorEquipmentTO object
+     * @param actual the actual EditorEquipmentTO object
+     */
     public void assertEditorEquipmentEqual(EditorEquipmentTO expected, EditorEquipmentTO actual){
         if(expected.getId() != null && actual.getId() != null) {
             assertEquals(expected.getId(), actual.getId());
@@ -51,7 +77,6 @@ public class EquipmentHelper {
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getDescription(), actual.getDescription());
         assertEquals(expected.getType(), actual.getType());
-
 
         assertEquals(expected.getOrders().size(), actual.getOrders().size());
         for (int i = 0; i < actual.getOrders().size(); i++) {
@@ -64,6 +89,12 @@ public class EquipmentHelper {
         assertEquals(expected.getUpdatedBy(), actual.getUpdatedBy());
     }
 
+    /**
+     * Asserts that two EditorOrderTO objects are equal.
+     *
+     * @param expected the expected EditorOrderTO object
+     * @param actual the actual EditorOrderTO object
+     */
     private void assertEditorProductsOrdersEqual(EditorOrderTO expected, EditorOrderTO actual){
         if(expected.getId() != null && actual.getId() != null) {
             assertEquals(expected.getId(), actual.getId());

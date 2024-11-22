@@ -1,7 +1,7 @@
 package com.shopfloor.backend.services.implementations;
 
+import com.shopfloor.backend.api.mappers.EditorTOMapper;
 import com.shopfloor.backend.api.transferobjects.editors.*;
-import com.shopfloor.backend.api.transferobjects.mappers.EditorTOMapper;
 import com.shopfloor.backend.database.exceptions.*;
 import com.shopfloor.backend.database.mappers.EquipmentDBOMapper;
 import com.shopfloor.backend.database.mappers.OrderDBOMapper;
@@ -24,27 +24,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This is where the concrete implementations of EditorService is
- * Of course implement all the needed methods
- * But do not be afraid to extract common logic in private methods
- * The number of public methods should be the same as in EditorService
- * If you implement something public here and NOT declare it in EditorService
- * The controller EditorController can NOT see it
- * Have fun
+ * Implementation of the EditorService interface.
+ * This tests provides methods to manage and retrieve editor-related data such as equipment, products, orders, workflows, tasks, and items.
+ * @author David Todorov (https://github.com/david-todorov)
  */
 @Component
 public class EditorServiceImpl implements EditorService {
 
+    /**
+     * Mapper for OrderDBO objects.
+     */
     private final OrderDBOMapper orderDBOMapper;
+
+    /**
+     * Mapper for ProductDBO objects.
+     */
     private final ProductDBOMapper productDBOMapper;
+
+    /**
+     * Mapper for EquipmentDBO objects.
+     */
     private final EquipmentDBOMapper equipmentDBOMapper;
 
+    /**
+     * Mapper for editor transfer objects.
+     */
     private final EditorTOMapper editorToMapper;
 
+    /**
+     * Repository for OrderDBO objects.
+     */
     private final OrderRepository orderRepository;
+
+    /**
+     * Repository for ProductDBO objects.
+     */
     private final ProductRepository productRepository;
+
+    /**
+     * Repository for EquipmentDBO objects.
+     */
     private final EquipmentRepository equipmentRepository;
 
+    /**
+     * Constructs an EditorServiceImpl with the specified dependencies.
+     *
+     * @param orderDBOMapper the mapper for OrderDBO objects
+     * @param productDBOMapper the mapper for ProductDBO objects
+     * @param equipmentDBOMapper the mapper for EquipmentDBO objects
+     * @param editorToMapper the mapper for editor transfer objects
+     * @param orderRepository the repository for OrderDBO objects
+     * @param productRepository the repository for ProductDBO objects
+     * @param equipmentRepository the repository for EquipmentDBO objects
+     */
     @Autowired
     public EditorServiceImpl(OrderDBOMapper orderDBOMapper,
                              ProductDBOMapper productDBOMapper,
@@ -62,6 +94,12 @@ public class EditorServiceImpl implements EditorService {
         this.equipmentRepository = equipmentRepository;
     }
 
+    /**
+     * Retrieves a list of equipment suggestions.
+     *
+     * @param numberOfEquipments the number of equipment suggestions to retrieve
+     * @return a list of EditorEquipmentTO objects
+     */
     @Override
     public List<EditorEquipmentTO> getEquipmentSuggestions(int numberOfEquipments) {
         Pageable pageable = PageRequest.of(0, numberOfEquipments);
@@ -69,6 +107,12 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toEquipmentTOs(this.equipmentRepository.findTopReferencedEquipment(pageable));
     }
 
+    /**
+     * Retrieves a list of product suggestions.
+     *
+     * @param numberOfProducts the number of product suggestions to retrieve
+     * @return a list of EditorProductTO objects
+     */
     @Override
     public List<EditorProductTO> getProductsSuggestions(int numberOfProducts) {
         Pageable pageable = PageRequest.of(0, numberOfProducts);
@@ -76,6 +120,12 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toProductTOs(this.productRepository.findTopReferencedProducts(pageable));
     }
 
+    /**
+     * Retrieves a list of workflow suggestions based on the provided product.
+     *
+     * @param productAfter the product to base the workflow suggestions on
+     * @return a list of EditorWorkflowTO objects
+     */
     @Override
     public List<EditorWorkflowTO> getWorkflowsSuggestions(EditorProductTO productAfter) {
         List<EditorWorkflowTO> suggested = new ArrayList<>();
@@ -98,6 +148,12 @@ public class EditorServiceImpl implements EditorService {
         return suggested;
     }
 
+    /**
+     * Retrieves a list of task suggestions based on the provided product.
+     *
+     * @param productAfter the product to base the task suggestions on
+     * @return a list of EditorTaskTO objects
+     */
     @Override
     public List<EditorTaskTO> getTasksSuggestions(EditorProductTO productAfter) {
         List<EditorTaskTO> suggested = new ArrayList<>();
@@ -122,6 +178,12 @@ public class EditorServiceImpl implements EditorService {
         return suggested;
     }
 
+    /**
+     * Retrieves a list of item suggestions based on the provided product.
+     *
+     * @param productAfter the product to base the item suggestions on
+     * @return a list of EditorItemTO objects
+     */
     @Override
     public List<EditorItemTO> getItemsSuggestions(EditorProductTO productAfter) {
         List<EditorItemTO> suggested = new ArrayList<>();
@@ -148,11 +210,22 @@ public class EditorServiceImpl implements EditorService {
         return suggested;
     }
 
+    /**
+     * Retrieves a list of all equipment.
+     *
+     * @return a list of EditorEquipmentTO objects
+     */
     @Override
     public List<EditorEquipmentTO> getAllEquipment() {
         return this.editorToMapper.toEquipmentTOs(this.equipmentRepository.findAll());
     }
 
+    /**
+     * Retrieves a specific equipment by its ID.
+     *
+     * @param equipmentId the ID of the equipment to retrieve
+     * @return an EditorEquipmentTO object
+     */
     @Override
     public EditorEquipmentTO getEquipment(Long equipmentId) {
         EquipmentDBO equipmentDBO = this.equipmentRepository.findById(equipmentId).orElseThrow(EquipmentNotFoundException::new);
@@ -160,6 +233,12 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toEquipmentTO(equipmentDBO);
     }
 
+    /**
+     * Adds a new equipment.
+     *
+     * @param newEditorEquipmentTO the new equipment to add
+     * @return the added EditorEquipmentTO object
+     */
     @Transactional
     @Override
     public EditorEquipmentTO addEquipment(EditorEquipmentTO newEditorEquipmentTO) {
@@ -174,6 +253,13 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toEquipmentTO(this.equipmentRepository.save(equipmentDBO));
     }
 
+    /**
+     * Updates an existing equipment.
+     *
+     * @param equipmentId the ID of the equipment to update
+     * @param updatedEditorEquipmentTO the updated equipment data
+     * @return the updated EditorEquipmentTO object
+     */
     @Transactional
     @Override
     public EditorEquipmentTO updateEquipment(Long equipmentId, EditorEquipmentTO updatedEditorEquipmentTO) {
@@ -191,6 +277,11 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toEquipmentTO(this.equipmentRepository.save(existingEquipmentDBO));
     }
 
+    /**
+     * Deletes an existing equipment.
+     *
+     * @param equipmentId the ID of the equipment to delete
+     */
     @Transactional
     @Override
     public void deleteEquipment(Long equipmentId) {
@@ -202,11 +293,22 @@ public class EditorServiceImpl implements EditorService {
         this.equipmentRepository.delete(equipmentDBO);
     }
 
+    /**
+     * Retrieves a list of all products.
+     *
+     * @return a list of EditorProductTO objects
+     */
     @Override
     public List<EditorProductTO> getAllProducts() {
         return this.editorToMapper.toProductTOs(this.productRepository.findAll());
     }
 
+    /**
+     * Retrieves a specific product by its ID.
+     *
+     * @param productId the ID of the product to retrieve
+     * @return an EditorProductTO object
+     */
     @Override
     public EditorProductTO getProduct(Long productId) {
         ProductDBO productDBO = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
@@ -214,6 +316,12 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toProductTO(productDBO);
     }
 
+    /**
+     * Adds a new product.
+     *
+     * @param newEditorProductTO the new product to add
+     * @return the added EditorProductTO object
+     */
     @Transactional
     @Override
     public EditorProductTO addProduct(EditorProductTO newEditorProductTO) {
@@ -228,6 +336,13 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toProductTO(this.productRepository.save(newProductDBO));
     }
 
+    /**
+     * Updates an existing product.
+     *
+     * @param productId the ID of the product to update
+     * @param editorProductTO the updated product data
+     * @return the updated EditorProductTO object
+     */
     @Transactional
     @Override
     public EditorProductTO updateProduct(Long productId, EditorProductTO editorProductTO) {
@@ -245,6 +360,11 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toProductTO(this.productRepository.save(existingProductDBO));
     }
 
+    /**
+     * Deletes an existing product.
+     *
+     * @param productId the ID of the product to delete
+     */
     @Transactional
     @Override
     public void deleteProduct(Long productId) {
@@ -256,11 +376,22 @@ public class EditorServiceImpl implements EditorService {
         this.productRepository.delete(toDeleteProduct);
     }
 
+    /**
+     * Retrieves a list of all orders.
+     *
+     * @return a list of EditorOrderTO objects
+     */
     @Override
     public List<EditorOrderTO> getAllOrders() {
         return this.editorToMapper.toOrderTOs(this.orderRepository.findAll());
     }
 
+    /**
+     * Retrieves a specific order by its ID.
+     *
+     * @param orderId the ID of the order to retrieve
+     * @return an EditorOrderTO object
+     */
     @Override
     public EditorOrderTO getOrder(Long orderId) {
 
@@ -269,6 +400,12 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toOrderTO(orderDBO);
     }
 
+    /**
+     * Adds a new order.
+     *
+     * @param newEditorOrderTO the new order to add
+     * @return the added EditorOrderTO object
+     */
     @Transactional
     @Override
     public EditorOrderTO addOrder(EditorOrderTO newEditorOrderTO) {
@@ -294,7 +431,6 @@ public class EditorServiceImpl implements EditorService {
                     .orElseThrow(ProductNotFoundException::new);
         }
 
-
         // Map the EditorOrderTO to OrderDBO and set the creator ID
         OrderDBO newOrderDBO = this.orderDBOMapper.initializeOrderDBOFrom(newEditorOrderTO, creatorId);
 
@@ -319,6 +455,13 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toOrderTO(newOrderDBO);
     }
 
+    /**
+     * Updates an existing order.
+     *
+     * @param orderId the ID of the order to update
+     * @param updatedEditorOrderTO the updated order data
+     * @return the updated EditorOrderTO object
+     */
     @Transactional
     @Override
     public EditorOrderTO updateOrder(Long orderId, EditorOrderTO updatedEditorOrderTO) {
@@ -371,6 +514,11 @@ public class EditorServiceImpl implements EditorService {
         return this.editorToMapper.toOrderTO(existingOrderDBO);
     }
 
+    /**
+     * Deletes an existing order.
+     *
+     * @param orderId the ID of the order to delete
+     */
     @Transactional
     @Override
     public void deleteOrder(Long orderId) {
@@ -391,18 +539,41 @@ public class EditorServiceImpl implements EditorService {
         orderRepository.delete(existingOrderDBO);
     }
 
+    /**
+     * Retrieves an order by its order number if it exists.
+     *
+     * @param orderNumber the order number to search for
+     * @return the OrderDBO object if found, otherwise null
+     */
     private OrderDBO getOrderIfExists(String orderNumber) {
         return this.orderRepository.findByOrderNumber(orderNumber).orElse(null);
     }
 
+    /**
+     * Retrieves a product by its product number if it exists.
+     *
+     * @param productNumber the product number to search for
+     * @return the ProductDBO object if found, otherwise null
+     */
     private ProductDBO getProductIfExists(String productNumber) {
         return this.productRepository.findByProductNumber(productNumber).orElse(null);
     }
 
+    /**
+     * Retrieves an equipment by its equipment number if it exists.
+     *
+     * @param equipmentNumber the equipment number to search for
+     * @return the EquipmentDBO object if found, otherwise null
+     */
     private EquipmentDBO getEquipmentIfExists(String equipmentNumber) {
         return this.equipmentRepository.findByEquipmentNumber(equipmentNumber).orElse(null);
     }
 
+    /**
+     * Sets the ID and nested IDs of the workflow to null.
+     *
+     * @param workflow the workflow to nullify IDs
+     */
     private void nullifyWorkflowIds(EditorWorkflowTO workflow) {
         workflow.setId(null);
         for (EditorTaskTO task : workflow.getTasks()) {
@@ -410,6 +581,11 @@ public class EditorServiceImpl implements EditorService {
         }
     }
 
+    /**
+     * Sets the ID and nested IDs of the task to null.
+     *
+     * @param task the task to nullify IDs
+     */
     private void nullifyTaskIds(EditorTaskTO task) {
         task.setId(null);
         for (EditorItemTO item : task.getItems()) {
@@ -417,6 +593,11 @@ public class EditorServiceImpl implements EditorService {
         }
     }
 
+    /**
+     * Sets the ID of the item to null.
+     *
+     * @param item the item to nullify ID
+     */
     private void nullifyItemIds(EditorItemTO item) {
         item.setId(null);
     }
