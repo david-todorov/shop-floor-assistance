@@ -31,7 +31,7 @@ export const routes: Routes = [
         { path: 'editor/orders/:id', component:EditorEditOrderComponent, canActivate:[authGuard, roleGuard] },
         { path: 'editor-orders/creation-option', component: OrderCreationOptionComponent, canActivate:[authGuard, roleGuard] },
         { path: 'editor-orders/create', component: EditorCreateOrderComponent, canActivate:[authGuard, roleGuard] },
-        { path: 'editor-orders/create-from-existing', component: CreateOrderFromExistingComponent, },
+        { path: 'editor-orders/create-from-existing', component: CreateOrderFromExistingComponent, canActivate:[authGuard, roleGuard] },
         { path: 'editor-homepage', component: EditorHomepageComponent, canActivate:[authGuard, roleGuard] },
         { path: 'editor/equipment', component: EditorEquipmentComponent, canActivate:[authGuard, roleGuard] },
         { path: 'editor/equipment/:id', component: EditorEditEquipmentComponent,canActivate:[authGuard, roleGuard] },
