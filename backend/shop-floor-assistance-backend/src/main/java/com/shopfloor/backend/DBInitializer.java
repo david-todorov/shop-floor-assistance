@@ -12,17 +12,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * This class adds two test users into the system
- * Two roles are assigned to them
- * In general we can add as much as we want users or roles
- * A user must always have a role
- *                   IMPORTANT
- * If you add new user and new role for him
- * First create the users then the role
- * Then associate the user with the role
- * Then FIRST save the role in the database
- * Finally save the user, the steps are important
- * This comes from the JPA mappings that are used
+ * This class initializes the database with test users and roles.
+ * It ensures that two roles (OPERATOR and EDITOR) and their corresponding users are created.
+ *
+ * Note: If you add a new user and a new role for them, follow these steps:
+ * 1. Create the users.
+ * 2. Create the role.
+ * 3. Associate the user with the role.
+ * 4. Save the role in the database first.
+ * 5. Save the user.
+ *
+ * These steps are important due to the JPA mappings used.
+ * @author David Todorov (https://github.com/david-todorov)
  */
 @Transactional
 @Component
@@ -32,6 +33,12 @@ public class DBInitializer {
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    /**
+     * Constructor for DBInitializer.
+     *
+     * @param userRepository the repository for user data access
+     * @param roleRepository the repository for role data access
+     */
     @Autowired
     public DBInitializer(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
@@ -39,6 +46,10 @@ public class DBInitializer {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
+    /**
+     * Initializes the database with test users and roles.
+     * This method is called after the bean's properties have been set.
+     */
     @PostConstruct
     public void init() {
 

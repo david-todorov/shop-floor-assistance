@@ -1,6 +1,6 @@
 package com.shopfloor.backend.services.implementations;
 
-import com.shopfloor.backend.api.transferobjects.mappers.OperatorTOMapper;
+import com.shopfloor.backend.api.mappers.OperatorTOMapper;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorExecutionTO;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorForecastTO;
 import com.shopfloor.backend.api.transferobjects.operators.OperatorOrderTO;
@@ -19,23 +19,41 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * This is where the concrete implementations of OperatorService is
- * Of course implement all the needed methods
- * But do not be afraid to extract common logic in private methods
- * The number of public methods should be the same as in OperatorService
- * If you implement something public here and NOT declare it in OperatorService
- * The controller OperatorController can NOT see it
- * Have fun
+ * Implementation of the OperatorService interface.
+ * This tests handles operations related to orders and executions for operators.
+ * @author David Todorov (https://github.com/david-todorov)
  */
 @Component
 public class OperatorServiceImpl implements OperatorService {
 
+    /**
+     * Mapper to convert between transfer objects and database objects for operators.
+     */
     private final OperatorTOMapper operatorTOMapper;
+
+    /**
+     * Repository to manage order data.
+     */
     private final OrderRepository orderRepository;
+
+    /**
+     * Repository to manage execution data.
+     */
     private final ExecutionRepository executionRepository;
 
+    /**
+     * Mapper to initialize and update execution database objects.
+     */
     private final ExecutionDBOMapper executionDBOMapper;
 
+    /**
+     * Constructs an OperatorServiceImpl with the specified dependencies.
+     *
+     * @param operatorTOMapper the mapper to convert between transfer objects and database objects
+     * @param orderRepository the repository to manage order data
+     * @param executionRepository the repository to manage execution data
+     * @param executionDBOMapper the mapper to initialize and update execution database objects
+     */
     @Autowired
     public OperatorServiceImpl(OperatorTOMapper operatorTOMapper,
                                OrderRepository orderRepository,
@@ -47,11 +65,23 @@ public class OperatorServiceImpl implements OperatorService {
         this.executionDBOMapper = executionDBOMapper;
     }
 
+    /**
+     * Retrieves all orders.
+     *
+     * @return a list of OperatorOrderTO representing all orders
+     */
     @Override
     public List<OperatorOrderTO> getAllOrders() {
         return this.operatorTOMapper.toOrderTOs(this.orderRepository.findAll());
     }
 
+    /**
+     * Retrieves a specific order by its ID.
+     *
+     * @param id the ID of the order to retrieve
+     * @return an OperatorOrderTO representing the order
+     * @throws OrderNotFoundException if the order is not found
+     */
     @Override
     public OperatorOrderTO getOrder(Long id) {
         OrderDBO orderDBO = orderRepository.findById(id)
@@ -60,6 +90,13 @@ public class OperatorServiceImpl implements OperatorService {
         return this.operatorTOMapper.toOrderTO(orderDBO);
     }
 
+    /**
+     * Starts a new execution for a specific order.
+     *
+     * @param orderId the ID of the order to start execution for
+     * @return an OperatorExecutionTO representing the started execution
+     * @throws OrderNotFoundException if the order is not found
+     */
     @Override
     public OperatorExecutionTO startExecution(Long orderId) {
         Long executorId = AuthenticatedUserDetails.getCurrentUserId();
@@ -73,16 +110,22 @@ public class OperatorServiceImpl implements OperatorService {
         order.addExecution(execution);
         this.orderRepository.save(order);
 
-
         return this.operatorTOMapper.toExecutionTO(execution);
     }
 
+    /**
+     * Finishes an existing execution.
+     *
+     * @param executionId the ID of the execution to finish
+     * @return an OperatorExecutionTO representing the finished execution
+     * @throws ExecutionNotFoundException if the execution is not found
+     */
     @Override
     public OperatorExecutionTO finishExecution(Long executionId) {
         Long finisherId = AuthenticatedUserDetails.getCurrentUserId();
 
         ExecutionDBO executionDBO = this.executionRepository.findById(executionId)
-                .orElseThrow(ExecutionNotFoundException :: new);
+                .orElseThrow(ExecutionNotFoundException::new);
 
         this.executionDBOMapper.finishExecutionDBO(executionDBO, finisherId);
         executionDBO = this.executionRepository.save(executionDBO);
@@ -90,11 +133,17 @@ public class OperatorServiceImpl implements OperatorService {
         return this.operatorTOMapper.toExecutionTO(executionDBO);
     }
 
+    /**
+     * Aborts an existing execution.
+     *
+     * @param executionId the ID of the execution to abort
+     * @return an OperatorExecutionTO representing the aborted execution
+     * @throws ExecutionNotFoundException if the execution is not found
+     */
     @Override
     public OperatorExecutionTO abortExecution(Long executionId) {
-
         ExecutionDBO executionDBO = this.executionRepository.findById(executionId)
-                .orElseThrow(ExecutionNotFoundException :: new);
+                .orElseThrow(ExecutionNotFoundException::new);
 
         this.executionDBOMapper.abortExecutionDBO(executionDBO);
         executionDBO = this.executionRepository.save(executionDBO);
@@ -102,6 +151,13 @@ public class OperatorServiceImpl implements OperatorService {
         return this.operatorTOMapper.toExecutionTO(executionDBO);
     }
 
+    /**
+     * Retrieves the forecast for a specific order.
+     *
+     * @param orderId the ID of the order to get the forecast for
+     * @return an OperatorForecastTO representing the forecast
+     * @throws OrderNotFoundException if the order is not found
+     */
     @Override
     public OperatorForecastTO getForecast(Long orderId) {
         OrderDBO orderDBO = orderRepository.findById(orderId)
@@ -111,5 +167,4 @@ public class OperatorServiceImpl implements OperatorService {
 
         return forecastTO;
     }
-
 }

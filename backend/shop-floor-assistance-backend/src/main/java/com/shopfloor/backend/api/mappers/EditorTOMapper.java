@@ -1,4 +1,4 @@
-package com.shopfloor.backend.api.transferobjects.mappers;
+package com.shopfloor.backend.api.mappers;
 
 import com.shopfloor.backend.api.transferobjects.editors.*;
 import com.shopfloor.backend.database.objects.*;
@@ -8,12 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is responsible for mapping a DBO object to TO object
- * If representation of any TO object has to change this is th place
+ * Mapper class for converting between various DBO and TO objects related to editors.
+ * @author David Todorov (https://github.com/david-todorov)
  */
 @Component
 public class EditorTOMapper {
 
+    /**
+     * Converts a list of EquipmentDBO objects to a list of EditorEquipmentTO objects.
+     * @param equipments the list of EquipmentDBO objects to convert
+     * @return the list of converted EditorEquipmentTO objects
+     */
     public ArrayList<EditorEquipmentTO> toEquipmentTOs(List<EquipmentDBO> equipments) {
         ArrayList<EditorEquipmentTO> equipmentTOs = new ArrayList<>();
         equipments.forEach(equipment -> {
@@ -23,6 +28,11 @@ public class EditorTOMapper {
         return equipmentTOs;
     }
 
+    /**
+     * Converts an EquipmentDBO to an EditorEquipmentTO.
+     * @param equipmentDBO the EquipmentDBO to convert
+     * @return the converted EditorEquipmentTO
+     */
     public EditorEquipmentTO toEquipmentTO(EquipmentDBO equipmentDBO) {
         EditorEquipmentTO editorEquipmentTO = this.mapBasicEquipmentProperties(equipmentDBO);
 
@@ -36,6 +46,11 @@ public class EditorTOMapper {
         return editorEquipmentTO;
     }
 
+    /**
+     * Converts a ProductDBO to an EditorProductTO.
+     * @param productDBO the ProductDBO to convert
+     * @return the converted EditorProductTO
+     */
     public EditorProductTO toProductTO(ProductDBO productDBO) {
 
         EditorProductTO editorProductTO = mapBasicProductProperties(productDBO);
@@ -52,16 +67,25 @@ public class EditorTOMapper {
         });
         editorProductTO.setOrdersAfter(editorOrderAfter);
 
-
         return editorProductTO;
     }
 
+    /**
+     * Converts a list of ProductDBO objects to a list of EditorProductTO objects.
+     * @param productDBOS the list of ProductDBO objects to convert
+     * @return the list of converted EditorProductTO objects
+     */
     public ArrayList<EditorProductTO> toProductTOs(List<ProductDBO> productDBOS) {
         ArrayList<EditorProductTO> editorProductTOs = new ArrayList<>();
         productDBOS.forEach(productDBO -> editorProductTOs.add(toProductTO(productDBO)));
         return editorProductTOs;
     }
 
+    /**
+     * Converts an OrderDBO to an EditorOrderTO.
+     * @param orderDBO the OrderDBO to convert
+     * @return the converted EditorOrderTO
+     */
     public EditorOrderTO toOrderTO(OrderDBO orderDBO) {
         EditorOrderTO editorOrderTO = mapBasicOrderProperties(orderDBO);
 
@@ -71,9 +95,8 @@ public class EditorTOMapper {
         if (orderDBO.getAfterProduct() != null) {
             editorOrderTO.setProductAfter(mapBasicProductProperties(orderDBO.getAfterProduct()));
         }
-        if (editorOrderTO.getEquipment() != null) {
-            editorOrderTO.setEquipment(toEquipmentTOs(orderDBO.getEquipment()));
-        }
+
+        editorOrderTO.setEquipment(toEquipmentTOs(orderDBO.getEquipment()));
 
         editorOrderTO.setWorkflows(toWorkflowTOs(orderDBO.getWorkflows()));
 
@@ -82,6 +105,11 @@ public class EditorTOMapper {
         return editorOrderTO;
     }
 
+    /**
+     * Converts a WorkflowDBO to an EditorWorkflowTO.
+     * @param workflowDBO the WorkflowDBO to convert
+     * @return the converted EditorWorkflowTO
+     */
     public EditorWorkflowTO toWorkflowTO(WorkflowDBO workflowDBO) {
         EditorWorkflowTO editorWorkflowTO = new EditorWorkflowTO();
 
@@ -96,6 +124,11 @@ public class EditorTOMapper {
         return editorWorkflowTO;
     }
 
+    /**
+     * Converts a TaskDBO to an EditorTaskTO.
+     * @param taskDBO the TaskDBO to convert
+     * @return the converted EditorTaskTO
+     */
     public EditorTaskTO toTaskTO(TaskDBO taskDBO) {
         EditorTaskTO editorTaskTO = new EditorTaskTO();
 
@@ -111,6 +144,11 @@ public class EditorTOMapper {
         return editorTaskTO;
     }
 
+    /**
+     * Converts an ItemDBO to an EditorItemTO.
+     * @param itemDBO the ItemDBO to convert
+     * @return the converted EditorItemTO
+     */
     public EditorItemTO toItemTO(ItemDBO itemDBO) {
         EditorItemTO editorItemTO = new EditorItemTO();
 
@@ -125,6 +163,11 @@ public class EditorTOMapper {
         return editorItemTO;
     }
 
+    /**
+     * Converts an OrderDBO to an EditorForecastTO.
+     * @param orderDBO the OrderDBO to convert
+     * @return the converted EditorForecastTO
+     */
     public EditorForecastTO toForecastTO(OrderDBO orderDBO) {
         EditorForecastTO editorForecastTO = new EditorForecastTO();
         editorForecastTO.setTotalTimeRequired(orderDBO.getTotalTimeRequired());
@@ -132,36 +175,55 @@ public class EditorTOMapper {
         return editorForecastTO;
     }
 
+    /**
+     * Converts a list of OrderDBO objects to a list of EditorOrderTO objects.
+     * @param orderDBOS the list of OrderDBO objects to convert
+     * @return the list of converted EditorOrderTO objects
+     */
     public ArrayList<EditorOrderTO> toOrderTOs(List<OrderDBO> orderDBOS) {
         ArrayList<EditorOrderTO> editorOrderTOS = new ArrayList<>();
         orderDBOS.forEach(orderDBO -> editorOrderTOS.add(toOrderTO(orderDBO)));
         return editorOrderTOS;
     }
 
+    /**
+     * Converts a list of WorkflowDBO objects to a list of EditorWorkflowTO objects.
+     * @param workflowDBOs the list of WorkflowDBO objects to convert
+     * @return the list of converted EditorWorkflowTO objects
+     */
     public ArrayList<EditorWorkflowTO> toWorkflowTOs(List<WorkflowDBO> workflowDBOs) {
         ArrayList<EditorWorkflowTO> editorWorkflowTOS = new ArrayList<>();
         workflowDBOs.forEach(workflowDBO -> editorWorkflowTOS.add(toWorkflowTO(workflowDBO)));
         return editorWorkflowTOS;
     }
 
+    /**
+     * Converts a list of TaskDBO objects to a list of EditorTaskTO objects.
+     * @param taskDBOs the list of TaskDBO objects to convert
+     * @return the list of converted EditorTaskTO objects
+     */
     public ArrayList<EditorTaskTO> toTaskTOs(List<TaskDBO> taskDBOs) {
         ArrayList<EditorTaskTO> editorTaskTOS = new ArrayList<>();
         taskDBOs.forEach(taskDBO -> editorTaskTOS.add(toTaskTO(taskDBO)));
         return editorTaskTOS;
     }
 
+    /**
+     * Converts a list of ItemDBO objects to a list of EditorItemTO objects.
+     * @param itemDBOs the list of ItemDBO objects to convert
+     * @return the list of converted EditorItemTO objects
+     */
     public ArrayList<EditorItemTO> toItemTOs(List<ItemDBO> itemDBOs) {
         ArrayList<EditorItemTO> editorItemTOS = new ArrayList<>();
         itemDBOs.forEach(itemDBO -> editorItemTOS.add(toItemTO(itemDBO)));
         return editorItemTOS;
     }
 
-    public ArrayList<EditorForecastTO> toForecastTOs(List<OrderDBO> orderDBOs) {
-        ArrayList<EditorForecastTO> editorForecastTOS = new ArrayList<>();
-        orderDBOs.forEach(orderDBO -> editorForecastTOS.add(toForecastTO(orderDBO)));
-        return editorForecastTOS;
-    }
-
+    /**
+     * Maps basic properties from an OrderDBO to an EditorOrderTO.
+     * @param orderDBO the OrderDBO to map
+     * @return the mapped EditorOrderTO
+     */
     private EditorOrderTO mapBasicOrderProperties(OrderDBO orderDBO) {
         EditorOrderTO editorOrderTO = new EditorOrderTO();
         editorOrderTO.setId(orderDBO.getId());
@@ -177,6 +239,11 @@ public class EditorTOMapper {
         return editorOrderTO;
     }
 
+    /**
+     * Maps basic properties from a ProductDBO to an EditorProductTO.
+     * @param productDBO the ProductDBO to map
+     * @return the mapped EditorProductTO
+     */
     private EditorProductTO mapBasicProductProperties(ProductDBO productDBO) {
         EditorProductTO editorProductTO = new EditorProductTO();
         editorProductTO.setId(productDBO.getId());
@@ -197,6 +264,11 @@ public class EditorTOMapper {
         return editorProductTO;
     }
 
+    /**
+     * Maps basic properties from an EquipmentDBO to an EditorEquipmentTO.
+     * @param equipmentDBO the EquipmentDBO to map
+     * @return the mapped EditorEquipmentTO
+     */
     private EditorEquipmentTO mapBasicEquipmentProperties(EquipmentDBO equipmentDBO) {
         EditorEquipmentTO editorEquipmentTO = new EditorEquipmentTO();
         editorEquipmentTO.setId(equipmentDBO.getId());

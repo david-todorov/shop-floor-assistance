@@ -18,20 +18,35 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 /**
- * This is where the concrete implementations of AuthenticationService is
- * Of course implement all the needed methods
- * But do not be afraid to extract common logic in private methods
- * The number of public methods should be the same as in AuthenticationService
- * If you implement something public here and NOT declare it in AuthenticationService
- * The controller AuthenticationController can NOT see it
- * Have fun
+ * Implementation of the AuthenticationService interface.
+ * This tests handles user authentication, including verifying credentials and generating JWT tokens.
+ * @author David Todorov (https://github.com/david-todorov)
  */
 @Component
 public class AuthenticationServiceImpl implements AuthenticationService {
+
+    /**
+     * The authentication manager to authenticate users.
+     */
     private final AuthenticationManager authenticationManager;
+
+    /**
+     * The user details tests to load user information.
+     */
     private final UserDetailsService userDetailsService;
+
+    /**
+     * The JWT to generate tokens.
+     */
     private final JwtService jwtService;
 
+    /**
+     * Constructs an AuthenticationServiceImpl with the specified dependencies.
+     *
+     * @param authenticationManager the authentication manager to authenticate users
+     * @param userDetailsService the user details tests to load user information
+     * @param jwtService the JWT tests to generate tokens
+     */
     @Autowired
     public AuthenticationServiceImpl(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
@@ -39,6 +54,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.jwtService = jwtService;
     }
 
+    /**
+     * Authenticates a user based on the provided login request.
+     *
+     * @param loginUserRequestTO the login request transfer object containing username and password
+     * @return a ResponseEntity containing the authentication response transfer object with the JWT token and expiration time
+     */
     @Override
     public ResponseEntity<AuthenticationUserResponseTO> authenticate(@RequestBody LoginUserRequestTO loginUserRequestTO) {
         // Authenticate the user

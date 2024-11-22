@@ -14,9 +14,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-
 /**
- * This files ensures the authentication policies and cors configurations
+ * Configuration class for security settings.
+ * Ensures the authentication policies and CORS configurations.
+ * @author David Todorov (https://github.com/david-todorov)
  */
 @Configuration
 @EnableWebSecurity
@@ -24,6 +25,12 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    /**
+     * Constructor for SecurityConfig.
+     *
+     * @param jwtAuthenticationFilter the JWT authentication filter
+     * @param authenticationProvider the authentication provider
+     */
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
                           AuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
@@ -31,8 +38,9 @@ public class SecurityConfig {
     }
 
     /**
-     * Configures the security filter chain for HTTP requests. Disables CSRF, sets authorization rules for
-     * different endpoints based on user roles, enforces stateless session management, and adds a JWT authentication filter.
+     * Configures the security filter chain for HTTP requests.
+     * Disables CSRF, sets authorization rules for different endpoints based on user roles,
+     * enforces stateless session management, and adds a JWT authentication filter.
      *
      * There are two hierarchical roles in this setup:
      * - **EDITOR**: Has access to both editors and operators orders.
@@ -40,6 +48,9 @@ public class SecurityConfig {
      *
      * **Note**: If a new endpoint or role is introduced, this method will need to be updated to reflect the new access rules.
      *
+     * @param http the HttpSecurity to configure
+     * @return the configured SecurityFilterChain
+     * @throws Exception if an error occurs during configuration
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -61,10 +72,9 @@ public class SecurityConfig {
         return http.build();
     }
 
-
     /**
-     * Configures Cross-Origin Resource Sharing (CORS) settings for the application, allowing specific origins,
-     * HTTP methods, and headers to be used in cross-origin requests.
+     * Configures Cross-Origin Resource Sharing (CORS) settings for the application,
+     * allowing specific origins, HTTP methods, and headers to be used in cross-origin requests.
      *
      * - **Allowed Origins**: Only requests from `http://localhost:4200` and `http://localhost:80` are permitted.
      * - **Allowed Methods**: Limits cross-origin HTTP requests to "GET", "POST", "PUT", and "DELETE".

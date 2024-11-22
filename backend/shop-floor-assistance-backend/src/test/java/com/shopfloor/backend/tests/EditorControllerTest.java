@@ -1,4 +1,4 @@
-package com.shopfloor.backend.service;
+package com.shopfloor.backend.tests;
 
 import com.shopfloor.backend.api.transferobjects.editors.*;
 import com.shopfloor.backend.database.repositories.EquipmentRepository;
@@ -18,29 +18,57 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integration tests for the editor controller.
+ *
+ * This class contains tests for various editor scenarios, including
+ * adding, updating, and deleting orders, products, and equipment.
+ * @author David Todorov (https://github.com/david-todorov)
+ */
 @ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
 public class EditorControllerTest {
 
+    /**
+     * Helper for API-related operations.
+     */
     @Autowired
     private ApiHelper apiHelper;
 
+    /**
+     * Helper for order-related operations.
+     */
     @Autowired
     private OrderHelper orderHelper;
 
+    /**
+     * Repository for managing order data.
+     */
     @Autowired
     private OrderRepository orderRepository;
 
+    /**
+     * Repository for managing product data.
+     */
     @Autowired
     private ProductRepository productRepository;
 
+    /**
+     * Repository for managing equipment data.
+     */
     @Autowired
     private EquipmentRepository equipmentRepository;
 
+    /**
+     * Helper for product-related operations.
+     */
     @Autowired
     private ProductHelper productHelper;
 
+    /**
+     * Helper for equipment-related operations.
+     */
     @Autowired
     private EquipmentHelper equipmentHelper;
 
@@ -2375,9 +2403,9 @@ public class EditorControllerTest {
     }
 
     @Test
-    public void when_DeleteProductTheReferencesWithOrdersAsBeforeDeleted_Then_NoContent() throws Exception {
-        EditorProductTO toBeDeleted = this.productHelper.buildCompleteEditorProductTO("ToBeDeleted");
-        toBeDeleted = this.saveProductInDatabase(toBeDeleted);
+    public void when_DeleteProductTheReferencesWithOrdersAsBeforeAndAfterDeleted_Then_NoContent() throws Exception {
+        EditorProductTO productAfter = this.productHelper.buildCompleteEditorProductTO("ToBeDeleted");
+        productAfter = this.saveProductInDatabase(productAfter);
         EditorProductTO productBefore = this.productHelper.buildCompleteEditorProductTO("Before");
         productBefore = this.saveProductInDatabase(productBefore);
 
@@ -2388,14 +2416,14 @@ public class EditorControllerTest {
         firstEquipment = this.saveEquipmentInDatabase(firstEquipment);
         secondEquipment = this.saveEquipmentInDatabase(secondEquipment);
         thirdEquipment = this.saveEquipmentInDatabase(thirdEquipment);
-        Long toBeDeletedId = toBeDeleted.getId();
-
+        Long productAfterId = productAfter.getId();
+        Long productBeforeId = productBefore.getId();
         equipments.add(firstEquipment);
         equipments.add(secondEquipment);
         equipments.add(thirdEquipment);
 
         EditorOrderTO newOrder = this.orderHelper.buildCompleteEditorOrderTO("W0001");
-        newOrder.setProductAfter(toBeDeleted);
+        newOrder.setProductAfter(productAfter);
         newOrder.setProductBefore(productBefore);
         newOrder.setEquipment(equipments);
 
@@ -2403,13 +2431,16 @@ public class EditorControllerTest {
         newOrder = this.apiHelper.createEditorOrderPOST(newOrder, authorizationHeader, 201);
         Long orderId = newOrder.getId();
 
-        toBeDeleted = this.apiHelper.getEditorProductGET(toBeDeletedId, authorizationHeader, 200);
 
-        apiHelper.deleteEditorProductDELETE(toBeDeletedId, authorizationHeader, 204);
-        assertFalse(this.productRepository.existsById(toBeDeletedId));
+        apiHelper.deleteEditorProductDELETE(productAfterId, authorizationHeader, 204);
+        assertFalse(this.productRepository.existsById(productAfterId));
+
+        apiHelper.deleteEditorProductDELETE(productBeforeId, authorizationHeader, 204);
+        assertFalse(this.productRepository.existsById(productBeforeId));
+
         newOrder = this.apiHelper.getEditorOrderGET(orderId, authorizationHeader, 200);
-
         assertNull(newOrder.getProductAfter());
+        assertNull(newOrder.getProductBefore());
     }
 
     @Test
@@ -2676,4 +2707,254 @@ public class EditorControllerTest {
         this.apiHelper.getEditorEquipmentGET(999L, authorizationHeader, 404);
     }
 
+    /**
+     * SUGGESTIONS for Products
+     */
+
+    @Test
+    public void when_GetSuggestionsForProduct_Then_Ok() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorProductTO productOne = this.productHelper.buildCompleteEditorProductTO("P0001");
+        productOne = this.apiHelper.createEditorProductPOST(productOne, authorizationHeader, 201);
+
+        EditorProductTO productTwo = this.productHelper.buildCompleteEditorProductTO("P0002");
+        productTwo = this.apiHelper.createEditorProductPOST(productTwo, authorizationHeader, 201);
+
+        EditorProductTO productThree = this.productHelper.buildCompleteEditorProductTO("P0003");
+        productThree = this.apiHelper.createEditorProductPOST(productThree, authorizationHeader, 201);
+
+        EditorProductTO productFour = this.productHelper.buildCompleteEditorProductTO("P0004");
+        productFour = this.apiHelper.createEditorProductPOST(productFour, authorizationHeader, 201);
+
+        EditorProductTO productFive = this.productHelper.buildCompleteEditorProductTO("P0005");
+        productFive = this.apiHelper.createEditorProductPOST(productFive, authorizationHeader, 201);
+
+
+        List<EditorProductTO> suggestions = this.apiHelper.getEditorProductSuggestionsGET(authorizationHeader, 200);
+
+        assertTrue(suggestions.isEmpty());
+
+        EditorOrderTO orderOne = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        orderOne.setProductAfter(productOne);
+        apiHelper.createEditorOrderPOST(orderOne, authorizationHeader, 201);
+        suggestions = this.apiHelper.getEditorProductSuggestionsGET(authorizationHeader, 200);
+        assertEquals(1, suggestions.size());
+
+        EditorOrderTO orderTwo = this.orderHelper.buildCompleteEditorOrderTO("W0002");
+        orderTwo.setProductAfter(productTwo);
+        apiHelper.createEditorOrderPOST(orderTwo, authorizationHeader, 201);
+        suggestions = this.apiHelper.getEditorProductSuggestionsGET(authorizationHeader, 200);
+        assertEquals(2, suggestions.size());
+
+        EditorOrderTO orderThree = this.orderHelper.buildCompleteEditorOrderTO("W0003");
+        orderThree.setProductAfter(productThree);
+        apiHelper.createEditorOrderPOST(orderThree, authorizationHeader, 201);
+        suggestions = this.apiHelper.getEditorProductSuggestionsGET(authorizationHeader, 200);
+        assertEquals(3, suggestions.size());
+
+        EditorOrderTO orderFour = this.orderHelper.buildCompleteEditorOrderTO("W0004");
+        orderFour.setProductAfter(productFour);
+        apiHelper.createEditorOrderPOST(orderFour, authorizationHeader, 201);
+        suggestions = this.apiHelper.getEditorProductSuggestionsGET(authorizationHeader, 200);
+        assertEquals(4, suggestions.size());
+
+        EditorOrderTO orderFive = this.orderHelper.buildCompleteEditorOrderTO("W0005");
+        orderFive.setProductAfter(productFive);
+        apiHelper.createEditorOrderPOST(orderFive, authorizationHeader, 201);
+        suggestions = this.apiHelper.getEditorProductSuggestionsGET(authorizationHeader, 200);
+        assertEquals(5, suggestions.size());
+    }
+
+    @Test
+    public void when_GetSuggestionsForEquipment_Then_Ok() throws Exception {
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorEquipmentTO equipmentOne = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0001");
+        EditorEquipmentTO equipmentTwo = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0002");
+        EditorEquipmentTO equipmentThree = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0003");
+        EditorEquipmentTO equipmentFour = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0004");
+        EditorEquipmentTO equipmentFive = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0005");
+        EditorEquipmentTO equipmentSix = this.equipmentHelper.buildCompleteEditorEquipmentTO("E0006");
+
+
+        equipmentOne = this.apiHelper.createEditorEquipmentPOST(equipmentOne, authorizationHeader, 201);
+        equipmentTwo = this.apiHelper.createEditorEquipmentPOST(equipmentTwo, authorizationHeader, 201);
+        equipmentThree = this.apiHelper.createEditorEquipmentPOST(equipmentThree, authorizationHeader, 201);
+        equipmentFour = this.apiHelper.createEditorEquipmentPOST(equipmentFour, authorizationHeader, 201);
+        equipmentFive = this.apiHelper.createEditorEquipmentPOST(equipmentFive, authorizationHeader, 201);
+        equipmentSix = this.apiHelper.createEditorEquipmentPOST(equipmentSix, authorizationHeader, 201);
+
+        List<EditorEquipmentTO> suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(0, suggestions.size());
+
+        EditorOrderTO orderOne = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        orderOne.getEquipment().add(equipmentOne);
+        orderOne = this.apiHelper.createEditorOrderPOST(orderOne, authorizationHeader, 201);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(1, suggestions.size());
+
+        orderOne.getEquipment().add(equipmentTwo);
+        orderOne = this.apiHelper.updateEditorOrderPUT(orderOne.getId(), orderOne, authorizationHeader, 200);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(2, suggestions.size());
+
+        orderOne.getEquipment().add(equipmentThree);
+        orderOne = this.apiHelper.updateEditorOrderPUT(orderOne.getId(), orderOne, authorizationHeader, 200);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(3, suggestions.size());
+
+        orderOne.getEquipment().add(equipmentFour);
+        orderOne = this.apiHelper.updateEditorOrderPUT(orderOne.getId(), orderOne, authorizationHeader, 200);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(4, suggestions.size());
+
+        orderOne.getEquipment().add(equipmentFive);
+        orderOne = this.apiHelper.updateEditorOrderPUT(orderOne.getId(), orderOne, authorizationHeader, 200);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(5, suggestions.size());
+
+        orderOne.getEquipment().add(equipmentSix);
+        orderOne = this.apiHelper.updateEditorOrderPUT(orderOne.getId(), orderOne, authorizationHeader, 200);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(5, suggestions.size());
+
+        orderOne.getEquipment().remove(0);
+        orderOne = this.apiHelper.updateEditorOrderPUT(orderOne.getId(), orderOne, authorizationHeader, 200);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(5, suggestions.size());
+
+        orderOne.getEquipment().remove(0);
+        orderOne = this.apiHelper.updateEditorOrderPUT(orderOne.getId(), orderOne, authorizationHeader, 200);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(4, suggestions.size());
+
+        orderOne.getEquipment().remove(0);
+        orderOne = this.apiHelper.updateEditorOrderPUT(orderOne.getId(), orderOne, authorizationHeader, 200);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(3, suggestions.size());
+
+        orderOne.getEquipment().remove(0);
+        orderOne = this.apiHelper.updateEditorOrderPUT(orderOne.getId(), orderOne, authorizationHeader, 200);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(2, suggestions.size());
+
+        orderOne.getEquipment().remove(0);
+        orderOne = this.apiHelper.updateEditorOrderPUT(orderOne.getId(), orderOne, authorizationHeader, 200);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(1, suggestions.size());
+
+        orderOne.getEquipment().remove(0);
+        orderOne = this.apiHelper.updateEditorOrderPUT(orderOne.getId(), orderOne, authorizationHeader, 200);
+        suggestions = this.apiHelper.getEditorEquipmentSuggestionsGET(authorizationHeader, 200);
+        assertEquals(0, suggestions.size());
+    }
+
+    @Test
+    public void when_GetSuggestionsForWorkflows_Then_Ok() throws Exception{
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorProductTO after = this.productHelper.buildCompleteEditorProductTO("P0001");
+        EditorProductTO before = this.productHelper.buildCompleteEditorProductTO("P0002");
+        after = this.apiHelper.createEditorProductPOST(after, authorizationHeader, 201);
+        before = this.apiHelper.createEditorProductPOST(before, authorizationHeader, 201);
+
+        EditorOrderTO order = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        order = this.apiHelper.createEditorOrderPOST(order, authorizationHeader, 201);
+
+        List<EditorWorkflowTO> suggestions = this.apiHelper.getEditorWorkflowSuggestionsPOST(after, authorizationHeader, 200);
+        assertEquals(0, suggestions.size());
+
+        order.setProductAfter(after);
+        order = this.apiHelper.updateEditorOrderPUT(order.getId(), order, authorizationHeader, 200);
+
+
+
+        EditorOrderTO orderTwo = this.orderHelper.buildCompleteEditorOrderTO("W0002");
+        orderTwo.setProductAfter(after);
+        orderTwo.setProductBefore(before);
+        orderTwo = this.apiHelper.createEditorOrderPOST(orderTwo, authorizationHeader, 201);
+
+        suggestions = this.apiHelper.getEditorWorkflowSuggestionsPOST(after, authorizationHeader, 200);
+        assertEquals(order.getWorkflows().size(), suggestions.size());
+
+        for (int i = 0; i < suggestions.size(); i++) {
+            orderHelper.assertEditorWorkflowsEqual(order.getWorkflows().get(i), suggestions.get(i));
+        }
+
+    }
+
+    @Test
+    public void when_GetSuggestionsForTasks_Then_Ok() throws Exception{
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorProductTO after = this.productHelper.buildCompleteEditorProductTO("P0001");
+        EditorProductTO before = this.productHelper.buildCompleteEditorProductTO("P0002");
+        after = this.apiHelper.createEditorProductPOST(after, authorizationHeader, 201);
+        before = this.apiHelper.createEditorProductPOST(before, authorizationHeader, 201);
+
+        EditorOrderTO order = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        order = this.apiHelper.createEditorOrderPOST(order, authorizationHeader, 201);
+
+        List<EditorTaskTO> suggestions = this.apiHelper.getEditorTasksSuggestionsPOST(after, authorizationHeader, 200);
+        assertEquals(0, suggestions.size());
+
+        order.setProductAfter(after);
+        order = this.apiHelper.updateEditorOrderPUT(order.getId(), order, authorizationHeader, 200);
+
+        EditorOrderTO orderTwo = this.orderHelper.buildCompleteEditorOrderTO("W0002");
+        orderTwo.setProductAfter(after);
+        orderTwo.setProductBefore(before);
+        orderTwo = this.apiHelper.createEditorOrderPOST(orderTwo, authorizationHeader, 201);
+
+        suggestions = this.apiHelper.getEditorTasksSuggestionsPOST(after, authorizationHeader, 200);
+        assertFalse(suggestions.isEmpty());
+    }
+
+    @Test
+    public void when_GetSuggestionsForItems_Then_Ok() throws Exception{
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorProductTO after = this.productHelper.buildCompleteEditorProductTO("P0001");
+        EditorProductTO before = this.productHelper.buildCompleteEditorProductTO("P0002");
+        after = this.apiHelper.createEditorProductPOST(after, authorizationHeader, 201);
+        before = this.apiHelper.createEditorProductPOST(before, authorizationHeader, 201);
+
+        EditorOrderTO order = this.orderHelper.buildCompleteEditorOrderTO("W0001");
+        order = this.apiHelper.createEditorOrderPOST(order, authorizationHeader, 201);
+
+        List<EditorItemTO> suggestions = this.apiHelper.getEditorItemsSuggestionsPOST(after, authorizationHeader, 200);
+        assertEquals(0, suggestions.size());
+
+        order.setProductAfter(after);
+        order = this.apiHelper.updateEditorOrderPUT(order.getId(), order, authorizationHeader, 200);
+
+        EditorOrderTO orderTwo = this.orderHelper.buildCompleteEditorOrderTO("W0002");
+        orderTwo.setProductAfter(after);
+        orderTwo.setProductBefore(before);
+        orderTwo = this.apiHelper.createEditorOrderPOST(orderTwo, authorizationHeader, 201);
+
+        suggestions = this.apiHelper.getEditorItemsSuggestionsPOST(after, authorizationHeader, 200);
+        assertFalse(suggestions.isEmpty());
+    }
+
+    @Test
+    public void when_GetSuggestionsForWorkflows_With_Non_ExistingProduct_Then_NotFound() throws Exception{
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorProductTO after = this.productHelper.buildCompleteEditorProductTO("P0001");
+        after.setId(999L);
+        List<EditorWorkflowTO> suggestions = this.apiHelper.getEditorWorkflowSuggestionsPOST(after, authorizationHeader, 404);
+
+    }
+
+    @Test
+    public void when_GetSuggestionsForTasks_With_Non_ExistingProduct_Then_NotFound() throws Exception{
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorProductTO after = this.productHelper.buildCompleteEditorProductTO("P0001");
+        after.setId(999L);
+        List<EditorTaskTO> suggestions = this.apiHelper.getEditorTasksSuggestionsPOST(after, authorizationHeader, 404);
+    }
+
+    @Test
+    public void when_GetSuggestionsForItems_With_Non_ExistingProduct_Then_NotFound() throws Exception{
+        String authorizationHeader = this.apiHelper.createAuthorizationHeaderFrom("editor","editor");
+        EditorProductTO after = this.productHelper.buildCompleteEditorProductTO("P0001");
+        after.setId(999L);
+        List<EditorItemTO> suggestions = this.apiHelper.getEditorItemsSuggestionsPOST(after, authorizationHeader, 404);
+    }
 }

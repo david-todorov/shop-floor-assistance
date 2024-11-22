@@ -2,77 +2,17 @@
 
 ## Authentication Endpoint
 
-`POST /auth/login`
+#### `POST /auth/login`
+- **Description**:This endpoint authenticates users (either 'editor' or 'operator') based on their credentials. Upon successful authentication, a JSON Web Token (JWT) is issued, along with timestamps for token creation and expiration.
+- **Request Body**:
+  - `LoginUserRequestTO`: The authentication request
+- **Throws**:
+  - Exception if provided credentials does not match a user in database
+- **Response**: Authentication response as `AuthenticationUserResponseTO`
+---
 
-### Description
-This endpoint authenticates users (either 'editor' or 'operator') based on their credentials. Upon successful authentication, a JSON Web Token (JWT) is issued, along with timestamps for token creation and expiration.
-
-### Request Body
-The login request requires a JSON body with the following parameters:
-
-```json
-{
-  "username": "operator",
-  "password": "operator"
-}
-```
-
-### Responses
-
-On successful authentication, the API responds with a JSON object based on the `AuthenticationUserResponseTO` class, containing the token, creation timestamp, and expiration timestamp.
-
-#### Success Response
-
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "createdAt": "2024-10-15 12:30:00",
-  "expiresAt": "2024-10-15 13:30:00"
-}
- ```
-
-#### Errors Responses:
-
-#### Invalid Credentials
-
--   **Status Code:** 401 Unauthorized
-
--   **Response:**
-```json    
-{
-  "error": "Invalid username or password."
-}
-```
-
-
-#### Forbidden Access
-
--   **Status Code:** 403 Forbidden
-
--   **Response:**
-```json
-{
-  "error": "Access to this resource is forbidden."
-}
-```
-
-### Authorization Header for Protected Endpoints
-
-Once authenticated, include the token in the `Authorization` header to access other secured endpoints, for example with `Bearer`
-
-### Usage Example
-
-#### cURL Example
-```bash
-curl -X POST http:/localhost/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "operator",
-    "password": "operator"
-  }'
-  ```
-##Editors Endpoints
-###Orders
+## Editors Endpoints
+### Orders
 #### `GET /editor/orders`
 - **Description**: Returns a list of all available orders in the system.
 - **Response**: List of orders as `EditorOrderTO` from the database.
@@ -186,7 +126,7 @@ curl -X POST http:/localhost/auth/login \
   - Exception if the provided equipment number is `null`.
   - Exception if equipment with the same `equipment number` already exists.
   - Exception if any mandatory property  is `null` or `empty`
-- **Response**: The saved order as TO
+- **Response**: The saved order as `EditorEquipmentTO`
 ---
 #### `PUT /editor/equipment/{equipmentId}`
 - **Description**: Updates an existing equipment.
@@ -199,7 +139,7 @@ curl -X POST http:/localhost/auth/login \
   - Exception if the provided ID does not exist in the database.
   - Exception if another equipment has the same `equipment number`, as it cannot be renamed.
   - Exception if any mandatory property  is `null` or `empty`
-- **Response**: The updated equipment as TO
+- **Response**: The updated equipment as `EditorEquipmentTO`
 ---
 #### `DELETE /editor/equipment/{equipmentId}`
 - **Description**: Deletes existing equipment identified by the specified `equipmentId`.
@@ -220,7 +160,7 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: The requested  equipment as `EditorEquipmentTO`
 ---
 
-###Suggestions
+### Suggestions
 #### `GET /editor/equipment/suggestions`
 - **Description**: Retrieves top `n` referenced equipment.
 - **Response**: List of `EditorEquipmentTO`
@@ -253,7 +193,7 @@ curl -X POST http:/localhost/auth/login \
 
 ## Operator Endpoints
 
-###Orders
+### Orders
 #### `GET /operator/orders`
 - **Description**: Returns a list of all available orders in the system
 - **Response**: List of orders as `OperatorOrderTO` from the database.
@@ -268,7 +208,7 @@ curl -X POST http:/localhost/auth/login \
 - **Response**: The requested  order as `OperatorOrderTO`
 ---
 
-###Executions
+### Executions
 #### `POST /operator/start/{orderId}`
 - **Description**:  Starts an execution of an order and returns started `OperatorExecutionTO`.
 - **Parameters**:

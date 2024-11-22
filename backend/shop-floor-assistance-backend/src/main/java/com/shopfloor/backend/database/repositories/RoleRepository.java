@@ -6,15 +6,26 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository interface for accessing Roles data in the database.
- *
- * This interface extends JpaRepository, providing CRUD operations
- * for RolesDBO entities, which represent roles in the database.
- * This interface will probably be used in some of our services
+ * Repository interface for RoleDBO entities.
+ * Provides methods for performing CRUD operations on role data.
+ * @author David Todorov (https://github.com/david-todorov)
  */
 @Repository
 public interface RoleRepository extends JpaRepository<RoleDBO, Long> {
+
+    /**
+     * Checks if a role entity exists with the given name.
+     *
+     * @param role the role to check
+     * @return true if a role entity exists with the given name, false otherwise
+     */
     boolean existsByName(Role role);
 
+    /**
+     * Finds a role entity by its name.
+     *
+     * @param role the name of the role to find
+     * @return the found RoleDBO entity
+     */
     RoleDBO findByName(Role role);
 }
