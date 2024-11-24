@@ -116,16 +116,16 @@ public class ProductDBO {
 
     /**
      * List of orders where this product is the before product.
-     * Fetch type is set to EAGER, meaning the orders are loaded immediately.
+     * Fetch type is set to LAZY, meaning the orders are loaded on demand.
      */
-    @OneToMany(mappedBy = "beforeProduct", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "beforeProduct", fetch = FetchType.LAZY)
     private List<OrderDBO> ordersAsBeforeProduct;
 
     /**
      * List of orders where this product is the after product.
-     * Fetch type is set to EAGER, meaning the orders are loaded immediately.
+     * Fetch type is set to LAZY, meaning the orders are loaded on demand.
      */
-    @OneToMany(mappedBy = "afterProduct", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "afterProduct", fetch = FetchType.LAZY)
     private List<OrderDBO> ordersAsAfterProduct;
 
     /**

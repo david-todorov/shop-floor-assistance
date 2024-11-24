@@ -8,7 +8,7 @@
   - `LoginUserRequestTO`: The authentication request
 - **Throws**:
   - Exception if provided credentials does not match a user in database
-- **Response**: Authentication response as `AuthenticationUserResponseTO`
+- **Response**: Authentication response as `LoginUserResponseTO`
 ---
 
 ## Editors Endpoints

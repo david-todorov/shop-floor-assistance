@@ -340,6 +340,119 @@ public class ApiHelper {
     }
 
     /**
+     * Retrieves product suggestions for an editor.
+     *
+     * @param authorizationHeader the authorization header
+     * @param expectedStatus the expected HTTP status code
+     * @return a list of editor product transfer objects
+     * @throws Exception if an error occurs during the request
+     */
+    public List<EditorProductTO> getEditorProductSuggestionsGET(String authorizationHeader, int expectedStatus) throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(get("/editor/products/suggestions")
+                        .header("Authorization", authorizationHeader))
+                .andExpect(status().is(expectedStatus))
+                .andReturn().getResponse();
+
+        if (response.getStatus() == 200) {
+            String responseContent = response.getContentAsString();
+            return objectMapper.readValue(responseContent, new TypeReference<List<EditorProductTO>>() {});
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Retrieves equipment suggestions for an editor.
+     *
+     * @param authorizationHeader the authorization header
+     * @param expectedStatus the expected HTTP status code
+     * @return a list of editor equipment transfer objects
+     * @throws Exception if an error occurs during the request
+     */
+    public List<EditorEquipmentTO> getEditorEquipmentSuggestionsGET(String authorizationHeader, int expectedStatus) throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(get("/editor/equipment/suggestions")
+                        .header("Authorization", authorizationHeader))
+                .andExpect(status().is(expectedStatus))
+                .andReturn().getResponse();
+
+        if (response.getStatus() == 200) {
+            String responseContent = response.getContentAsString();
+            return objectMapper.readValue(responseContent, new TypeReference<List<EditorEquipmentTO>>() {});
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Retrieves workflow suggestions for an editor based on a product.
+     *
+     * @param productAfter the product transfer object
+     * @param authorizationHeader the authorization header
+     * @param expectedStatus the expected HTTP status code
+     * @return a list of editor workflow transfer objects
+     * @throws Exception if an error occurs during the request
+     */
+    public List<EditorWorkflowTO> getEditorWorkflowSuggestionsPOST(EditorProductTO productAfter, String authorizationHeader, int expectedStatus) throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(post("/editor/workflows/suggestions")
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productAfter)).header("Authorization", authorizationHeader))
+                .andExpect(status().is(expectedStatus))
+                .andReturn().getResponse();
+
+        if (response.getStatus() == 200) {
+            String responseContent = response.getContentAsString();
+            return objectMapper.readValue(responseContent, new TypeReference<List<EditorWorkflowTO>>() {});
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Retrieves task suggestions for an editor based on a product.
+     *
+     * @param productAfter the product transfer object
+     * @param authorizationHeader the authorization header
+     * @param expectedStatus the expected HTTP status code
+     * @return a list of editor task transfer objects
+     * @throws Exception if an error occurs during the request
+     */
+    public List<EditorTaskTO> getEditorTasksSuggestionsPOST(EditorProductTO productAfter, String authorizationHeader, int expectedStatus) throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(post("/editor/tasks/suggestions")
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productAfter)).header("Authorization", authorizationHeader))
+                .andExpect(status().is(expectedStatus))
+                .andReturn().getResponse();
+
+        if (response.getStatus() == 200) {
+            String responseContent = response.getContentAsString();
+            return objectMapper.readValue(responseContent, new TypeReference<List<EditorTaskTO>>() {});
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Retrieves item suggestions for an editor based on a product.
+     *
+     * @param productAfter the product transfer object
+     * @param authorizationHeader the authorization header
+     * @param expectedStatus the expected HTTP status code
+     * @return a list of editor item transfer objects
+     * @throws Exception if an error occurs during the request
+     */
+    public List<EditorItemTO> getEditorItemsSuggestionsPOST(EditorProductTO productAfter, String authorizationHeader, int expectedStatus) throws Exception {
+        MockHttpServletResponse response = mockMvc.perform(post("/editor/items/suggestions")
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productAfter)).header("Authorization", authorizationHeader))
+                .andExpect(status().is(expectedStatus))
+                .andReturn().getResponse();
+
+        if (response.getStatus() == 200) {
+            String responseContent = response.getContentAsString();
+            return objectMapper.readValue(responseContent, new TypeReference<List<EditorItemTO>>() {});
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
      * Retrieves all orders for an operator.
      *
      * @param authorizationHeader the authorization header
@@ -379,79 +492,15 @@ public class ApiHelper {
         return objectMapper.readValue(responseContent, OperatorOrderTO.class);
     }
 
-
-
-    public List<EditorProductTO> getEditorProductSuggestionsGET(String authorizationHeader, int expectedStatus) throws Exception {
-        MockHttpServletResponse response = mockMvc.perform(get("/editor/products/suggestions")
-                        .header("Authorization", authorizationHeader))
-                .andExpect(status().is(expectedStatus))
-                .andReturn().getResponse();
-
-        if (response.getStatus() == 200) {
-            String responseContent = response.getContentAsString();
-            return objectMapper.readValue(responseContent, new TypeReference<List<EditorProductTO>>() {});
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public List<EditorEquipmentTO> getEditorEquipmentSuggestionsGET(String authorizationHeader, int expectedStatus) throws Exception {
-        MockHttpServletResponse response = mockMvc.perform(get("/editor/equipment/suggestions")
-                        .header("Authorization", authorizationHeader))
-                .andExpect(status().is(expectedStatus))
-                .andReturn().getResponse();
-
-        if (response.getStatus() == 200) {
-            String responseContent = response.getContentAsString();
-            return objectMapper.readValue(responseContent, new TypeReference<List<EditorEquipmentTO>>() {});
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public List<EditorWorkflowTO> getEditorWorkflowSuggestionsPOST(EditorProductTO productAfter,String authorizationHeader, int expectedStatus) throws Exception {
-        MockHttpServletResponse response = mockMvc.perform(post("/editor/workflows/suggestions")
-                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productAfter)).header("Authorization", authorizationHeader))
-                .andExpect(status().is(expectedStatus))
-                .andReturn().getResponse();
-
-        if (response.getStatus() == 200) {
-            String responseContent = response.getContentAsString();
-            return objectMapper.readValue(responseContent, new TypeReference<List<EditorWorkflowTO>>() {});
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    public List<EditorTaskTO> getEditorTasksSuggestionsPOST(EditorProductTO productAfter,String authorizationHeader, int expectedStatus) throws Exception {
-        MockHttpServletResponse response = mockMvc.perform(post("/editor/tasks/suggestions")
-                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productAfter)).header("Authorization", authorizationHeader))
-                .andExpect(status().is(expectedStatus))
-                .andReturn().getResponse();
-
-        if (response.getStatus() == 200) {
-            String responseContent = response.getContentAsString();
-            return objectMapper.readValue(responseContent, new TypeReference<List<EditorTaskTO>>() {});
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-
-    public List<EditorItemTO> getEditorItemsSuggestionsPOST(EditorProductTO productAfter,String authorizationHeader, int expectedStatus) throws Exception {
-        MockHttpServletResponse response = mockMvc.perform(post("/editor/items/suggestions")
-                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(productAfter)).header("Authorization", authorizationHeader))
-                .andExpect(status().is(expectedStatus))
-                .andReturn().getResponse();
-
-        if (response.getStatus() == 200) {
-            String responseContent = response.getContentAsString();
-            return objectMapper.readValue(responseContent, new TypeReference<List<EditorItemTO>>() {});
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
+    /**
+     * Retrieves the forecast for an operator's order.
+     *
+     * @param orderId the order ID
+     * @param authorizationHeader the authorization header
+     * @param expectedStatus the expected HTTP status code
+     * @return the operator forecast transfer object
+     * @throws Exception if an error occurs during the request
+     */
     public OperatorForecastTO getOperatorForecastGET(Long orderId, String authorizationHeader, int expectedStatus) throws Exception {
         String responseContent = mockMvc.perform(get("/operator/forecast/{orderId}", orderId)
                         .header("Authorization", authorizationHeader))
@@ -461,6 +510,15 @@ public class ApiHelper {
         return objectMapper.readValue(responseContent, OperatorForecastTO.class);
     }
 
+    /**
+     * Starts an operator's order.
+     *
+     * @param orderId the order ID
+     * @param authorizationHeader the authorization header
+     * @param expectedStatus the expected HTTP status code
+     * @return the operator execution transfer object
+     * @throws Exception if an error occurs during the request
+     */
     public OperatorExecutionTO startOperatorOrderPOST(Long orderId, String authorizationHeader, int expectedStatus) throws Exception {
         String responseContent = mockMvc.perform(post("/operator/start/{orderId}", orderId)
                         .header("Authorization", authorizationHeader))
@@ -470,6 +528,15 @@ public class ApiHelper {
         return objectMapper.readValue(responseContent, OperatorExecutionTO.class);
     }
 
+    /**
+     * Finishes an operator's order.
+     *
+     * @param executionId the execution ID
+     * @param authorizationHeader the authorization header
+     * @param expectedStatus the expected HTTP status code
+     * @return the operator execution transfer object
+     * @throws Exception if an error occurs during the request
+     */
     public OperatorExecutionTO finishOperatorOrderPUT(Long executionId, String authorizationHeader, int expectedStatus) throws Exception {
         String responseContent = mockMvc.perform(put("/operator/finish/{executionId}", executionId)
                         .header("Authorization", authorizationHeader))
@@ -479,6 +546,15 @@ public class ApiHelper {
         return objectMapper.readValue(responseContent, OperatorExecutionTO.class);
     }
 
+    /**
+     * Aborts an operator's order.
+     *
+     * @param executionId the execution ID
+     * @param authorizationHeader the authorization header
+     * @param expectedStatus the expected HTTP status code
+     * @return the operator execution transfer object
+     * @throws Exception if an error occurs during the request
+     */
     public OperatorExecutionTO abortOperatorOrderPUT(Long executionId, String authorizationHeader, int expectedStatus) throws Exception {
         String responseContent = mockMvc.perform(put("/operator/abort/{executionId}", executionId)
                         .header("Authorization", authorizationHeader))
@@ -487,4 +563,5 @@ public class ApiHelper {
 
         return objectMapper.readValue(responseContent, OperatorExecutionTO.class);
     }
+
 }

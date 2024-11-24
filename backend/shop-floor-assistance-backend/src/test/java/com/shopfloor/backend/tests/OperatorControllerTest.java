@@ -80,13 +80,20 @@ public class OperatorControllerTest {
     @Autowired
     private EquipmentHelper equipmentHelper;
 
+    /**
+     * Clears the database after each test.
+     * NOTE: The order of deletion is important to avoid foreign key constraint violations.
+     * It bypasses the service layer and directly deletes the data from the database.
+     * On service layer, the references to the respective entities are deleted first.
+     * Use this method carefully.
+     */
     @AfterEach
     public void tearDown() {
 
+        executionRepository.deleteAll();
         orderRepository.deleteAll();
         productRepository.deleteAll();
         equipmentRepository.deleteAll();
-        executionRepository.deleteAll();
     }
 
 
@@ -260,4 +267,5 @@ public class OperatorControllerTest {
         this.apiHelper.deleteEditorOrderDELETE(order.getId(), editorHeader, 204);
         this.executionRepository.existsById(operatorExecutionTO.getId());
     }
+
 }

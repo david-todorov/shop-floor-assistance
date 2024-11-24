@@ -39,7 +39,7 @@ To run both the backend and frontend applications using Docker Compose, follow t
 
 - **Running only the Database**:
    ```bash
-   
+   docker-compose up --build --detach database
    ```
 
 ### Stopping Containers

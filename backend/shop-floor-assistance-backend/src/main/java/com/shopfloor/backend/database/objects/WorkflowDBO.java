@@ -76,7 +76,7 @@ public class WorkflowDBO {
      * The tasks are ordered by their ordering index in ascending order.
      * Cascade type is set to ALL, meaning all operations (persist, merge, remove, refresh, detach) are cascaded to the tasks.
      * Fetch type is set to LAZY, meaning the tasks are loaded on demand.
-     * Orphan removal is enabled, meaning if a task is removed from the list, it will be deleted from the database.
+     * Note: Deleting all tasks from the list will not delete the workflow entity. The lifecycle of the workflow entity is independent of the tasks.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "workflow_id")

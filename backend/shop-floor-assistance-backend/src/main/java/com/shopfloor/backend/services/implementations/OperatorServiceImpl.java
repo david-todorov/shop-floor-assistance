@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Implementation of the OperatorService interface.
- * This tests handles operations related to orders and executions for operators.
+ * Provides methods to retrieve and manipulate order and execution data for operators.
  * @author David Todorov (https://github.com/david-todorov)
  */
 @Component
@@ -84,9 +84,12 @@ public class OperatorServiceImpl implements OperatorService {
      */
     @Override
     public OperatorOrderTO getOrder(Long id) {
+
+        // Retrieve the order from the database or return null if not found
         OrderDBO orderDBO = orderRepository.findById(id)
                 .orElseThrow(OrderNotFoundException::new);
 
+        // Convert the order to a OperatorOrderTO and return it
         return this.operatorTOMapper.toOrderTO(orderDBO);
     }
 
@@ -99,17 +102,23 @@ public class OperatorServiceImpl implements OperatorService {
      */
     @Override
     public OperatorExecutionTO startExecution(Long orderId) {
+
+        // Get the ID of the current user
         Long executorId = AuthenticatedUserDetails.getCurrentUserId();
 
+        // Retrieve the order from the database or throw an exception if not found
         OrderDBO order = orderRepository.findById(orderId)
                 .orElseThrow(OrderNotFoundException::new);
 
+        // Create a new execution and save it to the database
         ExecutionDBO execution = this.executionDBOMapper.initializeExecutionDBO(executorId);
         execution = this.executionRepository.save(execution);
 
+        // Add the execution to the order and save the order to the database
         order.addExecution(execution);
         this.orderRepository.save(order);
 
+        // Convert the execution to a OperatorExecutionTO and return it
         return this.operatorTOMapper.toExecutionTO(execution);
     }
 
@@ -122,14 +131,19 @@ public class OperatorServiceImpl implements OperatorService {
      */
     @Override
     public OperatorExecutionTO finishExecution(Long executionId) {
+
+        // Get the ID of the current user
         Long finisherId = AuthenticatedUserDetails.getCurrentUserId();
 
+        // Retrieve the execution from the database or throw an exception if not found
         ExecutionDBO executionDBO = this.executionRepository.findById(executionId)
                 .orElseThrow(ExecutionNotFoundException::new);
 
+        // Finish the execution and save it to the database
         this.executionDBOMapper.finishExecutionDBO(executionDBO, finisherId);
         executionDBO = this.executionRepository.save(executionDBO);
 
+        // Convert the execution to a OperatorExecutionTO and return it
         return this.operatorTOMapper.toExecutionTO(executionDBO);
     }
 
@@ -142,12 +156,15 @@ public class OperatorServiceImpl implements OperatorService {
      */
     @Override
     public OperatorExecutionTO abortExecution(Long executionId) {
+        // Retrieve the execution from the database or throw an exception if not found
         ExecutionDBO executionDBO = this.executionRepository.findById(executionId)
                 .orElseThrow(ExecutionNotFoundException::new);
 
+        // Abort the execution and save it to the database
         this.executionDBOMapper.abortExecutionDBO(executionDBO);
         executionDBO = this.executionRepository.save(executionDBO);
 
+        // Convert the execution to a OperatorExecutionTO and return it
         return this.operatorTOMapper.toExecutionTO(executionDBO);
     }
 
@@ -160,8 +177,12 @@ public class OperatorServiceImpl implements OperatorService {
      */
     @Override
     public OperatorForecastTO getForecast(Long orderId) {
+
+        // Retrieve the order from the database or throw an exception if not found
         OrderDBO orderDBO = orderRepository.findById(orderId)
                 .orElseThrow(OrderNotFoundException::new);
+
+        // Create a new OperatorForecastTO and set the total time required
         OperatorForecastTO forecastTO = new OperatorForecastTO();
         forecastTO.setTotalTimeRequired(orderDBO.getTotalTimeRequired());
 

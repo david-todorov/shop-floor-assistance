@@ -1,7 +1,7 @@
 package com.shopfloor.backend.services.interfaces;
 
-import com.shopfloor.backend.api.transferobjects.authentication.AuthenticationUserResponseTO;
 import com.shopfloor.backend.api.transferobjects.authentication.LoginUserRequestTO;
+import com.shopfloor.backend.api.transferobjects.authentication.LoginUserResponseTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -17,6 +17,6 @@ public interface AuthenticationService {
      * @param loginUserRequestTO the login request containing user credentials.
      * @return a ResponseEntity containing the authentication response.
      */
-    ResponseEntity<AuthenticationUserResponseTO> authenticate(@RequestBody LoginUserRequestTO loginUserRequestTO);
+    ResponseEntity<LoginUserResponseTO> authenticate(@RequestBody LoginUserRequestTO loginUserRequestTO);
 }
 

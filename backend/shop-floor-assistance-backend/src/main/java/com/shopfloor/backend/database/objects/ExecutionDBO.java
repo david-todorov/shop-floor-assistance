@@ -65,7 +65,8 @@ public class ExecutionDBO {
      * Fetch type is set to LAZY, meaning the order is loaded on demand.
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = true)
+    //@OnDelete(action = OnDeleteAction.SET_NULL)
     private OrderDBO order;
 
     /**

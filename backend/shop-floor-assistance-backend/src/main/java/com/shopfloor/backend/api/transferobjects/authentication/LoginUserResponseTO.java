@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
  */
 @Getter
 @Setter
-public class AuthenticationUserResponseTO {
+public class LoginUserResponseTO {
     /**
      * The JWT token.
      */
@@ -36,7 +36,7 @@ public class AuthenticationUserResponseTO {
      * @param createdAt the creation time of the token
      * @param expiresIn the duration in seconds until the token expires
      */
-    public AuthenticationUserResponseTO(String token, LocalDateTime createdAt, long expiresIn) {
+    public LoginUserResponseTO(String token, LocalDateTime createdAt, long expiresIn) {
         this.token = token;
         this.createdAt = formatDateTime(createdAt);
         this.expiresAt = formatDateTime(createdAt.plusSeconds(expiresIn / 1000));

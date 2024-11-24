@@ -1,7 +1,7 @@
 package com.shopfloor.backend.services.implementations;
 
-import com.shopfloor.backend.api.transferobjects.authentication.AuthenticationUserResponseTO;
 import com.shopfloor.backend.api.transferobjects.authentication.LoginUserRequestTO;
+import com.shopfloor.backend.api.transferobjects.authentication.LoginUserResponseTO;
 import com.shopfloor.backend.database.objects.UserDBO;
 import com.shopfloor.backend.security.JwtService;
 import com.shopfloor.backend.services.interfaces.AuthenticationService;
@@ -19,7 +19,7 @@ import java.time.ZoneOffset;
 
 /**
  * Implementation of the AuthenticationService interface.
- * This tests handles user authentication, including verifying credentials and generating JWT tokens.
+ * Provides methods to authenticate users and generate JWT tokens.
  * @author David Todorov (https://github.com/david-todorov)
  */
 @Component
@@ -61,7 +61,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @return a ResponseEntity containing the authentication response transfer object with the JWT token and expiration time
      */
     @Override
-    public ResponseEntity<AuthenticationUserResponseTO> authenticate(@RequestBody LoginUserRequestTO loginUserRequestTO) {
+    public ResponseEntity<LoginUserResponseTO> authenticate(@RequestBody LoginUserRequestTO loginUserRequestTO) {
         // Authenticate the user
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUserRequestTO.getUsername(), loginUserRequestTO.getPassword())
@@ -80,7 +80,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         long expiresIn = jwtService.getExpirationTime();
 
         // Create the response
-        AuthenticationUserResponseTO response = new AuthenticationUserResponseTO(jwtToken, LocalDateTime.now(ZoneOffset.UTC), expiresIn);
+        LoginUserResponseTO response = new LoginUserResponseTO(jwtToken, LocalDateTime.now(ZoneOffset.UTC), expiresIn);
 
         return ResponseEntity.ok(response);
     }

@@ -76,7 +76,7 @@ public class TaskDBO {
      * The items are ordered by their ordering index in ascending order.
      * Cascade type is set to ALL, meaning all operations (persist, merge, remove, refresh, detach) are cascaded to the items.
      * Fetch type is set to LAZY, meaning the items are loaded on demand.
-     * Orphan removal is enabled, meaning if an item is removed from the list, it will be deleted from the database.
+     * Note: Deleting all items from the list will not delete the task entity. The lifecycle of the task entity is independent of the items.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "task_id")

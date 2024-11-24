@@ -1,7 +1,7 @@
 package com.shopfloor.backend.api.controllers;
 
-import com.shopfloor.backend.api.transferobjects.authentication.AuthenticationUserResponseTO;
 import com.shopfloor.backend.api.transferobjects.authentication.LoginUserRequestTO;
+import com.shopfloor.backend.api.transferobjects.authentication.LoginUserResponseTO;
 import com.shopfloor.backend.services.implementations.AuthenticationServiceImpl;
 import com.shopfloor.backend.services.interfaces.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class AuthenticationController {
      * @return a ResponseEntity containing the authentication response transfer object
      */
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationUserResponseTO> authenticate(@RequestBody LoginUserRequestTO loginUserRequestTO) {
+    public ResponseEntity<LoginUserResponseTO> authenticate(@RequestBody LoginUserRequestTO loginUserRequestTO) {
         return authenticationService.authenticate(loginUserRequestTO);
     }
 }

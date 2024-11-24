@@ -83,6 +83,7 @@ public class OrderDBO {
      * Cascade type is set to ALL, meaning all operations (persist, merge, remove, refresh, detach) are cascaded to the workflows.
      * Fetch type is set to LAZY, meaning the workflows are loaded on demand.
      * Orphan removal is enabled, meaning if a workflow is removed from the list, it will be deleted from the database.
+     * Note: Deleting all workflows from the list will not delete the order entity. The lifecycle of the order entity is independent of the workflows.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "order_id")
@@ -92,26 +93,26 @@ public class OrderDBO {
     /**
      * List of equipment associated with the order.
      * Cascade type is set to PERSIST and MERGE, meaning these operations are cascaded to the equipment.
-     * Fetch type is set to EAGER, meaning the equipment is loaded immediately.
+     * Fetch type is set to LAZY, meaning the equipment is loaded on demand.
      * The join table 'order_equipment' is used to manage the many-to-many relationship.
      */
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(name = "order_equipment", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "equipment_id"))
     private List<EquipmentDBO> equipment;
 
     /**
      * The product that comes before this order.
-     * Fetch type is set to EAGER, meaning the product is loaded immediately.
+     * Fetch type is set to LAZY, meaning the product is loaded on demand.
      */
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "before_product_id")
     private ProductDBO beforeProduct;
 
     /**
      * The product that comes after this order.
-     * Fetch type is set to EAGER, meaning the product is loaded immediately.
+     * Fetch type is set to LAZY, meaning the product is loaded on demand.
      */
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "after_product_id")
     private ProductDBO afterProduct;
 
@@ -127,7 +128,7 @@ public class OrderDBO {
      * Fetch type is set to LAZY, meaning the executions are loaded on demand.
      */
     @OneToMany(
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE},
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH},
             fetch = FetchType.LAZY,
             mappedBy = "order",
             orphanRemoval = false
@@ -169,6 +170,7 @@ public class OrderDBO {
 
     /**
      * Clears the before product association.
+     * Ensures bidirectional consistency.
      */
     public void clearBeforeProduct() {
         if (this.beforeProduct != null) {
@@ -179,6 +181,7 @@ public class OrderDBO {
 
     /**
      * Clears the after product association.
+     * Ensures bidirectional consistency.
      */
     public void clearAfterProduct() {
         if (this.afterProduct != null) {
@@ -211,6 +214,7 @@ public class OrderDBO {
 
     /**
      * Clears the equipment list.
+     * Ensures bidirectional consistency.
      */
     public void clearEquipmentList() {
         for (EquipmentDBO equipment : new ArrayList<>(this.equipment)) {
@@ -253,6 +257,8 @@ public class OrderDBO {
 
     /**
      * Clears the executions list.
+     * Removes all executions associated with the order.
+     * Bidirectional consistency is ensured.
      */
     public void clearExecutions() {
         for (ExecutionDBO execution : new ArrayList<>(this.executions)) {
@@ -283,6 +289,7 @@ public class OrderDBO {
      * Synchronizes the equipment list with the provided list.
      * Removes equipment that are not in the provided list and adds new equipment.
      * Keeps existing equipment that are in both lists
+     * Equivalent to RIGHT JOIN in SQL
      * @param equipments the list of equipment to synchronize with
      */
     public void synchronizeEquipmentList(List<EquipmentDBO> equipments) {
