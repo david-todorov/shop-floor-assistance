@@ -29,14 +29,25 @@ import { ButtonComponent } from '../../shared/component-elements/button/button.c
   templateUrl: './login-register.component.html',
   styleUrl: './login-register.component.css'
 })
+  /**
+   * Implementation of login component.
+   * Registration is not currently implemented (as per customer specification)
+   */
 export class LoginRegisterComponent implements OnInit, OnDestroy{
 
+  /**
+   * Parameters of login component
+   */
   btnLabel = "Log In"
 
   loginUIState!: loginState;
   form !: FormGroup<any>;
   disabledd: boolean= false;
 
+  /**
+   * Inject the rerquired services
+   * Initialize log in form
+   */
   constructor(
     private backendCommunicationService: BackendCommunicationService,
     private router : Router,
@@ -47,16 +58,21 @@ export class LoginRegisterComponent implements OnInit, OnDestroy{
       });
     }
 
+  /**
+   * Initialization of login component.
+   * If the user is already loggd in, redirect to editor or operator homepage based on assigned role.
+   * i.e, an already logged in user can not reach the login page again unless he logs out first
+   * 
+   * If the user is already not logged in, initialize the login state from the login service.
+   */
   ngOnInit(): void {
     this.loginUIState= this.backendCommunicationService.getloginUIState();
     if(this.loginUIState && this.loginUIState.isLoggedIn){
       switch(this.loginUIState.currentRole){
         case 'editor':
-          console.log('logged as', this.loginUIState.currentRole)
           this.router.navigateByUrl('/editor-homepage');
           break;
         case 'operator':
-          console.log('logged as', this.loginUIState.currentRole)
           this.router.navigateByUrl('/operator/orders');
           break;
       }
@@ -72,26 +88,41 @@ export class LoginRegisterComponent implements OnInit, OnDestroy{
     }
   }
 
+  /**
+   * On destruction of the component:
+    * set the login visibility  and login state corresponding to successful/unsuccessful login
+    * Boradcast the login states via the defined observable 
+   */
   ngOnDestroy(): void {
     this.loginUIState.isLoginVisible= true;
     this.backendCommunicationService._loginUIState$.next(this.loginUIState);
     this.backendCommunicationService.setLoginStates(this.loginUIState);
   }
 
+  /**
+   * Set focus to the username input field as a visual aid to prompt user to log in
+   */
   @ViewChild('uname') uname!: ElementRef;
   ngAfterViewInit() {
-    this.uname.nativeElement.focus(); // Sets focus to the input field
+    this.uname.nativeElement.focus(); 
   }
 
+  /**
+   * Navigation based on user role
+   */
   loadUserPage(userRole: string) {
     if(userRole === 'editor'){
-      console.log('looged in as ediotr')
       this.router.navigateByUrl('/editor-homepage');
     }else if(userRole === 'operator'){
       this.router.navigateByUrl('/operator/orders');
     }
   }
 
+  /**
+   * 'Log In' button action
+    * Retrieve the entered information and  pass it to backend to generate the proper authentication tokens.
+    * Set proper values of the login states.
+   */
   resolveButtonClick(event: MouseEvent) {
     if(event.type==='click' && this.form.valid){
       const {username, password}= this.form.value;
