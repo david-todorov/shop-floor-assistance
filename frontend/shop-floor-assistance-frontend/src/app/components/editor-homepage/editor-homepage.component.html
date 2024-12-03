@@ -1,7 +1,29 @@
+<!-- Page heading for the Editor Homepage -->
 <span class="text-2xl font-semibold mb-3 ml-8"> Editor Homepage</span>
+
+<!-- Container for the options -->
 <div class="w-full text-center flex flex-col space-y-2">
+  <!-- Instructional text asking the user for their choice -->
   <span class="text-xl font-semibold mb-3">What do you want to modify?</span>
-  <app-button class="w-full" label="Orders" (click)="selectoption(0)"></app-button>
-  <app-button class="w-full" label="Equipment" (click)="selectoption(1)"></app-button>
-  <app-button class="w-full" label="Product" (click)="selectoption(2)"></app-button>
+
+  <!-- Button for navigating to the Orders modification page -->
+  <app-button 
+    class="w-full" 
+    label="Orders" 
+    (click)="selectoption(0)">
+  </app-button>
+
+  <!-- Button for navigating to the Equipment modification page -->
+  <app-button 
+    class="w-full" 
+    label="Equipment" 
+    (click)="selectoption(1)">
+  </app-button>
+
+  <!-- Button for navigating to the Product modification page -->
+  <app-button 
+    class="w-full" 
+    label="Product" 
+    (click)="selectoption(2)">
+  </app-button>
 </div>
