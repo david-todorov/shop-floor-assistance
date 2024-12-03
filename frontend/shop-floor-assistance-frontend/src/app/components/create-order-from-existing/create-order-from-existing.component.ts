@@ -9,6 +9,7 @@ import { ButtonComponent } from '../../shared/component-elements/button/button.c
 import { equipmentTO } from '../../shared/types/equipmentTO';
 import { productTO } from '../../shared/types/productTO';
 
+// Default product used in the order when no product is selected
 const defaultProduct: productTO = {
   id: 0,
   productNumber: "DEFAULT",
@@ -28,8 +29,10 @@ const defaultProduct: productTO = {
   templateUrl: './create-order-from-existing.component.html',
   styleUrl: './create-order-from-existing.component.css'
 })
-export class CreateOrderFromExistingComponent {
- order: orderTO = {
+export class CreateOrderFromExistingComponent implements OnInit {
+  
+  // Order object initialized with default values
+  order: orderTO = {
     orderNumber: "",
     name: "",
     description: "",
@@ -39,22 +42,23 @@ export class CreateOrderFromExistingComponent {
     workflows: []
   };
 
-  selectedOrder: orderTO | null = null;
+  selectedOrder: orderTO | null = null; // Holds the selected order from suggestions
   suggestions: orderTO[] = []; // Store fetched orders as suggestions
-  createDisabled: boolean = true;
-  createBtnLabel: string = 'Create Order';
-  orderNumberExists: boolean = false;
-  equipmentList: equipmentTO[] = [];
-  selectedEquipment: equipmentTO[] = [];
-  productList: productTO[] = [];
-  selectedProductBefore: productTO | null = null;
-  selectedProductAfter: productTO | null = null;
+  createDisabled: boolean = true; // Controls whether the Create Order button is enabled
+  createBtnLabel: string = 'Create Order'; // Label for the Create Order button
+  orderNumberExists: boolean = false; // Tracks if the order number already exists
+  equipmentList: equipmentTO[] = []; // List of available equipment
+  selectedEquipment: equipmentTO[] = []; // Selected equipment for the order
+  productList: productTO[] = []; // List of available products
+  selectedProductBefore: productTO | null = null; // Product selected before
+  selectedProductAfter: productTO | null = null; // Product selected after
 
   constructor(
-    private router: Router,
-    private backendCommunicationService: BackendCommunicationService
+    private router: Router, // Router for navigation
+    private backendCommunicationService: BackendCommunicationService // Service for backend communication
   ) { }
 
+  // Fetch all equipment data from the backend
   fetchEquipment() {
     this.backendCommunicationService.getAllEditorEquipment()
       .pipe(
@@ -71,22 +75,19 @@ export class CreateOrderFromExistingComponent {
           orders: item.orders
         }) as equipmentTO)),
         catchError(error => {
-          console.error('Error fetching equipment:', error);
-          return of([]);
+          alert('Error fetching equipment data');
+          return of([]); // Return empty array if an error occurs
         })
       )
-      .subscribe((equipment: equipmentTO[]) => {
-        this.equipmentList = equipment;
-       console.log("Equipment List:", this.equipmentList);
-      });
+      .subscribe((equipment: equipmentTO[]) => this.equipmentList = equipment); // Populate the equipment list
   }
 
+  // Update the selected equipment for the order
   onEquipmentChange(selectedEquipments: equipmentTO[]) {
-    console.log('Selected Equipment:', selectedEquipments);
-    this.order.equipment = [...selectedEquipments];
+    this.order.equipment = [...selectedEquipments]; // Set selected equipment to the order's equipment
   }
 
-
+  // Fetch all product data from the backend
   fetchProducts() {
     this.backendCommunicationService.getAllEditorProduct()
       .pipe(
@@ -100,98 +101,97 @@ export class CreateOrderFromExistingComponent {
           packageType: item.packageType
         }) as productTO)),
         catchError(error => {
-          console.error('Error fetching products:', error);
-          return of([]);
+          alert('Error fetching product data');
+          return of([]); // Return empty array if an error occurs
         })
       )
-      .subscribe((products: productTO[]) => this.productList = products);
+      .subscribe((products: productTO[]) => this.productList = products); // Populate the product list
   }
 
+  // Update the product selected for the "Before" state in the order
   onProductBeforeChange(selectedProductBefore: productTO) {
-    console.log('Selected Product Before:', this.selectedProductBefore);
-    this.order.productBefore = selectedProductBefore;
+    this.order.productBefore = selectedProductBefore; // Set the selected "before" product to the order
   }
 
+  // Update the product selected for the "After" state in the order
   onProductAfterChange(selectedProductAfter: productTO) {
-    console.log('Selected Product After:', this.selectedProductAfter);
-    this.order.productAfter = selectedProductAfter;
+    this.order.productAfter = selectedProductAfter; // Set the selected "after" product to the order
   }
 
+  // Initialize component data by fetching equipment, products, and order suggestions
   ngOnInit() {
-    this.fetchEquipment();
-    this.fetchProducts();
-    this.loadSuggestions();
+    this.fetchEquipment(); // Fetch equipment
+    this.fetchProducts(); // Fetch products
+    this.loadSuggestions(); // Fetch order suggestions
   }
 
+  // Fetch order suggestions from the backend
   loadSuggestions() {
-    // Fetch existing orders from the backend
     this.backendCommunicationService.getEditorOrders().subscribe(
       (data) => {
-        this.suggestions = data;
+        this.suggestions = data; // Populate the suggestions with fetched data
       },
       (error) => {
-        console.error('Error fetching order suggestions:', error);
+        alert('Error fetching order suggestions');
       }
     );
   }
 
+  // Handle selection of a suggestion, copying it into the selectedOrder and resetting some fields
   selectSuggestion(suggestion: orderTO) {
-    console.log("Order suggestion selected:", suggestion);
-    this.selectedOrder = { ...suggestion, orderNumber: "" }; // Copy selected order but reset the order number
-    this.selectedEquipment = suggestion.equipment || []; 
-    this.selectedProductBefore = suggestion.productBefore || null; 
-    this.selectedProductAfter = suggestion.productAfter || null; 
+    this.selectedOrder = { ...suggestion, orderNumber: "" }; // Reset order number for the selected order
+    this.selectedEquipment = suggestion.equipment || []; // Set selected equipment from the suggestion
+    this.selectedProductBefore = suggestion.productBefore || null; // Set selected "before" product from the suggestion
+    this.selectedProductAfter = suggestion.productAfter || null; // Set selected "after" product from the suggestion
   }
 
+  // Check if the order number is unique across all suggestions
   checkUniqueOrderNumber() {
     if (this.selectedOrder) {
-      // Check if the order number exists in suggestions
+      // Check if the order number already exists in the suggestions
       this.orderNumberExists = this.suggestions.some(
         (suggestion) => suggestion.orderNumber === this.selectedOrder!.orderNumber
       );
 
-      // Enable the button only if all fields are filled and the order number is unique
+      // Enable the button only if the order number is unique and all other fields are filled
       this.createDisabled = this.orderNumberExists || !(
         this.selectedOrder.orderNumber &&
         this.selectedOrder.name &&
         this.selectedOrder.description &&
-        this.order.equipment &&
-        this.order.productBefore &&
+        this.order.equipment.length > 0 && // Ensure at least one equipment is selected
+        this.order.productBefore && 
         this.order.productAfter
       );
     }
   }
 
+  // Create the order if the form is valid and the order number is unique
   createOrder(event: MouseEvent) {
     if (event.type === 'click' && !this.orderNumberExists) {
-      console.log("Payload being sent:", this.selectedOrder);
       this.backendCommunicationService.createOrder(this.selectedOrder!)
         .pipe(
           catchError((error) => {
-            console.error('Error creating order:', error);
             alert('Failed to create order. Please try again.');
-            return of(null); 
+            return of(null); // Return null to continue observable flow
           })
         )
         .subscribe({
           next: (response: any) => {
             if (response && response.id) {
-              console.log('Order created successfully:', response);
               alert('Order created successfully!');
 
-              // Delay navigation to allow the user to see the message
+              // Redirect to the newly created order after a short delay
               setTimeout(() => {
-                this.router.navigate(['/editor/orders', response.id]);
+                this.router.navigate(['/editor/orders', response.id]); // Navigate to the created order
               }, 1000); // 1-second delay
             }
           },
           error: () => {
-            console.error('Unexpected error occurred during order creation.');
+            alert('Unexpected error occurred during order creation.');
           }
         });
     } else {
-      console.error('Order number must be unique');
-      alert('Please enter a unique order number.');
+      alert('Please enter a unique order number.'); // Show alert if order number is not unique
     }
   }
 }
