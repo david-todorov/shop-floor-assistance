@@ -1,64 +1,77 @@
+/* Host styling: Custom property for table row text color */
 :host {
-    --order-text-table-rows: #7777BF;
-}
-/* Angular table elements */
-.mat-mdc-header-row { /* header */
-    color: white !important;
-    background-color: #0477BF !important;
-    border-radius: 5px !important;
+    --order-text-table-rows: #7777BF; /* Default text color for table rows */
 }
 
-.mat-mdc-row { /* row */
-    color: var(--text-table-rows) !important;
-    height: 45px !important;
+/* Angular Material table header row */
+.mat-mdc-header-row {
+    color: white !important; /* White text color for header */
+    background-color: #0477BF !important; /* Blue background for header */
+    border-radius: 5px !important; /* Rounded corners for header */
 }
 
+/* Angular Material table data row */
+.mat-mdc-row {
+    color: var(--text-table-rows) !important; /* Uses the custom property for text color */
+    height: 45px !important; /* Fixed row height */
+}
+
+/* Alternate background colors for table rows */
 .mat-mdc-row:nth-child(even) {
-    background-color: #F2F2F2 !important;
+    background-color: #F2F2F2 !important; /* Light gray background for even rows */
 }
 
 .mat-mdc-row:nth-child(odd) {
-    background-color: white !important;
+    background-color: white !important; /* White background for odd rows */
 }
 
+/* Table cell styling */
 .mat-mdc-cell {
-    border: none !important;
+    border: none !important; /* Removes borders from table cells */
 }
 
+/* Table element styling */
 .mat-mdc-table {
+    border-collapse: separate; /* Separates table cell borders */
+    overflow: hidden; /* Hides overflow content */
+    width: 100%; /* Full width table */
+    /* Optional styling (currently commented): 
+       - Uncomment for additional customization */
     /* border: 2px solid #0477BF; */
-    border-collapse: separate;
     /* border-radius: 15px !important; */
-    overflow: hidden;
     /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); */
-    width: 100%;
-}
-/* Overall container, scrollbar */
-.container {
-    @apply border-2 border-primary rounded-lg !important;
-    height: 320px;
-    overflow: auto; 
-}
-table {
-    width: 100%;
 }
 
+/* Scrollable container with custom scrollbar */
+.container {
+    @apply border-2 border-primary rounded-lg !important; /* Border and rounded corners */
+    height: 320px; /* Fixed height for scrolling */
+    overflow: auto; /* Enables scrolling */
+}
+
+table {
+    width: 100%; /* Ensures table occupies full container width */
+}
+
+/* Custom scrollbar styling for the container */
 .container::-webkit-scrollbar {
-    @apply w-4 h-10;
+    @apply w-4 h-10; /* Scrollbar width and height */
 }
 
 .container::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 hover:bg-scrollbar-hover rounded-lg !important;
+    @apply bg-gray-300 hover:bg-scrollbar-hover rounded-lg !important; /* Thumb styling */
 }
 
 .container::-webkit-scrollbar-track {
-    @apply bg-gray-200 rounded-tr-lg rounded-br-lg;
+    @apply bg-gray-200 rounded-tr-lg rounded-br-lg; /* Track styling */
     position: relative !important;
 }
+
 .container::-webkit-scrollbar-track-piece:start {
-    margin-top: 56px;
+    margin-top: 56px; /* Adds space at the start of the scrollbar track */
 }
 
-.search-field{
-    @apply w-full max-w-md border-2 border-primary rounded-full  text-lg m-2 p-1 pl-5 !important;
+/* Search input field styling */
+.search-field {
+    @apply w-full max-w-md border-2 border-primary rounded-full text-lg m-2 p-1 pl-5 !important; /* Full width, rounded borders, padding */
 }
