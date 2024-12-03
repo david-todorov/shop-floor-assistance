@@ -1,64 +1,77 @@
+/* Host styling: Defines a custom property for table row text color */
 :host {
-    --order-text-table-rows: #7777BF;
+    --order-text-table-rows: #7777BF; /* Default text color for table rows */
 }
-/* Angular table elements */
+
+/* Angular Material table header row styling */
 .mat-mdc-header-row { /* header */
-    color: white !important;
-    background-color: #0477BF !important;
-    border-radius: 5px !important;
+    color: white !important; /* Sets the text color to white */
+    background-color: #0477BF !important; /* Sets the background color to blue */
+    border-radius: 5px !important; /* Adds rounded corners to the header row */
 }
 
+/* Angular Material table data row styling */
 .mat-mdc-row { /* row */
-    color: var(--text-table-rows) !important;
-    height: 45px !important;
+    color: var(--text-table-rows) !important; /* Uses the custom property for text color */
+    height: 45px !important; /* Fixed height for each data row */
 }
 
+/* Alternating background colors for table rows */
 .mat-mdc-row:nth-child(even) {
-    background-color: #F2F2F2 !important;
+    background-color: #F2F2F2 !important; /* Light gray background for even rows */
 }
 
 .mat-mdc-row:nth-child(odd) {
-    background-color: white !important;
+    background-color: white !important; /* White background for odd rows */
 }
 
+/* Styling for table cells */
 .mat-mdc-cell {
-    border: none !important;
+    border: none !important; /* Removes borders from table cells */
 }
 
+/* Styling for the Angular Material table */
 .mat-mdc-table {
+    border-collapse: separate; /* Ensures borders do not overlap */
+    overflow: hidden; /* Hides content overflow */
+    width: 100%; /* Makes the table occupy full width of its container */
+    /* Optional styling (currently commented out): Uncomment to use */
     /* border: 2px solid #0477BF; */
-    border-collapse: separate;
     /* border-radius: 15px !important; */
-    overflow: hidden;
     /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); */
-    width: 100%;
-}
-/* Overall container, scrollbar */
-.container {
-    @apply border-2 border-primary rounded-lg !important;
-    height: 320px;
-    overflow: auto; 
-}
-table {
-    width: 100%;
 }
 
+/* Styling for the container holding the table and its scrollbar */
+.container {
+    @apply border-2 border-primary rounded-lg !important; /* Adds a border and rounded corners */
+    height: 320px; /* Fixed height with scrolling enabled */
+    overflow: auto; /* Enables scrolling */
+}
+
+/* Ensures the table inside the container takes the full width */
+table {
+    width: 100%; /* Makes the table span the full width of its container */
+}
+
+/* Custom scrollbar styling for the container */
 .container::-webkit-scrollbar {
-    @apply w-4 h-10;
+    @apply w-4 h-10; /* Sets the width and height of the scrollbar */
 }
 
 .container::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 hover:bg-scrollbar-hover rounded-lg !important;
+    @apply bg-gray-300 hover:bg-scrollbar-hover rounded-lg !important; /* Styles the scrollbar thumb */
 }
 
 .container::-webkit-scrollbar-track {
-    @apply bg-gray-200 rounded-tr-lg rounded-br-lg;
-    position: relative !important;
-}
-.container::-webkit-scrollbar-track-piece:start {
-    margin-top: 56px;
+    @apply bg-gray-200 rounded-tr-lg rounded-br-lg; /* Styles the scrollbar track */
+    position: relative !important; /* Ensures correct positioning */
 }
 
-.search-field{
-    @apply w-full max-w-md border-2 border-primary rounded-full  text-lg m-2 p-1 pl-5 !important;
+.container::-webkit-scrollbar-track-piece:start {
+    margin-top: 56px; /* Adds spacing at the top of the scrollbar track */
+}
+
+/* Styling for the search input field */
+.search-field {
+    @apply w-full max-w-md border-2 border-primary rounded-full text-lg m-2 p-1 pl-5 !important; /* Full width, rounded corners, and padding */
 }
