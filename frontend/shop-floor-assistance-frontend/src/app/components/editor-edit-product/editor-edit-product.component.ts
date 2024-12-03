@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'; 
 import { ActivatedRoute, Router } from '@angular/router';
 import { BackendCommunicationService } from '../../services/backend-communication.service';
 import { productTO } from '../../shared/types/productTO';
@@ -15,6 +15,7 @@ import { ButtonComponent } from '../../shared/component-elements/button/button.c
 })
 export class EditorEditProductComponent {
 
+  // Initial product object with default values
   product: productTO = {
     id: 0,
     productNumber: "",
@@ -27,106 +28,93 @@ export class EditorEditProductComponent {
     type: "",
   };
 
+  // Variable for storing the numeric ID from the route
   numericId: number | null = null;
+  // Button disabled state and label
   updateDisabled: boolean = false;
   updateBtnLabel: string = 'Update Product';
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private backendCommunicationService: BackendCommunicationService
+    private route: ActivatedRoute, // Activated route for fetching parameters from the URL
+    private router: Router, // Router for navigation
+    private backendCommunicationService: BackendCommunicationService // Backend service for product API calls
   ) { }
 
   ngOnInit() {
-    // Get the ID from the route
+    // Get the product ID from the URL route
     const idParam = this.route.snapshot.paramMap.get('id');
 
-    // Attempt to parse it as a numeric ID
+    // Attempt to parse the ID as a number
     this.numericId = idParam ? parseInt(idParam, 10) : null;
 
-    // Check if the ID is a valid number
+    // Check if the parsed ID is a valid number
     if (this.numericId !== null && !isNaN(this.numericId)) {
-      this.fetchProductDetails();
+      this.fetchProductDetails(); // Fetch product details if the ID is valid
     } else {
-      console.error('Invalid numeric ID:', idParam);
-      alert('Invalid product ID. Please use a numeric ID.');
-      // Optionally redirect to a different page or handle this error as needed
+      alert('Invalid product ID. Please use a numeric ID.'); // Alert if the ID is invalid
     }
   }
 
-  
+  // Fetch product details from the backend
   fetchProductDetails() {
     if (this.numericId !== null) {
       this.backendCommunicationService.getEditorProduct(this.numericId).subscribe({
         next: (data) => {
-          this.product = data;
-          console.log('Fetched product details:', this.product); // Log the product details for debugging
-          this.checkFormCompletion();
+          this.product = data; // Assign the fetched product data
+          this.checkFormCompletion(); // Check form completion status
         },
         error: (error) => {
-          console.error('Error loading product:', error);
-          alert('Failed to load product details.');
+          alert('Failed to load product details.'); // Alert in case of an error
         }
       });
     }
   }
 
+  // Update the product using the backend service
   updateProduct(event: MouseEvent) {
     if (
-      event.type === 'click' &&
-      this.product.productNumber &&
-      this.product.name &&
-      this.product.description &&
-      this.product.type &&
-      this.product.language &&
-      this.product.packageType &&
-      this.product.country &&
-      this.product.packageSize &&
-      this.numericId !== null
+      event.type === 'click' && // Ensure the event is a click
+      this.product.productNumber && this.product.name && this.product.description &&
+      this.product.type && this.product.language && this.product.packageType &&
+      this.product.country && this.product.packageSize && this.numericId !== null
     ) {
       this.backendCommunicationService.updateEditorProduct(this.numericId, this.product)
         .pipe(
           catchError((error) => {
-            console.error('Error updating product:', error);
-            alert('Failed to update product. Please try again.');
-            return of(null);
+            alert('Failed to update product. Please try again.'); // Handle update error
+            return of(null); // Return null in case of error
           })
         )
         .subscribe({
           next: (response) => {
             if (response) {
-              alert('Product updated successfully!');
-              this.router.navigateByUrl('/editor/products');
+              alert('Product updated successfully!'); // Alert on successful update
+              this.router.navigateByUrl('/editor/products'); // Navigate to product list
             }
           }
         });
     } else {
-      alert('Please fill in all fields before updating.');
+      alert('Please fill in all fields before updating.'); // Alert if any field is missing
     }
   }
 
+  // Check if the form is completed (all fields filled)
   checkFormCompletion() {
     this.updateDisabled = !(
-      this.product.productNumber &&
-      this.product.name &&
-      this.product.description &&
-      this.product.type &&
-      this.product.language &&
-      this.product.packageType &&
-      this.product.country &&
-      this.product.packageSize
+      this.product.productNumber && this.product.name && this.product.description &&
+      this.product.type && this.product.language && this.product.packageType &&
+      this.product.country && this.product.packageSize
     );
   }
 
+  // Handle button click for editing product
   resolveButtonClick($event: any, action: string): void {
     if ($event.type === 'click' && action === 'edit') {
       if (!this.product || this.numericId === null) {
-        alert('You must specify an equipment with a valid ID!');
+        alert('You must specify a product with a valid ID!'); // Alert if no valid product is selected
       } else {
-        this.router.navigate(['/editor/products', this.numericId]);
+        this.router.navigate(['/editor/products', this.numericId]); // Navigate to edit product page
       }
     }
   }
-
-
 }
