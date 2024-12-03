@@ -1,8 +1,11 @@
+<!-- Title for the Orders Workspace -->
 <span class="text-2xl font-semibold mb-3 ml-8"> Orders Workspace</span>
 
+<!-- Container for the order table component -->
 <div class="  mx-auto w-4/5 " >
     <app-order-table (onClick)="orderSelected($event)" [orders]="loadedOrders"></app-order-table>
 </div>
+<!-- Container for action buttons (edit, delete, create) placed in a flex layout -->
 <div class="w-7/12 mx-auto  mt-6  flex justify-around">
     <div class="w-7/12  mx-4">
         <app-button (onClick)="resolveButtonClick($event, 'edit')" [disabled]="editDisabled" [label]="editBtnLabel"></app-button>
