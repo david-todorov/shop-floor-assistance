@@ -9,6 +9,7 @@ import { equipmentTO } from '../../shared/types/equipmentTO';
 import { productTO } from '../../shared/types/productTO';
 import { orderTO } from '../../shared/types/orderTO';
 
+// Default product used as a placeholder in the order
 const defaultProduct: productTO = {
   id: 0,
   productNumber: "DEFAULT",
@@ -29,6 +30,7 @@ const defaultProduct: productTO = {
   styleUrl: './editor-create-order.component.css'
 })
 export class EditorCreateOrderComponent implements OnInit {
+  // Order object to store the details of the order
   order: orderTO = {
     orderNumber: "",
     name: "",
@@ -39,14 +41,22 @@ export class EditorCreateOrderComponent implements OnInit {
     workflows: []
   };
 
+  // List of available equipment
   equipmentList: equipmentTO[] = [];
-  selectedEquipment: equipmentTO[] = []; //Allow user to choose multiple equipment
+  // Array for storing selected equipment
+  selectedEquipment: equipmentTO[] = [];
+  // List of available products
   productList: productTO[] = [];
+  // Currently selected product before and after
   selectedProductBefore: productTO | null = null;
   selectedProductAfter: productTO | null = null;
+
+  // Controls whether the Create button is enabled or not
   createDisabled: boolean = false;
+  // Label for the Create button
   createBtnLabel: string = 'Create';
 
+  // UI state for the order creation button
   orderState = {
     buttonIcon: 'save',
     buttonLabel: 'Save Order',
@@ -54,15 +64,17 @@ export class EditorCreateOrderComponent implements OnInit {
   };
 
   constructor(
-    private router: Router,
-    private backendCommunicationService: BackendCommunicationService
+    private router: Router, // Router for navigation
+    private backendCommunicationService: BackendCommunicationService // Backend service for API calls
   ) { }
 
+  // Lifecycle hook to initialize data on component load
   ngOnInit() {
-    this.fetchEquipment();
-    this.fetchProducts();
+    this.fetchEquipment(); // Fetch available equipment
+    this.fetchProducts(); // Fetch available products
   }
 
+  // Fetch all equipment from the backend
   fetchEquipment() {
     this.backendCommunicationService.getAllEditorEquipment()
       .pipe(
@@ -79,19 +91,19 @@ export class EditorCreateOrderComponent implements OnInit {
           orders: item.orders
         }) as equipmentTO)),
         catchError(error => {
-          console.error('Error fetching equipment:', error);
-          return of([]);
+          alert('Error fetching equipment');
+          return of([]); // Return empty array if error occurs
         })
       )
-      .subscribe((equipment: equipmentTO[]) => this.equipmentList = equipment);
+      .subscribe((equipment: equipmentTO[]) => this.equipmentList = equipment); // Populate the equipment list
   }
 
+  // Handle change in selected equipment and update the order equipment
   onEquipmentChange(selectedEquipments: equipmentTO[]) {
-    console.log('Selected Equipment:', selectedEquipments);
-    this.order.equipment = [...selectedEquipments];
+    this.order.equipment = [...selectedEquipments]; // Update order with selected equipment
   }
 
-
+  // Fetch all products from the backend
   fetchProducts() {
     this.backendCommunicationService.getAllEditorProduct()
       .pipe(
@@ -105,72 +117,72 @@ export class EditorCreateOrderComponent implements OnInit {
           packageType: item.packageType
         }) as productTO)),
         catchError(error => {
-          console.error('Error fetching products:', error);
-          return of([]);
+          alert('Error fetching products');
+          return of([]); // Return empty array if error occurs
         })
       )
-      .subscribe((products: productTO[]) => this.productList = products);
+      .subscribe((products: productTO[]) => this.productList = products); // Populate the product list
   }
 
+  // Handle change in selected product before and update the order
   onProductBeforeChange(selectedProductBefore: productTO) {
-    console.log('Selected Product Before:', this.selectedProductBefore);
-    this.order.productBefore = selectedProductBefore;
+    this.order.productBefore = selectedProductBefore; // Update order's productBefore
   }
 
+  // Handle change in selected product after and update the order
   onProductAfterChange(selectedProductAfter: productTO) {
-    console.log('Selected Product After:', this.selectedProductAfter);
-    this.order.productAfter = selectedProductAfter;
+    this.order.productAfter = selectedProductAfter; // Update order's productAfter
   }
 
+  // Save the order if the form is complete
   saveOrder(event: MouseEvent) {
     if (event.type === 'click' && this.isFormComplete()) {
-      console.log('Order Payload:', this.order); // Debugging line
+      // Call the backend service to create the order
       this.backendCommunicationService.createOrder(this.order)
         .pipe(
           catchError((error) => {
-            console.error('Error creating order:', error);
-            alert('Failed to create order. Please try again.');
-            return of(null);
+            alert('Failed to create order. Please try again.'); // Handle error
+            return of(null); // Continue observable flow
           })
         )
         .subscribe({
           next: (response: any) => {
             if (response && response.id) {
-              console.log('Order created successfully:', response);
-
-              // Update UI states
+              // Update UI state after successful creation
               this.orderState.buttonIcon = 'check_circle';
               this.orderState.buttonLabel = 'Saved';
               this.orderState.isSaved = true;
 
               alert('Order created successfully!');
 
-              // Delay navigation
+              // Delay navigation to allow user to see the success message
               setTimeout(() => {
-                this.router.navigate(['/editor/orders', response.id]);
+                this.router.navigate(['/editor/orders', response.id]); // Redirect to created order's page
               }, 1000); // 1-second delay
             }
           },
           error: () => {
-            console.error('Unexpected error occurred during order creation.');
+            alert('Unexpected error occurred during order creation.'); // Alert if there are unexpected errors
           }
         });
     } else {
-      alert('Please fill in all fields before saving.');
+      alert('Please fill in all fields before saving.'); // Alert if form is incomplete
     }
   }
 
+  // Check if the form is complete
   isFormComplete(): boolean {
     return !!(
       this.order.orderNumber &&
       this.order.name &&
       this.order.description &&
-      this.order.equipment &&
+      this.order.equipment.length > 0 &&
       this.order.productBefore &&
       this.order.productAfter
     );
   }
 
+  // Check form completion status and enable/disable create button
   checkFormCompletion() {
     this.createDisabled = !this.isFormComplete();
   }

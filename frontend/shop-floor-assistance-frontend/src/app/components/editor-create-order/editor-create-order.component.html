@@ -1,48 +1,65 @@
+<!-- Container for the order form -->
 <div class="order-form p-4 border rounded-lg shadow max-w-lg mx-auto">
+
+  <!-- Title for the editor workspace, large, bold, and centered -->
   <span class="text-2xl font-semibold mb-5 block text-center">Editor Workspace</span>
 
+  <!-- Subtitle indicating that the user is creating a new order -->
   <div class="text-center mb-5">
     <span class="text-xl font-semibold">New Order:</span>
   </div>
 
+  <!-- Grid layout for input fields arranged in two columns -->
   <div class="grid grid-cols-2 gap-4 mb-5">
+    
+    <!-- Input field for the order name -->
     <div class="font-semibold">Name</div>
-    <div><input type="text" placeholder="Enter Order Name" class="input-field" [(ngModel)]="order.name">
-    </div>
+    <div><input type="text" placeholder="Enter Order Name" class="input-field" [(ngModel)]="order.name"></div>
 
+    <!-- Input field for the order number -->
     <div class="font-semibold">Order Number</div>
-    <div><input type="text" placeholder="Enter Order Number" class="input-field" [(ngModel)]="order.orderNumber">
-    </div>
+    <div><input type="text" placeholder="Enter Order Number" class="input-field" [(ngModel)]="order.orderNumber"></div>
 
+    <!-- Input field for the order description -->
     <div class="font-semibold">Description</div>
-    <div><input type="text" placeholder="Enter Order Description" class="input-field" [(ngModel)]="order.description">
-    </div>
+    <div><input type="text" placeholder="Enter Order Description" class="input-field" [(ngModel)]="order.description"></div>
 
+    <!-- Dropdown for selecting multiple equipment -->
     <div class="font-semibold">Equipment</div>
     <div>
+      <!-- Multiple selection dropdown for equipment -->
       <select class="input-field" [(ngModel)]="selectedEquipment" (ngModelChange)="onEquipmentChange($event)"
         title="Equipment" multiple required>
+        <!-- Loop through equipmentList and display equipmentNumber for each item -->
         <option *ngFor="let equipment of equipmentList" [ngValue]="equipment">{{ equipment.equipmentNumber }}</option>
       </select>
     </div>
 
+    <!-- Dropdown for selecting the old product -->
     <div class="font-semibold">Product (old)</div>
     <div>
+      <!-- Dropdown for selecting the old product -->
       <select class="input-field" [(ngModel)]="selectedProductBefore" (ngModelChange)="onProductBeforeChange($event)"
         title="Product Before" required>
+        <!-- Loop through productList and display productNumber -->
         <option *ngFor="let product of productList" [ngValue]="product">{{ product.productNumber }}</option>
       </select>
     </div>
 
+    <!-- Dropdown for selecting the new product -->
     <div class="font-semibold">Product (new)</div>
     <div>
+      <!-- Dropdown for selecting the new product -->
       <select class="input-field" [(ngModel)]="selectedProductAfter" (ngModelChange)="onProductAfterChange($event)"
         title="Product After" required>
+        <!-- Loop through productList and display productNumber -->
         <option *ngFor="let product of productList" [ngValue]="product">{{ product.productNumber }}</option>
       </select>
     </div>
   </div>
 
+  <!-- Button section for saving the order -->
   <div class="order-form text-center mt-4">
     <app-button (click)="saveOrder($event)" [disabled]="createDisabled" [label]="createBtnLabel"></app-button>
   </div>
+</div>
