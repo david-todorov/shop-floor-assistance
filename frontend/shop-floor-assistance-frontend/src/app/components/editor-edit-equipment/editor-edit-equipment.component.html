@@ -1,26 +1,34 @@
-<div class="p-4 border rounded-lg shadow max-w-lg mx-auto">
+<!-- Container for the editor workspace -->
+<div class="p-4 border rounded-lg shadow max-w-lg mx-auto"> 
+  <!-- Title for the editor workspace, styled as large, bold text and centered -->
   <span class="text-2xl font-semibold mb-5 block text-center">Editor Workspace</span>
   
+  <!-- Subtitle section for the "Edit Equipment Information" header, centered with bold text -->
   <div class="text-center mb-5">
     <span class="text-xl font-semibold">Edit Equipment Information:</span>
   </div>
   
+  <!-- Grid layout for equipment input fields, using two columns and a gap between fields -->
   <div class="grid grid-cols-2 gap-4 mb-5">
+    <!-- Equipment Number input field -->
     <div class="font-semibold">Equipment Number</div>
     <div>
       <input type="text" class="input-field" [(ngModel)]="equipment.equipmentNumber" (input)="checkFormCompletion()" placeholder="Enter Equipment Number">
     </div>
 
+    <!-- Name input field -->
     <div class="font-semibold">Name</div>
     <div>
       <input type="text" class="input-field" [(ngModel)]="equipment.name" (input)="checkFormCompletion()" placeholder="Enter Name">
     </div>
 
+    <!-- Description input field  -->
     <div class="font-semibold">Description</div>
     <div>
       <input type="text" class="input-field" [(ngModel)]="equipment.description" (input)="checkFormCompletion()" placeholder="Enter Description">
     </div>
 
+    <!-- Type input field with label -->
     <div class="font-semibold">Type</div>
     <div>
       <input type="text" class="input-field" [(ngModel)]="equipment.type" (input)="checkFormCompletion()" placeholder="Enter Type">
@@ -28,9 +36,9 @@
   </div>
 </div>
 
-<div class="w-7/12 mx-auto  mt-6  flex justify-around">
+<!-- Container for the update button, using flexbox to center and space the button -->
+<div class="w-7/12 mx-auto mt-6 flex justify-around">
     <div class="w-7/12 mx-4">
-        <app-button (onClick)="updateEquipment($event)" [disabled]="updateDisabled"
-            [label]="updateBtnLabel"></app-button>
+        <app-button (onClick)="updateEquipment($event)" [disabled]="updateDisabled" [label]="updateBtnLabel"></app-button>
     </div>
 </div>
