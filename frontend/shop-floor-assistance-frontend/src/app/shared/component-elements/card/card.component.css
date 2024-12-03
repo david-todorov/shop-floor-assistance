@@ -1,16 +1,14 @@
+/* Styles for a row layout using flexbox */
 .row {
-  @apply flex;
+  @apply flex; /* Applies Flexbox display to create a row layout */
 }
  
+/* Styles for spacing content with justify-between */
 .space-between {
-  @apply justify-between;
+  @apply justify-between; /* Spaces items evenly with space between them */
 }
  
-/* .center {
-  @apply items-center;
-} */
- 
+/* Styles for a title with larger, bold text */
 .title {
-  @apply text-lg font-bold;
+  @apply text-lg font-bold; /* Sets the text size to large and makes it bold */
 }
- 
