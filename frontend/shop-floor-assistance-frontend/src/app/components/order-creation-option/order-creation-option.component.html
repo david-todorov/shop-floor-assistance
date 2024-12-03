@@ -1,14 +1,27 @@
+<!-- Container for the Order Creation Options with full width and centered text -->
 <div class="w-full text-center flex flex-col space-y-2">
-    <span class="text-xl font-semibold mb-3">Select Order Creation Option</span>
-    <div class="w-7/12 mx-auto  mt-6  flex justify-around">
-
-        <div class="w-7/12 mx-4">
-            <app-button (onClick)="createFromExisting()" [label]="createBtnLabel"></app-button>
-        </div>
-
-        <div class="w-7/12 mx-4">
-            <app-button (onClick)="createFromScratch()" [label]="createNewBtnLabel"></app-button>
-        </div>
-
+  
+  <!-- Title for the section: "Select Order Creation Option" -->
+  <span class="text-xl font-semibold mb-3">Select Order Creation Option</span>
+  
+  <!-- Layout for the buttons, with horizontal alignment and spacing between them -->
+  <div class="w-7/12 mx-auto mt-6 flex justify-around">
+    
+    <!-- First button: "Create from Existing" option -->
+    <div class="w-7/12 mx-4">
+      <app-button 
+        (onClick)="createFromExisting()" 
+        [label]="createBtnLabel">
+      </app-button>
     </div>
+
+    <!-- Second button: "Create New" option -->
+    <div class="w-7/12 mx-4">
+      <app-button 
+        (onClick)="createFromScratch()" 
+        [label]="createNewBtnLabel">
+      </app-button>
+    </div>
+
+  </div>
 </div>
