@@ -1,18 +1,17 @@
+/* Styling for the button */
 .btn {
-    @apply w-44 mt-4 
-    bg-primary text-white 
-    hover:bg-opacity-70 
-    transition ease-in-out duration-300 !important;
-  
+    @apply w-44 mt-4; /* Fixed width and top margin */
+    @apply bg-primary text-white; /* Primary background color and white text */
+    @apply hover:bg-opacity-70; /* Reduces background opacity on hover */
+    @apply transition ease-in-out duration-300 !important; /* Smooth transition effect for hover */
 }
 
+/* Styling for disabled buttons */
 .btn:disabled {
-    @apply bg-gray-300 text-gray-500 cursor-not-allowed !important;
+    @apply bg-gray-300 text-gray-500 cursor-not-allowed !important; /* Gray background, muted text color, and no pointer interaction */
 }
 
-.button-div{
-    @apply flex justify-center !important;
+/* Styling for the button container */
+.button-div {
+    @apply flex justify-center !important; /* Centers the button horizontally */
 }
-
-
- 
