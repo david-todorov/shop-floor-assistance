@@ -2,21 +2,24 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-button',
-  standalone: true,
-  imports: [MatButtonModule],
-  templateUrl: './button.component.html',
-  styleUrl: './button.component.css'
+  selector: 'app-button', // Selector for the button component
+  standalone: true, // Indicates this component is standalone
+  imports: [MatButtonModule], // Imports Angular Material Button Module
+  templateUrl: './button.component.html', // Path to the component's HTML template
+  styleUrl: './button.component.css' // Path to the component's CSS styles
 })
 export class ButtonComponent {
 
-  @Input() label!: string;
-  @Input() disabled!: boolean;
-  @Output() onClick = new EventEmitter<any>();
+  @Input() label!: string; // Input property to receive the button label
+  @Input() disabled!: boolean; // Input property to control the disabled state of the button
+  @Output() onClick = new EventEmitter<any>(); // Output event emitter to notify when the button is clicked
 
-
-
-  onClickButton(event: MouseEvent) {
-      this.onClick.emit(event);
-    }
+  /**
+   * Handles the button click event.
+   * Emits the event to the parent component.
+   * @param event - The click event triggered by the button
+   */
+  onClickButton(event: MouseEvent): void {
+    this.onClick.emit(event); // Emit the click event to the parent component
+  }
 }

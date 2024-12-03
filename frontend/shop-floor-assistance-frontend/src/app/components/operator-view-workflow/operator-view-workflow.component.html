@@ -1,80 +1,85 @@
+<!-- Main grid layout with three rows filling the screen height -->
 <div class="grid grid-rows-3 h-screen m-5">
-    <div class="row-span-1 w-full flex  whitespace-nowrap">
-        <div class="col-span-1 w-1/3 h-full  min-w-[350px] min-h-[200px]">
-            <div class="  w-full h-full p-4">
-                @if(order){
-                <table class=" table-auto min-w-full  p-4">
+    
+    <!-- Top row: Order details section -->
+    <div class="row-span-1 w-full flex whitespace-nowrap">
+        <!-- Order details card -->
+        <div class="col-span-1 w-1/3 h-full min-w-[350px] min-h-[200px]">
+            <div class="w-full h-full p-4">
+                <!-- Display order details if order exists -->
+                @if(order) {
+                <table class="table-auto min-w-full p-4">
                     <tbody>
+                        <!-- Order name -->
                         <tr>
                             <td class="field">Name:</td>
                             <td class="value">{{order.name}}</td>
                         </tr>
+                        <!-- Order number -->
                         <tr>
                             <td class="field">Order number:</td>
                             <td class="value">{{order.orderNumber}}</td>
                         </tr>
+                        <!-- Order description -->
                         <tr>
                             <td class="field">Description:</td>
                             <td class="value">{{order.description}}</td>
                         </tr>
-
+                        <!-- Order equipment list -->
                         <tr>
-                        <td class="field">Equipments:</td>
-                        <td class="value"><span *ngFor="let equipment of order.equipment; let i = index">
-                           {{ equipment.equipmentNumber }}<span *ngIf="i < order.equipment.length - 1">, </span> </span>
-                        </td>
+                            <td class="field">Equipments:</td>
+                            <td class="value">
+                                <span *ngFor="let equipment of order.equipment; let i = index">
+                                    {{ equipment.equipmentNumber }}
+                                    <span *ngIf="i < order.equipment.length - 1">, </span>
+                                </span>
+                            </td>
                         </tr>
-                        
                     </tbody>
                 </table>
-                }@else {
+                } @else {
+                <!-- Message displayed if no order found -->
                 <h1>The specified order could not be found!</h1>
                 }
 
-                  <div class="flex justify-start items-center space-x-8 p-4">
+                <!-- Buttons for aborting or finishing the order -->
+                <div class="flex justify-start items-center space-x-8 p-4">
+                    <button 
+                        class="w-44 mt-4 bg-red-500 text-white hover:bg-red-600 transition ease-in-out duration-300 px-4 py-2 rounded-full focus:outline-none"
+                        (click)="abortOrder($event)">
+                        Abort
+                    </button>
 
-                  <button class="w-44 mt-4 bg-red-500 text-white hover:bg-red-600 transition ease-in-out duration-300 px-4 py-2 rounded-full focus:outline-none"
-                  (click)="abortOrder($event)">Abort</button>
-
-                <app-button 
-                    (onClick)="finishOrder($event)" 
-                    [label]="btnLabelFinish" 
-                    class="btn btn-primary">
-                </app-button>
-                
-                <!-- <app-button 
-                    (onClick)="abortOrder($event)" 
-                    [label]="btnLabelAbort" 
-                    class="btn btnred">
-                </app-button> -->
+                    <app-button 
+                        (onClick)="finishOrder($event)" 
+                        [label]="btnLabelFinish" 
+                        class="btn btn-primary">
+                    </app-button>
+                </div>
             </div>
-            </div>
-
         </div>
-  
     </div>
 
-    <div class="row-span-2 grid grid-cols-3 relative pt-12 ">
-        <div class="col-span-1 overflow-auto w-full h-full  p-4 min-w-[350px] min-h-[200px] mt-20">
+    <!-- Middle and bottom rows: Workflow and task sections -->
+    <div class="row-span-2 grid grid-cols-3 relative pt-12">
+        <!-- Workflow accordion (left column) -->
+        <div class="col-span-1 overflow-auto w-full h-full p-4 min-w-[350px] min-h-[200px] mt-20">
             <app-workflow-accordion 
                 (onOrderUpdate)="updateOrder($event)" 
                 (onSelect)="onSelect($event)" 
-                
                 [order]="order"
-                [isEditorMode]="isEditorMode"
-                >
+                [isEditorMode]="isEditorMode">
             </app-workflow-accordion>
         </div>
-        <div
-            class="col-span-2 h-fulloverflow-auto w-2/3 p-4 min-w-[650px] min-h-[200px]  absolute top-0 left-1/3  -mt-8">
+        
+        <!-- Task tab (right column) -->
+        <div class="col-span-2 h-full overflow-auto w-2/3 p-4 min-w-[650px] min-h-[200px] absolute top-0 left-1/3 -mt-8">
             <app-task-tab 
                 [order]="order" 
                 [workflowIndex]="selectedWorkflowIndex"
                 [isEditorMode]="isEditorMode"
                 (onOrderUpdate)="updateOrder($event)"
-                (onItemsCheckedReceived)="onItemsCheckReceived($event)"
-                
-                >
+                (onItemsCheckedReceived)="onItemsCheckReceived($event)">
             </app-task-tab>
         </div>
     </div>

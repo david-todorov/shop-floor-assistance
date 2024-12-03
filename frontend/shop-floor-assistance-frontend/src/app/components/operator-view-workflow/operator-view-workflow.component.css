@@ -1,23 +1,27 @@
-.field{
+/* Style for table field cells */
+.field {
     @apply px-2 py-1 whitespace-nowrap text-lg font-medium text-shade !important;
 }
 
-.value{
-    @apply px-2 py-1 whitespace-nowrap text-lg text-primary font-bold text-start  !important;
+/* Style for table value cells */
+.value {
+    @apply px-2 py-1 whitespace-nowrap text-lg text-primary font-bold text-start !important;
 }
 
+/* Scrollbar styles for suggestion boxes */
 
+/* Custom scrollbar width and height */
 .suggestion-box::-webkit-scrollbar {
     @apply w-4 h-10;
 }
 
+/* Style for scrollbar thumb (the draggable part) */
 .suggestion-box::-webkit-scrollbar-thumb {
     @apply bg-gray-300 hover:bg-scrollbar-hover rounded-lg !important;
 }
 
+/* Style for scrollbar track (the background track) */
 .suggestion-box::-webkit-scrollbar-track {
     @apply bg-gray-200 rounded-tr-lg rounded-br-lg;
     position: relative !important;
 }
-
-

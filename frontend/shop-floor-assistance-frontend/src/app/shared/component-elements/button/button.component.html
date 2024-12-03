@@ -1,4 +1,12 @@
+<!-- Container for the button -->
 <div id="button" class="button-div">
-    <button mat-raised-button type="button" class="btn" [disabled]="disabled" (click)="onClickButton($event)">{{label}}</button>
+    <!-- Angular Material raised button -->
+    <button 
+        mat-raised-button 
+        type="button" 
+        class="btn" 
+        [disabled]="disabled" 
+        (click)="onClickButton($event)">
+        {{ label }} <!-- Display the button label passed via the Input property -->
+    </button>
 </div>
-

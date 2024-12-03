@@ -1,19 +1,25 @@
+<!-- Container for the order creation from existing form -->
 <div class="container p-14 border rounded-lg shadow max-w-4xl mx-auto">
+  
+  <!-- Title -->
   <span class="text-2xl font-semibold mb-5 block text-center">Create Order from Existing</span>
 
+  <!-- Two-column layout for the suggestions and order form sections -->
   <div class="two-column-layout">
-    <!-- Suggestions Section -->
+    
+    <!-- Suggestions Section: Displays available orders to be selected as templates -->
     <div class="suggestions border-r pr-4">
+      <!-- Header for the suggestions section -->
       <div class="text-center mb-5">
         <span class="text-xl font-semibold">Select an Existing Order:</span>
       </div>
 
+      <!-- List of order suggestions rendered dynamically -->
       <div class="grid grid-cols-1 gap-4 mb-5">
-        <div
-          *ngFor="let suggestion of suggestions"
+        <div *ngFor="let suggestion of suggestions"
           class="suggestion-card p-4 border rounded cursor-pointer hover:bg-gray-100"
-          (click)="selectSuggestion(suggestion)"
-        >
+          (click)="selectSuggestion(suggestion)">
+          <!-- Display the suggestion name and description -->
           <h3 class="font-semibold">{{ suggestion.name }}</h3>
           <p>{{ suggestion.description }}</p>
           <p class="text-gray-500 text-sm">Order Number: {{ suggestion.orderNumber }}</p>
@@ -21,13 +27,17 @@
       </div>
     </div>
 
-    <!-- Order Form Section -->
+    <!-- Order Form Section: Displays the form to edit the selected order template -->
     <div class="edit-form pl-4" *ngIf="selectedOrder">
+      <!-- Header for the order form section -->
       <div class="text-center mb-5">
         <span class="text-xl font-semibold">Edit Selected Order:</span>
       </div>
 
+      <!-- Grid layout for the order form fields -->
       <div class="grid grid-cols-2 gap-4 mb-5">
+        
+        <!-- Order Number input field with validation for uniqueness -->
         <div class="font-semibold">Order Number</div>
         <div>
           <input
@@ -37,11 +47,13 @@
             [(ngModel)]="selectedOrder.orderNumber"
             (input)="checkUniqueOrderNumber()"
           />
+          <!-- Display error message if the order number is not unique -->
           <p *ngIf="orderNumberExists" class="text-red-500 text-sm">
             Order number must be unique.
           </p>
         </div>
 
+        <!-- Name input field -->
         <div class="font-semibold">Name</div>
         <div>
           <input
@@ -52,6 +64,7 @@
           />
         </div>
 
+        <!-- Description input field -->
         <div class="font-semibold">Description</div>
         <div>
           <input
@@ -62,6 +75,7 @@
           />
         </div>
 
+        <!-- Equipment selection dropdown -->
         <div class="font-semibold">Equipment</div>
         <div>
           <select
@@ -69,18 +83,20 @@
             [(ngModel)]="selectedEquipment"
             (ngModelChange)="onEquipmentChange($event)"
             title="Equipment"
-             multiple required
+            multiple required
           >
-            <!-- Display all currently selected equipment -->
+            <!-- Display currently selected equipment -->
             <option *ngFor="let equipment of selectedEquipment" [ngValue]="equipment">
-            Current: {{ equipment.equipmentNumber }}
+              Current: {{ equipment.equipmentNumber }}
             </option>
             <!-- Display all available equipment -->
-            <option *ngFor="let equipment of equipmentList" [ngValue]="equipment">{{ equipment.equipmentNumber }}
+            <option *ngFor="let equipment of equipmentList" [ngValue]="equipment">
+              {{ equipment.equipmentNumber }}
             </option>
           </select>
         </div>
 
+        <!-- Product Before selection dropdown -->
         <div class="font-semibold">Product (old)</div>
         <div>
           <select
@@ -90,13 +106,18 @@
             title="Product Before"
             required
           >
-            <option *ngIf="selectedProductBefore" [ngValue]="selectedProductBefore">Current: {{ selectedProductBefore.productNumber }}
+            <!-- Display currently selected "before" product -->
+            <option *ngIf="selectedProductBefore" [ngValue]="selectedProductBefore">
+              Current: {{ selectedProductBefore.productNumber }}
             </option>
-            <option *ngFor="let product of productList" [ngValue]="product">{{ product.productNumber }}
+            <!-- Display all available products -->
+            <option *ngFor="let product of productList" [ngValue]="product">
+              {{ product.productNumber }}
             </option>
           </select>
         </div>
 
+        <!-- Product After selection dropdown -->
         <div class="font-semibold">Product (new)</div>
         <div>
           <select
@@ -106,14 +127,19 @@
             title="Product After"
             required
           >
-            <option *ngIf="selectedProductAfter" [ngValue]="selectedProductAfter">Current: {{ selectedProductAfter.productNumber }}
+            <!-- Display currently selected "after" product -->
+            <option *ngIf="selectedProductAfter" [ngValue]="selectedProductAfter">
+              Current: {{ selectedProductAfter.productNumber }}
             </option>
-            <option *ngFor="let product of productList" [ngValue]="product">{{ product.productNumber }}
+            <!-- Display all available products -->
+            <option *ngFor="let product of productList" [ngValue]="product">
+              {{ product.productNumber }}
             </option>
           </select>
         </div>
       </div>
 
+      <!-- Save button section -->
       <div class="text-center mt-4">
         <app-button
           (onClick)="createOrder($event)"
@@ -124,4 +150,3 @@
     </div>
   </div>
 </div>
-

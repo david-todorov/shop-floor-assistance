@@ -1,28 +1,42 @@
+<!-- Container for the equipment creation from template form -->
 <div class="container p-14 border rounded-lg shadow max-w-4xl mx-auto border-primary">
+  
+  <!-- Title -->
   <span class="text-2xl font-semibold mb-5 block text-center">Create Equipment from Template</span>
 
+  <!-- Two-column layout for the suggestions and equipment form sections -->
   <div class="two-column-layout">
-    <!-- Suggestions Section -->
+    
+    <!-- Suggestions Section: Displays available equipment templates to be selected -->
     <div class="suggestions border-r pr-4">
+      <!-- Header for the suggestions section -->
       <div class="text-center mb-5">
         <span class="text-xl font-semibold">Please select a template to start:</span>
       </div>
 
+      <!-- List of equipment suggestions rendered dynamically -->
       <div class="grid grid-cols-1 gap-4 mb-5">
-        <div *ngFor="let suggestion of suggestions" class="suggestion-card p-4 border border-accent rounded cursor-pointer hover:bg-gray-100" (click)="selectSuggestion(suggestion)">
+        <div *ngFor="let suggestion of suggestions" 
+          class="suggestion-card p-4 border border-accent rounded cursor-pointer hover:bg-gray-100" 
+          (click)="selectSuggestion(suggestion)">
+          <!-- Display the suggestion name and description -->
           <h3 class="font-semibold">{{ suggestion.name }}</h3>
           <p>{{ suggestion.description }}</p>
         </div>
       </div>
     </div>
 
-    <!-- Equipment Form Section -->
+    <!-- Equipment Form Section: Displays the form to edit the selected equipment template -->
     <div class="edit-form pl-4" *ngIf="selectedEquipment">
+      <!-- Header for the equipment form section -->
       <div class="text-center mb-5">
         <span class="text-xl font-semibold">Edit Selected Template:</span>
       </div>
-      
+
+      <!-- Grid layout for the equipment form fields -->
       <div class="grid grid-cols-2 gap-4 mb-5">
+        
+        <!-- Equipment Number input field with validation for uniqueness -->
         <div class="font-semibold">Equipment Number</div>
         <div>
           <input 
@@ -32,27 +46,38 @@
             [(ngModel)]="selectedEquipment.equipmentNumber" 
             (input)="checkUniqueEquipmentNumber()"
           >
-          <p *ngIf="equipmentNumberExists" class="text-red-500 text-sm">Equipment number must be unique.</p>
+          <!-- Display error message if the equipment number is not unique -->
+          <p *ngIf="equipmentNumberExists" class="text-red-500 text-sm">
+            Equipment number must be unique.
+          </p>
         </div>
 
+        <!-- Name input field -->
         <div class="font-semibold">Name</div>
         <div>
           <input type="text" placeholder="Enter Name" class="input-field" [(ngModel)]="selectedEquipment.name">
         </div>
 
+        <!-- Description input field -->
         <div class="font-semibold">Description</div>
         <div>
           <input type="text" placeholder="Enter Description" class="input-field" [(ngModel)]="selectedEquipment.description">
         </div>
 
+        <!-- Type input field -->
         <div class="font-semibold">Type</div>
         <div>
           <input type="text" placeholder="Enter Type" class="input-field" [(ngModel)]="selectedEquipment.type">
         </div>
       </div>
-      
+
+      <!-- Save button section -->
       <div class="text-center mt-4">
-        <app-button (onClick)="createEquipment($event)" [disabled]="createDisabled" [label]="createBtnLabel"></app-button>
+        <app-button 
+          (onClick)="createEquipment($event)" 
+          [disabled]="createDisabled" 
+          [label]="createBtnLabel">
+        </app-button>
       </div>
     </div>
   </div>

@@ -14,59 +14,63 @@ import { productTO } from '../../shared/types/productTO';
   templateUrl: './create-product-from-existing.component.html',
   styleUrl: './create-product-from-existing.component.css'
 })
-export class CreateProductFromExistingComponent {
+
+export class CreateProductFromExistingComponent implements OnInit {
+  // Initializing a product object with default values
   product: productTO = {
     id: 0,
     productNumber: '',
     name: '',
     description: '',
-    language:'',
-    country:'',
+    language: '',
+    country: '',
     type: '',
     packageSize: '',
     packageType: '',
   };
-  selectedProduct: productTO | null = null;
-  suggestions: productTO[] = []; // Store fetched suggestions
-  createDisabled: boolean = true;
-  createBtnLabel: string = 'Create Product';
-  productNumberExists: boolean = false; // To track uniqueness of equipment number
   
+  selectedProduct: productTO | null = null; // Holds the selected product after suggestion selection
+  suggestions: productTO[] = []; // Array to store product suggestions fetched from the backend
+  createDisabled: boolean = true; // Controls whether the Create button is disabled
+  createBtnLabel: string = 'Create Product'; // Label for the Create button
+  productNumberExists: boolean = false; // Tracks whether the product number already exists
+
   constructor(
-    private router: Router,
-    private backendCommunicationService: BackendCommunicationService,
+    private router: Router, // Router to handle navigation
+    private backendCommunicationService: BackendCommunicationService, // Backend service to interact with the API
   ) { }
 
+  // Lifecycle hook for component initialization
   ngOnInit() {
-    this.loadSuggestions();
+    this.loadSuggestions(); // Fetch product suggestions when the component initializes
   }
 
+  // Fetch product suggestions from the backend
   loadSuggestions() {
-    // Fetch suggestions from the backend
     this.backendCommunicationService.getProductSuggestions().subscribe(
       (data) => {
-        this.suggestions = data;
+        this.suggestions = data; // Store the fetched suggestions
       },
       (error) => {
-        console.error('Error fetching suggestions:', error);
+        alert('Error fetching suggestions');
       }
     );
   }
 
+  // Method for selecting a product suggestion and resetting the product number
   selectSuggestion(suggestion: productTO) {
-    console.log("Suggestion selected:", suggestion); // Debugging line
-    this.selectedProduct = { ...suggestion, productNumber: '' };
-    //this.createDisabled = true; // Disable the button until the new equipment number is unique
+    this.selectedProduct = { ...suggestion, productNumber: '' }; // Copy the suggestion and reset the product number
   }
 
-    checkUniqueProductNumber() {
+  // Check if the selected product number is unique and validate the form
+  checkUniqueProductNumber() {
     if (this.selectedProduct) {
-      // Check if the equipment number exists in suggestions
+      // Check if the selected product number already exists in the suggestions
       this.productNumberExists = this.suggestions.some(
         (suggestion) => suggestion.productNumber === this.selectedProduct!.productNumber
       );
 
-      // Enable the button only if all fields are filled and the equipment number is unique
+      // Enable the create button only if the product number is unique and all fields are filled
       this.createDisabled = this.productNumberExists || !(
         this.selectedProduct.productNumber &&
         this.selectedProduct.name &&
@@ -80,37 +84,32 @@ export class CreateProductFromExistingComponent {
     }
   }
 
+  // Create the product if the form is valid and product number is unique
   createProduct(event: MouseEvent) {
     if (event.type === 'click' && !this.productNumberExists) {
-      console.log("Payload being sent:", this.selectedProduct);
+      // Call the backend service to create the product
       this.backendCommunicationService.createProduct(this.selectedProduct)
         .pipe(
           catchError((error) => {
-            console.error('Error creating product:', error);
             alert('Failed to create product. Please try again.');
-            return of(null); // Return null to continue with the observable flow
+            return of(null); // Return null to continue the observable flow
           })
         )
         .subscribe({
           next: (response) => {
             if (response) {
-              console.log('Product created successfully:', response);
               alert('Product created successfully!');
-
-              // Delay navigation to allow the user to see the message
               setTimeout(() => {
-                this.router.navigateByUrl('/editor/products');
+                this.router.navigateByUrl('/editor/products'); // Redirect to the products page after creation
               }, 1000); // 1-second delay
             }
           },
           error: () => {
-            console.error('Unexpected error occurred during product creation.');
+            alert('Unexpected error occurred during product creation.');
           }
         });
     } else {
-      console.error('Product number must be unique');
-      alert('Please enter a unique product number.');
+      alert('Please enter a unique product number.'); // Alert if the product number is not unique
     }
   }
-
 }

@@ -15,6 +15,8 @@ import { ButtonComponent } from '../../shared/component-elements/button/button.c
   styleUrl: './create-equipment-from-existing.component.css'
 })
 export class CreateEquipmentFromExistingComponent {
+
+  // Initialize the equipment object with default values
   equipment: equipmentTO = {
     equipmentNumber: "",
     name: "",
@@ -22,47 +24,54 @@ export class CreateEquipmentFromExistingComponent {
     type: "",
     orders: [],
   };
+
+  // Variable to hold the selected equipment
   selectedEquipment: equipmentTO | null = null;
-  suggestions: equipmentTO[] = []; // Store fetched suggestions
+  // Store fetched equipment suggestions
+  suggestions: equipmentTO[] = [];
+  // Flag to enable/disable the Create button
   createDisabled: boolean = true;
+  // Button label for creating equipment
   createBtnLabel: string = 'Create Equipment';
-  equipmentNumberExists: boolean = false; // To track uniqueness of equipment number
-  
+  // Flag to track uniqueness of the equipment number
+  equipmentNumberExists: boolean = false;
+
   constructor(
-    private router: Router,
-    private backendCommunicationService: BackendCommunicationService,
+    private router: Router, // Router for navigation
+    private backendCommunicationService: BackendCommunicationService, // Backend service to interact with the API
   ) { }
 
+  // Fetch the equipment suggestions from the backend when the component initializes
   ngOnInit() {
-    this.loadSuggestions();
+    this.loadSuggestions(); // Load equipment suggestions
   }
 
+  // Fetch equipment suggestions from the backend
   loadSuggestions() {
-    // Fetch suggestions from the backend
     this.backendCommunicationService.getEquipmentSuggestions().subscribe(
       (data) => {
-        this.suggestions = data;
+        this.suggestions = data; // Populate the suggestions with fetched data
       },
       (error) => {
-        console.error('Error fetching suggestions:', error);
+        alert('Error fetching equipment suggestions');
       }
     );
   }
 
+  // Handle the selection of an equipment suggestion and reset the equipment number
   selectSuggestion(suggestion: equipmentTO) {
-    console.log("Suggestion selected:", suggestion); // Debugging line
-    this.selectedEquipment = { ...suggestion, equipmentNumber: '' };
-    //this.createDisabled = true; // Disable the button until the new equipment number is unique
+    this.selectedEquipment = { ...suggestion, equipmentNumber: '' }; // Copy selected suggestion and reset equipment number
   }
 
-    checkUniqueEquipmentNumber() {
+  // Check if the selected equipment number is unique
+  checkUniqueEquipmentNumber() {
     if (this.selectedEquipment) {
-      // Check if the equipment number exists in suggestions
+      // Check if the equipment number already exists in the suggestions
       this.equipmentNumberExists = this.suggestions.some(
         (suggestion) => suggestion.equipmentNumber === this.selectedEquipment!.equipmentNumber
       );
 
-      // Enable the button only if all fields are filled and the equipment number is unique
+      // Enable the Create button only if the equipment number is unique and all fields are filled
       this.createDisabled = this.equipmentNumberExists || !(
         this.selectedEquipment.equipmentNumber &&
         this.selectedEquipment.name &&
@@ -72,39 +81,36 @@ export class CreateEquipmentFromExistingComponent {
     }
   }
 
+  // Handle the creation of equipment
   createEquipment(event: MouseEvent) {
     if (event.type === 'click' && !this.equipmentNumberExists) {
-      console.log("Payload being sent:", this.selectedEquipment);
-      this.backendCommunicationService.createEquipment(this.selectedEquipment)
+      // Call the backend service to create the equipment
+      this.backendCommunicationService.createEquipment(this.selectedEquipment!)
         .pipe(
           catchError((error) => {
-            console.error('Error creating equipment:', error);
             alert('Failed to create equipment. Please try again.');
-            return of(null); // Return null to continue with the observable flow
+            return of(null); // Continue with observable flow after error
           })
         )
         .subscribe({
           next: (response) => {
             if (response) {
-              console.log('Equipment created successfully:', response);
               alert('Equipment created successfully!');
 
-              // Delay navigation to allow the user to see the message
+              // Delay navigation to allow the user to see the success message
               setTimeout(() => {
-                this.router.navigateByUrl('/editor/equipment');
+                this.router.navigateByUrl('/editor/equipment'); // Redirect to the equipment page
               }, 1000); // 1-second delay
             }
           },
           error: () => {
-            console.error('Unexpected error occurred during equipment creation.');
+            alert('Unexpected error occurred during equipment creation.');
           }
         });
     } else {
-      console.error('Equipment number must be unique');
-      alert('Please enter a unique equipment number.');
+      alert('Please enter a unique equipment number.'); // Alert if the equipment number is not unique
     }
   }
-
 }
 
 

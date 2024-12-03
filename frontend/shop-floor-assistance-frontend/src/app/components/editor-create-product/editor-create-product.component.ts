@@ -1,54 +1,55 @@
-import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { ActivatedRoute, Router } from '@angular/router';
-import { BackendCommunicationService } from '../../services/backend-communication.service';
-import { catchError, of } from 'rxjs';
-import { ProductTableComponent } from '../../shared/component-elements/product-table/product-table.component';
-import { ButtonComponent } from '../../shared/component-elements/button/button.component';
-import { EditorProductComponent } from '../editor-product/editor-product.component';
-import { productTO } from '../../shared/types/productTO';
+// Import statements for Angular components and other utilities
+import { FormsModule } from '@angular/forms'; 
+import { ActivatedRoute, Router } from '@angular/router'; 
+import { BackendCommunicationService } from '../../services/backend-communication.service'; 
+import { catchError, of } from 'rxjs'; 
+import { ButtonComponent } from '../../shared/component-elements/button/button.component'; 
+import { productTO } from '../../shared/types/productTO'; 
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-editor-create-product',
-  standalone: true,
-  imports: [FormsModule, ButtonComponent],
-  templateUrl: './editor-create-product.component.html',
-  styleUrls: ['./editor-create-product.component.css']
+  selector: 'app-editor-create-product', 
+  standalone: true, 
+  imports: [FormsModule, ButtonComponent], 
+  templateUrl: './editor-create-product.component.html', 
+  styleUrls: ['./editor-create-product.component.css'] 
 })
 
-
 export class EditorCreateProductComponent {
+  // Initial product object with empty values
   product: productTO = {
     id: 0,
     productNumber: '',
     name: '',
     description: '',
-    language:'',
-    country:'',
+    language: '',
+    country: '',
     type: '',
     packageSize: '',
     packageType: '',
   };
+
+  // Button state to control if the save button is disabled
   createDisabled: boolean = true;
+  // Save button label
   createBtnLabel: string = 'Save Product';
 
-  // Initialize equipmentState without an interface
+  // Product state for button icon and label
   productState = {
     buttonIcon: 'save',
     buttonLabel: 'Save Product',
     isSaved: false
   };
 
-
   constructor(
-    private router: Router,
-    private backendCommunicationService: BackendCommunicationService
+    private router: Router, // Inject Router for navigation
+    private backendCommunicationService: BackendCommunicationService // Inject backend service to interact with the API
   ) { }
 
   // Method to handle Save Product button click with error handling
   saveProduct(event: MouseEvent) {
     if (
-      event.type === 'click' &&
+      event.type === 'click' && // Ensure the event is a click
       this.product.productNumber &&
       this.product.name &&
       this.product.description &&
@@ -58,11 +59,11 @@ export class EditorCreateProductComponent {
       this.product.packageSize &&
       this.product.packageType
     ) {
-      console.log("Payload:", this.product); // Debugging line to check payload
+      // Call backend service to create a new product
       this.backendCommunicationService.createProduct(this.product)
         .pipe(
           catchError((error) => {
-            console.error('Error creating product:', error);
+            // Handle errors during product creation
             alert('Failed to create product. Please try again.');
             return of(null); // Return null to continue with the observable flow
           })
@@ -70,9 +71,7 @@ export class EditorCreateProductComponent {
         .subscribe({
           next: (response) => {
             if (response) {
-              console.log('Product created successfully:', response);
-
-              // Update UI states
+              // Update UI states upon successful creation
               this.productState.buttonIcon = 'check_circle';
               this.productState.buttonLabel = 'Saved';
               this.productState.isSaved = true;
@@ -81,31 +80,23 @@ export class EditorCreateProductComponent {
 
               // Delay navigation to allow the user to see the message
               setTimeout(() => {
-                this.router.navigateByUrl('/editor/products');
-              }, 1000); // 1-second delay
+                this.router.navigateByUrl('/editor/products'); // Navigate to product list after 1 second
+              }, 1000);
             }
           },
           error: () => {
-            console.error('Unexpected error occurred during product creation.');
+            // Handle unexpected errors during the product creation process
+            alert('Unexpected error occurred during product creation.');
           }
         });
     } else {
-      console.error('All fields are required');
+      // Alert if any field is missing
       alert('Please fill in all fields before saving.');
     }
   }
 
-  // Enable the button when all fields have values
+  // Enable the save button when all fields are filled
   checkFormCompletion() {
-    console.log("Product Number:", this.product.productNumber);
-    console.log("Name:", this.product.name);
-    console.log("Description:", this.product.description);
-    console.log("Language:", this.product.language);
-    console.log("Country:", this.product.country);
-    console.log("Type:", this.product.type);
-    console.log("Package Size:", this.product.packageSize);
-    console.log("Package Type:", this.product.packageType);
-
     this.createDisabled = !(
       this.product.productNumber &&
       this.product.name &&
@@ -116,6 +107,5 @@ export class EditorCreateProductComponent {
       this.product.packageSize &&
       this.product.packageType
     );
-    console.log("Create Disabled:", this.createDisabled);
   }
 }

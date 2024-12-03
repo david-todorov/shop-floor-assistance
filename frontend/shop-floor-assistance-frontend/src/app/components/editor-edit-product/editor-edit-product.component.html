@@ -1,47 +1,60 @@
+<!-- Wrapper for the editor workspace -->
 <div class="p-4 border rounded-lg shadow max-w-lg mx-auto">
+  
+  <!-- Title for the editor workspace, styled as a large bold text in the center -->
   <span class="text-2xl font-semibold mb-5 block text-center">Editor Workspace</span>
   
+  <!-- Section for the subheading "Edit Product Information" -->
   <div class="text-center mb-5">
     <span class="text-xl font-semibold">Edit Product Information:</span>
   </div>
   
+  <!-- Grid for product input fields, arranged in two columns with a gap between each field -->
   <div class="grid grid-cols-2 gap-4 mb-5">
+    
+    <!-- Product Number input field -->
     <div class="font-semibold">Product Number</div>
     <div>
       <input type="text" class="input-field" [(ngModel)]="product.productNumber" (input)="checkFormCompletion()" placeholder="Enter Product Number">
     </div>
 
+    <!-- Name input field  -->
     <div class="font-semibold">Name</div>
     <div>
       <input type="text" class="input-field" [(ngModel)]="product.name" (input)="checkFormCompletion()" placeholder="Enter Name">
     </div>
 
+    <!-- Description input field -->
     <div class="font-semibold">Description</div>
     <div>
       <input type="text" class="input-field" [(ngModel)]="product.description" (input)="checkFormCompletion()" placeholder="Enter Description">
     </div>
 
+    <!-- Type input field -->
     <div class="font-semibold">Type</div>
-<div>
-  <input type="text" class="input-field" [(ngModel)]="product.type" (input)="checkFormCompletion()" placeholder="Enter Type">
-</div>
+    <div>
+      <input type="text" class="input-field" [(ngModel)]="product.type" (input)="checkFormCompletion()" placeholder="Enter Type">
+    </div>
 
-
+    <!-- Language input field -->
     <div class="font-semibold">Language</div>
     <div>
       <input type="text" class="input-field" [(ngModel)]="product.language" (input)="checkFormCompletion()" placeholder="Enter Language">
     </div>
 
+    <!-- Country input field -->
     <div class="font-semibold">Country</div>
     <div>
       <input type="text" class="input-field" [(ngModel)]="product.country" (input)="checkFormCompletion()" placeholder="Enter Country">
     </div>
 
+    <!-- Package Size input field -->
     <div class="font-semibold">Package Size</div>
     <div>
       <input type="text" class="input-field" [(ngModel)]="product.packageSize" (input)="checkFormCompletion()" placeholder="Enter Package Size">
     </div>
 
+    <!-- Package Type input field -->
     <div class="font-semibold">Package Type</div>
     <div>
       <input type="text" class="input-field" [(ngModel)]="product.packageType" (input)="checkFormCompletion()" placeholder="Enter Package Type">
@@ -49,8 +62,10 @@
   </div>
 </div>
 
+<!-- Section for the action buttons -->
 <div class="w-7/12 mx-auto mt-6 flex justify-around">
   <div class="w-7/12 mx-4">
+    <!-- Button for updating the product -->
     <app-button (onClick)="updateProduct($event)" [disabled]="updateDisabled" [label]="updateBtnLabel"></app-button>
   </div>
 </div>
