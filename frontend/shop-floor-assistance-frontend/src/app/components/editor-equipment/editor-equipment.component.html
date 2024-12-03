@@ -1,22 +1,46 @@
+<!-- Page heading for the Equipment Workspace -->
 <span class="text-2xl font-semibold mb-3 ml-8"> Equipment Workspace</span>
 
-<div class="  mx-auto w-4/5 ">
-    <app-equipment-table (onClick)="equipmentSelected($event)" [Equipment]="loadedEquipment"></app-equipment-table>
+<!-- Container for the equipment table -->
+<div class="mx-auto w-4/5">
+    <!-- Equipment table component: Displays a list of equipment and emits an event when an equipment is selected -->
+    <app-equipment-table 
+        (onClick)="equipmentSelected($event)" 
+        [Equipment]="loadedEquipment">
+    </app-equipment-table>
 </div>
-<div class="w-7/12 mx-auto  mt-6  flex justify-around">
+
+<!-- Container for action buttons -->
+<div class="w-7/12 mx-auto mt-6 flex justify-around">
+
+    <!-- Edit Equipment button -->
     <div class="w-7/12 mx-4">
-        <app-button (onClick)="resolveButtonClick($event, 'edit')" [disabled]="editDisabled"
-            [label]="editBtnLabel"></app-button>
+        <!-- Button component: Triggers the edit action when clicked -->
+        <app-button 
+            (onClick)="resolveButtonClick($event, 'edit')" 
+            [disabled]="editDisabled" 
+            [label]="editBtnLabel">
+        </app-button>
     </div>
 
+    <!-- Delete Equipment button -->
     <div class="w-7/12 mx-4">
-        <app-button (onClick)="resolveButtonClick($event, 'delete')" [disabled]="deleteDisabled"
-            [label]="deleteBtnLabel"></app-button>
+        <!-- Button component: Triggers the delete action when clicked -->
+        <app-button 
+            (onClick)="resolveButtonClick($event, 'delete')" 
+            [disabled]="deleteDisabled" 
+            [label]="deleteBtnLabel">
+        </app-button>
     </div>
 
+    <!-- Create Equipment button -->
     <div class="w-7/12 mx-4">
-        <app-button (onClick)="resolveButtonClick($event, 'create')" [disabled]="createDisabled"
-            [label]="createBtnLabel"></app-button>
+        <!-- Button component: Triggers the create action when clicked -->
+        <app-button 
+            (onClick)="resolveButtonClick($event, 'create')" 
+            [disabled]="createDisabled" 
+            [label]="createBtnLabel">
+        </app-button>
     </div>
 
 </div>
