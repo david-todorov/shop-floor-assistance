@@ -23,80 +23,90 @@ import { CommonModule } from '@angular/common';
 })
 export class EditorEditOrderComponent {
   
-  isEditorMode=true;
+  // Editor mode flag
+  isEditorMode = true;
 
-  btnLabelAddWorkflow: string= 'Add Workflow';
+  // Button labels
+  btnLabelAddWorkflow: string = 'Add Workflow';
   saveBtnLabel: string = 'Save Order';
-  orderId!:number;
-  productAfter!:productTO;
 
+  // Order ID and related product
+  orderId!: number;
+  productAfter!: productTO;
+
+  // The order to be edited and selected workflow index
   order!: orderTO;
   selectedWorkflowIndex!: number | null;
 
+  // Checked order for workflow filtering
   checkedOrder!: orderTO;
   checkStatuses!: itemCheckStatuses;
 
   constructor(private backendCommunicationService: BackendCommunicationService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private snackBar: MatSnackBar) {
+              private route: ActivatedRoute,
+              private router: Router,
+              private snackBar: MatSnackBar) {
+    // Fetch the order ID from the route parameters
     this.route.params.subscribe(params => {
       this.orderId = params['id'];
+
+      // Fetch the order details from the backend
       this.backendCommunicationService.getEditorOrder(this.orderId).pipe(
         catchError((err) => {
-          console.error(err);
           return of(null);
         })
       ).subscribe({
         next: (response) => {
           if (response) {
             this.order = response; // Assign the retrieved order data
-            this.productAfter= this.order.productAfter;
-            this.filterOrder(this.initializeCheckStatuses());
-            console.log('checkedOrder on initial loading', this.checkedOrder)
+            this.productAfter = this.order.productAfter;
+            this.filterOrder(this.initializeCheckStatuses()); // Filter the order based on check statuses
           } else {
             console.warn('No order found');
           }
         },
         complete: () => {
-          console.log('Order retrieval complete:', this.order);
         }
       });
     });
   }
 
+  // Update the order object with new data
   updateOrder(order: orderTO) {
     this.order = { ...order };
-    console.log('updates order received at parent', this.order)
   }
 
-
+  // Save the updated order
   saveOrder(event: MouseEvent): void {
     if (event.type === 'click' && this.order) {
       this.backendCommunicationService.updateEditorOrder(this.orderId, this.order)
         .pipe(
           catchError((error) => {
-            console.error('Error updating order:', error);
+            // Handle any errors that occur during the update
             this.showSnackbar('Failed to save the order. Please try again.');
             return of(null);
           })
         )
         .subscribe((response) => {
           if (response) {
+            // Show success message and navigate
             this.showSnackbar('Order updated successfully!');
-            // Redirect or update UI
             this.router.navigateByUrl('/editor/orders');
           }
         });
     }
   }
 
+  // Select a workflow for viewing or editing
   onSelect(selectedWorkflow: number | null) {
     this.selectedWorkflowIndex = selectedWorkflow;
   }
 
+  // Add a new workflow to the order
   resolveAddWorkflow(event: MouseEvent): void {
     event.stopPropagation();
+
+    // Define a new workflow with default tasks and items
     const newWorkflow: workflowTO = {
       name: 'New Workflow',
       description: 'New workflow: Description',
@@ -114,22 +124,28 @@ export class EditorEditOrderComponent {
         }
       ]
     };
+
+    // Append the new workflow to the order
     this.order.workflows.push(newWorkflow);
-    this.order= {...this.order};
-    console.log('updated order', this.order)
+    this.order = { ...this.order };
+
+    // Show a success message after adding the workflow
     this.showSnackbar('New workflow appended to the end of the workflows!');
   }
 
+  // Show a snackbar message to the user
   showSnackbar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 1500
     });
   }
 
+  // Handle received item check statuses and filter the order accordingly
   onItemsCheckReceived(checkStatuses: itemCheckStatuses): void {
     this.filterOrder(checkStatuses);
   }
 
+  // Initialize the check statuses for all items in the order
   initializeCheckStatuses(): itemCheckStatuses {
     this.checkStatuses = {};
     this.order.workflows.forEach((workflow, workflowIndex) => {
@@ -144,7 +160,8 @@ export class EditorEditOrderComponent {
     return this.checkStatuses;
   }
 
-  filterOrder(checkStatuses: itemCheckStatuses){
+  // Filter the order based on the check statuses
+  filterOrder(checkStatuses: itemCheckStatuses) {
     this.checkedOrder = {
       ...this.order,
       workflows: this.order.workflows.map((workflow, workflowIndex) => {
