@@ -4,13 +4,18 @@ import { itemCheckStatuses, itemIndices, taskCheckStatuses } from '../shared/typ
 @Injectable({
   providedIn: 'root'
 })
+ /**
+   * User Interface service
+   * 
+   * This file contains the helper functions to keep track of indices for items and tasks. Indices are updated when 
+   * elements (items, tasks etc.) are added or deleted. Additonally, an operatir can mark items as done. The tracking 
+   * of these indices are also implemented using the function sin this service.
+   * @author Jossin Antony
+*/
 export class UIService {
   private itemIndices: itemIndices = {};
   private itemCheckStatuses: itemCheckStatuses = {};
   private taskCheckStatuses: taskCheckStatuses = {};
-
-
-  
 
   setSelectedItemIndex(workflowIndex: number, taskIndex: number, itemIndex: number): void {
     if (!this.itemIndices[workflowIndex]) {
@@ -34,9 +39,6 @@ export class UIService {
     this.itemIndices = itemIndices;
   }
 
-  // -------------------
-
-
   setSelectedItemStatus(workflow: number, task: number, item: number, status: boolean): void {
     if (!this.itemCheckStatuses[workflow]) {
       this.itemCheckStatuses[workflow] = {};
@@ -44,8 +46,6 @@ export class UIService {
     this.itemCheckStatuses[workflow][task][item] = status;
   }
 
-
-  
   getSelectedItemStatus(workflow: number, task: number, item: number): boolean | null {
     if (this.itemCheckStatuses[workflow] && this.itemCheckStatuses[workflow][task] && this.itemCheckStatuses[workflow][task][item]!== undefined) {
       return this.itemCheckStatuses[workflow][task][item];
@@ -61,7 +61,6 @@ export class UIService {
     this.itemCheckStatuses = itemStatuses;
   }
 
-  // ---------------------------------------
   setTaskStatuses(taskStatuses: taskCheckStatuses): void {
     this.taskCheckStatuses = taskStatuses;
   }

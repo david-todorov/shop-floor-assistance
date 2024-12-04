@@ -1,7 +1,14 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { BackendCommunicationService } from '../services/backend-communication.service';
-
+ /**
+   * Authorization guard
+   * 
+   * This file implements an authorization guard which ensures that only logged in users can 
+   * access the URLs. This is achieved by defining the protected routes, to which access is allowed only if the
+   * user is logged in.
+   * @author Jossin Antony
+*/
 export const authGuard: CanActivateFn = 
   (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const router:Router= inject(Router);
@@ -28,8 +35,6 @@ export const authGuard: CanActivateFn =
                                       '/editor-product/create-from-existing', 
                                     ];
   const isLoggedIn: boolean= backendCommunicationService.getloginUIState().isLoggedIn;
-  console.log('in authguard', 'url is ', state.url,protectedRoutes.includes(state.url) && !isLoggedIn
-    ? router.navigate(['/']): true)
   return protectedRoutes.includes(state.url) && !isLoggedIn
     ? router.navigate(['/']): true;
 };

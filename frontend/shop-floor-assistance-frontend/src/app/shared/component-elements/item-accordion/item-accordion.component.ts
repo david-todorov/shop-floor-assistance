@@ -32,13 +32,24 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './item-accordion.component.html',
   styleUrl: './item-accordion.component.css'
 })
+ /**
+   * Item accordion
+   * 
+   * This file implements the accordion element which is used to display items. It is highly interactive,
+   * supporting reordering and draging of items to and from the component. The accordionn can also 
+   * be expanded to display longer descriptions as well.
+   * It also supports editing of items and deletion of items from the parent workflow.
+   * @author Jossin Antony
+*/
 export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
 
+  //Receive inputs from parent component
   @Input() order!:orderTO;
   @Input() workflowIndex!:number | null;
   @Input() taskIndex!: number | null;
   @Input() isEditorMode!: boolean;
   
+  //Emit events to parent component
   @Output() onOrderUpdate= new EventEmitter<orderTO>();
   @Output() onItemsChecked= new EventEmitter<itemCheckStatuses>();
 
@@ -65,7 +76,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     private suggestionService: SuggestionsService,
     private snackBar: MatSnackBar){}
 
-  //--life cycle hooks
+  //--life cycle hooks, initiallze indices and check statuses.
   ngOnInit(): void {
     this.itemIndices = this.uiService.getItemIndices();
     if (Object.keys(this.itemIndices).length === 0) {
@@ -78,7 +89,6 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     if (Object.keys(this.tasksCheckStatuses).length === 0) {
       this.initializeTaskCheckStatuses();
     }
-    // this.dropItemIds.push(this.dropItemIdFromTask);
     this.suggestionService.addDropItemId(this.dropItemIdFromTask);
   }
 
@@ -87,6 +97,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     this.uiService.setItemIndices(this.itemIndices);
   }
 
+  //When change is detected
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['workflowIndex'] ){
       this.closeAllPanels();
@@ -103,7 +114,20 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     }
   }
   //---------------------------------------------------------------
-  //--Ui helper functions for maintaing itemindices and checkstatuses
+  //--Ui helper functions for initializing and maintaining itemindices and checkstatuses.
+   /**
+   * Checkstatus:
+   * The fiunctionality where completed elements ar indicated by a UI symbol, e.g, a green tick on the screen 
+   * as a visual indicator for the user about the completion of tasks.
+   * I.e, for an item -> when the item is marked as done by operator
+   * for a task tab -> When all its children items are marked as checked
+   * for a workflow -> when all task tabs are marked as done
+   * for an order -> when all workflows have been marked as done.
+   * Note: This functionality has not been implemented completely. Currently, only items 
+   * show the green tick when checked.
+   * The check statuses have to be propoagated back to its parent components and up through the
+   * hierarchy in order to complete the implementaion.
+*/
   initializeItemIndices(): void {
     if (this.order && this.order.workflows) {
       this.order.workflows.forEach((workflow, workflowIndex) => {
@@ -207,7 +231,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     if(this.taskIndex != null && this.workflowIndex !=null){
       const task= this.order.workflows[this.workflowIndex].tasks[this.taskIndex]
       this.itemIndices= this.uiService.getItemIndices();
-      this.items = [...task.items]; // Create a new array reference
+      this.items = [...task.items]; // Create a new array reference for triggering ngOnChange
     }else{
       this.items=[];
     }
@@ -223,6 +247,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     });
   }
 
+  //Deletion of items
   deleteItems(index: number,event: MouseEvent) {
     if(this.taskIndex!=null && this.workflowIndex !=null){
       event.stopPropagation();
@@ -233,14 +258,14 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
       // Update itemIndices array
       this.itemIndices[this.workflowIndex][this.taskIndex] = task.items.length > 0 ? 0 : -1;
       this.uiService.setItemIndices(this.itemIndices);
-      this.items = [...task.items]; // Create a new array reference
+      this.items = [...task.items]; // Create a new array reference to trigger ngOnchange
       this.initializeItemUIStates(); 
-      // this.expandedPanels= new Array(this.items.length).fill(false);
       this.closeAllPanels();
       this.onOrderUpdate.emit(this.order);
     }
   }
 
+  //Saving the edited information.
   saveItems(index: number){
     if(this.itemUIStates[index].updatedTitle=='' || this.itemUIStates[index].updatedTitle==null){
       alert('The item name cannot be empty!');
@@ -251,6 +276,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     this.items[index].timeRequired= this.itemUIStates[index].upDatedTimeReq;
   }
 
+  //Enter adn leave edit mode. Expand panels if in edit mode
   toggleEditMode(index: number, event: MouseEvent) {
     event.stopPropagation();
     this.expandedPanels[index] = !this.expandedPanels[index]; // Expand the panel
@@ -283,15 +309,8 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   updateCheckStatus(workflowIndex: number, taskIndex: number, itemIndex: number, checked: boolean): void {
     this.itemsCheckStatuses[workflowIndex][taskIndex][itemIndex] = checked;
     this.uiService.setSelectedItemStatus(workflowIndex, taskIndex, itemIndex, checked);
-    console.log('checkstatuses',this.itemsCheckStatuses);
-    // if(Object.values(this.itemsCheckStatuses[workflowIndex][taskIndex]).every(status=>status===true)){
-    //   console.log('All checked in at', this.order.workflows[workflowIndex].tasks[taskIndex].name);
-    // }else{
-    //    console.log('Not all checked at', this.order.workflows[workflowIndex].tasks[taskIndex].name);
-    // }
     const taskChecked= Object.values(this.itemsCheckStatuses[workflowIndex][taskIndex]).every(status=>status===true);
     this.tasksCheckStatuses[workflowIndex][taskIndex]=taskChecked;
-    console.log('tasks checked = ', this.tasksCheckStatuses)
     this.onItemsChecked.emit(this.itemsCheckStatuses)
   }
   
@@ -301,6 +320,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     }
   }
 
+  //Add a new item with default text.
   resolveAddItem(event: any) {
     if(this.workflowIndex!=null && this.taskIndex!=null){
       event.stopPropagation();
@@ -316,6 +336,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
     }
   }
 
+  //Drop-action to the accordion
   drop(event: CdkDragDrop<itemTO[]>): void {
     if(this.workflowIndex!=null && this.taskIndex!=null){
       const items= this.order.workflows[this.workflowIndex].tasks[this.taskIndex].items
@@ -334,6 +355,7 @@ export class ItemAccordionComponent implements OnInit, OnChanges, OnDestroy{
   this.onOrderUpdate.emit(this.order);
   }
 
+  //Snackbar to show the user about the element drop.
   showSnackbar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 1500

@@ -1,3 +1,7 @@
+ /**
+   * Definition of the user transfer object, which is set during authentication.
+   * @author Jossin Antony
+*/
 export type userTO={
     roles: [
         userRoleTO

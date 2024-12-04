@@ -23,6 +23,12 @@ import { ButtonComponent } from '../button/button.component';
   templateUrl: './edit-workflow-dialog.component.html',
   styleUrl: './edit-workflow-dialog.component.css'
 })
+ /**
+   * Edit workflow Dialog
+   * 
+   * This file implements the window for editing the task details using an angular form.
+   * @author Jossin Antony
+*/
 export class EditWorkflowDialogComponent {
 
   form!: FormGroup;

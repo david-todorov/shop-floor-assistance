@@ -21,6 +21,14 @@ import { CommonModule } from '@angular/common';
   templateUrl: './editor-edit-order.component.html',
   styleUrl: './editor-edit-order.component.css'
 })
+  /**
+   * Implementation of edit order component.
+   * This component provides the functionality to add, edit and delete workflows, tasks and
+   * items of the order. 
+   * It loads other components such as the worklow component, task component, items componet and 
+   * the suggestions component to accomplish the diting of orders.
+   * @author Jossin Antony
+   */
 export class EditorEditOrderComponent {
   
   // Editor mode flag
@@ -140,6 +148,12 @@ export class EditorEditOrderComponent {
     });
   }
 
+  //------------------------------------------------------------------------
+    /**
+   * The functionlity detailed below keeps track of the checked items by the operator.
+   * 
+   */
+  
   // Handle received item check statuses and filter the order accordingly
   onItemsCheckReceived(checkStatuses: itemCheckStatuses): void {
     this.filterOrder(checkStatuses);

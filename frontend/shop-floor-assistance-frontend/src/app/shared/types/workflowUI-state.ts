@@ -1,3 +1,7 @@
+ /**
+   * Definition of a UIstate types to keep consistent behavior across different components.
+   * @author Jossin Antony
+*/
 export type workflowStates= {
     [key: number]:{
         editMode: boolean, 

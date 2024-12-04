@@ -24,6 +24,12 @@ import { ButtonComponent } from '../button/button.component';
   templateUrl: './edit-task-dialog.component.html',
   styleUrl: './edit-task-dialog.component.css'
 })
+ /**
+   * Edit Task Dialog
+   * 
+   * This file implements the pop-up window for editing the task details using an angular form.
+   * @author Jossin Antony
+*/
 export class EditTaskDialogComponent {
 
   form!: FormGroup;

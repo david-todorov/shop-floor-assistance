@@ -1,8 +1,8 @@
 /* Styling for the button */
 .btn {
-    @apply w-44 mt-4; /* Fixed width and top margin */
-    @apply bg-primary text-white; /* Primary background color and white text */
-    @apply hover:bg-opacity-70; /* Reduces background opacity on hover */
+    @apply w-44 mt-4 !important; /* Fixed width and top margin */
+    @apply bg-primary text-white !important; /* Primary background color and white text */
+    @apply hover:bg-opacity-70 !important; /* Reduces background opacity on hover */
     @apply transition ease-in-out duration-300 !important; /* Smooth transition effect for hover */
 }
 

@@ -17,14 +17,21 @@ import { BackendCommunicationService } from '../../services/backend-communicatio
     MatSliderModule, 
     MatToolbarModule, 
     MatIconModule,
-    RouterOutlet,
     RouterLink
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
+ /**
+   * Implementation of header component.
+   * The header holds the title, menu, the information of the currently logged in user role and login/out button
+   * @author Jossin Antony
+   */
 export class HeaderComponent {
 
+   /**
+   * Declaration of variables
+   */
   public btnLabel!: loginState['buttonLabel'];
   public btnIcon!: loginState['buttonIcon'];
   public btnVisible!: loginState['isLoginVisible'];
@@ -37,20 +44,11 @@ export class HeaderComponent {
     private location: Location, 
     private router:Router) { 
   }
-  
-  private setUIParameters() {
-    this.btnLabel = this.loginUIState.buttonLabel;
-    this.btnIcon = this.loginUIState.buttonIcon;
-    this.btnVisible = this.loginUIState.isLoginVisible;
-    this.showCurrentRole= this.loginUIState.isLoggedIn;
-    this.userRole=this.loginUIState.currentRole;
-  }
 
-  // @HostListener('window:beforeunload', ['$event'])
-  // unloadHandler(event: Event) {
-  //   // Handle refresh logic here
-  // }
-
+  /**
+   * Initialization: Get the logged in state information and set the UI button labels visibilty, icons
+   * and other properties accordingly.
+  */
   ngOnInit(): void {
       this.backendCommunicationService.loginUIState$.subscribe(
       (state) => {
@@ -66,13 +64,25 @@ export class HeaderComponent {
     this.location.subscribe((event) => {
       if(event.url=='/login'){
         this.loginUIState.isLoginVisible= false;
-        console.log('in header browse back action',this.loginUIState);
         this.backendCommunicationService._loginUIState$.next(this.loginUIState);
         this.backendCommunicationService.setLoginStates(this.loginUIState);
       }
     });
   }
 
+  //Helper function to set the UI labels and icons
+  private setUIParameters() {
+    this.btnLabel = this.loginUIState.buttonLabel;
+    this.btnIcon = this.loginUIState.buttonIcon;
+    this.btnVisible = this.loginUIState.isLoginVisible;
+    this.showCurrentRole= this.loginUIState.isLoggedIn;
+    this.userRole=this.loginUIState.currentRole;
+  }
+
+  /**
+   * Button submit action. If the user is already logged in, log him out. 
+   * Otherwise, redirect to the login page
+  */
   onSubmit() {
     if(!this.loginUIState.isLoggedIn){
       this.loginUIState.isLoginVisible= false;
@@ -100,6 +110,9 @@ export class HeaderComponent {
     }
   }
 
+  /**
+   * Menu entries action depending on: the current role (operstor/editor)
+  */
   getHomeRoute(): string {
     switch (this.backendCommunicationService.getloginUIState().currentRole) {
       case 'editor':
