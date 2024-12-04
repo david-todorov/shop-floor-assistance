@@ -28,9 +28,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './workflow-accordion.component.html',
   styleUrl: './workflow-accordion.component.css'
 })
-
-
-export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewInit{
+ /**
+   * Workflow component
+   * 
+   * This file implements the workflow accordion which is used to display workflows. It is highly interactive,
+   * supporting reordering and draging of workflows to and from the component. The workflow element
+   * also supports editing and deletion of workflows from the parent workflow.
+   * @author Jossin Antony
+*/
+export class WorkflowAccordionComponent implements OnInit, OnChanges{
+   /**
+   * Declaration of variables and input & outputs.
+*/
   @Input() order!: orderTO;
   @Input() isEditorMode!: boolean;
 
@@ -51,18 +60,16 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     this.initializeWorkflowStates();
   }
   
-  ngAfterViewInit(): void {
-    // this.cdr.detectChanges();
-  }
-  
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['order']) {
       this.initializeWorkflowStates();
     }
   }
 
+   /**
+   *Initialization of workflow states
+  */
   initializeWorkflowStates() {
-    console.log(this.order)
     this.orderExists= (this.order!== null && this.order != undefined);
     if(this.orderExists){
       this.order.workflows.forEach((workflow: any, index: number) => {
@@ -74,6 +81,9 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     }
   }
 
+  /**
+   *Emit the selected workflow so that the corresponding task element is displayed.
+  */
   selectWorkflow(index: number) {
     if (this.workFlowStates[index].editMode) {
       return; // Do not trigger selectWorkflow if in edit mode
@@ -82,6 +92,9 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     this.onSelect.emit(this.selectedWorkflowIndex);
   }
 
+  /**
+   *Handle deletion of workflows
+  */
   deleteWorkflow(index: number, event: MouseEvent) {
     if (this.selectedWorkflowIndex !== null) {
       event.stopPropagation();
@@ -95,6 +108,9 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     }
   }
 
+  /**
+   *Save the order with the new workflow.
+  */
   saveOrder(index: number){
     if(this.workFlowStates[index].updatedTitle=='' || this.workFlowStates[index].updatedTitle==null){
       alert('The workflow name cannot be empty!');
@@ -105,6 +121,9 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
   };
   
 
+  /**
+   *Handle UI behaviour according to read/edit mode of the workflow
+  */
   toggleEditMode(index: number, event: MouseEvent) {
     event.stopPropagation();
     this.expandedPanels[index] = !this.expandedPanels[index]; // Expand the panel
@@ -125,6 +144,9 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     return Object.values(this.workFlowStates).some(state => state.editMode);
   }
 
+  /**
+   *Editing of workflow
+  */
   editWorkflow(workflowIndex: number): void {
     const workflow = this.order.workflows[workflowIndex];
     const dialogRef = this.dialog.open(EditWorkflowDialogComponent, {
@@ -145,6 +167,7 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     });
   }
 
+  //handle drop event of a new workflow from the suggestions component
   drop(event: CdkDragDrop<workflowTO[]>): void {
     // moveItemInArray(this.order.workflows, event.previousIndex, event.currentIndex);
     if (event.previousContainer === event.container) {
@@ -161,13 +184,12 @@ export class WorkflowAccordionComponent implements OnInit, OnChanges, AfterViewI
     this.onOrderUpdate.emit(this.order);
   }
 
+  /**
+   *Show snackbar to indicate the additon of a new element to the user.
+  */
   showSnackbar(message: string): void {
     this.snackBar.open(message, 'Close',{
       duration: 1500
     });
   }
 }
-
-
-
-

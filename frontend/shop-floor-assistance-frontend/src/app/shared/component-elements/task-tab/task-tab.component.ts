@@ -29,19 +29,20 @@ import { itemCheckStatuses, taskCheckStatuses } from '../../types/workflowUI-sta
   templateUrl: './task-tab.component.html',
   styleUrl: './task-tab.component.css'
 })
+ /**
+   * Task component
+   * 
+   * This file implements the tab element which is used to display tasks. It is highly interactive,
+   * supporting reordering and draging of tabs/tasks to and from the component. The tab element
+   * also supports editing of items and deletion of items from the parent workflow.
+   * @author Jossin Antony
+*/
 export class TaskTabComponent implements OnInit, OnChanges, AfterViewInit{
-onItemsChecked(event: itemCheckStatuses) {
-  this.onItemsCheckedReceived.emit(event);
-}
 
+   /**
+   * Declaration of variables
+  */
   status!:taskCheckStatuses;
-
-  updateTasksInOrder(event: taskCheckStatuses){
-    this.status= event;
-  }
-
-  @Output() onItemsCheckedReceived = new EventEmitter<itemCheckStatuses>();
-
 
   @Input() order!: orderTO;
   @Input() workflowIndex!: number | null;
@@ -50,6 +51,8 @@ onItemsChecked(event: itemCheckStatuses) {
   @Output() onOrderUpdate = new EventEmitter<orderTO>();
   @Output() onWorkflowChange = new EventEmitter<number | null>();
   @Output() ontaskChange = new EventEmitter<number | null>();
+  @Output() onItemsCheckedReceived = new EventEmitter<itemCheckStatuses>();
+
   @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
 
   taskIndex: number | null = 0;
@@ -64,35 +67,20 @@ onItemsChecked(event: itemCheckStatuses) {
               private suggestionService: SuggestionsService,
   ){}
 
+   /**
+   * Initialization of component and inital setting up of the tab element.
+  */
   ngOnInit(): void {
     if (this.workflowIndex == null) {
       this.workflowIndex = 0;
       this.taskIndex = 0;
       this.setTabGroupIndex(0);
     }
-  //      this.taskElements.forEach((taskElement, index) => {
-  //   const id = taskElement.nativeElement.id;
-  //   console.log(`Task element ID for index ${index}:`, id);
-  // });
   }
 
   ngAfterViewInit(): void {
-      // setTimeout(() => {
       this.setTabGroupIndex(0);
-    // })
-    //  this.tasks.forEach((_, i) => {
-    //   const dropTaskId = `task-${i}`;
-    //   this.suggestionService.addDropTaskId(dropTaskId);
-    // });
-    // console.log('all tabs,', this.suggestionService.getDropTaskIds())
-    // this.taskElements.forEach((taskElement, index) => {
-    // const dropTaskId = taskElement.nativeElement.id;
-    // // console.log(`Task element ID for index ${index}:`, dropTaskId);
-    // this.suggestionService.addDropTaskId(dropTaskId);
-  // });
   }
-
-
 
   async setTabGroupIndex(index: number): Promise<void> {
     await this.waitForTabGroup();
@@ -126,6 +114,9 @@ onItemsChecked(event: itemCheckStatuses) {
     }
   }
 
+  /**
+   * Get tasks for the selected workflow
+  */
   getTasksForSelectedWorkflow() {
     if(this.workflowIndex != null && this.order.workflows) {
       this.tasks = [...this.order.workflows[this.workflowIndex].tasks];
@@ -134,6 +125,9 @@ onItemsChecked(event: itemCheckStatuses) {
     }
   }
 
+  /**
+   * Deletion of tasks and updation of indices
+  */
   deleteTasks(index: any,event: MouseEvent) {
     if (this.workflowIndex !== null) {
       event.stopPropagation();
@@ -146,6 +140,9 @@ onItemsChecked(event: itemCheckStatuses) {
     }
   }
 
+  /**
+   * Show the dialog window for editiong of the task.
+  */
   editTask(task: taskTO) {
     const dialogRef = this.dialog.open(EditTaskDialogComponent, {
       width: '750px',
@@ -163,26 +160,27 @@ onItemsChecked(event: itemCheckStatuses) {
 
 }
 
+  /**
+   * Emit the updated order
+  */
   updateItemsInOrder(event: orderTO){
-    // if(this.workflowIndex!=null && this.taskIndex!=null){
       this.onOrderUpdate.emit(this.order);
-    // }
   }
 
   onTaskSelected(taskIndex: number) {
     this.ontaskChange.emit(taskIndex);
   }
 
-    resolveAddTAsk(event: any) {
+  /**
+   * Add new task to workflow
+  */
+  resolveAddTAsk(event: any) {
     if(this.workflowIndex!=null){
       event.stopPropagation();
       const newTask: taskTO= {
         name: 'New Task', 
         description: 'Task Description', 
         items: [
-          // { name: 'New Item', 
-          //   description: 'Item Description', 
-          //   timeRequired: null }
             { 
               name: 'New Item', 
               description: 'Item Description',
@@ -191,7 +189,6 @@ onItemsChecked(event: itemCheckStatuses) {
           ] 
         };
       this.order.workflows[this.workflowIndex].tasks.push(newTask);
-      console.log(this.order)
       this.order= {...this.order};
       this.onOrderUpdate.emit(this.order);
       this.tabGroup.selectedIndex = 0;
@@ -199,6 +196,9 @@ onItemsChecked(event: itemCheckStatuses) {
     }
   }
 
+  /**
+   * Show snackbar
+  */
   showSnackbar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 1500
@@ -206,6 +206,9 @@ onItemsChecked(event: itemCheckStatuses) {
   }
 
   // ---Drag functions--------------------
+  /**
+   * Handle the drop event from suggestions
+  */
   drop(event: CdkDragDrop<taskTO[]>){
     if(this.workflowIndex!=null){
       let currentIndex = parseInt(event.previousContainer.id.replace("task-",""));
@@ -223,26 +226,14 @@ onItemsChecked(event: itemCheckStatuses) {
         sourceIndex= currentIndex;
       }
       transferArrayItem(sourceArray, tasks,sourceIndex,targetIndex);
-      
-      // if(event.previousContainer.id=== Global.task_suggestions_container_id){
-      //    transferArrayItem(
-      //       event.previousContainer.data,
-      //       tasks,
-      //       event.previousIndex,
-      //       targetIndex);
-      // }else{
-      //   transferArrayItem(
-      //     tasks,
-      //     tasks,
-      //     currentIndex,
-      //     targetIndex);}
-      //   }
       }
     this.onOrderUpdate.emit(this.order);
   }
 
-
- getAllDragTabs(index:number){
+  /**
+   * Get tasks for the selected workflow
+  */
+  getAllDragTabs(index:number){
     let taskList = []
     for(let i=0;i<this.tasks.length;i++){
       if(i!=index){
@@ -250,11 +241,15 @@ onItemsChecked(event: itemCheckStatuses) {
         this.suggestionService.addDropTaskId("task-"+i)
       }
     }
-    // this.suggestionService.setDropTaskIdArray(taskList);
-    // console.log('in tasklist in tabsss: tasklist', this.suggestionService.getDropTaskIds())
     return taskList;
   }
 // ----------------------------------------------
+  updateTasksInOrder(event: taskCheckStatuses){
+    this.status= event;
+  }
 
+  onItemsChecked(event: itemCheckStatuses) {
+    this.onItemsCheckedReceived.emit(event);
+  }
 
 }

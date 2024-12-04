@@ -11,6 +11,12 @@ import { OperatorExecutionTO } from '../shared/types/OperatorExecutionTO'; // Op
 @Injectable({
   providedIn: 'root' // Service available throughout the app
 })
+ /**
+   * Backend communication service
+   * 
+   * This file contains all api endpoints that are being utilized in the frontend of the application.
+   * @author Jossin Antony (contributor)
+   */
 export class BackendCommunicationService {
   
   // Observable and BehaviorSubject for login UI state management
@@ -170,7 +176,7 @@ export class BackendCommunicationService {
   }
 
   // ------------------------------------
-  // Suggestions API calls
+  // API calls for getting suggestions from previously executed orders and workflows
   getWorkflowSuggestions(productAfter: productTO): Observable<HttpResponse<any>> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<HttpResponse<any>>(`${this.apiServerURL}editor/workflows/suggestions`, productAfter, { headers, observe: 'response' });

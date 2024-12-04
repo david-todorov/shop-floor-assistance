@@ -32,7 +32,7 @@ import { ButtonComponent } from '../../shared/component-elements/button/button.c
   /**
    * Implementation of login component.
    * Registration is not currently implemented (as per customer specification)
-   * @author Jossin Antony (contributor)
+   * @author Jossin Antony
    */
 export class LoginRegisterComponent implements OnInit, OnDestroy{
 

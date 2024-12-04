@@ -1,7 +1,14 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { BackendCommunicationService } from '../services/backend-communication.service';
-
+ /**
+   * Role guard
+   * 
+   * This file implements a role guard which ensures that URLS can be accessed by users only if they are logged in
+   * with the respective role, i.e, operator/editor required for access.
+   * This is achieved by defining protected routes for accessible to each role.
+   * @author Jossin Antony
+*/
 export const roleGuard: CanActivateFn = 
 (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const router:Router= inject(Router);
@@ -33,15 +40,13 @@ export const roleGuard: CanActivateFn =
                                       '/operator/orders/:id', 
                                     ];
 
-
   const loggedInAs: String | null= backendCommunicationService.getloginUIState().currentRole;
-  console.log('loged as:', loggedInAs)
-  console.log('includes url:', state.url, protectedEditorRoutes.includes(state.url))
-  console.log('loged as:', loggedInAs)
 
+   /**
+   * HAndling of navigation based on current role and allowed routes.
+*/
   switch(loggedInAs){
     case 'editor':
-      console.log('in editor rolegaurd')
       return protectedEditorRoutes.some(routePattern => {
         const regex = new RegExp(`^${routePattern.replace(/:\w+/g, '\\w+')}$`);
         return regex.test(state.url);
@@ -51,4 +56,3 @@ export const roleGuard: CanActivateFn =
   }
   return false;
 };
-

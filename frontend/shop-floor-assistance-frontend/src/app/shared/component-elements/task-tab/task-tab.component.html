@@ -9,7 +9,6 @@
     </div>
     <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="true" class="custom-tab-group" 
          [(selectedIndex)]="taskIndex" (selectedIndexChange)="onTaskSelected($event)" >
-         <!-- (selectedIndexChange)="onTabChange($event)"> -->
         @for(task of tasks;track $index){
             <mat-tab >
                 <ng-template mat-tab-label>
@@ -36,11 +35,9 @@
                                             <mat-icon>delete</mat-icon>
                                         </button>
                                     }
-                                    
                                     <!-- <button class="done-all" mat-icon-button>
                                             <mat-icon >done_all</mat-icon>
                                     </button> -->
-                                    
                                 </div>
                             </div>
                         </div>

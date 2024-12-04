@@ -25,7 +25,7 @@ import { BackendCommunicationService } from '../../services/backend-communicatio
  /**
    * Implementation of header component.
    * The header holds the title, menu, the information of the currently logged in user role and login/out button
-   * @author Jossin Antony (contributor)
+   * @author Jossin Antony
    */
 export class HeaderComponent {
 

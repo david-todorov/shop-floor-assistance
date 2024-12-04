@@ -3,7 +3,10 @@ import { orderTO } from "./orderTO"
 import { taskTO } from "./taskTO"
 import { workflowTO } from "./workflowTO"
 
-// Delete after debugging..
+ /**
+   * Dummy data for debugging (Included at the request of the client)
+   * @author Jossin Antony
+*/
 export const dummyOrder: orderTO= {
     "orderNumber": "W0005",
     "name": "EEE",
